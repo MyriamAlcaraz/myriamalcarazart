@@ -1,0 +1,8 @@
+{
+  "name": "Copy of Myriam Alcaraz Art & Studio",
+  "description": "Professional portfolio and artist management suite for Myriam Alcaraz, featuring gallery showcase, pricing tools, and business automation.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
