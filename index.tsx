@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './MainApp';
+import App from './App';
 import './index.css'; // <--- ESTA ES LA LÍNEA QUE ENCIENDE EL DISEÑO
 
 const rootElement = document.getElementById('root');
