@@ -76,4 +76,4 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
 
     </div>
   );
-};
+}; 
