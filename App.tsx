@@ -9,7 +9,6 @@ import { Layout, Palette } from 'lucide-react';
 import { LoginScreen } from './components/LoginScreen'; 
 
 const App: React.FC = () => {
-  // Los Hooks DEBEN estar aquí, en el nivel superior.
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [view, setView] = useState<'public' | 'artist'>('public');
   const [selectedCompanionId, setSelectedCompanionId] = useState<string | null>(null);
@@ -23,7 +22,7 @@ const App: React.FC = () => {
     setIsAuthenticated(true);
   };
 
-  // --- SOLUCIÓN AL ERROR #310 ---
+  // --- SOLUCIÓN AL ERROR DE ESTABILIDAD ---
   if (!isAuthenticated) {
     // Si no está autenticada, SOLO devolvemos el componente de acceso.
     return <LoginScreen onLoginSuccess={handleSuccessLogin} />;

@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
-// 🛑 Importa la clave desde constants.ts (necesita el cambio del Paso 1)
 import { PASSWORD } from '../constants'; 
 
 interface LoginScreenProps {
