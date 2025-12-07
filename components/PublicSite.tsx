@@ -92,9 +92,26 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
                         <span>•</span>
                         <span>{art.year || '2025'}</span>
                     </div>
-                    <span className="mt-2 bg-slate-900 text-white px-6 py-1 text-xs uppercase tracking-widest">
-                        {art.status === 'sold' ? 'Colección Privada' : `${art.price} €`}
-                    </span>
+
+                    {/* ✅ CTA de Contacto/Disponibilidad (REEMPLAZO DEL PRECIO) */}
+                    {art.status === 'sold' ? (
+                        <span className="mt-2 bg-slate-900 text-white px-6 py-1 text-xs uppercase tracking-widest">
+                            Colección Privada
+                        </span>
+                    ) : (
+                        <div className="text-center mt-4">
+                            <p className="text-sm font-bold text-slate-700 mb-2">Obra Disponible.</p>
+                            <a 
+                                href={`mailto:${ARTIST_INFO.email}?subject=Consulta%20sobre%20la%20obra%20"${art.title}"`} 
+                                className="inline-flex items-center gap-2 bg-gold-500 text-white px-4 py-2 rounded-full text-xs uppercase tracking-widest font-bold hover:bg-gold-600 transition-colors shadow-md"
+                            >
+                                Contacto
+                                <Mail size={16} />
+                            </a>
+                            <p className="text-[10px] text-slate-500 mt-1">Consulte su disponibilidad y detalles para incorporación a colección.</p>
+                        </div>
+                    )}
+                    {/* FIN DEL CTA */}
 
                     {/* Botón DEMO Experiencia Digital */}
                     <button 
@@ -115,7 +132,12 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
           <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-start animate-fade-in pb-32">
             <div className="relative sticky top-32">
               <div className="absolute inset-0 border-2 border-gold-500 transform translate-x-4 translate-y-4"></div>
-              <img src="/obras/ARTISTA.jpg" alt="Myriam Alcaraz" className="relative z-10 shadow-lg w-full grayscale hover:grayscale-0 transition-all duration-700 object-cover aspect-[3/4]" />
+              {/* ✅ Imagen con efecto B/N a Color */}
+              <img 
+                src="/bio-photo.jpg" 
+                alt="Myriam Alcaraz" 
+                className="relative z-10 shadow-lg w-full grayscale hover:grayscale-0 transition-all duration-700 object-cover aspect-[3/4]" 
+              />
             </div>
             <div>
               <h2 className="font-serif text-4xl text-slate-900 mb-6">Biografía & Statement</h2>
@@ -238,9 +260,9 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
         <div className="max-w-4xl mx-auto px-6">
           <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
           <div className="flex justify-center gap-8 mb-8">
-            <a href="#" className="hover:text-gold-600 transition-colors"><Instagram size={18} /></a>
+            <a href={`https://instagram.com/${ARTIST_INFO.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="hover:text-gold-600 transition-colors"><Instagram size={18} /></a>
             <a href={`mailto:${ARTIST_INFO.email}`} className="hover:text-gold-600 transition-colors"><Mail size={18} /></a>
-            <a href={`https://${ARTIST_INFO.website}`} className="hover:text-gold-600 transition-colors"><ExternalLink size={18} /></a>
+            <a href={`https://${ARTIST_INFO.website}`} target="_blank" rel="noopener noreferrer" className="hover:text-gold-600 transition-colors"><ExternalLink size={18} /></a>
           </div>
           <p className="text-[10px] opacity-40 uppercase tracking-wide">© 2025 Myriam Alcaraz. Todos los derechos reservados.</p>
         </div>
