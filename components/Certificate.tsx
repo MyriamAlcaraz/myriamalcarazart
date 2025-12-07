@@ -12,7 +12,7 @@ export const Certificate: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
     year: 'numeric' 
   });
   
-  // Función auxiliar para formatear precio con puntos y euros
+  // Función auxiliar para formatear precio con puntos y euros (Mantenida por si acaso)
   const formatPrice = (price: number) => 
     new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(price);
 
@@ -49,14 +49,35 @@ export const Certificate: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
                 />
             </div>
 
-            {/* DETALLES DE LA OBRA */}
+            {/* 🛑 DETALLES DE LA OBRA (CORREGIDOS) 🛑 */}
             <div className="max-w-xl mx-auto text-left border-t border-slate-300 pt-4">
-              <div className="flex py-2"><span className="w-40 font-bold text-slate-700 text-sm uppercase tracking-wide">Título de la Obra:</span><span className="flex-1 text-lg text-slate-800 font-serif italic">{artwork.title}</span></div>
-              <div className="flex border-b border-slate-300 py-2"><span className="w-40 font-bold text-slate-700 text-sm uppercase tracking-wide">Año de Creación:</span><span className="flex-1 text-lg text-slate-800">{artwork.year}</span></div>
-              <div className="flex border-b border-slate-300 py-2"><span className="w-40 font-bold text-slate-700 text-sm uppercase tracking-wide">Técnica / Medio:</span><span className="flex-1 text-lg text-slate-800">{artwork.technique}</span></div>
-              <div className="flex border-b border-slate-300 py-2"><span className="w-40 font-bold text-slate-700 text-sm uppercase tracking-wide">Dimensiones:</span><span className="flex-1 text-lg text-slate-800">{artwork.dimensions}</span></div>
-              <div className="flex border-b border-slate-300 py-2"><span className="w-40 font-bold text-slate-700 text-sm uppercase tracking-wide">Precio Certificado:</span><span className="flex-1 text-lg text-slate-800">{formatPrice(artwork.price)}</span></div>
-              <div className="flex border-b border-slate-300 py-2"><span className="w-40 font-bold text-slate-700 text-sm uppercase tracking-wide">ID de Referencia:</span><span className="flex-1 text-lg text-slate-800">MA-{new Date().getFullYear()}-{artwork.id.padStart(2,'0')}</span></div>
+              
+              {/* 1. Título de la Obra */}
+              <div className="flex py-2">
+                <span className="w-40 font-bold text-slate-700 text-sm uppercase tracking-wide">Título de la Obra:</span>
+                <span className="flex-1 text-lg text-slate-800 font-serif italic">{artwork.title}</span>
+              </div>
+              
+              {/* 2. Dimensiones */}
+              <div className="flex border-b border-slate-300 py-2">
+                <span className="w-40 font-bold text-slate-700 text-sm uppercase tracking-wide">Dimensiones:</span>
+                <span className="flex-1 text-lg text-slate-800">{artwork.dimensions}</span>
+              </div>
+              
+              {/* 3. Técnica / Medio */}
+              <div className="flex border-b border-slate-300 py-2">
+                <span className="w-40 font-bold text-slate-700 text-sm uppercase tracking-wide">Técnica / Medio:</span>
+                <span className="flex-1 text-lg text-slate-800">{artwork.technique}</span>
+              </div>
+              
+              {/* 4. ID de Referencia */}
+              <div className="flex border-b border-slate-300 py-2">
+                <span className="w-40 font-bold text-slate-700 text-sm uppercase tracking-wide">ID de Referencia:</span>
+                {/* Usamos el ID de la obra y el año actual, como en su borrador */}
+                <span className="flex-1 text-lg text-slate-800">MA-{new Date().getFullYear()}-{artwork.id.padStart(2,'0')}</span>
+              </div>
+
+              {/* Se eliminan: Año de Creación y Precio Certificado */}
             </div>
         </div>
 
@@ -81,7 +102,7 @@ export const Certificate: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
             </div>
           </div>
           
-          {/* Información de Contacto al Pie (Coincide con el borrador HTML) */}
+          {/* Información de Contacto al Pie */}
           <div className="mt-8 text-[10px] text-slate-500 uppercase tracking-wider space-x-4">
               <span>{ARTIST_INFO.website}</span> |
               <span>{ARTIST_INFO.email}</span> |
