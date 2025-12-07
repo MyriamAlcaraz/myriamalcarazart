@@ -1,5 +1,4 @@
-// ARCHIVO: App.tsx (SOLUCIÓN ESTABLE PARA PANTALLA BLANCA)
-// Este código es idéntico al anterior, pero lo repito para garantizar que está intacto.
+// ARCHIVO: src/App.tsx (CÓDIGO FINAL LIMPIO Y FUNCIONAL)
 
 import React, { useState, useEffect } from 'react';
 import { PublicSite } from './components/PublicSite';
@@ -11,7 +10,7 @@ import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 const PASSWORD = "arte2025"; 
 
 const App: React.FC = () => {
-  // 🛑 TODOS LOS HOOKS DEFINIDOS AL PRINCIPIO
+  // --- ESTADO Y HOOKS ---
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [view, setView] = useState<'public' | 'artist'>('public');
   const [selectedCompanionId, setSelectedCompanionId] = useState<string | null>(null);
