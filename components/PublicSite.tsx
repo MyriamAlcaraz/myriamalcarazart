@@ -1,4 +1,4 @@
-// ARCHIVO: src/components/PublicSite.tsx (CÓDIGO COMPLETO)
+// ARCHIVO: src/components/PublicSite.tsx (CÓDIGO COMPLETO Y CORREGIDO)
 
 import React, { useState } from 'react';
 import { ARTIST_INFO, ARTWORKS, PRICING_TABLE } from '../constants';
@@ -21,7 +21,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
             <img src="/logo-myriam.png" alt="Myriam Alcaraz Logo" className="h-12 w-auto md:h-16 object-contain" />
             <div className="hidden md:block border-l border-slate-300 pl-4">
               <h1 className="font-serif text-lg tracking-[0.2em] text-slate-900 uppercase">Myriam Alcaraz</h1>
-              <p className="text-[10px] text-gold-600 tracking-[0.3em] uppercase">ARTE CON ALMA Y SOFISTICACIÓN</p>
+              <p className="text-[10px] text-gold-600 tracking-[0.3em] uppercase">{ARTIST_INFO.tagline}</p>
             </div>
           </div>
           
@@ -55,7 +55,8 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
         {/* Portfolio / Obras */}
         {activeTab === 'portfolio' && (
           <div className="pt-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* ESTE LAYOUT CONFIRMA: 1 columna en móvil, 2 en tablet, 3 en escritorio (LG) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"> 
               {ARTWORKS.map(art => (
                 <div 
                   key={art.id} 
@@ -73,7 +74,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
                     <h3 className="font-serif text-xl font-semibold text-slate-900 mb-1">{art.title}</h3>
                     <p className="text-sm text-slate-600 mb-4">{art.technique} | {art.dimensions}</p>
 
-                    {/* 🛑 BLOQUE MODIFICADO (Opción 1: Contacto) 🛑 */}
+                    {/* Bloque de Contacto (Opción 1) */}
                     <div className="text-center mb-4">
                         <p className="text-sm font-bold text-slate-700 mb-2">Obra Disponible.</p>
                         <a 
@@ -85,8 +86,6 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
                         </a>
                         <p className="text-[10px] text-slate-500 mt-1">Consulte su disponibilidad y detalles para incorporación a colección.</p>
                     </div>
-                    {/* 🛑 FIN DEL BLOQUE MODIFICADO 🛑 */}
-
 
                     <button 
                       onClick={() => onOpenCompanion(art.id)}
@@ -119,21 +118,35 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
           </div>
         )}
 
-        {/* Biografía */}
+        {/* Biografía (CORREGIDO PARA INCLUIR LA FOTO) */}
         {activeTab === 'bio' && (
-          <div className="pt-8 max-w-3xl mx-auto text-center">
-            <h2 className="font-serif text-3xl text-gold-600 mb-6 border-b-2 border-gold-300 inline-block pb-2">Biografía y Declaración Artística</h2>
-            <div className="text-left bg-white p-8 rounded-lg shadow-xl">
-              <h3 className="font-serif text-xl text-slate-900 mb-3">La Artista</h3>
-              <p className="mb-6 leading-relaxed text-slate-700">{ARTIST_INFO.bioShort}</p>
+          <div className="pt-8 max-w-4xl mx-auto">
+            <h2 className="font-serif text-3xl text-gold-600 mb-6 text-center border-b-2 border-gold-300 inline-block pb-2">Biografía y Declaración Artística</h2>
+            <div className="bg-white p-8 rounded-lg shadow-xl flex flex-col md:flex-row gap-8 items-start">
               
-              <h3 className="font-serif text-xl text-slate-900 mb-3 border-t border-slate-200 pt-4 mt-4">Declaración Artística (Artist Statement)</h3>
-              <p className="italic leading-relaxed text-slate-700">"{ARTIST_INFO.statement}"</p>
+              {/* Bloque de Imagen (Añadido) */}
+              <div className="w-full md:w-1/3 flex-shrink-0">
+                  <img 
+                      src="/bio-photo.jpg" 
+                      alt="Fotografía de la artista Myriam Alcaraz" 
+                      className="w-full h-auto object-cover rounded-lg shadow-lg border-2 border-gold-100"
+                  />
+                  <p className="text-center text-xs text-slate-500 mt-2 italic">Myriam Alcaraz en su estudio.</p>
+              </div>
+
+              {/* Bloque de Texto */}
+              <div className="w-full md:w-2/3 text-left">
+                <h3 className="font-serif text-xl text-slate-900 mb-3">La Artista</h3>
+                <p className="mb-6 leading-relaxed text-slate-700">{ARTIST_INFO.bioShort}</p>
+                
+                <h3 className="font-serif text-xl text-slate-900 mb-3 border-t border-slate-200 pt-4 mt-4">Declaración Artística (Artist Statement)</h3>
+                <p className="italic leading-relaxed text-slate-700">"{ARTIST_INFO.statement}"</p>
+              </div>
             </div>
           </div>
         )}
 
-        {/* Precios */}
+        {/* Precios (Sin cambios) */}
         {activeTab === 'prices' && (
           <div className="pt-8 max-w-2xl mx-auto">
             <h2 className="font-serif text-3xl text-gold-600 mb-6 text-center border-b-2 border-gold-300 inline-block pb-2">Valores Orientativos por Formato</h2>
