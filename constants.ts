@@ -9,7 +9,7 @@ export const ARTWORKS: Artwork[] = [
     technique: 'Óleo en tela montada en tabla con bastidor', 
     price: 3000, 
     // RENOMBRA EL ARCHIVO a: 1_Autorretrato.jpg
-    image: '/obras/1_Autorretrato.jpg', 
+    image: '/public/obras/OBRA_01.jpg', 
     description: 'Obra clave en la exploración de la artista de la figura y el tiempo. En Colección Privada.',
     year: '2023',
     status: 'sold',
