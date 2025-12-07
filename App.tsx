@@ -5,15 +5,17 @@ import { DigitalCompanion } from './components/DigitalCompanion';
 import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 // --- CONFIGURACIÓN DE SEGURIDAD ---
+// Esta es tu contraseña secreta
 const PASSWORD = "arte2025"; 
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
   const [error, setError] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // Nuevo: Ver contraseña
+  const [showPassword, setShowPassword] = useState(false); 
 
   useEffect(() => {
+    // Intenta recuperar la sesión si ya habías iniciado antes
     const savedAuth = localStorage.getItem('myriam_auth');
     if (savedAuth === 'true') setIsAuthenticated(true);
   }, []);
@@ -36,6 +38,7 @@ const App: React.FC = () => {
     return (
       <div className="min-h-screen bg-stone-50 flex flex-col items-center justify-center p-4 font-serif">
         <div className="text-center max-w-md w-full animate-fade-in">
+          {/* Asegúrate de que este archivo '/logo-myriam.png' existe en tu carpeta 'public' */}
           <img src="/logo-myriam.png" alt="Logo" className="h-24 mx-auto mb-8 opacity-80" />
           <h1 className="text-3xl text-slate-900 mb-2">Próximamente</h1>
           <p className="text-slate-500 mb-8 italic text-sm">Sitio web oficial en construcción. Acceso privado.</p>
@@ -114,7 +117,8 @@ const App: React.FC = () => {
       </div>
     );
   } catch (err) {
-    return <div className="p-8 text-center text-red-500">Ha ocurrido un error al cargar la web. Por favor recarga.</div>;
+    // Si la web pública o el dashboard fallan, al menos se ve este mensaje
+    return <div className="p-8 text-center text-red-500 font-serif">Ha ocurrido un error al cargar la web. Por favor recarga o contacta con el soporte técnico.</div>;
   }
 };
 
