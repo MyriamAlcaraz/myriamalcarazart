@@ -1,15 +1,15 @@
 // Reemplaza el array ARTWORKS completo en constants.ts con este código.
 
 export const ARTWORKS: Artwork[] = [
-  // --- OBRAS CLAVE (ID 1-4) ---
+  // --- OBRAS DESTACADAS Y DISPONIBLES (ID 1-4) ---
   { 
     id: '1', 
     title: 'Autorretrato en siglo XIX', 
     dimensions: '100x81 cm', 
     technique: 'Óleo en tela montada en tabla con bastidor', 
     price: 3000, 
-    // RUTA CORREGIDA
-    image: '/obras/Autorretrato%20en%20siglo%20XIX.jpg', 
+    // RENOMBRA EL ARCHIVO a: 1_Autorretrato.jpg
+    image: '/obras/1_Autorretrato.jpg', 
     description: 'Obra clave en la exploración de la artista de la figura y el tiempo. En Colección Privada.',
     year: '2023',
     status: 'sold',
@@ -20,8 +20,8 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '100x81 cm', 
     technique: 'Óleo en tela montada en tabla con bastidor', 
     price: 3000, 
-    // RUTA CORREGIDA
-    image: '/obras/Laura%20en%20el%20Crepúsculo.jpg', 
+    // RENOMBRA EL ARCHIVO a: 2_Laura-Crepusculo.jpg
+    image: '/obras/2_Laura-Crepusculo.jpg', 
     description: 'Semifinalista Target Prize 2025, Alba y Crepúsculo (AEPE), ModPortrait 2024, Guía Leonardo 2025, Almenara Prize 2025.',
     year: '2024',
     status: 'available',
@@ -32,8 +32,8 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '92x60 cm', 
     technique: 'Óleo sobre tela montada en tabla con bastidor', 
     price: 3000, 
-    // RUTA CORREGIDA
-    image: '/obras/Sara%20bajo%20la%20farola.jpg', 
+    // RENOMBRA EL ARCHIVO a: 3_Sara-Farola.jpg
+    image: '/obras/3_Sara-Farola.jpg', 
     description: 'Semifinalista Target Prize 2025, Almenara Prize 2025, Guía Leonardo 2025.',
     year: '2024',
     status: 'available',
@@ -44,22 +44,22 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '100x81 cm', 
     technique: 'Óleo en tela montada en tabla con bastidor', 
     price: 3000, 
-    // RUTA CORREGIDA
-    image: '/obras/Sara%20en%20Marquesina.jpg', 
+    // RENOMBRA EL ARCHIVO a: 4_Sara-Marquesina.jpg
+    image: '/obras/4_Sara-Marquesina.jpg', 
     description: 'Seleccionada en el 92º Salón de Otoño (AEPE), Casa de Vacas, Parque del Retiro.',
     year: '2024',
     status: 'available',
   },
 
-  // --- OBRAS MEDIANAS Y DE SERIE (ID 5-11) ---
+  // --- OTRAS OBRAS (ID 5-18) ---
   { 
     id: '5', 
     title: 'Ana y la Habana', 
     dimensions: '92x60 cm', 
     technique: 'Óleo sobre tela montada en tabla con bastidor', 
     price: 3000, 
-    // RUTA CORREGIDA
-    image: '/obras/Ana%20y%20la%20Habana.jpg', 
+    // RENOMBRA EL ARCHIVO a: 5_Ana-Habana.jpg
+    image: '/obras/5_Ana-Habana.jpg', 
     description: 'Obra destacada en la Guía de Arte y Artistas Leonardo 2025.',
     year: '2023',
     status: 'available',
@@ -70,8 +70,8 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '81x100 cm', 
     technique: 'Óleo sobre tela montada en tabla con bastidor', 
     price: 3000, 
-    // RUTA CORREGIDA
-    image: '/obras/Viajera.jpg', 
+    // RENOMBRA EL ARCHIVO a: 6_Viajera.jpg
+    image: '/obras/6_Viajera.jpg', 
     description: 'Pieza de la serie de viajes figurativos. Formato apaisado.',
     year: '2023',
     status: 'available',
@@ -82,8 +82,8 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '81x100 cm', 
     technique: 'Óleo sobre tela montada en tabla con bastidor', 
     price: 3000, 
-    // RUTA CORREGIDA
-    image: '/obras/Memorias%20de%20Mekong%20I.jpg', 
+    // RENOMBRA EL ARCHIVO a: 7_Mekong-I.jpg
+    image: '/obras/7_Mekong-I.jpg', 
     description: 'Parte de la serie inspirada en los mercados y la vida del río Mekong.',
     year: '2023',
     status: 'available',
@@ -94,8 +94,8 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '90x70 cm', 
     technique: 'Óleo sobre tela montada en tabla con bastidor', 
     price: 1905, 
-    // RUTA CORREGIDA
-    image: '/obras/Pablo%20en%20Cascada.jpg', 
+    // RENOMBRA EL ARCHIVO a: 8_Pablo-Cascada.jpg
+    image: '/obras/8_Pablo-Cascada.jpg', 
     description: 'Finalista ModPortrait 2022. Incluida en la Guía Leonardo 2025. Vendida a Colección Privada.',
     year: '2022',
     status: 'sold',
@@ -106,8 +106,8 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '55x46 cm', 
     technique: 'Óleo sobre lienzo preparado', 
     price: 1500, 
-    // RUTA CORREGIDA
-    image: '/obras/Porteadores%20Adoración%20Reyes%20Magos.jpg', 
+    // RENOMBRA EL ARCHIVO a: 9_Porteadores-Reyes.jpg
+    image: '/obras/9_Porteadores-Reyes.jpg', 
     description: 'Estudio de figuras religiosas en formato pequeño. Precio según la tabla (1500€).',
     year: '2022',
     status: 'available',
@@ -118,8 +118,8 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '140x50 cm', 
     technique: 'Óleo sobre tela en bastidor', 
     price: 1500, 
-    // RUTA CORREGIDA
-    image: '/obras/Carpe%20Diem.jpg', 
+    // RENOMBRA EL ARCHIVO a: 10_Carpe-Diem.jpg
+    image: '/obras/10_Carpe-Diem.jpg', 
     description: 'Obra conceptual en formato vertical que explora el deseo de eternizar el instante. Vendida a Colección Privada.',
     year: '2023',
     status: 'sold',
@@ -130,22 +130,20 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '100x60 cm', 
     technique: 'Óleo sobre tela con bastidor', 
     price: 1500, 
-    // RUTA CORREGIDA
-    image: '/obras/Más%20que%20amigos.jpg', 
+    // RENOMBRA EL ARCHIVO a: 11_Mas-Que-Amigos.jpg
+    image: '/obras/11_Mas-Que-Amigos.jpg', 
     description: 'Pieza de figuración íntima. Vendida a Colección Privada.',
     year: '2023',
     status: 'sold',
   },
-
-  // --- OBRAS ADICIONALES ENCONTRADAS EN DOSSIER (ID 12-18) ---
   { 
     id: '12', 
     title: 'Jilguero en charca del Botánico', 
     dimensions: '46x38 cm', 
     technique: 'Óleo sobre lienzo preparado', 
     price: 765, 
-    // RUTA CORREGIDA
-    image: '/obras/Jilguero%20en%20charca%20del%20Botánico.jpg', 
+    // RENOMBRA EL ARCHIVO a: 12_Jilguero-Botanico.jpg
+    image: '/obras/12_Jilguero-Botanico.jpg', 
     description: 'Estudio de naturaleza y la fauna local. (Precio base estimado: 765€ IVA incluido).',
     year: '2023',
     status: 'available',
@@ -156,8 +154,8 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '73x60 cm', 
     technique: 'Óleo sobre lienzo', 
     price: 1325, 
-    // RUTA CORREGIDA
-    image: '/obras/A%20la%20espera.jpg', 
+    // RENOMBRA EL ARCHIVO a: 13_A-La-Espera.jpg
+    image: '/obras/13_A-La-Espera.jpg', 
     description: 'Figura femenina en una pose contemplativa. (Precio base estimado: 1325€ IVA incluido).',
     year: '2024',
     status: 'available',
@@ -168,8 +166,8 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '81x100 cm', 
     technique: 'Óleo sobre tela montada en tabla con bastidor', 
     price: 3000, 
-    // RUTA CORREGIDA
-    image: '/obras/El%20Relevo.jpg', 
+    // RENOMBRA EL ARCHIVO a: 14_El-Relevo.jpg
+    image: '/obras/14_El-Relevo.jpg', 
     description: 'Obra de gran formato explorando el dinamismo y la tensión corporal.',
     year: '2024',
     status: 'available',
@@ -180,8 +178,8 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '50x50 cm', 
     technique: 'Óleo sobre lienzo', 
     price: 908, 
-    // RUTA CORREGIDA
-    image: '/obras/Mirada%20al%20Jardín.jpg', 
+    // RENOMBRA EL ARCHIVO a: 15_Mirada-Jardin.jpg
+    image: '/obras/15_Mirada-Jardin.jpg', 
     description: 'Escena botánica con toque figurativo, jugando con la luz y la sombra. (Precio base estimado: 908€ IVA incluido).',
     year: '2024',
     status: 'available',
@@ -192,8 +190,8 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '65x50 cm', 
     technique: 'Óleo sobre tela', 
     price: 1060, 
-    // RUTA CORREGIDA
-    image: '/obras/Retrato%20de%20José%20Antonio.jpg', 
+    // RENOMBRA EL ARCHIVO a: 16_Retrato-Jose-Antonio.jpg
+    image: '/obras/16_Retrato-Jose-Antonio.jpg', 
     description: 'Retrato de comisión o estudio personal. (Precio base estimado: 1060€ IVA incluido).',
     year: '2023',
     status: 'available',
@@ -204,8 +202,8 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '70x60 cm', 
     technique: 'Óleo sobre tela', 
     price: 1270, 
-    // RUTA CORREGIDA
-    image: '/obras/El%20Baile.jpg', 
+    // RENOMBRA EL ARCHIVO a: 17_El-Baile.jpg
+    image: '/obras/17_El-Baile.jpg', 
     description: 'Estudio de movimiento y composición en figuración. (Precio base estimado: 1270€ IVA incluido).',
     year: '2023',
     status: 'available',
@@ -216,22 +214,22 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '70x60 cm', 
     technique: 'Óleo sobre tela', 
     price: 1270, 
-    // RUTA CORREGIDA
-    image: '/obras/Bañista%20en%20el%20Guadalquivir.jpg', 
+    // RENOMBRA EL ARCHIVO a: 18_Bañista-Guadalquivir.jpg
+    image: '/obras/18_Bañista-Guadalquivir.jpg', 
     description: 'Estudio de luz, reflejos en el agua y la figura humana. (Precio base estimado: 1270€ IVA incluido).',
     year: '2024',
     status: 'available',
   },
 
-  // --- OBRAS PENDIENTES (ID 19-20) - POR FAVOR, REEMPLAZA ESTOS DATOS Y RUTA ---
+  // --- OBRAS PENDIENTES (ID 19-20) - MANTÉN LOS NOMBRES SIMPLIFICADOS ---
   { 
     id: '19', 
     title: 'Obra Pendiente 1 (¡Reemplazar!)', 
     dimensions: '60x50 cm', 
     technique: 'Técnica por confirmar', 
     price: 908, 
-    // RUTA PLACEHOLDER: ¡Asegúrate de cambiar esto!
-    image: '/obras/Obra%20Pendiente%201%20(¡Reemplazar!).jpg', 
+    // RENOMBRA EL ARCHIVO a: 19_Obra-Pendiente-1.jpg
+    image: '/obras/19_Obra-Pendiente-1.jpg', 
     description: '⚠️ Este es un marcador de posición. Reemplaza el título, dimensiones, técnica, precio y la ruta de imagen.',
     year: '2024',
     status: 'available',
@@ -242,8 +240,8 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '55x46 cm', 
     technique: 'Técnica por confirmar', 
     price: 765, 
-    // RUTA PLACEHOLDER: ¡Asegúrate de cambiar esto!
-    image: '/obras/Obra%20Pendiente%202%20(¡Reemplazar!).jpg', 
+    // RENOMBRA EL ARCHIVO a: 20_Obra-Pendiente-2.jpg
+    image: '/obras/20_Obra-Pendiente-2.jpg', 
     description: '⚠️ Este es un marcador de posición. Reemplaza el título, dimensiones, técnica, precio y la ruta de imagen.',
     year: '2024',
     status: 'available',
