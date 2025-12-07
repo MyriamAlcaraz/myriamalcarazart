@@ -1,10 +1,13 @@
 import { Artwork, PriceRow, SocialPost, WorkflowItem } from './types';
 
+// ARCHIVO: src/constants.ts (O constants.ts)
+
 export const ARTIST_INFO = {
   name: "Myriam Alcaraz",
-  tagline: "Artista Figurativa Contemporánea",
+  // FRASE CORPORATIVA REQUERIDA
+  tagline: "ARTE CON ALMA Y SOFISTICACIÓN", 
   email: "myriamhotmail@hotmail.com",
-  phone: "672 72 64 22",
+  // 🛑 Campo 'phone' ELIMINADO según su solicitud.
   instagram: "@myriamalcaraz.artist",
   website: "myriamalcaraz.wordpress.com",
   bioShort: "Myriam Alcaraz combina una sólida formación técnica con una voz artística profundamente personal. Ha completado más de noventa cursos especializados, fusionando el rigor del aprendizaje académico con la exploración autodidacta. Actualmente trabaja a partir de sus propias fotografías, consolidando su presencia en circuitos internacionales y colecciones privadas.",
