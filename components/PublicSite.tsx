@@ -256,9 +256,22 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
         <div className="max-w-4xl mx-auto px-6">
           <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
           <div className="flex justify-center gap-8 mb-8">
-            <a href="#" className="hover:text-gold-600 transition-colors"><Instagram size={18} /></a>
-            <a href={`mailto:${ARTIST_INFO.email}`} className="hover:text-gold-600 transition-colors"><Mail size={18} /></a>
+            {/* 1. Instagram: CORREGIDO - Enlaza al perfil real y abre en nueva pestaña */}
+            <a 
+                href={`https://instagram.com/${ARTIST_INFO.instagram.replace('@', '')}`} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-gold-600 transition-colors"
+            >
+                <Instagram size={18} />
+            </a>
+            {/* 2. Email: Se mantiene */}
+            <a href={`mailto:${ARTIST_INFO.email}`} className="hover:text-gold-600 transition-colors">
+                <Mail size={18} />
+            </a>
+            {/* 3. ExternalLink (WordPress): ELIMINADO - Estaba aquí antes:
             <a href={`https://${ARTIST_INFO.website}`} className="hover:text-gold-600 transition-colors"><ExternalLink size={18} /></a>
+            */}
           </div>
           <p className="text-[10px] opacity-40 uppercase tracking-wide">© 2025 Myriam Alcaraz. Todos los derechos reservados.</p>
         </div>
