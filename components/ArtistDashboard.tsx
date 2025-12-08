@@ -24,15 +24,14 @@ const WelcomeLetter: React.FC<{ artworkId: string }> = ({ artworkId }) => {
             <p className="mb-12">Espero que la disfrute tanto como yo disfruté creándola.</p>
             <p>Con gratitud,</p>
 
-            {/* 🛑 CAMBIO FINAL: mt-4 para subirlo y eliminar la línea de firma */}
             <div className="flex justify-end mt-4 mb-24"> 
                 <div className="text-right">
-                    {/* Línea de firma ELIMINADA */}
                     <p className="font-bold text-sm">{ARTIST_INFO.name}</p>
                 </div>
             </div>
 
-            <div className="absolute bottom-12 left-0 right-0 text-center text-[10px] text-slate-400 uppercase tracking-widest">{ARTIST_INFO.website} • {ARTIST_INFO.email}</div>
+            {/* 🛑 MODIFICACIÓN DEL PIE DE PÁGINA: Eliminado el website y sustituido por el Instagram */}
+            <div className="absolute bottom-12 left-0 right-0 text-center text-[10px] text-slate-400 uppercase tracking-widest">{ARTIST_INFO.email} • @myriamalcaraz.artist</div>
         </div>
     );
 };
