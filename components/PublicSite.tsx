@@ -131,13 +131,16 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
         {/* BIO SECTION */}
         {activeTab === 'bio' && (
           <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-start animate-fade-in pb-32">
-            {/* CORRECCIÓN DE LAYOUT MÓVIL: Se eliminó 'sticky top-32' y se añadió mb-8 en móvil */}
-            <div className="relative mb-8 md:mb-0">
+            
+            {/* 🛑 INICIO: CORRECCIÓN DEL LAYOUT MÓVIL DE LA FOTO */}
+            <div className="relative mb-8 md:mb-0 md:sticky md:top-32">
               <div className="absolute inset-0 border-2 border-gold-500 transform translate-x-4 translate-y-4"></div>
               <img src="/obras/ARTISTA.jpg" alt="Myriam Alcaraz" className="relative z-10 shadow-lg w-full grayscale hover:grayscale-0 transition-all duration-700 object-cover aspect-[3/4]" />
             </div>
+            {/* 🛑 FIN: CORRECCIÓN DEL LAYOUT MÓVIL DE LA FOTO */}
+            
             <div>
-              <h2 className="font-serif text-4xl text-slate-900 mb-6">Biografía & Statement</h2>
+              <h2 className="font-serif text-4xl text-slate-900 mb-6">Biografía & Statement </h2>
               <p className="text-slate-600 leading-relaxed mb-6 font-light">
                 {ARTIST_INFO.bioShort}
               </p>
@@ -167,9 +170,9 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
                       <Mail size={18} />
                       Email
                   </a>
-                  {/* ExternalLink (WordPress) ELIMINADO */}
               </div>
               
+              {/* LISTA DE TRAYECTORIA ACTUAL (Aún en duro, esperando `constants.ts`) */}
               <div className="bg-stone-50 p-6 rounded-sm border border-stone-200">
                 <h3 className="font-bold text-slate-900 mb-6 uppercase tracking-widest text-xs border-b border-slate-200 pb-2">Trayectoria & Reconocimientos</h3>
                 <ul className="space-y-4 text-slate-600 text-sm">
@@ -281,7 +284,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
       <footer className="bg-white text-slate-500 py-16 text-center border-t border-slate-100">
         <div className="max-w-4xl mx-auto px-6">
           <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
-          {/* El espacio de enlaces sociales en el footer se mantiene vacío */}
+          {/* El espacio de enlaces sociales en el footer se mantiene vacío (corregido) */}
           <div className="flex justify-center gap-8 mb-8">
             {/* ENLACES SOCIALES ELIMINADOS DEL FOOTER */}
           </div>
