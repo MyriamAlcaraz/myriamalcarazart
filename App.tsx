@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
-// IMPORTANTE: Dejamos el path como está, pero ten en cuenta que Vercel podría requerir './componentes/'
 import { PublicSite } from './components/PublicSite'; 
 import { ArtistDashboard } from './components/ArtistDashboard';
 import { DigitalCompanion } from './components/DigitalCompanion';
-// Se añaden X, Shield (para el modal) y LogOut (para el menú logueado)
-import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield, LogOut } from 'lucide-react';
+// Se ha eliminado LogOut de las importaciones ya que no se usa
+import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield } from 'lucide-react'; 
 
 // --- CONFIGURACIÓN DE SEGURIDAD (PASSWORD) ---
-// 🔑 CAMBIO DE CLAVE: arte2025 -> arte2026
 const PASSWORD = "arte2026"; 
 
 const App: React.FC = () => {
   // --- ESTADO Y HOOKS ---
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // Nuevo estado para controlar la visibilidad del formulario de login (el modal)
   const [showLoginModal, setShowLoginModal] = useState(false); 
   
   // 'public' = Web en modo "Vista Previa" o "En Construcción"
@@ -41,15 +38,16 @@ const App: React.FC = () => {
       setIsAuthenticated(true);
       localStorage.setItem('myriam_auth', 'true');
       setError(false);
-      setShowLoginModal(false); // Cierra el modal al loguear
-      setView('public'); // Accede a la vista previa
+      setShowLoginModal(false); 
+      setView('public'); 
     } else {
       setError(true);
       setPasswordInput(""); 
     }
   };
 
-  // Función para cerrar sesión
+  // 🛑 MANTENEMOS la función handleLogout, pero ahora solo se puede llamar
+  // si borras la información del navegador manualmente (localStorage)
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('myriam_auth');
@@ -62,7 +60,6 @@ const App: React.FC = () => {
   // ---------------------------------------------------------
   if (!isAuthenticated) {
     return (
-      // Contenedor principal para la pantalla de "En Construcción"
       <div className="min-h-screen bg-stone-50 flex flex-col items-center justify-center p-6 relative font-serif">
         
         {/* Contenido Público: Logo y Mensaje de Construcción */}
@@ -114,7 +111,6 @@ const App: React.FC = () => {
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
-                    // 🛑 ELIMINACIÓN DEL HINT DE CLAVE
                     placeholder="Introduce tu clave privada" 
                     value={passwordInput}
                     onChange={(e) => {
@@ -160,28 +156,21 @@ const App: React.FC = () => {
         <ArtistDashboard />
       )}
 
-      {/* 🛡️ SISTEMA DE NAVEGACIÓN PRIVADO (Cambiamos el botón por el sistema discreto) */}
+      {/* 🛡️ SISTEMA DE NAVEGACIÓN PRIVADO (Solo el botón de MODO GESTIÓN) */}
       <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 items-end">
         
-        {/* Botón para cambiar de vista: Public Preview <-> MODO GESTIÓN */}
+        {/* 🛑 Botón de MODO GESTIÓN/Vista Previa (Más discreto) */}
         <button 
           onClick={() => setView(view === 'public' ? 'artist' : 'public')}
-          className="bg-white/90 backdrop-blur p-3 rounded-full shadow-lg border border-stone-200 transition-all hover:scale-110 text-stone-500 hover:text-gold-600"
+          // Estilo modificado para ser más discreto: más pequeño y oscuro
+          className="bg-slate-900/50 backdrop-blur p-2 rounded-full shadow-xl transition-all hover:scale-110 text-white/70 hover:text-gold-500"
           title={view === 'public' ? "Entrar en MODO GESTIÓN" : "Volver a Vista Previa"}
         >
-          {/* Si está en la vista pública, muestra un Candado para ir a Gestión.
-               Si está en Gestión, muestra un Ojo para ir a Vista Previa. */}
-          {view === 'public' ? <Lock size={18} /> : <Eye size={18} />}
+          {/* Tamaño del icono reducido */}
+          {view === 'public' ? <Lock size={16} /> : <Eye size={16} />} 
         </button>
 
-        {/* Botón de Cerrar Sesión (Siempre visible si está logueado) */}
-        <button 
-            onClick={handleLogout}
-            className="bg-slate-900 text-white p-3 rounded-full shadow-lg hover:bg-red-600 transition-all hover:scale-110"
-            title="Cerrar Sesión"
-        >
-            <LogOut size={18} />
-        </button>
+        {/* 🛑 El botón de Cerrar Sesión ha sido ELIMINADO */}
         
       </div>
 
@@ -190,6 +179,8 @@ const App: React.FC = () => {
         <DigitalCompanion 
           artworkId={selectedCompanionId} 
           onClose={() => setSelectedCompanionId(null)} 
+          // Mantenemos la lógica para el siguiente paso (certificados)
+          showCertificateAccess={view === 'artist'} 
         />
       )}
     </div>
