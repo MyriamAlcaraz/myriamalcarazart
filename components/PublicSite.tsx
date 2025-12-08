@@ -144,6 +144,32 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
                 "{ARTIST_INFO.statement}"
               </div>
               
+              {/* === INICIO: ENLACES SOCIALES CORREGIDOS (AÑADIDOS AQUÍ) === */}
+              <div className="flex gap-6 justify-center md:justify-start text-slate-500 mb-10">
+                  {/* 1. Instagram: CRÍTICO - Corregido para enlazar al perfil real y abrir en nueva pestaña */}
+                  <a 
+                      href={`https://instagram.com/${ARTIST_INFO.instagram.replace('@', '')}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="hover:text-gold-600 transition-colors flex items-center gap-2 text-sm"
+                      aria-label="Instagram de Myriam Alcaraz"
+                  >
+                      <Instagram size={18} />
+                      {ARTIST_INFO.instagram}
+                  </a>
+                  {/* 2. Email: Se mantiene */}
+                  <a 
+                      href={`mailto:${ARTIST_INFO.email}`} 
+                      className="hover:text-gold-600 transition-colors flex items-center gap-2 text-sm"
+                      aria-label="Correo electrónico de Myriam Alcaraz"
+                  >
+                      <Mail size={18} />
+                      Email
+                  </a>
+                  {/* ExternalLink (WordPress) ELIMINADO */}
+              </div>
+              {/* === FIN: ENLACES SOCIALES CORREGIDOS === */}
+              
               <div className="bg-stone-50 p-6 rounded-sm border border-stone-200">
                 <h3 className="font-bold text-slate-900 mb-6 uppercase tracking-widest text-xs border-b border-slate-200 pb-2">Trayectoria & Reconocimientos</h3>
                 <ul className="space-y-4 text-slate-600 text-sm">
@@ -255,23 +281,9 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
       <footer className="bg-white text-slate-500 py-16 text-center border-t border-slate-100">
         <div className="max-w-4xl mx-auto px-6">
           <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
+          {/* Este div ha sido vaciado para eliminar los enlaces sociales del pie de página */}
           <div className="flex justify-center gap-8 mb-8">
-            {/* 1. Instagram: CORREGIDO - Enlaza al perfil real y abre en nueva pestaña */}
-            <a 
-                href={`https://instagram.com/${ARTIST_INFO.instagram.replace('@', '')}`} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="hover:text-gold-600 transition-colors"
-            >
-                <Instagram size={18} />
-            </a>
-            {/* 2. Email: Se mantiene */}
-            <a href={`mailto:${ARTIST_INFO.email}`} className="hover:text-gold-600 transition-colors">
-                <Mail size={18} />
-            </a>
-            {/* 3. ExternalLink (WordPress): ELIMINADO - Estaba aquí antes:
-            <a href={`https://${ARTIST_INFO.website}`} className="hover:text-gold-600 transition-colors"><ExternalLink size={18} /></a>
-            */}
+            {/* ENLACES SOCIALES ELIMINADOS DEL FOOTER */}
           </div>
           <p className="text-[10px] opacity-40 uppercase tracking-wide">© 2025 Myriam Alcaraz. Todos los derechos reservados.</p>
         </div>
