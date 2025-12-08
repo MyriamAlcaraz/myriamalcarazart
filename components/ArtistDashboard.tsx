@@ -6,7 +6,7 @@ import {
   Lightbulb, FileText, Share2, Kanban, Copy, Check, TrendingUp, AlertCircle, Sparkles, Printer, X, Mail
 } from 'lucide-react';
 
-// --- COMPONENTE CARTA DE BIENVENIDA (MODIFICADO AQUÍ) ---
+// --- COMPONENTE CARTA DE BIENVENIDA (Firma y Pie de Página Finales) ---
 const WelcomeLetter: React.FC<{ artworkId: string }> = ({ artworkId }) => {
     const artwork = ARTWORKS.find(a => a.id === artworkId);
     if (!artwork) return null;
@@ -30,7 +30,6 @@ const WelcomeLetter: React.FC<{ artworkId: string }> = ({ artworkId }) => {
                 </div>
             </div>
 
-            {/* 🛑 MODIFICACIÓN DEL PIE DE PÁGINA: Eliminado el website y sustituido por el Instagram */}
             <div className="absolute bottom-12 left-0 right-0 text-center text-[10px] text-slate-400 uppercase tracking-widest">{ARTIST_INFO.email} • @myriamalcaraz.artist</div>
         </div>
     );
@@ -85,16 +84,40 @@ export const ArtistDashboard: React.FC = () => {
   };
 
   return (
+    <>
+    {/* 🛑 INYECCIÓN DE ESTILOS DE IMPRESIÓN (Solución sin globals.css) */}
+    <style>
+        {`
+        @media print {
+            /* Oculta los botones y elementos de interfaz */
+            .print-hidden {
+                display: none !important;
+            }
+            /* Limpia el fondo del modal y lo hace de página completa */
+            .print-clean-background {
+                position: static !important;
+                background-color: white !important; 
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 auto !important;
+                width: 100% !important;
+                max-width: 210mm !important; /* Limita el ancho al tamaño A4 para impresión */
+                max-height: none !important;
+                overflow: visible !important;
+            }
+        }
+        `}
+    </style>
+    
     <div className="min-h-screen bg-slate-50 flex font-sans text-slate-800">
       
-      {/* NAVEGACIÓN LATERAL (ASIDE) - SOLO CONTIENE KIT */}
-      <aside className="w-64 bg-slate-900 text-white flex-shrink-0 hidden md:flex flex-col">
+      {/* NAVEGACIÓN LATERAL (ASIDE) - AÑADIR print-hidden */}
+      <aside className="w-64 bg-slate-900 text-white flex-shrink-0 hidden md:flex flex-col print-hidden">
         <div className="p-6 border-b border-slate-800">
             <h2 className="font-serif text-xl text-gold-500">ESTUDIO</h2>
             <p className="text-xs text-slate-400 mt-1">Hub de Gestión Profesional</p>
         </div>
         <nav className="flex-1 p-4 space-y-2">
-          {/* ÚNICO BOTÓN: KIT */}
           <button 
             onClick={() => {}} 
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-colors bg-gold-600 text-white`}
@@ -107,7 +130,8 @@ export const ArtistDashboard: React.FC = () => {
 
       <main className="flex-1 overflow-y-auto p-0 md:p-8 relative">
         
-        <header className="flex justify-between items-center mb-8 px-6 md:px-0 mt-6 md:mt-0">
+        {/* HEADER - AÑADIR print-hidden */}
+        <header className="flex justify-between items-center mb-8 px-6 md:px-0 mt-6 md:mt-0 print-hidden">
           <div>
             <h1 className="text-2xl font-serif font-bold text-slate-900 capitalize">KIT</h1>
             <p className="text-slate-500 text-sm">Panel de control de Myriam Alcaraz</p>
@@ -118,19 +142,25 @@ export const ArtistDashboard: React.FC = () => {
           </div>
         </header>
 
-        {/* SECCIÓN 'tools' (KIT) */}
-        {section === 'tools' && renderContent()}
+        {/* SECCIÓN 'tools' (KIT) - AÑADIR print-hidden */}
+        {section === 'tools' && <div className='print-hidden'>{renderContent()}</div>}
         
         {/* MODAL DE IMPRESIÓN (Certificado/Carta) */}
         {(selectedCertificate || selectedLetter) && (
-            <div className="fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-4">
-                <div className="bg-slate-200 p-4 rounded-lg shadow-2xl max-h-[90vh] overflow-y-auto w-fit relative">
-                    <button onClick={() => { setSelectedCertificate(null); setSelectedLetter(null); }} className="absolute top-4 right-4 z-50 bg-slate-800 text-white p-2 rounded-full hover:bg-red-500 transition-colors"><X size={20} /></button>
-                    <div className="flex justify-end gap-2 mb-4">
+            <div className="fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-4 print-clean-background">
+                {/* 🛑 Aplicamos print-clean-background para limpiar el contenedor interior */}
+                <div className="bg-slate-200 p-4 rounded-lg shadow-2xl max-h-[90vh] overflow-y-auto w-fit relative print-clean-background">
+                    
+                    {/* 🛑 Botón de cierre (Oculto) */}
+                    <button onClick={() => { setSelectedCertificate(null); setSelectedLetter(null); }} className="absolute top-4 right-4 z-50 bg-slate-800 text-white p-2 rounded-full hover:bg-red-500 transition-colors print-hidden"><X size={20} /></button>
+                    
+                    {/* 🛑 Contenedor del botón de impresión (Oculto) */}
+                    <div className="flex justify-end gap-2 mb-4 print-hidden">
                         <button onClick={() => window.print()} className="bg-gold-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-gold-700 text-sm font-bold shadow-lg">
                             <Printer size={16}/> Imprimir Documento
                         </button>
                     </div>
+                    
                     <div className="bg-white shadow-2xl">
                         {/* Aquí se renderiza el documento para su impresión */}
                         {selectedCertificate && selectedArtworkForCert && <Certificate artwork={selectedArtworkForCert} />}
@@ -141,5 +171,6 @@ export const ArtistDashboard: React.FC = () => {
         )}
       </main>
     </div>
+    </>
   );
 };
