@@ -24,11 +24,10 @@ const WelcomeLetter: React.FC<{ artworkId: string }> = ({ artworkId }) => {
             <p className="mb-12">Espero que la disfrute tanto como yo disfruté creándola.</p>
             <p>Con gratitud,</p>
 
-            {/* 🛑 CORRECCIÓN FINAL: Cambiado mt-24 a mt-12 para subirlo "tres líneas" */}
-            <div className="flex justify-end mt-12"> 
+            {/* 🛑 CAMBIO FINAL: mt-4 para subirlo y eliminar la línea de firma */}
+            <div className="flex justify-end mt-4 mb-24"> 
                 <div className="text-right">
-                    {/* Aumentado a h-20 (80px) para un buen espacio de firma */}
-                    <div className="h-20 border-b border-slate-400 w-64 mx-auto mb-1"></div> 
+                    {/* Línea de firma ELIMINADA */}
                     <p className="font-bold text-sm">{ARTIST_INFO.name}</p>
                 </div>
             </div>
