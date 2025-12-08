@@ -24,15 +24,15 @@ const WelcomeLetter: React.FC<{ artworkId: string }> = ({ artworkId }) => {
             <p className="mb-12">Espero que la disfrute tanto como yo disfruté creándola.</p>
             <p>Con gratitud,</p>
 
-            {/* 🛑 MARGEN SUPERIOR AUMENTADO A mt-16 para bajar la firma */}
-            <div className="flex justify-end mt-16 mb-24"> 
+            {/* 🛑 AUMENTADO A mt-24 para bajar la firma dos espacios más */}
+            <div className="flex justify-end mt-24 mb-24"> 
                 <div className="text-right">
                     <p className="font-bold text-sm">{ARTIST_INFO.name}</p>
                 </div>
             </div>
 
-            {/* 🛑 PIE DE PÁGINA BAJADO A bottom-4 */}
-            <div className="absolute bottom-4 left-0 right-0 text-center text-[10px] text-slate-400 uppercase tracking-widest">{ARTIST_INFO.email} • @myriamalcaraz.artist</div>
+            {/* 🛑 PIE DE PÁGINA BAJADO A bottom-0 para pegarlo al límite del padding */}
+            <div className="absolute bottom-0 left-0 right-0 text-center text-[10px] text-slate-400 uppercase tracking-widest">{ARTIST_INFO.email} • @myriamalcaraz.artist</div>
         </div>
     );
 };
