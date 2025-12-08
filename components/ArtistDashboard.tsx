@@ -6,7 +6,7 @@ import {
   Lightbulb, FileText, Share2, Kanban, Copy, Check, TrendingUp, AlertCircle, Sparkles, Printer, X, Mail
 } from 'lucide-react';
 
-// --- COMPONENTE CARTA DE BIENVENIDA (Firma y Pie de Página Finales) ---
+// --- COMPONENTE CARTA DE BIENVENIDA (MODIFICADO AQUÍ) ---
 const WelcomeLetter: React.FC<{ artworkId: string }> = ({ artworkId }) => {
     const artwork = ARTWORKS.find(a => a.id === artworkId);
     if (!artwork) return null;
@@ -24,13 +24,15 @@ const WelcomeLetter: React.FC<{ artworkId: string }> = ({ artworkId }) => {
             <p className="mb-12">Espero que la disfrute tanto como yo disfruté creándola.</p>
             <p>Con gratitud,</p>
 
-            <div className="flex justify-end mt-4 mb-24"> 
+            {/* 🛑 MARGEN SUPERIOR AUMENTADO A mt-16 para bajar la firma */}
+            <div className="flex justify-end mt-16 mb-24"> 
                 <div className="text-right">
                     <p className="font-bold text-sm">{ARTIST_INFO.name}</p>
                 </div>
             </div>
 
-            <div className="absolute bottom-12 left-0 right-0 text-center text-[10px] text-slate-400 uppercase tracking-widest">{ARTIST_INFO.email} • @myriamalcaraz.artist</div>
+            {/* 🛑 PIE DE PÁGINA BAJADO A bottom-4 */}
+            <div className="absolute bottom-4 left-0 right-0 text-center text-[10px] text-slate-400 uppercase tracking-widest">{ARTIST_INFO.email} • @myriamalcaraz.artist</div>
         </div>
     );
 };
@@ -85,7 +87,7 @@ export const ArtistDashboard: React.FC = () => {
 
   return (
     <>
-    {/* 🛑 INYECCIÓN DE ESTILOS DE IMPRESIÓN (Solución sin globals.css) */}
+    {/* 🛑 INYECCIÓN DE ESTILOS DE IMPRESIÓN */}
     <style>
         {`
         @media print {
@@ -148,7 +150,6 @@ export const ArtistDashboard: React.FC = () => {
         {/* MODAL DE IMPRESIÓN (Certificado/Carta) */}
         {(selectedCertificate || selectedLetter) && (
             <div className="fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-4 print-clean-background">
-                {/* 🛑 Aplicamos print-clean-background para limpiar el contenedor interior */}
                 <div className="bg-slate-200 p-4 rounded-lg shadow-2xl max-h-[90vh] overflow-y-auto w-fit relative print-clean-background">
                     
                     {/* 🛑 Botón de cierre (Oculto) */}
