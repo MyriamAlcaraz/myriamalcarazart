@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 // Mantenemos todas las importaciones necesarias
-import { ANALYSIS_POINTS, SOCIAL_CONTENT, MOCK_WORKFLOW, ARTIST_INFO, ARTWORKS } from '../constants';
-import { AIStudio } from './AIStudio';
+import { ARTWORKS, ARTIST_INFO } from '../constants';
 import { Certificate } from './Certificate';
 import { 
   Lightbulb, FileText, Share2, Kanban, Copy, Check, TrendingUp, AlertCircle, Sparkles, Printer, X, Mail
 } from 'lucide-react';
 
-// Se mantiene el componente de la Carta de Bienvenida
+// --- COMPONENTE CARTA DE BIENVENIDA (MODIFICADO AQUÍ) ---
 const WelcomeLetter: React.FC<{ artworkId: string }> = ({ artworkId }) => {
     const artwork = ARTWORKS.find(a => a.id === artworkId);
     if (!artwork) return null;
@@ -24,16 +23,25 @@ const WelcomeLetter: React.FC<{ artworkId: string }> = ({ artworkId }) => {
             <p className="mb-8">Adjunto encontrará el <strong>Certificado de Autenticidad Oficial</strong> con mi sello seco personal, que garantiza la procedencia y el valor de su adquisición. La obra viaja en camino desde el taller de impresión y llegará a sus manos con el máximo cuidado.</p>
             <p className="mb-12">Espero que la disfrute tanto como yo disfruté creándola.</p>
             <p>Con gratitud,</p>
-            <div className="h-24 mt-4 border-b border-slate-200 w-48 mb-2"></div>
-            <p className="font-bold">{ARTIST_INFO.name}</p>
+
+            {/* 🛑 MODIFICACIÓN FINAL: Alinear a la derecha y elevar con mt-24 (unos 6 rem o 96px) para dejar el espacio necesario. */}
+            <div className="flex justify-end mt-24"> 
+                <div className="text-right">
+                    {/* Espacio vertical de 16 (64px) para la firma manuscrita */}
+                    <div className="h-16 border-b border-slate-400 w-64 mx-auto mb-1"></div> 
+                    <p className="font-bold text-sm">{ARTIST_INFO.name}</p>
+                </div>
+            </div>
+
             <div className="absolute bottom-12 left-0 right-0 text-center text-[10px] text-slate-400 uppercase tracking-widest">{ARTIST_INFO.website} • {ARTIST_INFO.email}</div>
         </div>
     );
 };
+// --- FIN COMPONENTE CARTA DE BIENVENIDA ---
 
 export const ArtistDashboard: React.FC = () => {
-  // 🛑 ÚNICO ESTADO: Siempre en 'tools', que ahora será el KIT
-  const [section, setSection] = useState<'tools'>('tools'); 
+  // ÚNICO ESTADO: Siempre en 'tools', que ahora será el KIT
+  const [section] = useState<'tools'>('tools'); 
   
   const [copied, setCopied] = useState<string | null>(null);
   const [selectedCertificate, setSelectedCertificate] = useState<string | null>(null);
@@ -47,47 +55,10 @@ export const ArtistDashboard: React.FC = () => {
 
   const selectedArtworkForCert = ARTWORKS.find(a => a.id === selectedCertificate);
 
-  return (
-    <div className="min-h-screen bg-slate-50 flex font-sans text-slate-800">
-      
-      {/* 🛑 NAVEGACIÓN LATERAL (ASIDE) - SOLO CONTIENE KIT */}
-      <aside className="w-64 bg-slate-900 text-white flex-shrink-0 hidden md:flex flex-col">
-        <div className="p-6 border-b border-slate-800">
-            {/* 🛑 RENOMBRADO A ESTUDIO */}
-            <h2 className="font-serif text-xl text-gold-500">ESTUDIO</h2>
-            <p className="text-xs text-slate-400 mt-1">Hub de Gestión Profesional</p>
-        </div>
-        <nav className="flex-1 p-4 space-y-2">
-          {/* 🛑 ÚNICO BOTÓN: KIT */}
-          <button 
-            // setSection('tools') es lo único que mantiene el contenido visible
-            onClick={() => setSection('tools')} 
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-colors bg-gold-600 text-white`}
-          >
-            <FileText size={18} /> 
-            KIT
-          </button>
-        </nav>
-      </aside>
-
-      <main className="flex-1 overflow-y-auto p-0 md:p-8 relative">
-        
-        {/* 🛑 CABECERA PRINCIPAL (Simplificada) */}
-        <header className="flex justify-between items-center mb-8 px-6 md:px-0 mt-6 md:mt-0">
-          <div>
-            {/* 🛑 RENOMBRADO A KIT */}
-            <h1 className="text-2xl font-serif font-bold text-slate-900 capitalize">KIT</h1>
-            <p className="text-slate-500 text-sm">Panel de control de Myriam Alcaraz</p>
-          </div>
-          <div className="bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200 text-sm flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            Estado: Disponible
-          </div>
-        </header>
-
-        {/* 🛑 SECCIÓN 'tools' (KIT) - CONTENIDO ORIGINAL RECUPERADO */}
-        {section === 'tools' && (
-          <div className="space-y-8 animate-fade-in px-6 md:px-0">
+  // Función que renderiza el contenido del KIT (Recuperado y centrado en documentos)
+  const renderContent = () => {
+    return (
+        <div className="space-y-8 animate-fade-in px-6 md:px-0">
             <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
               <div className="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
                 <div>
@@ -112,16 +83,58 @@ export const ArtistDashboard: React.FC = () => {
               </div>
             </div>
           </div>
-        )}
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex font-sans text-slate-800">
+      
+      {/* NAVEGACIÓN LATERAL (ASIDE) - SOLO CONTIENE KIT */}
+      <aside className="w-64 bg-slate-900 text-white flex-shrink-0 hidden md:flex flex-col">
+        <div className="p-6 border-b border-slate-800">
+            <h2 className="font-serif text-xl text-gold-500">ESTUDIO</h2>
+            <p className="text-xs text-slate-400 mt-1">Hub de Gestión Profesional</p>
+        </div>
+        <nav className="flex-1 p-4 space-y-2">
+          {/* ÚNICO BOTÓN: KIT */}
+          <button 
+            onClick={() => {}} // No hace falta cambiar el estado si solo hay una sección
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-colors bg-gold-600 text-white`}
+          >
+            <FileText size={18} /> 
+            KIT
+          </button>
+        </nav>
+      </aside>
+
+      <main className="flex-1 overflow-y-auto p-0 md:p-8 relative">
         
-        {/* 🛑 CONTENIDO DE LAS OTRAS SECCIONES (AIStudio, Strategy, Marketing, Workflow) ELIMINADO */}
-        {/* 🛑 Solo queda el modal de impresión para Certificados/Cartas */}
+        <header className="flex justify-between items-center mb-8 px-6 md:px-0 mt-6 md:mt-0">
+          <div>
+            <h1 className="text-2xl font-serif font-bold text-slate-900 capitalize">KIT</h1>
+            <p className="text-slate-500 text-sm">Panel de control de Myriam Alcaraz</p>
+          </div>
+          <div className="bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200 text-sm flex items-center gap-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            Estado: Disponible
+          </div>
+        </header>
+
+        {/* SECCIÓN 'tools' (KIT) */}
+        {section === 'tools' && renderContent()}
+        
+        {/* MODAL DE IMPRESIÓN (Certificado/Carta) */}
         {(selectedCertificate || selectedLetter) && (
             <div className="fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-4">
                 <div className="bg-slate-200 p-4 rounded-lg shadow-2xl max-h-[90vh] overflow-y-auto w-fit relative">
                     <button onClick={() => { setSelectedCertificate(null); setSelectedLetter(null); }} className="absolute top-4 right-4 z-50 bg-slate-800 text-white p-2 rounded-full hover:bg-red-500 transition-colors"><X size={20} /></button>
-                    <div className="flex justify-end gap-2 mb-4"><button onClick={() => window.print()} className="bg-gold-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-gold-700 text-sm font-bold shadow-lg"><Printer size={16}/> Imprimir Documento</button></div>
+                    <div className="flex justify-end gap-2 mb-4">
+                        <button onClick={() => window.print()} className="bg-gold-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-gold-700 text-sm font-bold shadow-lg">
+                            <Printer size={16}/> Imprimir Documento
+                        </button>
+                    </div>
                     <div className="bg-white shadow-2xl">
+                        {/* Aquí se renderiza el documento para su impresión */}
                         {selectedCertificate && selectedArtworkForCert && <Certificate artwork={selectedArtworkForCert} />}
                         {selectedLetter && <WelcomeLetter artworkId={selectedLetter} />}
                     </div>
