@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { PublicSite } from './components/PublicSite'; 
 import { ArtistDashboard } from './components/ArtistDashboard';
 import { DigitalCompanion } from './components/DigitalCompanion';
-// Se ha eliminado LogOut de las importaciones ya que no se usa
 import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield } from 'lucide-react'; 
 
 // --- CONFIGURACIÓN DE SEGURIDAD (PASSWORD) ---
@@ -13,25 +12,28 @@ const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false); 
   
+  // 🛑 NUEVO ESTADO: Para el segundo candado (acceso a ESTUDIO)
+  const [showStudioLoginModal, setShowStudioLoginModal] = useState(false);
+
   // 'public' = Web en modo "Vista Previa" o "En Construcción"
-  // 'artist' = MODO GESTIÓN/ESTUDIO
+  // 'artist' = ESTUDIO
   const [view, setView] = useState<'public' | 'artist'>('public');
   const [selectedCompanionId, setSelectedCompanionId] = useState<string | null>(null);
   
-  // Hooks para el formulario de login 
+  // Hooks para el formulario de login (reutilizados para ambos candados)
   const [passwordInput, setPasswordInput] = useState("");
   const [error, setError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    // Comprobar si ya se inició sesión
     const savedAuth = localStorage.getItem('myriam_auth');
     if (savedAuth === 'true') {
         setIsAuthenticated(true);
-        setView('public'); // Entra por defecto en la Vista Previa de la web
+        setView('public'); 
     }
   }, []);
 
+  // Handler para el PRIMER candado (Acceso inicial a la web/Preview)
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordInput === PASSWORD) {
@@ -40,18 +42,32 @@ const App: React.FC = () => {
       setError(false);
       setShowLoginModal(false); 
       setView('public'); 
+      setPasswordInput(""); // Limpiar para el siguiente uso
     } else {
       setError(true);
       setPasswordInput(""); 
     }
   };
 
-  // 🛑 MANTENEMOS la función handleLogout, pero ahora solo se puede llamar
-  // si borras la información del navegador manualmente (localStorage)
+  // 🛑 NUEVO HANDLER para el SEGUNDO candado (Acceso al ESTUDIO)
+  const handleStudioLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordInput === PASSWORD) {
+        setView('artist'); // Cambia a la vista de ESTUDIO
+        setError(false);
+        setShowStudioLoginModal(false); // Cierra el modal
+        setPasswordInput(""); // Limpiar la clave
+    } else {
+        setError(true);
+        setPasswordInput("");
+    }
+  };
+
+
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('myriam_auth');
-    setView('public'); // Vuelve a la pantalla de construcción
+    setView('public'); 
   };
 
 
@@ -156,23 +172,85 @@ const App: React.FC = () => {
         <ArtistDashboard />
       )}
 
-      {/* 🛡️ SISTEMA DE NAVEGACIÓN PRIVADO (Solo el botón de MODO GESTIÓN) */}
+      {/* 🛡️ SISTEMA DE NAVEGACIÓN PRIVADO (Solo el botón ESTUDIO/PREVIEW) */}
       <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 items-end">
         
-        {/* 🛑 Botón de MODO GESTIÓN/Vista Previa (Más discreto) */}
+        {/* 🛑 Botón de ESTUDIO/Vista Previa */}
         <button 
-          onClick={() => setView(view === 'public' ? 'artist' : 'public')}
-          // Estilo modificado para ser más discreto: más pequeño y oscuro
+          onClick={() => {
+            // Si está en vista pública, activa el segundo candado (el modal)
+            if (view === 'public') {
+              setShowStudioLoginModal(true);
+            } else {
+              // Si está en ESTUDIO, vuelve directamente a la vista pública
+              setView('public'); 
+            }
+          }}
           className="bg-slate-900/50 backdrop-blur p-2 rounded-full shadow-xl transition-all hover:scale-110 text-white/70 hover:text-gold-500"
-          title={view === 'public' ? "Entrar en MODO GESTIÓN" : "Volver a Vista Previa"}
+          // 🛑 TEXTO RENOMBRADO
+          title={view === 'public' ? "Entrar en ESTUDIO" : "Volver a Vista Previa"} 
         >
-          {/* Tamaño del icono reducido */}
           {view === 'public' ? <Lock size={16} /> : <Eye size={16} />} 
         </button>
-
-        {/* 🛑 El botón de Cerrar Sesión ha sido ELIMINADO */}
         
       </div>
+
+      {/* 🛑 MODAL DEL SEGUNDO CANDADO (ACCESO A ESTUDIO) */}
+      {showStudioLoginModal && (
+          <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white p-8 rounded-xl shadow-2xl max-w-sm w-full relative animate-scale-in">
+              
+              <button 
+                onClick={() => {
+                    setShowStudioLoginModal(false);
+                    setError(false);
+                    setPasswordInput(""); // Limpiar input
+                }}
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-800"
+                aria-label="Cerrar"
+              >
+                <X size={20} />
+              </button>
+
+              <div className="text-center mb-6">
+                <Shield size={32} className="text-gold-500 mx-auto mb-2" />
+                <h2 className="text-xl font-bold text-slate-800">Acceso a ESTUDIO</h2> {/* Renombrado */}
+                <p className="text-sm text-slate-500">Introduce la clave para acceder a la gestión.</p>
+              </div>
+
+              {/* Utiliza el nuevo handler handleStudioLogin */}
+              <form onSubmit={handleStudioLogin} className="flex flex-col gap-4"> 
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Introduce tu clave privada" 
+                    value={passwordInput}
+                    onChange={(e) => {
+                      setPasswordInput(e.target.value);
+                      if (error) setError(false);
+                    }}
+                    className={`w-full p-3 pr-12 text-center border-2 rounded-lg outline-none transition-all focus:border-gold-500 ${
+                      error ? 'border-red-500 bg-red-50' : 'border-stone-200'
+                    }`}
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(prev => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gold-500"
+                    aria-label={showPassword ? "Ocultar clave" : "Mostrar clave"}
+                  >
+                    {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                  </button>
+                </div>
+                {error && <p className="text-xs text-red-500 text-center font-bold">Clave incorrecta</p>}
+                <button type="submit" className="bg-gold-500 text-white py-3 rounded-lg font-bold hover:bg-gold-600 transition-colors text-sm tracking-wider flex items-center justify-center gap-2">
+                    ACCEDER AL ESTUDIO <ArrowRight size={18} />
+                </button>
+              </form>
+            </div>
+          </div>
+      )}
 
       {/* COMPAÑERO DIGITAL */}
       {selectedCompanionId && (
