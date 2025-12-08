@@ -131,7 +131,8 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
         {/* BIO SECTION */}
         {activeTab === 'bio' && (
           <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-start animate-fade-in pb-32">
-            <div className="relative sticky top-32">
+            {/* CORRECCIÓN DE LAYOUT MÓVIL: Se eliminó 'sticky top-32' y se añadió mb-8 en móvil */}
+            <div className="relative mb-8 md:mb-0">
               <div className="absolute inset-0 border-2 border-gold-500 transform translate-x-4 translate-y-4"></div>
               <img src="/obras/ARTISTA.jpg" alt="Myriam Alcaraz" className="relative z-10 shadow-lg w-full grayscale hover:grayscale-0 transition-all duration-700 object-cover aspect-[3/4]" />
             </div>
@@ -144,9 +145,9 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
                 "{ARTIST_INFO.statement}"
               </div>
               
-              {/* === INICIO: ENLACES SOCIALES CORREGIDOS (AÑADIDOS AQUÍ) === */}
+              {/* ENLACES SOCIALES CORREGIDOS (Sección ARTISTA) */}
               <div className="flex gap-6 justify-center md:justify-start text-slate-500 mb-10">
-                  {/* 1. Instagram: CRÍTICO - Corregido para enlazar al perfil real y abrir en nueva pestaña */}
+                  {/* 1. Instagram: CORREGIDO - Enlaza al perfil real y abre en nueva pestaña */}
                   <a 
                       href={`https://instagram.com/${ARTIST_INFO.instagram.replace('@', '')}`} 
                       target="_blank" 
@@ -168,7 +169,6 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
                   </a>
                   {/* ExternalLink (WordPress) ELIMINADO */}
               </div>
-              {/* === FIN: ENLACES SOCIALES CORREGIDOS === */}
               
               <div className="bg-stone-50 p-6 rounded-sm border border-stone-200">
                 <h3 className="font-bold text-slate-900 mb-6 uppercase tracking-widest text-xs border-b border-slate-200 pb-2">Trayectoria & Reconocimientos</h3>
@@ -281,7 +281,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
       <footer className="bg-white text-slate-500 py-16 text-center border-t border-slate-100">
         <div className="max-w-4xl mx-auto px-6">
           <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
-          {/* Este div ha sido vaciado para eliminar los enlaces sociales del pie de página */}
+          {/* El espacio de enlaces sociales en el footer se mantiene vacío */}
           <div className="flex justify-center gap-8 mb-8">
             {/* ENLACES SOCIALES ELIMINADOS DEL FOOTER */}
           </div>
