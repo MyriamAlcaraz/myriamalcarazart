@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-// Mantenemos todas las importaciones necesarias
+// Importaciones necesarias
 import { ARTWORKS, ARTIST_INFO } from '../constants';
 import { Certificate } from './Certificate';
 import { 
-  Lightbulb, FileText, Share2, Kanban, Copy, Check, TrendingUp, AlertCircle, Sparkles, Printer, X, Mail
+  FileText, Printer, X
 } from 'lucide-react';
 
 // --- COMPONENTE CARTA DE BIENVENIDA (Posición de Firma y Pie de Página Finales) ---
@@ -24,14 +24,14 @@ const WelcomeLetter: React.FC<{ artworkId: string }> = ({ artworkId }) => {
             <p className="mb-12">Espero que la disfrute tanto como yo disfruté creándola.</p>
             <p>Con gratitud,</p>
 
-            {/* Firma: Baja 2 espacios más */}
+            {/* Firma: Baja 2 espacios más (mt-24) */}
             <div className="flex justify-end mt-24 mb-24"> 
                 <div className="text-right">
                     <p className="font-bold text-sm">{ARTIST_INFO.name}</p>
                 </div>
             </div>
 
-            {/* Pie de página: Pegado al borde */}
+            {/* Pie de página: Pegado al borde (bottom-0) */}
             <div className="absolute bottom-0 left-0 right-0 text-center text-[10px] text-slate-400 uppercase tracking-widest">{ARTIST_INFO.email} • @myriamalcaraz.artist</div>
         </div>
     );
@@ -54,7 +54,7 @@ export const ArtistDashboard: React.FC = () => {
 
   const selectedArtworkForCert = ARTWORKS.find(a => a.id === selectedCertificate);
 
-  // 🛑 MODIFICACIÓN: Función que renderiza el contenido del KIT (Trayectoria y Publicaciones actualizadas)
+  // Función que renderiza el contenido del KIT (Trayectoria y Publicaciones actualizadas)
   const renderContent = () => {
     return (
         <div className="space-y-8 animate-fade-in px-6 md:px-0">
@@ -117,7 +117,6 @@ export const ArtistDashboard: React.FC = () => {
     );
   };
   
-  // ... (El resto del componente ArtistDashboard se mantiene igual, incluyendo los estilos de impresión inyectados)
   return (
     <>
     {/* INYECCIÓN DE ESTILOS DE IMPRESIÓN */}
@@ -146,7 +145,7 @@ export const ArtistDashboard: React.FC = () => {
     
     <div className="min-h-screen bg-slate-50 flex font-sans text-slate-800">
       
-      {/* NAVEGACIÓN LATERAL (ASIDE) - print-hidden */}
+      {/* NAVEGACIÓN LATERAL (ASIDE) - Oculto en impresión */}
       <aside className="w-64 bg-slate-900 text-white flex-shrink-0 hidden md:flex flex-col print-hidden">
         <div className="p-6 border-b border-slate-800">
             <h2 className="font-serif text-xl text-gold-500">ESTUDIO</h2>
@@ -165,7 +164,7 @@ export const ArtistDashboard: React.FC = () => {
 
       <main className="flex-1 overflow-y-auto p-0 md:p-8 relative">
         
-        {/* HEADER - print-hidden */}
+        {/* HEADER - Oculto en impresión */}
         <header className="flex justify-between items-center mb-8 px-6 md:px-0 mt-6 md:mt-0 print-hidden">
           <div>
             <h1 className="text-2xl font-serif font-bold text-slate-900 capitalize">KIT</h1>
@@ -177,7 +176,7 @@ export const ArtistDashboard: React.FC = () => {
           </div>
         </header>
 
-        {/* SECCIÓN 'tools' (KIT) - renderContent */}
+        {/* SECCIÓN 'tools' (KIT) */}
         {section === 'tools' && <div>{renderContent()}</div>}
         
         {/* MODAL DE IMPRESIÓN (Certificado/Carta) */}
