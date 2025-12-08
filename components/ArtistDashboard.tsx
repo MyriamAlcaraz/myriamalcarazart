@@ -1,104 +1,133 @@
 import React, { useState } from 'react';
-// Importamos solo los iconos necesarios para el KIT
-import { Send, Clipboard, Folder, FileText } from 'lucide-react';
+// Mantenemos todas las importaciones necesarias
+import { ANALYSIS_POINTS, SOCIAL_CONTENT, MOCK_WORKFLOW, ARTIST_INFO, ARTWORKS } from '../constants';
+import { AIStudio } from './AIStudio';
+import { Certificate } from './Certificate';
+import { 
+  Lightbulb, FileText, Share2, Kanban, Copy, Check, TrendingUp, AlertCircle, Sparkles, Printer, X, Mail
+} from 'lucide-react';
 
-// ÚNICA SECCIÓN REQUERIDA: KIT
-const sections = [
-  { id: 'kit', name: 'KIT', icon: Clipboard }
-];
-
-export const ArtistDashboard: React.FC = () => {
-  // Siempre estamos en la sección 'kit' ya que es la única que queda
-  const [activeSection] = useState(sections[0].id); 
-
-  // Función que renderiza el contenido del KIT
-  const renderContent = () => {
+// Se mantiene el componente de la Carta de Bienvenida
+const WelcomeLetter: React.FC<{ artworkId: string }> = ({ artworkId }) => {
+    const artwork = ARTWORKS.find(a => a.id === artworkId);
+    if (!artwork) return null;
     return (
-        <div className="p-8">
-            <h2 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-2 flex items-center gap-3">
-                <Clipboard size={24} className="text-gold-500" /> Kit de Gestión
-            </h2>
-
-            <div className="grid md:grid-cols-2 gap-8">
-                {/* Herramienta 1: Cartas de Arte */}
-                <div className="bg-white p-6 rounded-xl shadow-lg border border-stone-100 transition duration-300 hover:shadow-xl">
-                    <div className="flex items-center gap-3 mb-4 text-gold-600">
-                        <Send size={24} />
-                        <h3 className="text-xl font-semibold">Gestión de Cartas de Arte</h3>
-                    </div>
-                    <p className="text-gray-600 mb-4 text-sm">
-                        Genera cartas de presentación, agradecimiento y otros documentos personalizados listos para enviar a galerías, clientes o prensa.
-                    </p>
-                    {/* Botón de ejemplo */}
-                    <button className="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm hover:bg-gold-500 transition-colors">
-                        Abrir Generador
-                    </button>
-                </div>
-                
-                {/* Herramienta 2: Certificados y Documentación */}
-                <div className="bg-white p-6 rounded-xl shadow-lg border border-stone-100 transition duration-300 hover:shadow-xl">
-                    <div className="flex items-center gap-3 mb-4 text-gold-600">
-                        <FileText size={24} />
-                        <h3 className="text-xl font-semibold">Certificados Digitales (COA)</h3>
-                    </div>
-                    <p className="text-gray-600 mb-4 text-sm">
-                        Accede, revisa y descarga los certificados de autenticidad de tus obras.
-                    </p>
-                    {/* Botón de ejemplo */}
-                    <button className="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm hover:bg-gold-500 transition-colors">
-                        Gestionar Documentos
-                    </button>
-                </div>
-
-                {/* Herramienta 3: Archivo Digital */}
-                <div className="bg-white p-6 rounded-xl shadow-lg border border-stone-100 transition duration-300 hover:shadow-xl">
-                    <div className="flex items-center gap-3 mb-4 text-gold-600">
-                        <Folder size={24} />
-                        <h3 className="text-xl font-semibold">Archivo de Obra</h3>
-                    </div>
-                    <p className="text-gray-600 mb-4 text-sm">
-                        Organiza y almacena fichas técnicas, imágenes de alta resolución y borradores asociados a cada obra.
-                    </p>
-                    {/* Botón de ejemplo */}
-                    <button className="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm hover:bg-gold-500 transition-colors">
-                        Ver Archivos
-                    </button>
-                </div>
-
+        <div className="bg-white p-12 max-w-2xl mx-auto shadow-lg text-slate-800 font-serif leading-relaxed relative">
+            <div className="text-center mb-12">
+                <img src="/logo-myriam.png" alt="Logo" className="h-16 mx-auto mb-4" />
+                <p className="text-xs uppercase tracking-[0.3em] text-gold-600">Arte con Alma y Sofisticación</p>
             </div>
+            <p className="text-right text-sm italic text-slate-500 mb-8">Madrid, {new Date().toLocaleDateString()}</p>
+            <p className="mb-6">Estimado/a Coleccionista,</p>
+            <p className="mb-4">Es un honor saber que <strong>"{artwork.title}"</strong> ha encontrado su lugar en su colección personal.</p>
+            <p className="mb-4">Esta pieza no es solo pintura sobre lienzo; es el resultado de un proceso íntimo de búsqueda de la luz y la atmósfera que ahora, gracias a usted, completa su ciclo.</p>
+            <p className="mb-8">Adjunto encontrará el <strong>Certificado de Autenticidad Oficial</strong> con mi sello seco personal, que garantiza la procedencia y el valor de su adquisición. La obra viaja en camino desde el taller de impresión y llegará a sus manos con el máximo cuidado.</p>
+            <p className="mb-12">Espero que la disfrute tanto como yo disfruté creándola.</p>
+            <p>Con gratitud,</p>
+            <div className="h-24 mt-4 border-b border-slate-200 w-48 mb-2"></div>
+            <p className="font-bold">{ARTIST_INFO.name}</p>
+            <div className="absolute bottom-12 left-0 right-0 text-center text-[10px] text-slate-400 uppercase tracking-widest">{ARTIST_INFO.website} • {ARTIST_INFO.email}</div>
         </div>
     );
+};
+
+export const ArtistDashboard: React.FC = () => {
+  // 🛑 ÚNICO ESTADO: Siempre en 'tools', que ahora será el KIT
+  const [section, setSection] = useState<'tools'>('tools'); 
+  
+  const [copied, setCopied] = useState<string | null>(null);
+  const [selectedCertificate, setSelectedCertificate] = useState<string | null>(null);
+  const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
+
+  const handleCopy = (text: string, id: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(id);
+    setTimeout(() => setCopied(null), 2000);
   };
 
+  const selectedArtworkForCert = ARTWORKS.find(a => a.id === selectedCertificate);
+
   return (
-    <div className="min-h-screen bg-stone-100 font-sans">
-      <header className="bg-white shadow-md border-b border-stone-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-serif font-bold text-slate-800 uppercase tracking-wider">
-            ESTUDIO (Modo Gestión)
-          </h1>
+    <div className="min-h-screen bg-slate-50 flex font-sans text-slate-800">
+      
+      {/* 🛑 NAVEGACIÓN LATERAL (ASIDE) - SOLO CONTIENE KIT */}
+      <aside className="w-64 bg-slate-900 text-white flex-shrink-0 hidden md:flex flex-col">
+        <div className="p-6 border-b border-slate-800">
+            {/* 🛑 RENOMBRADO A ESTUDIO */}
+            <h2 className="font-serif text-xl text-gold-500">ESTUDIO</h2>
+            <p className="text-xs text-slate-400 mt-1">Hub de Gestión Profesional</p>
         </div>
-      </header>
+        <nav className="flex-1 p-4 space-y-2">
+          {/* 🛑 ÚNICO BOTÓN: KIT */}
+          <button 
+            // setSection('tools') es lo único que mantiene el contenido visible
+            onClick={() => setSection('tools')} 
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm transition-colors bg-gold-600 text-white`}
+          >
+            <FileText size={18} /> 
+            KIT
+          </button>
+        </nav>
+      </aside>
 
-      {/* Navegación - Solo mostramos la pestaña KIT */}
-      <div className="bg-stone-100 border-b border-stone-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center space-x-4">
-          {sections.map(section => (
-            <button
-              key={section.id}
-              // El botón de KIT siempre estará "activo"
-              className={`flex items-center space-x-2 py-3 px-4 font-semibold text-sm transition-all text-gold-600 border-b-2 border-gold-600`}
-            >
-              <section.icon size={18} />
-              <span>{section.name}</span>
-            </button>
-          ))}
-        </div>
-      </div>
+      <main className="flex-1 overflow-y-auto p-0 md:p-8 relative">
+        
+        {/* 🛑 CABECERA PRINCIPAL (Simplificada) */}
+        <header className="flex justify-between items-center mb-8 px-6 md:px-0 mt-6 md:mt-0">
+          <div>
+            {/* 🛑 RENOMBRADO A KIT */}
+            <h1 className="text-2xl font-serif font-bold text-slate-900 capitalize">KIT</h1>
+            <p className="text-slate-500 text-sm">Panel de control de Myriam Alcaraz</p>
+          </div>
+          <div className="bg-white px-4 py-2 rounded-full shadow-sm border border-slate-200 text-sm flex items-center gap-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            Estado: Disponible
+          </div>
+        </header>
 
-      {/* Contenido Principal */}
-      <main className="max-w-7xl mx-auto">
-        {renderContent()}
+        {/* 🛑 SECCIÓN 'tools' (KIT) - CONTENIDO ORIGINAL RECUPERADO */}
+        {section === 'tools' && (
+          <div className="space-y-8 animate-fade-in px-6 md:px-0">
+            <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+              <div className="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                <div>
+                    <h3 className="font-bold text-lg text-slate-900">Documentación Oficial (Certificados & Cartas)</h3>
+                    <p className="text-sm text-slate-500">Genera el Certificado y la Carta de Agradecimiento para tu envío híbrido.</p>
+                </div>
+                <Printer className="text-slate-300" />
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {ARTWORKS.map(art => (
+                    <div key={art.id} className="border border-slate-200 rounded p-2 hover:border-gold-500 hover:shadow-md transition-all bg-white">
+                        <div className="aspect-square bg-slate-100 mb-2 overflow-hidden">
+                            <img src={art.image} alt={art.title} className="w-full h-full object-cover" />
+                        </div>
+                        <p className="font-bold text-xs truncate text-slate-800 mb-2">{art.title}</p>
+                        <div className="flex gap-1">
+                            <button onClick={() => setSelectedCertificate(art.id)} className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 text-[10px] py-1 rounded">Certificado</button>
+                            <button onClick={() => setSelectedLetter(art.id)} className="flex-1 bg-gold-50 hover:bg-gold-100 text-gold-700 text-[10px] py-1 rounded">Carta</button>
+                        </div>
+                    </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* 🛑 CONTENIDO DE LAS OTRAS SECCIONES (AIStudio, Strategy, Marketing, Workflow) ELIMINADO */}
+        {/* 🛑 Solo queda el modal de impresión para Certificados/Cartas */}
+        {(selectedCertificate || selectedLetter) && (
+            <div className="fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="bg-slate-200 p-4 rounded-lg shadow-2xl max-h-[90vh] overflow-y-auto w-fit relative">
+                    <button onClick={() => { setSelectedCertificate(null); setSelectedLetter(null); }} className="absolute top-4 right-4 z-50 bg-slate-800 text-white p-2 rounded-full hover:bg-red-500 transition-colors"><X size={20} /></button>
+                    <div className="flex justify-end gap-2 mb-4"><button onClick={() => window.print()} className="bg-gold-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-gold-700 text-sm font-bold shadow-lg"><Printer size={16}/> Imprimir Documento</button></div>
+                    <div className="bg-white shadow-2xl">
+                        {selectedCertificate && selectedArtworkForCert && <Certificate artwork={selectedArtworkForCert} />}
+                        {selectedLetter && <WelcomeLetter artworkId={selectedLetter} />}
+                    </div>
+                </div>
+            </div>
+        )}
       </main>
     </div>
   );
