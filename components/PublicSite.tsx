@@ -18,196 +18,224 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
             <img src="/logo-myriam.png" alt="Myriam Alcaraz Logo" className="h-12 w-auto md:h-16 object-contain" />
             <div className="hidden md:block border-l border-slate-300 pl-4">
               <h1 className="font-serif text-lg tracking-[0.2em] text-slate-900 uppercase">Myriam Alcaraz</h1>
-              <p className="text-[10px] text-gold-600 tracking-[0.3em] uppercase">Artista Figurativa</p>
+              <p className="text-[10px] text-gold-600 tracking-[0.3em] uppercase">Artista Figurativa Contemporánea</p>
             </div>
           </div>
-          
-          {/* Botones de Navegación */}
-          <div className="flex space-x-4 md:space-x-8 text-sm font-semibold uppercase tracking-wide">
+          <div className="flex gap-6 text-xs md:text-sm font-medium tracking-widest">
             <button 
-              onClick={() => setActiveTab('portfolio')} 
-              className={`pb-1 transition-colors ${activeTab === 'portfolio' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
+              onClick={() => setActiveTab('portfolio')}
+              className={`${activeTab === 'portfolio' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-900'} transition-all pb-1`}
             >
-              Portfolio
+              OBRA
             </button>
             <button 
-              onClick={() => setActiveTab('bio')} 
-              className={`pb-1 transition-colors ${activeTab === 'bio' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
+              onClick={() => setActiveTab('bio')}
+              className={`${activeTab === 'bio' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-900'} transition-all pb-1`}
             >
-              Biografía
+              ARTISTA
             </button>
             <button 
-              onClick={() => setActiveTab('prices')} 
-              className={`pb-1 transition-colors ${activeTab === 'prices' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
+              onClick={() => setActiveTab('prices')}
+              className={`${activeTab === 'prices' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-900'} transition-all pb-1`}
             >
-              Precios
+              ADQUISICIÓN
             </button>
-          </div>
-
-          {/* Iconos de Contacto */}
-          <div className="flex gap-4">
-            <a href={`mailto:${ARTIST_INFO.email}`} aria-label="Email" className="text-slate-500 hover:text-gold-600 transition-colors"><Mail size={20} /></a>
-            <a href={`https://instagram.com/${ARTIST_INFO.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-slate-500 hover:text-gold-600 transition-colors"><Instagram size={20} /></a>
-            <a href={ARTIST_INFO.website} target="_blank" rel="noopener noreferrer" aria-label="Website" className="text-slate-500 hover:text-gold-600 transition-colors"><ExternalLink size={20} /></a>
           </div>
         </div>
       </nav>
-      
-      {/* Contenido Principal */}
-      <main className="max-w-4xl mx-auto px-6 py-12">
+
+      {/* Content Area */}
+      <main className="max-w-6xl mx-auto px-6 py-12">
         
-        {/* Pestaña de Portfolio */}
+        {/* HERO SECTION */}
         {activeTab === 'portfolio' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-6">
-            {ARTWORKS.map(artwork => (
-              <div key={artwork.id} className="bg-white shadow-xl rounded-lg overflow-hidden group cursor-pointer transition-transform hover:scale-[1.02] duration-300">
-                <div className="relative overflow-hidden">
+          <div className="mb-16 text-center animate-fade-in-up">
+            <h2 className="font-serif text-3xl md:text-5xl text-slate-900 mb-6 italic font-light">
+              "Arte con alma y sofisticación"
+            </h2>
+            <div className="w-24 h-1 bg-gold-500 mx-auto mb-6"></div>
+            <p className="max-w-2xl mx-auto text-lg text-slate-600 font-light leading-relaxed">
+              Pintura figurativa contemporánea que captura la intimidad, la luz y la atmósfera.
+            </p>
+          </div>
+        )}
+
+        {/* PORTFOLIO GRID - SINGLE COLUMN */}
+        {activeTab === 'portfolio' && (
+          <div className="flex flex-col gap-32 max-w-4xl mx-auto pb-32">
+            {ARTWORKS.map((art) => (
+              <div key={art.id} className="group">
+                {/* Frame Effect */}
+                <div className="relative p-4 bg-white shadow-xl shadow-stone-300/50 transition-all duration-500">
+                    <div className="relative overflow-hidden bg-stone-100">
                     <img 
-                      src={artwork.image} 
-                      alt={artwork.title} 
-                      className="w-full h-80 object-cover transition-opacity duration-500 group-hover:opacity-90"
+                        src={art.image} 
+                        alt={art.title}
+                        className="w-full h-auto object-contain block"
                     />
-                    <button 
-                        onClick={() => onOpenCompanion(artwork.id)}
-                        className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-lg font-bold uppercase tracking-wider"
-                    >
-                        <Eye size={24} className="mr-2" /> Ver Detalles
-                    </button>
+                    </div>
                 </div>
-                <div className="p-4">
-                  <h2 className="font-serif text-xl font-bold text-slate-900">{artwork.title}</h2>
-                  <p className="text-sm text-slate-600 mt-1">{artwork.dimensions} | {artwork.technique}</p>
-                  <p className={`mt-2 text-xs font-semibold uppercase ${artwork.status === 'available' ? 'text-green-600' : 'text-red-600'}`}>
-                      {artwork.status === 'available' ? `Disponible: ${artwork.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 })}` : 'Vendida'}
+                
+                {/* Info Section */}
+                <div className="mt-8 text-center px-4">
+                  <h3 className="font-serif text-3xl text-slate-900 mb-3">{art.title}</h3>
+                  <div className="w-16 h-px bg-gold-400 mx-auto mb-4"></div>
+                  
+                  <p className="text-slate-600 font-serif italic mb-6 max-w-2xl mx-auto leading-relaxed text-lg">
+                    <span dangerouslySetInnerHTML={{__html: art.description.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" class="text-gold-600 hover:underline border-b border-gold-300">$1</a>')}}></span>
                   </p>
+                  
+                  <div className="flex flex-col gap-2 items-center text-sm tracking-wide text-slate-500">
+                    <p className="uppercase">{art.technique}</p>
+                    <div className="flex gap-3 text-gold-600 font-bold">
+                        <span>{art.dimensions}</span>
+                        <span>•</span>
+                        <span>{art.year || '2025'}</span>
+                    </div>
+                    
+                    {/* ✅ INICIO DE LA LLAMADA A LA ACCIÓN DE CONTACTO (MODIFICACIÓN) */}
+                    {art.status === 'sold' ? (
+                        <span className="mt-2 bg-slate-900 text-white px-6 py-1 text-xs uppercase tracking-widest">
+                            Colección Privada
+                        </span>
+                    ) : (
+                        <div className="text-center mt-4">
+                            <p className="text-sm font-bold text-slate-700 mb-2">Obra Disponible.</p>
+                            <a 
+                                href={`mailto:${ARTIST_INFO.email}?subject=Consulta%20sobre%20la%20obra%20"${art.title}"`} 
+                                className="inline-flex items-center gap-2 bg-gold-500 text-white px-4 py-2 rounded-full text-xs uppercase tracking-widest font-bold hover:bg-gold-600 transition-colors shadow-md"
+                            >
+                                Contacto
+                                <Mail size={16} />
+                            </a>
+                            <p className="text-[10px] text-slate-500 mt-1">Consulte su disponibilidad y detalles para incorporación a colección.</p>
+                        </div>
+                    )}
+                    {/* FIN DE LA LLAMADA A LA ACCIÓN DE CONTACTO */}
+
+
+                    {/* Botón DEMO Experiencia Digital */}
+                    <button 
+                      onClick={() => onOpenCompanion(art.id)}
+                      className="mt-4 flex items-center gap-2 text-[10px] text-slate-400 hover:text-gold-600 transition-colors border border-slate-200 px-3 py-1 rounded-full hover:border-gold-400"
+                    >
+                      <Eye size={12} /> VER EXPERIENCIA DIGITAL (DEMO)
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* =======================================================
-           🛑 SECCIÓN BIOGRAFÍA (TAB: BIO) - ¡CORREGIDA CON ?. !
-           ======================================================= */}
+        {/* BIO SECTION */}
         {activeTab === 'bio' && (
-          <div className="pt-6">
-            <div className="grid md:grid-cols-3 gap-12">
-              <div className="md:col-span-2">
-                <h2 className="font-serif text-3xl font-bold mb-4">Sobre {ARTIST_INFO.name}</h2>
-                <p className="text-slate-600 mb-6 leading-relaxed">{ARTIST_INFO.bioShort}</p>
-                
-                <h3 className="font-serif text-xl font-bold mt-8 mb-4 border-b pb-2">Declaración Artística (Statement)</h3>
-                <p className="italic text-slate-700 leading-relaxed border-l-4 border-gold-500/50 pl-4 py-1">{ARTIST_INFO.statement}</p>
-              </div>
-
-              <div className="md:col-span-1">
-                <img src="/artist_profile.jpg" alt={ARTIST_INFO.name} className="w-full h-auto object-cover shadow-xl rounded-lg border-4 border-gold-500/10" />
-              </div>
+          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-start animate-fade-in pb-32">
+            <div className="relative sticky top-32">
+              <div className="absolute inset-0 border-2 border-gold-500 transform translate-x-4 translate-y-4"></div>
+              <img src="/obras/ARTISTA.jpg" alt="Myriam Alcaraz" className="relative z-10 shadow-lg w-full grayscale hover:grayscale-0 transition-all duration-700 object-cover aspect-[3/4]" />
             </div>
-
-            <hr className="my-12 border-stone-200" />
-            
-            {/* TRAYECTORIA (Accolades & Publications) */}
-            <div className="grid md:grid-cols-2 gap-10">
+            <div>
+              <h2 className="font-serif text-4xl text-slate-900 mb-6">Biografía & Statement</h2>
+              <p className="text-slate-600 leading-relaxed mb-6 font-light">
+                {ARTIST_INFO.bioShort}
+              </p>
+              <div className="bg-white p-8 border-l-2 border-gold-500 shadow-sm mb-10 italic text-slate-700 font-serif leading-loose">
+                "{ARTIST_INFO.statement}"
+              </div>
               
-              {/* Columna de ACLAIMACIONES/EXPOSICIONES */}
-              <div>
-                <h3 className="font-serif text-xl font-bold mb-4 text-gold-600">Aclamaciones y Exhibiciones</h3>
-                
-                {/* EXPOSICIONES (Uso de ?. para evitar errores si accolades o exposiciones son undefined) */}
-                {ARTIST_INFO.accolades?.exposiciones?.length > 0 && (
-                    <>
-                        <h4 className="font-bold mt-6 mb-2 text-slate-700">Exposiciones Colectivas</h4>
-                        <ul className="list-disc pl-5 space-y-2 text-sm text-slate-600">
-                            {ARTIST_INFO.accolades.exposiciones.map((item, index) => (
-                                <li key={`exp-${index}`}>{item}</li>
-                            ))}
-                        </ul>
-                    </>
-                )}
-
-                {/* CONCURSOS (Uso de ?. para evitar errores si accolades o concursos son undefined) */}
-                {ARTIST_INFO.accolades?.concursos?.length > 0 && (
-                    <>
-                        <h4 className="font-bold mt-6 mb-2 text-slate-700">Concursos y Finalistas</h4>
-                        <ul className="list-disc pl-5 space-y-2 text-sm text-slate-600">
-                            {ARTIST_INFO.accolades.concursos.map((item, index) => (
-                                <li key={`conc-${index}`}>{item}</li>
-                            ))}
-                        </ul>
-                    </>
-                )}
-                
-                {/* Mensaje de no datos si ambos están vacíos (Uso de ?. en la condición) */}
-                {(!ARTIST_INFO.accolades?.exposiciones?.length && !ARTIST_INFO.accolades?.concursos?.length) && (
-                    <p className="text-sm text-slate-400 italic mt-4">No hay datos de trayectoria disponibles en este momento.</p>
-                )}
-              </div>
-
-              {/* Columna de PUBLICACIONES */}
-              <div>
-                <h3 className="font-serif text-xl font-bold mb-4 text-gold-600">Publicaciones</h3>
-                {/* Uso de ?. para evitar errores si publications es undefined */}
-                {ARTIST_INFO.publications?.length > 0 ? (
-                    <ul className="list-disc pl-5 space-y-2 text-sm text-slate-600">
-                        {ARTIST_INFO.publications.map((item, index) => (
-                            <li key={`pub-${index}`}>{item}</li>
-                        ))}
-                    </ul>
-                ) : (
-                  <p className="text-sm text-slate-400 italic mt-4">No hay publicaciones listadas en este momento.</p>
-                )}
+              <div className="bg-stone-50 p-6 rounded-sm border border-stone-200">
+                <h3 className="font-bold text-slate-900 mb-6 uppercase tracking-widest text-xs border-b border-slate-200 pb-2">Trayectoria & Reconocimientos</h3>
+                <ul className="space-y-4 text-slate-600 text-sm">
+                  <li className="flex gap-3">
+                    <span className="text-gold-500 mt-1">✦</span>
+                    <div>
+                      <strong className="text-slate-800 block">Seleccionada 92 Salón de Otoño (Casa de Vacas, Madrid)</strong>
+                      <span className="italic text-slate-500">Obra: "Sara en Marquesina"</span>
+                    </div>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="text-gold-500 mt-1">✦</span>
+                    <div>
+                      <strong className="text-slate-800 block">Semifinalista Target Prize 2025</strong>
+                      <span className="italic text-slate-500">Obras: "Laura en el Crepúsculo", "Sara bajo la Farola", "La Viajera"</span>
+                    </div>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="text-gold-500 mt-1">✦</span>
+                    <div>
+                      <strong className="text-slate-800 block">Finalista ModPortrait 2022</strong>
+                      <span className="italic text-slate-500">Obra: "Pablo en Cascada"</span>
+                    </div>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="text-gold-500 mt-1">✦</span>
+                    <div>
+                      <strong className="text-slate-800 block">Seleccionada X Salón de Realismo (AEPE)</strong>
+                      <span className="italic text-slate-500">Serie: "Memorias de Mekong I y II"</span>
+                    </div>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="text-gold-500 mt-1">✦</span>
+                    <div>
+                      <strong className="text-slate-800 block">Guía de Arte y Artistas Leonardo 2025</strong>
+                      <span className="italic text-slate-500">
+                        Obras incluidas: "Ana y la Habana", "Laura en el Crepúsculo", "Pablo en Cascada", "Sara bajo la farola" y "Sara en Marquesina".
+                      </span>
+                    </div>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="text-gold-500 mt-1">✦</span>
+                    <div>
+                      <strong className="text-slate-800 block">Certamen Pequeño Formato (C.C. Príncipe de Asturias)</strong>
+                      <span className="italic text-slate-500">Obra: "Jilguero en charca del Botánico"</span>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </div>
-            
           </div>
         )}
-        
-        {/* Pestaña de Precios */}
-        {activeTab === 'prices' && (
-          <div className="pt-6">
-            <h2 className="font-serif text-3xl font-bold mb-6">Lista de Precios y Dimensiones</h2>
-            <p className="text-slate-600 mb-8 max-w-2xl">
-              La siguiente tabla es una guía estándar de precios para encargos por metro cuadrado. Todos los precios incluyen el 21% de IVA y se ajustan a la complejidad del diseño y el tiempo de ejecución.
-            </p>
 
-            <div className="overflow-x-auto shadow-xl rounded-lg border border-stone-200">
-              <table className="min-w-full divide-y divide-stone-200 bg-white">
-                <thead className="bg-stone-100">
-                  <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
-                      Dimensiones (cm)
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-slate-600 uppercase tracking-wider">
-                      Precio Base (sin IVA)
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gold-600 uppercase tracking-wider">
-                      Precio Final (IVA Incluido)
-                    </th>
+        {/* PRICING SECTION */}
+        {activeTab === 'prices' && (
+          <div className="max-w-3xl mx-auto animate-fade-in pb-32">
+            <div className="text-center mb-12">
+              <h2 className="font-serif text-4xl text-slate-900 mb-4">Listado de Precios</h2>
+              <p className="text-slate-600 font-light max-w-2xl mx-auto leading-relaxed">
+                Este documento informa sobre los valores orientativos de las obras de Myriam Alcaraz, basados en 2.500 EUR/m². Cada pieza es única y el precio final puede variar según técnica, número de figuras, nivel de detalle y tiempo de ejecución.
+              </p>
+            </div>
+
+            <div className="bg-white shadow-xl shadow-stone-200/50 rounded-sm overflow-hidden mb-12 border-t-4 border-gold-500">
+              <div className="bg-stone-50 px-8 py-6 flex justify-between items-center border-b border-stone-100">
+                <span className="font-serif italic text-xl text-slate-800">Tarifas Oficiales 2025</span>
+                <span className="text-[10px] uppercase tracking-widest text-slate-400 border border-slate-200 px-2 py-1">IVA Incluido</span>
+              </div>
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="text-[10px] uppercase tracking-widest text-slate-400">
+                    <th className="px-8 py-4 font-normal">Medida (cm)</th>
+                    <th className="px-8 py-4 font-normal text-right">Precio Base</th>
+                    <th className="px-8 py-4 font-normal text-right text-slate-900">PVP Final</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-stone-100">
-                  {PRICING_TABLE.map((row, index) => (
-                    <tr key={index} className="hover:bg-gold-50/50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
-                        {row.dimensions} cm
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-slate-600">
-                        {row.priceBase.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 })}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-gold-700">
-                        {row.priceWithTax.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 })}
-                      </td>
+                  {PRICING_TABLE.map((row, idx) => (
+                    <tr key={idx} className="hover:bg-gold-50/30 transition-colors">
+                      <td className="px-8 py-5 text-slate-700 font-medium">{row.dimensions}</td>
+                      <td className="px-8 py-5 text-right text-slate-400 font-light">{row.priceBase} €</td>
+                      <td className="px-8 py-5 text-right font-serif text-lg text-slate-900">{row.priceWithTax.toLocaleString('es-ES', { minimumFractionDigits: 2 })} €</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            <div className="mt-12 p-6 bg-slate-800 rounded-lg shadow-2xl flex flex-col md:flex-row justify-between items-center gap-6">
-                <div>
+            <div className="flex flex-col md:flex-row gap-8 items-center bg-slate-900 text-stone-300 p-8 rounded-sm">
+                <div className="flex-1">
                     <h3 className="font-serif text-2xl text-white mb-2 italic">Commissions & Encargos</h3>
-                    <p className="text-sm font-light leading-relaxed opacity-80 text-slate-200">
+                    <p className="text-sm font-light leading-relaxed opacity-80">
                         Realizo proyectos personalizados para coleccionistas privados y estudios de arquitectura.
                         El proceso incluye bocetos previos, cronograma detallado y certificado de autenticidad.
                     </p>
@@ -227,9 +255,10 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
       <footer className="bg-white text-slate-500 py-16 text-center border-t border-slate-100">
         <div className="max-w-4xl mx-auto px-6">
           <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
-          {/* El espacio de enlaces sociales en el footer se mantiene vacío */}
           <div className="flex justify-center gap-8 mb-8">
-            {/* ENLACES SOCIALES ELIMINADOS DEL FOOTER */}
+            <a href="#" className="hover:text-gold-600 transition-colors"><Instagram size={18} /></a>
+            <a href={`mailto:${ARTIST_INFO.email}`} className="hover:text-gold-600 transition-colors"><Mail size={18} /></a>
+            <a href={`https://${ARTIST_INFO.website}`} className="hover:text-gold-600 transition-colors"><ExternalLink size={18} /></a>
           </div>
           <p className="text-[10px] opacity-40 uppercase tracking-wide">© 2025 Myriam Alcaraz. Todos los derechos reservados.</p>
         </div>
