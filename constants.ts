@@ -11,43 +11,34 @@ export const ARTIST_INFO = {
   statement: "Trabajo la figura humana desde una mirada íntima y contemporánea. Busco un equilibrio preciso entre técnica y emoción, donde la luz y el color construyen atmósferas que invitan a la contemplación. Cada obra es un diálogo silencioso con el tiempo.",
   
   // =======================================================
-  // 🛑 DATOS DE TRAYECTORIA Y PUBLICACIONES (KIT) - ¡ACTUALIZADOS!
+  // 🛑 DATOS DE TRAYECTORIA Y PUBLICACIONES (KIT) - ¡CRÍTICO!
+  // ESTOS DATOS HAN SIDO REEMPLAZADOS POR LA INFORMACIÓN DEL PDF
   // =======================================================
+  
+  // Se eliminan 'education', 'affiliations' y 'collections' ya que no están en el PDF proporcionado.
 
   accolades: {
       exposiciones: [
-          // 92 Salón de Otoño
-          '92 Salón de Otoño de la Asociación Española de Pintores y Escultores. Formó parte de la exposición en la Casa de Vacas del Parque del Retiro - Madrid, del 30 de octubre al 23 de noviembre de 2025.',
-          // X Salón de Realismo
-          'X Salón de Realismo, exposición colectiva organizada por la Asociación Española de Pintores y Escultores en la Sala de Exposiciones del Centro Cultural “La Vaguada” de la JM Fuencarral-El Pardo, C/ Monforte de Lemos, 40 Madrid, del 25 de septiembre al 27 de octubre de 2025.',
-          // Exposición virtual TargetPrice 2025
-          'Exposición virtual TargetPrice 2025 (tres obras semifinalistas).',
-          // "Alba y Crepúsculo"
-          '"Alba y Crepúsculo", exposición colectiva de la Asociación Española de Pintores y Escultores. Salas Juana Francés y Pablo Serrano, Junta Municipal de Tetuán, Madrid. Del 2 al 28 de abril de 2025.',
+          '92 Salón de Otoño de la Asociación Española de Pintores y Escultores. Formó parte de la exposición en la Casa de Vacas del Parque del Retiro - Madrid, del 30 de octubre al 23 de noviembre de 2025. [cite: 2, 3]',
+          'X Salón de Realismo, exposición colectiva organizada por la Asociación Española de Pintores y Escultores en la Sala de Exposiciones del Centro Cultural "La Vaguada" de la JM Fuencarral-El Pardo, C/ Monforte de Lemos, 40 Madrid, del 25 de septiembre al 27 de octubre de 2025. [cite: 4]',
+          '"Alba y Crepúsculo", exposición colectiva de la Asociación Española de Pintores y Escultores. Salas Juana Francés y Pablo Serrano, Junta Municipal de Tetuán, Madrid. Del 2 al 28 de abril de 2025. [cite: 6, 7]',
+          'Exposición virtual TargetPrice 2025 (tres obras semifinalistas). [cite: 5]'
       ],
       concursos: [
-          // Finalista ModPortrait
-          'Finalista en el concurso internacional ModPortrait 2022 con “Pablo en Cascada”',
-          // Semifinalista TargetPrice
-          'Semifinalista en concurso internacional Target Price 2025 con tres obras: “Laura en Parque Oeste”, “La Farola” y “La Viajera”.',
+          'Finalista en el concurso internacional ModPortrait 2022 con "Pablo en Cascada" [cite: 9]',
+          'Semifinalista en concurso internacional TargetPrice 2025 con tres obras: "Laura en Parque Oeste", "La Farola" y "La Viajera" [cite: 10]',
       ]
   },
 
   publications: [
-      // Guía Leonardo 2025
-      'Obras incluidas en la Guía Leonardo 2025: "Ana y la Habana", "Laura en el Crepúsculo", "Pablo en Cascada", "Sara bajo farola" y "Sara en marquesina".',
-      // Anuarios ModPortrait
-      'Anuarios ModPortrait 2022 y 2024.',
-      // Participación Guía Virtual
-      'Participación en la guía virtual de Galería Arte Libre, ModPortrait 2025: https://www.artelibre-store.com/guialeonardo-2025/listado-participantes-2025/',
-      // Dato original mantenido (Certamen Pequeño Formato)
-      'Obra seleccionada para Exposición Certamen Pequeño Formato en Centro Cultural Principe de Asturias-Madrid en octubre de 2025.',
+      'Obras incluidas en la Guía Leonardo 2025: "Ana y la Habana", "Laura en el Crepúsculo", "Pablo en Cascada", "Sara bajo farola" y "Sara en marquesina" [cite: 12]',
+      'Anuarios ModPortrait 2022 y 2024. [cite: 13]',
+      'Participación en la guía virtual de Galería Arte Libre, ModPortrait 2025: https://www.artelibre-store.com/guialeonardo-2025/listado-participantes-2025/ [cite: 14]',
   ]
 };
 
 export const ARTWORKS: Artwork[] = [
   // --- OBRAS DESTACADAS ---
-  // Nota: Todas sus obras ya tienen 'dimensions' y 'technique', lo cual es genial.
   { 
     id: '4', 
     title: 'Sara en Marquesina', 
@@ -284,14 +275,3 @@ export const ANALYSIS_POINTS = {
 
 export const SOCIAL_CONTENT = [];
 export const MOCK_WORKFLOW = [];
-
-
-// =======================================================
-// ✅ FIX DE COMPILACIÓN DE VERCEL: ALIASES
-// Estos alias resuelven el conflicto de nombres entre la exportación (inglés) 
-// y la importación (español) en PublicSite.tsx.
-// =======================================================
-
-export const INFORMACIÓN_DEL_ARTISTA = ARTIST_INFO;
-export const OBRAS = ARTWORKS;
-export const TABLA_DE_PRECIOS = PRICING_TABLE;
