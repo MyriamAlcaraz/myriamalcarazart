@@ -278,4 +278,4 @@ export const ANALYSIS_POINTS = {
 };
 
 export const SOCIAL_CONTENT = [];
-export const MOCK_WORKFLOW = [];
+export const MOCK_WORKFLOW = []; 
