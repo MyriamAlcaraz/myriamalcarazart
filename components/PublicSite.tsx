@@ -87,7 +87,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
         )}
 
         {/* =======================================================
-           🛑 SECCIÓN BIOGRAFÍA (TAB: BIO) - ¡CORREGIDA Y ROBUSTA!
+           🛑 SECCIÓN BIOGRAFÍA (TAB: BIO) - ¡CORREGIDA CON ?. !
            ======================================================= */}
         {activeTab === 'bio' && (
           <div className="pt-6">
@@ -114,8 +114,8 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
               <div>
                 <h3 className="font-serif text-xl font-bold mb-4 text-gold-600">Aclamaciones y Exhibiciones</h3>
                 
-                {/* EXPOSICIONES */}
-                {ARTIST_INFO.accolades && ARTIST_INFO.accolades.exposiciones && ARTIST_INFO.accolades.exposiciones.length > 0 && (
+                {/* EXPOSICIONES (Uso de ?. para evitar errores si accolades o exposiciones son undefined) */}
+                {ARTIST_INFO.accolades?.exposiciones?.length > 0 && (
                     <>
                         <h4 className="font-bold mt-6 mb-2 text-slate-700">Exposiciones Colectivas</h4>
                         <ul className="list-disc pl-5 space-y-2 text-sm text-slate-600">
@@ -126,8 +126,8 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
                     </>
                 )}
 
-                {/* CONCURSOS */}
-                {ARTIST_INFO.accolades && ARTIST_INFO.accolades.concursos && ARTIST_INFO.accolades.concursos.length > 0 && (
+                {/* CONCURSOS (Uso de ?. para evitar errores si accolades o concursos son undefined) */}
+                {ARTIST_INFO.accolades?.concursos?.length > 0 && (
                     <>
                         <h4 className="font-bold mt-6 mb-2 text-slate-700">Concursos y Finalistas</h4>
                         <ul className="list-disc pl-5 space-y-2 text-sm text-slate-600">
@@ -138,8 +138,8 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
                     </>
                 )}
                 
-                {/* Mensaje de no datos si ambos están vacíos */}
-                {(!ARTIST_INFO.accolades || ARTIST_INFO.accolades.exposiciones?.length === 0) && ARTIST_INFO.accolades.concursos?.length === 0 && (
+                {/* Mensaje de no datos si ambos están vacíos (Uso de ?. en la condición) */}
+                {(!ARTIST_INFO.accolades?.exposiciones?.length && !ARTIST_INFO.accolades?.concursos?.length) && (
                     <p className="text-sm text-slate-400 italic mt-4">No hay datos de trayectoria disponibles en este momento.</p>
                 )}
               </div>
@@ -147,7 +147,8 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
               {/* Columna de PUBLICACIONES */}
               <div>
                 <h3 className="font-serif text-xl font-bold mb-4 text-gold-600">Publicaciones</h3>
-                {ARTIST_INFO.publications && ARTIST_INFO.publications.length > 0 ? (
+                {/* Uso de ?. para evitar errores si publications es undefined */}
+                {ARTIST_INFO.publications?.length > 0 ? (
                     <ul className="list-disc pl-5 space-y-2 text-sm text-slate-600">
                         {ARTIST_INFO.publications.map((item, index) => (
                             <li key={`pub-${index}`}>{item}</li>
@@ -167,4 +168,72 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
           <div className="pt-6">
             <h2 className="font-serif text-3xl font-bold mb-6">Lista de Precios y Dimensiones</h2>
             <p className="text-slate-600 mb-8 max-w-2xl">
-              La siguiente tabla es una
+              La siguiente tabla es una guía estándar de precios para encargos por metro cuadrado. Todos los precios incluyen el 21% de IVA y se ajustan a la complejidad del diseño y el tiempo de ejecución.
+            </p>
+
+            <div className="overflow-x-auto shadow-xl rounded-lg border border-stone-200">
+              <table className="min-w-full divide-y divide-stone-200 bg-white">
+                <thead className="bg-stone-100">
+                  <tr>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
+                      Dimensiones (cm)
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-slate-600 uppercase tracking-wider">
+                      Precio Base (sin IVA)
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gold-600 uppercase tracking-wider">
+                      Precio Final (IVA Incluido)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-stone-100">
+                  {PRICING_TABLE.map((row, index) => (
+                    <tr key={index} className="hover:bg-gold-50/50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
+                        {row.dimensions} cm
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-slate-600">
+                        {row.priceBase.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 })}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-gold-700">
+                        {row.priceWithTax.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 })}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="mt-12 p-6 bg-slate-800 rounded-lg shadow-2xl flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                    <h3 className="font-serif text-2xl text-white mb-2 italic">Commissions & Encargos</h3>
+                    <p className="text-sm font-light leading-relaxed opacity-80 text-slate-200">
+                        Realizo proyectos personalizados para coleccionistas privados y estudios de arquitectura.
+                        El proceso incluye bocetos previos, cronograma detallado y certificado de autenticidad.
+                    </p>
+                </div>
+                <a 
+                    href={`mailto:${ARTIST_INFO.email}`} 
+                    className="bg-gold-500 text-white px-8 py-3 hover:bg-gold-600 transition-colors uppercase tracking-widest text-xs font-bold whitespace-nowrap"
+                >
+                    Solicitar Propuesta
+                </a>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-white text-slate-500 py-16 text-center border-t border-slate-100">
+        <div className="max-w-4xl mx-auto px-6">
+          <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
+          {/* El espacio de enlaces sociales en el footer se mantiene vacío */}
+          <div className="flex justify-center gap-8 mb-8">
+            {/* ENLACES SOCIALES ELIMINADOS DEL FOOTER */}
+          </div>
+          <p className="text-[10px] opacity-40 uppercase tracking-wide">© 2025 Myriam Alcaraz. Todos los derechos reservados.</p>
+        </div>
+      </footer>
+    </div>
+  );
+};
