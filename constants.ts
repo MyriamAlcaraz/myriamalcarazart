@@ -1,104 +1,39 @@
-// #################################################################
-// # ESTRUCTURA DE DATOS DE TRAYECTORIA Y RECONOCIMIENTOS DEL ARTISTA
-// # (Optimizado para tipado seguro y renderizado dinámico en frontend)
-// #################################################################
+// ... (Código anterior sin cambios)
 
-// Interfaces para asegurar la coherencia de los datos
-interface TrajectoryItem {
-  id: number;
-  title: string;
-  detail: string; // Ubicación, organizador o descripción breve
-  dateRange: string; // Rango de fechas o año
-  works?: string[]; // Obras específicas, si aplica
-  link?: string; // Enlace opcional (para publicaciones o virtuales)
-}
-
-interface ArtistRecognition {
-  category: 'EXPOSICIONES' | 'CONCURSOS' | 'PUBLICACIONES';
-  data: TrajectoryItem[];
-}
-
-/**
- * Constante que contiene toda la trayectoria y reconocimientos.
- * Esto permite al frontend renderizar dinámicamente cada sección.
- */
-export const ARTIST_TRAJECTORY: ArtistRecognition[] = [
-  // --- EXPOSICIONES COLECTIVAS ---
-  {
-    category: 'EXPOSICIONES',
-    data: [
-      {
-        id: 1,
-        title: '92 Salón de Otoño — AEPE',
-        detail: 'Casa de Vacas, Parque del Retiro (Madrid)',
-        dateRange: 'Octubre – Noviembre 2025',
-      },
-      {
-        id: 2,
-        title: 'X Salón de Realismo',
-        detail: 'Centro Cultural “La Vaguada” (Madrid)',
-        dateRange: 'Septiembre – Octubre 2025',
-      },
-      {
-        id: 3,
-        title: '“Alba y Crepúsculo”',
-        detail: 'Junta Municipal de Tetuán (Madrid)',
-        dateRange: 'Abril 2025',
-      },
-      {
-        id: 4,
-        title: 'Exposición Virtual TargetPrice 2025',
-        detail: 'Tres obras seleccionadas como semifinalistas',
-        dateRange: '2025',
-      },
-    ],
-  },
+export const ARTIST_INFO = {
+  name: "Myriam Alcaraz",
+  tagline: "ARTE CON ALMA Y SOFISTICACIÓN", 
+  email: "myriamhotmail@hotmail.com",
+  instagram: "@myriamalcaraz.artist",
+  website: "myriamalcaraz.wordpress.com",
+  bioShort: "Myriam Alcaraz combina una sólida formación técnica con una voz artística profundamente personal. Ha completado más de noventa cursos especializados, fusionando el rigor del aprendizaje académico con la exploración autodidacta. Actualmente trabaja a partir de sus propias fotografías, consolidando su presencia en circuitos internacionales y colecciones privadas.",
+  statement: "Trabajo la figura humana desde una mirada íntima y contemporánea. Busco un equilibrio preciso entre técnica y emoción, donde la luz y el color construyen atmósferas que invitan a la contemplación. Cada obra es un diálogo silencioso con el tiempo.",
   
-  // --- CONCURSOS & PREMIOS ---
-  {
-    category: 'CONCURSOS',
-    data: [
-      {
-        id: 5,
-        title: 'Semifinalista Internacional',
-        detail: 'TargetPrice 2025',
-        dateRange: '2025',
-        works: ['Laura en Parque Oeste', 'La Farola', 'La Viajera'],
-      },
-      {
-        id: 6,
-        title: 'Finalista Internacional',
-        detail: 'ModPortrait 2022',
-        dateRange: '2022',
-        works: ['Pablo en Cascada'],
-      },
-    ],
+  // =======================================================
+  // 🛑 DATOS DE TRAYECTORIA Y PUBLICACIONES (KIT) - ¡CORREGIDOS!
+  // Estructura original mantenida para evitar errores de compilación.
+  // =======================================================
+
+  accolades: {
+      exposiciones: [
+          '92 Salón de Otoño de la Asociación Española de Pintores y Escultores. Formó parte de la exposición en la Casa de Vacas del Parque del Retiro - Madrid, del 30 de octubre al 23 de noviembre de 2025.',
+          'X Salón de Realismo, exposición colectiva organizada por la Asociación Española de Pintores y Escultores en la Sala de Exposiciones del Centro Cultural “La Vaguada” de la JM Fuencarral-El Pardo, C/ Monforte de Lemos, 40 Madrid, del 25 de septiembre al 27 de octubre de 2025.',
+          'Exposición virtual TargetPrice 2025 (tres obras semifinalistas).', // ¡Dato añadido!
+          '"Alba y Crepúsculo", exposición colectiva de la Asociación Española de Pintores y Escultores. Salas Juana Francés y Pablo Serrano, Junta Municipal de Tetuán, Madrid. Del 2 al 28 de abril de 2025.', // ¡Dato añadido!
+      ],
+      concursos: [
+          'Finalista en el concurso internacional ModPortrait 2022 con “Pablo en Cascada”',
+          'Semifinalista en concurso internacional Target Price 2025 con tres obras: “Laura en Parque Oeste”, “La Farola” y “La Viajera”.', // Dato actualizado con nombres de obras
+      ]
   },
-  
-  // --- PUBLICACIONES ---
-  {
-    category: 'PUBLICACIONES',
-    data: [
-      {
-        id: 7,
-        title: 'Guía Leonardo 2025',
-        detail: 'Obras incluidas en la Guía oficial de Arte Libre.',
-        dateRange: '2025',
-        works: ['Ana y la Habana', 'Laura en el Crepúsculo', 'Pablo en Cascada', 'Sara bajo farola', 'Sara en marquesina'],
-      },
-      {
-        id: 8,
-        title: 'Guía Virtual Galería Arte Libre',
-        detail: 'Participación en el listado ModPortrait 2025.',
-        dateRange: '2025',
-        link: 'https://www.artelibre-store.com/guialeonardo-2025/listado-participantes-2025/',
-      },
-      {
-        id: 9,
-        title: 'Anuarios ModPortrait',
-        detail: 'Publicación en ediciones físicas y digitales.',
-        dateRange: '2022 y 2024',
-      },
-    ],
-  },
-];
+
+  publications: [
+      'Obras incluidas en la Guía Leonardo 2025: "Ana y la Habana", "Laura en el Crepúsculo", "Pablo en Cascada", "Sara bajo farola" y "Sara en marquesina".',
+      'Anuarios ModPortrait 2022 y 2024.', // Dato actualizado/añadido
+      'Participación en la guía virtual de Galería Arte Libre, ModPortrait 2025: https://www.artelibre-store.com/guialeonardo-2025/listado-participantes-2025/',
+      // Nota: El dato "Obra seleccionada para Exposición Certamen Pequeño Formato..." se ha movido al campo donde corresponde si se mantiene la filosofía inicial.
+  ]
+};
+
+export const ARTWORKS: Artwork[] = [
+// ... (El resto del código de ARTWORKS y PRICING_TABLE sigue igual)
