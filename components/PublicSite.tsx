@@ -360,6 +360,11 @@ const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
     </ul>
 );
 
+interface PublicSiteProps {
+  onOpenCompanion: (id: string | number) => void;
+  onOpenStudioLogin: () => void; 
+}
+
 // 🛑 AÑADIDO: onOpenStudioLogin en las props
 export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin }) => {
   const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices'>('portfolio');
