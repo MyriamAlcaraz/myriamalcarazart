@@ -79,7 +79,7 @@ const REAL_ARTWORKS: Artwork[] = ARTWORKS_FOR_INITIALIZATION.map((art, index) =>
     title: art.title,
     certificationDate: '2025-12-10', // Fecha inicial de ejemplo
     type: 'PT', // Pintura por defecto
-    seriesIndex: null, 
+    seriesIndex: null, // Obra única por defecto
     seriesTotal: null, 
     code: null, 
     status: 'PENDIENTE', 
@@ -109,7 +109,7 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
         return `MA-${year}-${dateCode}-${indexFmtd}/${totalFmtd}`; 
     }
     
-    // El formato final es MA-AÑOCOMPLETO-AÑOMES(INDEXTOTAL)
+    // El formato final es MA-AÑOCOMPLETO-AÑOMES-IDDEOBRA
     return `MA-${year}-${dateCode}-${String(artworkToCode.id).padStart(2, '0')}`;
 };
 
@@ -124,13 +124,13 @@ const getSeriesText = (artwork: Artwork) => {
 }
 
 /**
- * Genera el HTML del CERTIFICADO. (CORRECCIÓN DEL DOBLE MARCO APLICADA Y PIE DE PÁGINA LIMPIO)
+ * Genera el HTML del CERTIFICADO. (CAMBIOS DE LAYOUT PARA A4 APLICADOS)
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const creationMonthAndYear = new Date(artwork.certificationDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
 
-    // 🛑 Diseño de Iconos y Estilos del Footer
+    // Diseño de Iconos y Estilos del Footer
     const contactFooterHtml = `
         <div class="contact-footer">
             <span class="contact-item">
@@ -209,8 +209,8 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                 }
                 .artwork-image-section {
                     width: 70%; 
-                    max-width: 300px; 
-                    margin: 30px auto;
+                    max-width: 250px; /* 🛑 REDUCIDO para ajuste a A4 */
+                    margin: 20px auto; /* Reducido el margen vertical */
                     border: 1px solid #ccc;
                     padding: 5px;
                     box-shadow: 0 0 8px rgba(0,0,0,0.1);
@@ -250,7 +250,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     font-family: 'Courier New', monospace; 
                 }
                 
-                /* 🛑 Estilos del Footer de Contacto (Iconos y Datos) */
+                /* Estilos del Footer de Contacto (Iconos y Datos) */
                 .contact-footer {
                     font-size: 9pt;
                     text-align: center;
@@ -319,8 +319,9 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                 </div>
 
                 <div class="fixed-text">
-                    Por la presente se certifica que la obra de arte descrita a continuación 
-                    es una creación original y auténtica de la artista:
+                    <p style="font-size: 10pt; color: #333; margin: 0; line-height: 1.5;">
+                        Por la presente se certifica que la obra de arte descrita a continuación es una creación original y auténtica. Todos los derechos de autor y reproducción están reservados por la artista:
+                    </p>
                     <strong>${settings.artistName}</strong>
                     <span class="artist-title-style">${settings.artistTitle}</span>
                 </div>
@@ -356,10 +357,6 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     </p>
                 </div>
 
-                <div class="fixed-text" style="border-top: 1px solid #eee; padding-top: 15px; margin-bottom: 5px;">
-                    Todos los derechos de autor y reproducción están reservados por la artista.
-                </div>
-
                 <div class="signature-area">
                     <p style="font-size: 10pt; margin-bottom: 5px;">
                         FECHA: ${today}
@@ -367,7 +364,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     <span class="signature-line"></span>
                     <p class="artist-name">${settings.artistName}</p>
                     <p class="artist-title-style">${settings.artistTitle}</p>
-                    </div>
+                </div>
                 
                 ${contactFooterHtml}
 
