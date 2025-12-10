@@ -150,7 +150,7 @@ const getSeriesText = (artwork: Artwork) => {
 
 /**
  * Genera el HTML del CERTIFICADO. 
- * 🛑 FIX EXTREMO BORDER V4: Se aplica margin fijo en MM al contenedor para alejarlo del borde.
+ * 🛑 FIX EXTREMO BORDER V5: Se ajusta el padding vertical interno para subir el contenido.
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -199,7 +199,9 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     border: 1px solid #000; 
                     outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (5px) */
                     outline-offset: ${OUTLINE_OFFSET}; /* Crea el espacio entre el borde fino y el outline grueso (10px) */
-                    padding: 35px; /* Padding interno */
+                    
+                    /* 🛑 FIX V5: Padding asimétrico para subir el contenido. (15mm top, 35px side, 8mm bottom) */
+                    padding: 15mm 35px 8mm 35px; 
                 }
                 .header { 
                     text-align: center; 
@@ -345,13 +347,13 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     body { margin: 0; padding: 0; } 
                     .cert-container { 
                         box-shadow: none; 
-                        /* 🛑 MANTENER FIX BORDER/OUTLINE V4 */
+                        /* 🛑 MANTENER FIX BORDER/OUTLINE V4 y aplicar V5 */
                         margin: 15mm auto !important;
                         width: 180mm !important; 
                         border: 1px solid #000 !important; 
                         outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important; 
                         outline-offset: ${OUTLINE_OFFSET} !important;
-                        padding: 35px !important; 
+                        padding: 15mm 35px 8mm 35px !important; /* 🛑 FIX V5 */
                         
                         /* 🛑 FORZAR COLORES */
                         -webkit-print-color-adjust: exact !important; 
@@ -429,7 +431,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
 
 /**
  * Genera el HTML de la CARTA. 
- * 🛑 FIX EXTREMO BORDER V4: Se aplica margin fijo en MM al contenedor para alejarlo del borde.
+ * 🛑 FIX EXTREMO BORDER V5: Se ajusta el padding vertical interno para subir el contenido.
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -471,8 +473,8 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                     outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (5px) */
                     outline-offset: ${OUTLINE_OFFSET}; /* Espacio entre bordes (10px) */
                     
-                    /* CORREGIDO: Padding interno ajustado al nuevo ancho fijo (180mm) */
-                    padding: 40mm 40px; 
+                    /* 🛑 FIX V5: Padding asimétrico para subir el contenido. (30mm top, 40px side, 50mm bottom) */
+                    padding: 30mm 40px 50mm 40px; 
                 }
 
                 .top-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
@@ -502,14 +504,14 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                 @media print { 
                     body { margin: 0; padding: 0; } 
                     
-                    /* 🛑 MANTENER FIX BORDE CARTA V4 */
+                    /* 🛑 MANTENER FIX BORDE CARTA V4 y aplicar V5 */
                     .letter-container { 
                         margin: 15mm auto !important;
                         width: 180mm !important; 
                         border: 1px solid #000 !important; 
                         outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important; 
                         outline-offset: ${OUTLINE_OFFSET} !important;
-                        padding: 40mm 40px !important; 
+                        padding: 30mm 40px 50mm 40px !important; /* 🛑 FIX V5 */
                         
                         /* Forzar la impresión de colores y fondos en la carta también */
                         -webkit-print-color-adjust: exact !important; 
