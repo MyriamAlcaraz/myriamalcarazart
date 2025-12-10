@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { ARTIST_INFO, ARTWORKS, PRICING_TABLE } from '../constants';
-import { Mail, Instagram, ExternalLink, Eye, ChevronRight, Image as ImageIcon, Briefcase, ShieldCheck } from 'lucide-react'; 
+import { Mail, Instagram, ExternalLink, Eye, ChevronRight, Image as ImageIcon, Briefcase, ShieldCheck, Lock } from 'lucide-react'; 
 
 interface PublicSiteProps {
   onOpenCompanion: (id: string) => void;
+  onOpenStudioLogin: () => void; 
 }
 
 // =======================================================
@@ -17,7 +18,8 @@ const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
     </ul>
 );
 
-export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
+// 🛑 AÑADIDO: onOpenStudioLogin en las props
+export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin }) => {
   const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices'>('portfolio');
 
   return (
@@ -211,56 +213,4 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
               {/* Opción 3: Encargo Personalizado (Creación desde Cero) */}
               <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 flex flex-col items-center text-center">
                 <Briefcase size={36} className="text-gold-600 mb-4" />
-                <h3 className="font-serif text-2xl font-bold text-slate-900 mb-3">3. Encargo Personalizado</h3>
-                <p className="text-slate-600 mb-4 text-sm leading-relaxed flex-grow">
-                  Partimos de tus fotografías o ideas más queridas para crear una obra única, **pintada desde cero**. El precio se determina antes de comenzar, tras una consulta personal sobre el formato y la complejidad.
-                </p>
-                <a 
-                  href={`mailto:${ARTIST_INFO.email}`} 
-                  className="mt-4 bg-slate-800 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors"
-                >
-                  Solicitar Consulta
-                </a>
-              </div>
-            </div>
-            
-            {/* 🛑 SECCIÓN DE DETALLES DE ENCARGOS ELIMINADA */}
-
-          </div>
-        )}
-
-        {/* Cierre - CTA Final (Solo para Portfolio y Bio) */}
-        {activeTab !== 'prices' && (
-          <div className="mt-16 bg-slate-800 p-12 text-center">
-            <div className="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-                <div className="text-left">
-                    <h3 className="font-serif text-2xl text-white mb-2 italic">Commissions & Encargos</h3>
-                    <p className="text-sm font-light leading-relaxed opacity-80 text-slate-200">
-                        Realizo proyectos personalizados para coleccionistas privados y estudios de arquitectura.
-                        El proceso incluye bocetos previos, cronograma detallado y certificado de autenticidad.
-                    </p>
-                </div>
-                <a 
-                    href={`mailto:${ARTIST_INFO.email}`} 
-                    className="bg-gold-500 text-white px-8 py-3 hover:bg-gold-600 transition-colors uppercase tracking-widest text-xs font-bold whitespace-nowrap"
-                >
-                    Solicitar Propuesta
-                </a>
-            </div>
-          </div>
-        )}
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-white text-slate-500 py-16 text-center border-t border-slate-100">
-        <div className="max-w-4xl mx-auto px-6">
-          <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
-          <div className="flex justify-center gap-8 mb-8">
-            {/* ENLACES SOCIALES ELIMINADOS DEL FOOTER */}
-          </div>
-          <p className="text-[10px] opacity-40 uppercase tracking-wide">© 2025 Myriam Alcaraz. Todos los derechos reservados.</p>
-        </div>
-      </footer>
-    </div>
-  );
-};
+                <h3 className="font-serif text-2xl font-bold text-slate-900 mb-3
