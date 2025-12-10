@@ -141,15 +141,15 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                     </p>
                     <p className="text-sm mt-2">
                         {isPublicPreview 
-                            ? 'Los datos de registro y la firma están pixelados en esta demo pública. La copia Giclée final incluye el certificado físico original con sello seco y numeración.'
+                            ? 'El ID de registro, los datos de la obra y la firma están pixelados en esta demo pública. La copia Giclée final incluye el certificado físico original con sello seco y numeración.'
                             : 'Esto es solo una previsualización. Para generar la versión final, usa la sección KIT del panel principal.'
                         }
                     </p>
                 </div>
                 
-                {/* Aplicamos filtro de pixelado en modo demo público */}
-                <div className={`bg-white shadow-2xl relative ${isPublicPreview ? 'filter blur-sm pointer-events-none' : ''}`}>
-                    <Certificate artwork={artwork} />
+                {/* 🛑 AHORA PASAMOS EL PROP PARA QUE EL COMPONENTE CERTIFICATE SE PIXELE INTERNAMENTE */}
+                <div className="bg-white shadow-2xl relative">
+                    <Certificate artwork={artwork} isPixelatedDemo={isPublicPreview} />
                 </div>
 
                 {/* BOTÓN DE IMPRESIÓN (Solo visible en ESTUDIO y no en Demo Mode) */}
