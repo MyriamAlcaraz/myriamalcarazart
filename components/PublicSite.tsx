@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ARTIST_INFO, ARTWORKS, PRICING_TABLE } from '../constants';
-// 🛑 Importación de iconos verificada, incluyendo ChevronRight y Eye
 import { Mail, Instagram, ExternalLink, Eye, ChevronRight } from 'lucide-react'; 
 
 interface PublicSiteProps {
@@ -88,7 +87,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
         )}
 
         {/* ========================================= */}
-        {/* BIO & TRAYECTORIA TAB (CORREGIDO) */}
+        {/* BIO & TRAYECTORIA TAB (CON FOTO GRANDE) */}
         {/* ========================================= */}
         {activeTab === 'bio' && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -118,12 +117,11 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
             <div className="md:col-span-2 space-y-10">
               
               {/* Contenedor del Título y la Foto para posicionarla en la esquina */}
-              {/* 🛑 Eliminé el 'mb-6' del div contenedor para evitar espaciados dobles */}
               <div className="flex justify-between items-start relative"> 
                   <h2 className="font-serif text-4xl font-bold text-slate-900">Trayectoria & Reconocimientos</h2>
                   
-                  {/* FOTO DEL ARTISTA (Pequeña, B/N a Color al Hover) */}
-                  <div className="w-28 h-28 overflow-hidden rounded-lg shadow-lg border-2 border-stone-200 ml-4 group transition-all duration-300 hover:shadow-xl">
+                  {/* FOTO DEL ARTISTA (¡w-36 h-36!) */}
+                  <div className="w-36 h-36 overflow-hidden rounded-lg shadow-lg border-2 border-stone-200 ml-4 group transition-all duration-300 hover:shadow-xl">
                       <img
                           src="/obras/ARTISTA.jpg"
                           alt="Retrato de la Artista Myriam Alcaraz"
