@@ -150,16 +150,16 @@ const getSeriesText = (artwork: Artwork) => {
 
 /**
  * Genera el HTML del CERTIFICADO. 
- * 🛑 FIX EXTREMO BORDER: Reducción del body margin y aumento del outline/offset.
+ * 🛑 FIX EXTREMO BORDER V3: Cero margin en body y aumento de outline/offset para compensar.
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const creationMonthAndYear = new Date(artwork.certificationDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
     
-    // 🛑 FIX EXTREMO DE MARCO: Aumento de grosor y separación.
+    // 🛑 FIX EXTREMO DE MARCO V3: Aumento de grosor y separación + CERO margin en body.
     const GOLD_COLOR = "#b8860b"; 
-    const OUTLINE_WIDTH = "4px"; // 🛑 AUMENTADO de 3px a 4px
-    const OUTLINE_OFFSET = "8px"; // 🛑 AUMENTADO de 6px a 8px
+    const OUTLINE_WIDTH = "5px"; // 🛑 AUMENTADO de 4px a 5px
+    const OUTLINE_OFFSET = "10px"; // 🛑 AUMENTADO de 8px a 10px
 
     // Diseño de Iconos y Estilos del Footer
     const contactFooterHtml = `
@@ -186,14 +186,14 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
         <head>
             <title>Certificado - ${artwork.title}</title>
             <style>
-                /* 🛑 FIX MARGIN EXTREMO: Reducción del margen de la página para dar espacio al marco */
-                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 12pt; margin: 5mm; color: #111; } /* Nuevo: 5mm */
+                /* 🛑 FIX MARGIN EXTREMO V3: CERO margin en body para maximizar el área imprimible */
+                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 12pt; margin: 0mm; padding: 0; color: #111; } 
                 .cert-container { 
-                    /* Borde fino (1px negro) + Outline grueso (4px dorado) */
+                    /* Borde fino (1px negro) + Outline grueso (5px dorado) */
                     border: 1px solid #000; 
-                    outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (4px) */
-                    outline-offset: ${OUTLINE_OFFSET}; /* Crea el espacio entre el borde fino y el outline grueso (8px) */
-                    padding: 25px; 
+                    outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (5px) */
+                    outline-offset: ${OUTLINE_OFFSET}; /* Crea el espacio entre el borde fino y el outline grueso (10px) */
+                    padding: 35px; /* 🛑 AUMENTADO de 25px a 35px para centrar el contenido */
                     max-width: 550px; 
                     margin: 0 auto;
                 }
@@ -347,7 +347,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                         outline-offset: ${OUTLINE_OFFSET} !important;
                         
                         max-width: 100%; 
-                        padding: 25px !important; 
+                        padding: 35px !important; /* Asegurar el padding */
                         
                         /* 🛑 FORZAR COLORES */
                         -webkit-print-color-adjust: exact !important; 
@@ -425,17 +425,17 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
 
 /**
  * Genera el HTML de la CARTA. 
- * 🛑 FIX EXTREMO BORDER: Reducción del body margin y aumento del outline/offset.
+ * 🛑 FIX EXTREMO BORDER V3: Cero margin en body y aumento de outline/offset para compensar.
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     
     const seriesText = getSeriesText(artwork);
     
-    // 🛑 FIX EXTREMO DE MARCO: Aumento de grosor y separación.
+    // 🛑 FIX EXTREMO DE MARCO V3: Aumento de grosor y separación + CERO margin en body.
     const GOLD_COLOR = "#b8860b"; 
-    const OUTLINE_WIDTH = "4px"; // 🛑 AUMENTADO de 3px a 4px
-    const OUTLINE_OFFSET = "8px"; // 🛑 AUMENTADO de 6px a 8px
+    const OUTLINE_WIDTH = "5px"; // 🛑 AUMENTADO de 4px a 5px
+    const OUTLINE_OFFSET = "10px"; // 🛑 AUMENTADO de 8px a 10px
 
     // Referencia de la carta para reflejar la edición abierta
     let seriesReference = '';
@@ -453,17 +453,17 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
         <head>
             <title>Carta Personalizada - ${artwork.title}</title>
             <style>
-                /* 🛑 FIX MARGIN EXTREMO: Reducción del margen de la página para dar espacio al marco */
-                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 13pt; margin: 5mm; color: #111; line-height: 1.8; } /* Nuevo: 5mm */
+                /* 🛑 FIX MARGIN EXTREMO V3: CERO margin en body para maximizar el área imprimible */
+                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 13pt; margin: 0mm; padding: 0; color: #111; line-height: 1.8; } 
                 
                 /* 🛑 CONTENEDOR CON MARCO DORADO PARA LA CARTA */
                 .letter-container { 
                     border: 1px solid #000; 
-                    outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (4px) */
-                    outline-offset: ${OUTLINE_OFFSET}; /* Espacio entre bordes (8px) */
+                    outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (5px) */
+                    outline-offset: ${OUTLINE_OFFSET}; /* Espacio entre bordes (10px) */
                     
-                    /* CORREGIDO: Padding interno uniforme para simetría */
-                    padding: 30mm 70px; 
+                    /* CORREGIDO: Padding interno aumentado para compensar el offset y centrar */
+                    padding: 40mm 80px; /* 🛑 AUMENTADO de 30mm 70px */
                     margin: 0 auto; 
                 }
 
@@ -499,6 +499,7 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                         border: 1px solid #000 !important; 
                         outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important; 
                         outline-offset: ${OUTLINE_OFFSET} !important;
+                        padding: 40mm 80px !important; /* Asegurar el padding */
                         
                         /* Forzar la impresión de colores y fondos en la carta también */
                         -webkit-print-color-adjust: exact !important; 
