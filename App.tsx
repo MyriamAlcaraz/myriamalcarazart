@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { PublicSite } from './components/PublicSite'; 
-import { ArtistDashboard } from './components/ArtistDashboard';
-import { DigitalCompanion } from './components/DigitalCompanion';
+import { PublicSite } from './PublicSite'; // Nota: La importación en tu código debe ser relativa: './components/PublicSite'
+import { ArtistDashboard } from './ArtistDashboard'; // Nota: La importación en tu código debe ser relativa: './components/ArtistDashboard'
+import { DigitalCompanion } from './DigitalCompanion'; // Nota: La importación en tu código debe ser relativa: './components/DigitalCompanion'
 import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield } from 'lucide-react'; 
 
 // --- CONFIGURACIÓN DE SEGURIDAD (PASSWORD) ---
@@ -12,7 +12,7 @@ const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false); 
   
-  // 🛑 NUEVO ESTADO: Para el segundo candado (acceso a ESTUDIO)
+  // 🛑 ESTADO: Para el segundo candado (acceso a ESTUDIO)
   const [showStudioLoginModal, setShowStudioLoginModal] = useState(false);
 
   // 'public' = Web en modo "Vista Previa" o "En Construcción"
@@ -29,9 +29,22 @@ const App: React.FC = () => {
     const savedAuth = localStorage.getItem('myriam_auth');
     if (savedAuth === 'true') {
         setIsAuthenticated(true);
+        // Si el usuario ya está autenticado, lo dejamos en la vista pública por defecto al cargar.
         setView('public'); 
     }
   }, []);
+  
+  // 🚀 SOLUCIÓN A LA VENTANA EN BLANCO: Cierra el modal solo cuando el cambio de vista a 'artist' ha sido confirmado.
+  useEffect(() => {
+    if (view === 'artist' && showStudioLoginModal) {
+      // Usamos un ligero timeout para darle tiempo a React de renderizar ArtistDashboard
+      const timer = setTimeout(() => {
+        setShowStudioLoginModal(false);
+      }, 50); 
+      
+      return () => clearTimeout(timer);
+    }
+  }, [view, showStudioLoginModal]); // Depende solo de la vista y si el modal está abierto.
 
   // Handler para el PRIMER candado (Acceso inicial a la web/Preview)
   const handleLogin = (e: React.FormEvent) => {
@@ -49,13 +62,13 @@ const App: React.FC = () => {
     }
   };
 
-  // 🛑 NUEVO HANDLER para el SEGUNDO candado (Acceso al ESTUDIO)
+  // 🛑 HANDLER para el SEGUNDO candado (Acceso al ESTUDIO)
   const handleStudioLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordInput === PASSWORD) {
-        setView('artist'); // Cambia a la vista de ESTUDIO
+        setView('artist'); // Cambia a la vista de ESTUDIO (esto dispara el useEffect de cierre)
         setError(false);
-        setShowStudioLoginModal(false); // Cierra el modal
+        // 🛑 Importante: NO cerramos el modal aquí, el useEffect lo hará.
         setPasswordInput(""); // Limpiar la clave
     } else {
         setError(true);
@@ -167,9 +180,14 @@ const App: React.FC = () => {
       
       {/* VISTA PRINCIPAL (Alterna entre PublicSite y ArtistDashboard) */}
       {view === 'public' ? (
-        <PublicSite onOpenCompanion={(id) => setSelectedCompanionId(id)} />
+        // Asumiendo que las props de PublicSite están en la raíz (ej: PublicSite.tsx)
+        <PublicSite 
+            onOpenCompanion={(id) => setSelectedCompanionId(id)} 
+            onOpenStudioLogin={() => setShowStudioLoginModal(true)}
+        />
       ) : (
-        <ArtistDashboard />
+        // Asumiendo que ArtistDashboard.tsx no necesita props específicas para el logout
+        <ArtistDashboard onLogout={handleLogout} /> 
       )}
 
       {/* 🛡️ SISTEMA DE NAVEGACIÓN PRIVADO (Solo el botón ESTUDIO/PREVIEW) */}
