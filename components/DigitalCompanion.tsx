@@ -1,10 +1,9 @@
 // ARCHIVO: ./components/DigitalCompanion.tsx - CÓDIGO FINAL Y CONECTADO
 
 import React, { useState, useRef } from 'react';
-// 🛑 ELIMINADA: La importación del componente Certificate ya no es necesaria aquí.
 import { Shield, Image as ImageIcon, ZoomIn, Printer, X, AlertTriangle, Mail, Lock, CheckCircle } from 'lucide-react'; 
 import { ARTWORKS, ARTIST_INFO } from '../constants';
-// No importar Certificate.
+// 🛑 IMPORTANTE: Ya no se importa ni se usa el componente Certificate.
 
 interface DigitalCompanionProps {
   artworkId: string | null;
@@ -20,12 +19,11 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     onClose,
     showCertificateAccess, 
     initialMode = 'lupa',
-    onOpenCertificateDemo // 🛑 Nuevo prop
+    onOpenCertificateDemo // Prop destructurada y utilizada
 }) => {
   const artwork = ARTWORKS.find(a => a.id === artworkId) || ARTWORKS[0];
   
-  // 🛑 ELIMINADA: Ya no se necesita el estado interno del certificado. Lo gestiona App.tsx.
-  // const [showCertificate, setShowCertificate] = useState(initialMode === 'certificate');
+  // 🛑 ESTADO ELIMINADO: Ya no se necesita el estado interno del certificado.
   
   const [showZoom, setShowZoom] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
@@ -59,8 +57,6 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
   // ----------------------------------------
 
 
-  // 🛑 ELIMINADA: La lógica condicional del renderizado de Certificado ya no está aquí.
-  // Se renderiza directamente el contenido del Companion.
   return (
     <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-xl shadow-2xl max-w-5xl w-full h-[90vh] flex flex-col relative animate-scale-in">
@@ -129,7 +125,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                         
                         {/* 1. Botón de Certificado (Ahora llama a onOpenCertificateDemo) */}
                         <button
-                            onClick={onOpenCertificateDemo} // 🛑 CORRECCIÓN CLAVE
+                            onClick={onOpenCertificateDemo} // 🛑 LLAMADA CLAVE
                             className="w-full flex items-center justify-center gap-2 bg-slate-800 text-white p-3 rounded font-bold hover:bg-gold-600 transition-colors shadow-md"
                             title="Abre la simulación del certificado de autenticidad final."
                         >
@@ -153,8 +149,6 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                     </div>
                 </div>
             </div>
-
-            {/* 🛑 ELIMINADA: El modal del certificado YA NO se renderiza aquí. */}
 
         </div>
     </div>
