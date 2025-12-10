@@ -150,7 +150,7 @@ const getSeriesText = (artwork: Artwork) => {
 
 /**
  * Genera el HTML del CERTIFICADO. 
- * 🛑 FIX EXTREMO BORDER V8: Se ajusta el padding vertical interno a 7.5mm para simetría.
+ * 🛑 FIX EXTREMO BORDER V8: Se mantiene el padding vertical interno a 7.5mm para simetría.
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -200,7 +200,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (5px) */
                     outline-offset: ${OUTLINE_OFFSET}; /* Crea el espacio entre el borde fino y el outline grueso (10px) */
                     
-                    /* 🛑 FIX V8: Padding ajustado a 7.5mm verticalmente para SIMETRÍA. */
+                    /* 🛑 FIX V8 (Mantenido): Padding ajustado a 7.5mm verticalmente para SIMETRÍA. */
                     padding: 7.5mm 35px 7.5mm 35px; 
                 }
                 .header { 
@@ -431,7 +431,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
 
 /**
  * Genera el HTML de la CARTA. 
- * 🛑 FIX EXTREMO BORDER V8: Se reduce el padding superior interno a 5mm para subir el contenido y liberar la zona inferior.
+ * 🛑 FIX EXTREMO BORDER V9: Se aumenta el padding inferior a 80mm para subir el contenido y liberar la zona inferior.
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -473,8 +473,8 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                     outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (5px) */
                     outline-offset: ${OUTLINE_OFFSET}; /* Espacio entre bordes (10px) */
                     
-                    /* 🛑 FIX V8: Padding ajustado para SUBIR el contenido (5mm top, 40px side, 60mm bottom) */
-                    padding: 5mm 40px 60mm 40px; 
+                    /* 🛑 FIX V9: Padding ajustado para SUBIR el contenido (5mm top, 40px side, 80mm bottom) */
+                    padding: 5mm 40px 80mm 40px; /* **CAMBIO: 80mm inferior** */
                 }
 
                 .top-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
@@ -504,14 +504,14 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                 @media print { 
                     body { margin: 0; padding: 0; } 
                     
-                    /* 🛑 MANTENER FIX BORDE CARTA V4 y aplicar V8 */
+                    /* 🛑 MANTENER FIX BORDE CARTA V4 y aplicar V9 */
                     .letter-container { 
                         margin: 15mm auto !important;
                         width: 180mm !important; 
                         border: 1px solid #000 !important; 
                         outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important; 
                         outline-offset: ${OUTLINE_OFFSET} !important;
-                        padding: 5mm 40px 60mm 40px !important; /* 🛑 FIX V8 (5mm top) */
+                        padding: 5mm 40px 80mm 40px !important; /* 🛑 FIX V9 (80mm bottom) */
                         
                         /* Forzar la impresión de colores y fondos en la carta también */
                         -webkit-print-color-adjust: exact !important; 
