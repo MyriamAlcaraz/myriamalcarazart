@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ARTIST_INFO, ARTWORKS, PRICING_TABLE } from '../constants';
-import { Mail, Instagram, ExternalLink, Eye, ChevronRight } from 'lucide-react'; 
+import { Mail, Instagram, ExternalLink, Eye, ChevronRight, Image as ImageIcon, Briefcase, ShieldCheck } from 'lucide-react'; 
 
 interface PublicSiteProps {
   onOpenCompanion: (id: string) => void;
@@ -87,7 +87,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
         )}
 
         {/* ========================================= */}
-        {/* BIO & TRAYECTORIA TAB (CON FOTO MÁXIMA Y ENLACE DE WEB ELIMINADO) */}
+        {/* BIO & TRAYECTORIA TAB */}
         {/* ========================================= */}
         {activeTab === 'bio' && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -99,7 +99,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
               <h3 className="text-xl font-semibold mb-3">Declaración del Artista</h3>
               <p className="text-slate-700 leading-relaxed mb-8">{ARTIST_INFO.statement}</p>
               
-              {/* Contacto Rápido (Se ha quitado 'Web Profesional') */}
+              {/* Contacto Rápido */}
               <div className="space-y-3">
                 <a href={`mailto:${ARTIST_INFO.email}`} className="flex items-center gap-2 text-slate-600 hover:text-gold-600 transition-colors text-sm">
                   <Mail size={16} /> {ARTIST_INFO.email}
@@ -157,57 +157,89 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
         )}
 
         {/* ========================================= */}
-        {/* PRECIOS TAB */}
+        {/* COLECCIONISMO & PRECIOS TAB (REDESIGN) */}
         {/* ========================================= */}
         {activeTab === 'prices' && (
-          <div className="flex flex-col md:flex-row gap-12">
+          <div className="space-y-12">
             
-            {/* Commissions Info */}
-            <div className="md:w-1/2">
-              <h2 className="font-serif text-4xl font-bold text-slate-900 mb-6">Encargos Personalizados</h2>
-              <p className="text-slate-700 leading-relaxed mb-4">
-                Estoy disponible para realizar obras por encargo, adaptando mi estilo figurativo a su visión. El proceso incluye una consulta inicial, presentación de bocetos digitales y un cronograma de trabajo claro, asegurando la máxima fidelidad al resultado deseado.
+            {/* Introducción de Lujo */}
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="font-serif text-5xl font-bold text-slate-900 mb-4">El Arte de Coleccionar</h2>
+              <p className="text-xl font-serif italic text-slate-600 border-b border-gold-500 pb-4">
+                "Arte con alma y sofisticación para tu espacio."
               </p>
-              <p className="text-sm text-slate-500 italic">
-                El precio final depende de la complejidad del sujeto, el detalle y los materiales específicos solicitados.
+              <p className="text-slate-700 leading-relaxed mt-6">
+                Llevar una pieza de arte a tu hogar o espacio de trabajo es una decisión íntima y transformadora. 
+                Para adaptarme a tu visión, proceso y presupuesto, ofrezco tres caminos exclusivos para que inicies o amplíes tu colección.
               </p>
-              
-              <a 
-                href={`mailto:${ARTIST_INFO.email}`} 
-                className="mt-8 inline-flex items-center gap-2 bg-gold-500 text-white px-8 py-3 hover:bg-gold-600 transition-colors uppercase tracking-widest text-xs font-bold shadow-md"
-              >
-                <Mail size={16} /> Solicitar Propuesta
-              </a>
             </div>
 
-            {/* Pricing Table */}
-            <div className="md:w-1/2 bg-white p-6 shadow-xl border border-stone-100">
-              <h3 className="font-serif text-2xl font-bold text-slate-900 mb-6 border-b pb-2">Tarifa Base por Formato (Óleo)</h3>
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-stone-200 text-sm uppercase tracking-wider text-slate-500">
-                    <th className="py-2">Dimensiones (cm)</th>
-                    <th className="py-2 text-right">Precio Base (sin IVA)</th>
-                    <th className="py-2 text-right">Precio Final (con IVA)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {PRICING_TABLE.map((row, index) => (
-                    <tr key={index} className="border-b border-stone-100 hover:bg-stone-50 transition-colors">
-                      <td className="py-3 font-semibold">{row.dimensions} cm</td>
-                      <td className="py-3 text-right">{row.priceBase.toLocaleString('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 })}</td>
-                      <td className="py-3 text-right font-bold text-gold-600">{row.priceWithTax.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            {/* Opciones de Coleccionismo (Grid de 3 Columnas) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              
+              {/* Opción 1: Obra Original Única */}
+              <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 flex flex-col items-center text-center">
+                <ImageIcon size={36} className="text-gold-600 mb-4" />
+                <h3 className="font-serif text-2xl font-bold text-slate-900 mb-3">1. Obra Original Única</h3>
+                <p className="text-slate-600 mb-4 text-sm leading-relaxed flex-grow">
+                  Explora mi galería de obras disponibles en el **PORTFOLIO**. Cada pieza que ves es una creación única, pintada al óleo sobre lienzo o tabla, lista para dar un toque de elegancia y profundidad a tu colección.
+                </p>
+                <button
+                  onClick={() => setActiveTab('portfolio')}
+                  className="mt-4 bg-slate-800 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors"
+                >
+                  Explorar Portafolio
+                </button>
+              </div>
+
+              {/* Opción 2: Reproducción de Lujo Giclée */}
+              <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 flex flex-col items-center text-center">
+                <ShieldCheck size={36} className="text-gold-600 mb-4" />
+                <h3 className="font-serif text-2xl font-bold text-slate-900 mb-3">2. Reproducción Lujo Giclée</h3>
+                <p className="text-slate-600 mb-4 text-sm leading-relaxed">
+                  ¿Buscas una opción más accesible o un formato específico? Ofrezco copias de museo Giclée (impresión de altísima fidelidad). Cada reproducción incluye un **Certificado de Autenticidad** original, numerado y firmado.
+                </p>
+                {/* Botón de Teasing para Certificado Pixelado */}
+                <button
+                  onClick={() => onOpenCompanion(ARTWORKS[0].id)} // Usamos A001 como ejemplo para la demo
+                  className="mt-4 bg-gold-500 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors flex items-center gap-2"
+                >
+                  <Eye size={16}/> Ver Demo Certificado
+                </button>
+              </div>
+
+              {/* Opción 3: Encargo Personalizado (Creación desde Cero) */}
+              <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 flex flex-col items-center text-center">
+                <Briefcase size={36} className="text-gold-600 mb-4" />
+                <h3 className="font-serif text-2xl font-bold text-slate-900 mb-3">3. Encargo Personalizado</h3>
+                <p className="text-slate-600 mb-4 text-sm leading-relaxed flex-grow">
+                  Partimos de tus fotografías o ideas más queridas para crear una obra única, **pintada desde cero**. El precio se determina antes de comenzar, tras una consulta personal sobre el formato y la complejidad.
+                </p>
+                <a 
+                  href={`mailto:${ARTIST_INFO.email}`} 
+                  className="mt-4 bg-slate-800 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors"
+                >
+                  Solicitar Consulta
+                </a>
+              </div>
+            </div>
+            
+            {/* Notas del Encargo (Sustituye a la tabla) */}
+            <div className="max-w-4xl mx-auto pt-6 border-t border-stone-300">
+                <h3 className="font-serif text-2xl font-bold text-slate-900 mb-4">Detalles sobre Encargos (Opción 3)</h3>
+                <ul className="list-disc pl-5 space-y-3 text-slate-700">
+                    <li>**Valor Mínimo:** Los proyectos de encargo original (óleo/acrílico) tienen un valor mínimo de **1.000€**, dado que reservo tiempo en mi agenda profesional para su creación.</li>
+                    <li>**Formatos:** El tamaño mínimo de lienzo es de **40x40 cm** y el máximo que acepto actualmente es de **100x81 cm**.</li>
+                    <li>**Proceso:** El proceso comienza con la revisión de tus imágenes de referencia y la definición de la composición, seguido de la aprobación de un presupuesto cerrado antes de iniciar la pintura.</li>
+                    <li>**Logística Giclée:** Si estás interesado en la Opción 2 (Reproducción Giclée), por favor, **solicítala directamente por correo electrónico** indicando el título de la obra que deseas.</li>
+                </ul>
             </div>
 
           </div>
         )}
 
-        {/* Cierre - CTA Final */}
-        {activeTab !== 'bio' && (
+        {/* Cierre - CTA Final (Solo para Portfolio y Bio) */}
+        {activeTab !== 'prices' && (
           <div className="mt-16 bg-slate-800 p-12 text-center">
             <div className="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="text-left">
