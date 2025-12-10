@@ -22,10 +22,10 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
   const [zoomStyle, setZoomStyle] = useState({});
   const imgContainerRef = useRef<HTMLDivElement>(null);
 
-  // 🛑 MODIFICACIÓN: Lógica para el Año de Creación por defecto (2025) sin etiqueta
+  // Lógica para el Año de Creación por defecto (2025) sin etiqueta
   const displayYear = artwork.year && artwork.year.toString().trim() !== '' 
                       ? artwork.year 
-                      : '2025'; // Solo se muestra '2025' si no hay dato.
+                      : '2025'; 
   
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!imgContainerRef.current) return;
@@ -100,11 +100,11 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
       {/* Contenedor Principal */}
       <div className="bg-white rounded-xl shadow-2xl flex flex-col lg:flex-row max-w-5xl w-full max-h-[95vh] overflow-hidden">
         
-        {/* Lado Izquierdo: Imagen y Lupa */}
-        <div className="lg:w-1/2 relative bg-slate-100 flex items-center justify-center p-4">
+        {/* Lado Izquierdo: Imagen y Lupa 🛑 MODIFICADO: Añadido flex-grow y height/max-height ajustados */}
+        <div className="lg:w-1/2 relative bg-slate-100 flex items-center justify-center p-4 flex-grow h-full max-h-full">
           <div 
             ref={imgContainerRef} 
-            className="relative w-full h-auto max-h-[70vh] cursor-none overflow-hidden group"
+            className="relative w-full h-full cursor-none overflow-hidden group" // 🛑 MODIFICACIÓN: h-full en lugar de max-h-[70vh]
             onMouseMove={handleMouseMove} 
             onMouseEnter={() => setShowZoom(true)} 
             onMouseLeave={() => setShowZoom(false)} 
@@ -112,7 +112,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
             <img 
               src={artwork.image} 
               alt={artwork.title} 
-              className="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-80"
+              className="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-80" // 🛑 MODIFICACIÓN: h-full
             />
             
             {/* 🛑 LUPA (Magnifier) */}
@@ -138,7 +138,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
 
           <div className="space-y-4 border-y border-stone-200 py-6 mb-8">
             <p className="text-slate-600"><span className="font-bold text-slate-800">Dimensiones:</span> {artwork.dimensions}</p>
-            {/* 🛑 USO DEL AÑO DE CREACIÓN (SOLO EL DATO) */}
+            {/* USO DEL AÑO DE CREACIÓN (SOLO EL DATO) */}
             <p className="text-slate-600"><span className="font-bold text-slate-800">Año:</span> {displayYear}</p>
             <p className="text-slate-600"><span className="font-bold text-slate-800">Disponibilidad:</span> {artwork.status === 'available' ? 'Disponible para colección' : 'En colección privada (Posible Giclée)'}</p>
           </div>
