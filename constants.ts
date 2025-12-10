@@ -11,7 +11,7 @@ export const ARTIST_INFO = {
   statement: "Trabajo la figura humana desde una mirada íntima y contemporánea. Busco un equilibrio preciso entre técnica y emoción, donde la luz y el color construyen atmósferas que invitan a la contemplación. Cada obra es un diálogo silencioso con el tiempo.",
   
   // =======================================================
-  // 🛑 DATOS DE TRAYECTORIA Y PUBLICACIONES - ACTUALIZADO
+  // 🛑 DATOS DE TRAYECTORIA Y PUBLICACIONES - CORREGIDO
   // =======================================================
 
   accolades: {
@@ -28,7 +28,7 @@ export const ARTIST_INFO = {
   },
 
   publications: [
-      'Obras incluidas en la Guía Leonardo 2025: “Ana y la Habana”, “Laura en el Crepúsculo”, “Pablo en Cascada”, “Sara bajo farola” y “Sara en marquesina”.',
+      'Obras incluidas en la Guía Leonardo 2025: "Ana y la Habana", "Laura en el Crepúsculo", "Pablo en Cascada", "Sara bajo farola" y "Sara en marquesina".',
       'Anuarios ModPortrait 2022 y 2024.',
       'Participación en la guía virtual de Galería Arte Libre, ModPortrait 2025: https://www.artelibre-store.com/guialeonardo-2025/listado-participantes-2025/',
   ]
@@ -145,102 +145,4 @@ export const ARTWORKS: Artwork[] = [
     dimensions: '55x46 cm', 
     technique: 'Óleo sobre tela', 
     price: 2500, 
-    image: '/obras/OBRA_11.jpg', 
-    description: 'Finalista del ModPortrait 2022 | Incluida en la Guía de Arte y Artistas Leonardo 2025.', 
-    status: 'available' 
-  },
-  { 
-    id: '12', 
-    title: 'Pablo en Cascada II', 
-    dimensions: '80x65 cm', 
-    technique: 'Óleo sobre tela', 
-    price: 2000, 
-    image: '/obras/OBRA_12.jpg', 
-    description: 'Variante de la obra finalista en ModPortrait 2022 (Pablo en Cascada I).', 
-    status: 'available' 
-  },
-  { 
-    id: '13', 
-    title: 'Niños en playa valenciana', 
-    dimensions: '80x60 cm', 
-    technique: 'Óleo sobre tela', 
-    price: 2500, 
-    image: '/obras/OBRA_13.jpg', 
-    description: 'Luz valenciana inconfundible.', 
-    status: 'available' 
-  },
-  { 
-    id: '14', 
-    title: 'Buceando', 
-    dimensions: '100x65 cm', 
-    technique: 'Óleo sobre tela', 
-    price: 2500, 
-    image: '/obras/OBRA_14.jpg', 
-    description: 'Visión subacuática.', 
-    status: 'available' 
-  },
-  { 
-    id: '15', 
-    title: 'Niños con capucha', 
-    dimensions: '100x81 cm', 
-    technique: 'Óleo sobre tela', 
-    price: 3000, 
-    image: '/obras/OBRA_15.jpg', 
-    description: 'Juego de volúmenes y texturas.', 
-    status: 'available' 
-  },
-  { 
-    id: '16', 
-    title: 'Niños en playa rocosa', 
-    dimensions: '55x46 cm', 
-    technique: 'Óleo sobre lienzo', 
-    price: 2000, 
-    image: '/obras/OBRA_16.jpg', 
-    description: 'Pincelada suelta y vibrante.', 
-    status: 'available' 
-  },
-  { 
-    id: '17', 
-    title: 'Jilguero en charca del Botánico', 
-    dimensions: '46x38 cm', 
-    technique: 'Óleo sobre lienzo', 
-    price: 0, 
-    image: '/obras/OBRA_17.jpg', 
-    description: 'Obra seleccionada para Exposición Certamen Pequeño Formato en Centro Cultural Principe de Asturias-Madrid en octubre de 2025.', 
-    status: 'sold' 
-  },
-  { 
-    id: '18', 
-    title: 'Porteadores', 
-    dimensions: '55x46 cm', 
-    technique: 'Óleo sobre lienzo', 
-    price: 1500, 
-    image: '/obras/OBRA_18.jpg', 
-    description: 'Estudio de Rubens.', 
-    status: 'available' 
-  },
-  { 
-    id: '19', 
-    title: 'Carpe Diem', 
-    dimensions: '140x50 cm', 
-    technique: 'Óleo sobre tela', 
-    price: 1500, 
-    image: '/obras/OBRA_19.jpg', 
-    description: 'Reflexión sobre lo efímero.', 
-    status: 'available' 
-  },
-  { 
-    id: '20', 
-    title: 'Más que amigos', 
-    dimensions: '100x60 cm', 
-    technique: 'Óleo sobre tela', 
-    price: 1500, 
-    image: '/obras/OBRA_20.jpg', 
-    description: 'Coreografía del deseo.', 
-    status: 'available' 
-  }
-];
-
-export const PRICING_TABLE = [
-  { dimensions: '55x46', priceBase: 632, priceWithTax: 764.72 },
-  { dimensions: '60x50', priceBase: 7
+    image: '/obras/OBRA_
