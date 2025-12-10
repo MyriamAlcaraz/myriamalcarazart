@@ -140,7 +140,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
               <div>
                 <h3 className="text-2xl font-serif font-semibold text-gold-600 mb-4 flex items-center gap-2">
                     <ChevronRight size={20} /> Concursos y Premios
-                </h3>
+                </h3 >
                 <AccoladeList items={ARTIST_INFO.accolades.concursos} />
               </div>
               
@@ -224,16 +224,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
               </div>
             </div>
             
-            {/* Notas del Encargo (Sustituye a la tabla) */}
-            <div className="max-w-4xl mx-auto pt-6 border-t border-stone-300">
-                <h3 className="font-serif text-2xl font-bold text-slate-900 mb-4">Detalles sobre Encargos (Opción 3)</h3>
-                <ul className="list-disc pl-5 space-y-3 text-slate-700">
-                    <li>**Valor Mínimo:** Los proyectos de encargo original (óleo/acrílico) tienen un valor mínimo de **1.000€**, dado que reservo tiempo en mi agenda profesional para su creación.</li>
-                    <li>**Formatos:** El tamaño mínimo de lienzo es de **40x40 cm** y el máximo que acepto actualmente es de **100x81 cm**.</li>
-                    <li>**Proceso:** El proceso comienza con la revisión de tus imágenes de referencia y la definición de la composición, seguido de la aprobación de un presupuesto cerrado antes de iniciar la pintura.</li>
-                    <li>**Logística Giclée:** Si estás interesado en la Opción 2 (Reproducción Giclée), por favor, **solicítala directamente por correo electrónico** indicando el título de la obra que deseas.</li>
-                </ul>
-            </div>
+            {/* 🛑 SECCIÓN DE DETALLES DE ENCARGOS ELIMINADA */}
 
           </div>
         )}
