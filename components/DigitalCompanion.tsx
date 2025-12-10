@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-// 🛑 Aseguramos que 'Mail' esté importado (soluciona la pantalla en blanco)
 import { Shield, Image as ImageIcon, ZoomIn, Printer, X, AlertTriangle, Mail } from 'lucide-react'; 
 import { ARTWORKS, ARTIST_INFO } from '../constants';
 import { Certificate } from './Certificate';
@@ -23,10 +22,10 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
   const [zoomStyle, setZoomStyle] = useState({});
   const imgContainerRef = useRef<HTMLDivElement>(null);
 
-  // 🛑 Lógica para el Año de Creación por defecto (2025)
+  // 🛑 MODIFICACIÓN: Lógica para el Año de Creación por defecto (2025) sin etiqueta
   const displayYear = artwork.year && artwork.year.toString().trim() !== '' 
                       ? artwork.year 
-                      : '2025 (Por defecto)';
+                      : '2025'; // Solo se muestra '2025' si no hay dato.
   
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!imgContainerRef.current) return;
@@ -38,7 +37,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     if(x < 0) x = 0; if(x > width) x = width;
     if(y < 0) y = 0; if(y > height) y = height;
 
-    const zoomFactor = 3.5; // 🛑 MODIFICACIÓN: Incremento de factor de zoom a 3.5x
+    const zoomFactor = 3.5; // Factor de zoom (Mantenido a 3.5x)
     const backgroundPositionX = (x / width) * 100;
     const backgroundPositionY = (y / height) * 100;
 
@@ -139,7 +138,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
 
           <div className="space-y-4 border-y border-stone-200 py-6 mb-8">
             <p className="text-slate-600"><span className="font-bold text-slate-800">Dimensiones:</span> {artwork.dimensions}</p>
-            {/* 🛑 USO DEL AÑO POR DEFECTO */}
+            {/* 🛑 USO DEL AÑO DE CREACIÓN (SOLO EL DATO) */}
             <p className="text-slate-600"><span className="font-bold text-slate-800">Año:</span> {displayYear}</p>
             <p className="text-slate-600"><span className="font-bold text-slate-800">Disponibilidad:</span> {artwork.status === 'available' ? 'Disponible para colección' : 'En colección privada (Posible Giclée)'}</p>
           </div>
