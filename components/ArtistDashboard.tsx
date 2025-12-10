@@ -93,6 +93,22 @@ const REAL_ARTWORKS: Artwork[] = ARTWORKS_FOR_INITIALIZATION.map((art, index) =>
     isOpenSeries: false, // 🛑 NUEVO: Por defecto no es serie abierta
 }));
 
+// 🛑 FIX: Constante para representar una obra nueva (ID 0)
+const NEW_WORK_PLACEHOLDER: Artwork = {
+    id: 0, 
+    title: '',
+    certificationDate: new Date().toISOString().substring(0, 10),
+    type: 'PT', 
+    seriesIndex: null, 
+    seriesTotal: null, 
+    code: null, 
+    status: 'PENDIENTE', 
+    image: '/obras/placeholder-work.jpg', 
+    dimensions: '', 
+    technique: '', 
+    originalIndex: -1, 
+    isOpenSeries: false, 
+};
 
 // ---------------------------------------------------------
 // 🚀 FUNCIÓN CENTRAL: CODIFICACIÓN INTELIGENTE
@@ -104,7 +120,6 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
     const month = dateParts[1];
     const dateCode = `${yearShort}${month}`;
 
-    let seriesCode = '';
     // Si es serie limitada, usa el formato Index/Total al final
     if (artworkToCode.seriesIndex !== null && artworkToCode.seriesTotal !== null && !artworkToCode.isOpenSeries) {
         const indexFmtd = String(artworkToCode.seriesIndex).padStart(2, '0');
@@ -135,21 +150,22 @@ const getSeriesText = (artwork: Artwork) => {
 
 /**
  * Genera el HTML del CERTIFICADO. 
- * 🛑 CORREGIDO: 
- * 1. Tamaño de la foto para que quepa en un DIN A4 (máx 1 página).
- * 2. Propiedad CSS para forzar la impresión del color dorado y el doble borde.
- * 3. ULTERIORES AJUSTES DE PADDING Y MARGIN PARA EVITAR EL CORTE VERTICAL
+ * 🛑 FIX BORDER: Ajustes de margin y color dorado para mejor rendering en PDF.
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const creationMonthAndYear = new Date(artwork.certificationDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
+    
+    // FIX DE COLOR Y ESPACIO: Uso de un tono de oro más oscuro (#b8860b) y más offset.
+    const GOLD_COLOR = "#b8860b"; 
+    const OUTLINE_OFFSET = "6px"; 
 
     // Diseño de Iconos y Estilos del Footer
     const contactFooterHtml = `
         <div class="contact-footer">
             <span class="contact-item">
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 0 4 10 15.3 15.3 0 0 0-4 10zM22 12A15.3 15.3 0 0 0 18 8m-4-4a15.3 15.3 0 0 0-4 10 15.3 15.3 0 0 0 4 10"/></svg>
-                <a href="${settings.website}" target="_blank">${settings.website.replace('https://', '')}</a>
+                <a href="${settings.website}" target="_blank">${settings.website.replace('https://', '').replace('http://', '')}</a>
             </span>
             <span class="contact-item">
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -169,24 +185,22 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
         <head>
             <title>Certificado - ${artwork.title}</title>
             <style>
-                /* Estilos Fieles al Borrador: Tipografía Serifa, Doble Borde, Centro */
-                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 12pt; margin: 20mm; color: #111; }
+                /* 🛑 FIX MARGIN: Reducción del margen de la página para dar espacio al marco */
+                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 12pt; margin: 10mm; color: #111; }
                 .cert-container { 
                     /* Borde fino (1px negro) + Outline grueso (3px dorado) */
                     border: 1px solid #000; 
-                    outline: 3px solid #d4af37; /* Marco grueso dorado */
-                    outline-offset: 5px; /* Crea el espacio entre el borde fino y el outline grueso */
-                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de padding vertical de 30px a 25px */
+                    outline: 3px solid ${GOLD_COLOR}; /* Marco grueso dorado */
+                    outline-offset: ${OUTLINE_OFFSET}; /* Crea el espacio entre el borde fino y el outline grueso */
                     padding: 25px; 
                     max-width: 550px; 
                     margin: 0 auto;
                 }
                 .header { 
                     text-align: center; 
-                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de margin-bottom de 20px a 15px */
                     padding-bottom: 20px; 
                     border-bottom: 1px solid #ddd;
-                    margin-bottom: 15px; /* MODIFICADO: 20px -> 15px */
+                    margin-bottom: 15px; 
                 }
                 .logo { 
                     max-height: 80px; 
@@ -207,15 +221,14 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     margin: 0; 
                     font-weight: 300; 
                     letter-spacing: 5px; 
-                    color: #d4af37;
+                    color: ${GOLD_COLOR};
                     text-transform: uppercase;
                 }
                 .fixed-text {
                     text-align: center;
                     font-size: 10pt;
                     color: #333;
-                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de margin vertical de 20px a 15px */
-                    margin: 15px 0; /* MODIFICADO: 20px 0 -> 15px 0 */
+                    margin: 15px 0; 
                     line-height: 1.5;
                 }
                 .fixed-text strong {
@@ -225,7 +238,6 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     margin-top: 5px;
                 }
                 .artwork-image-section {
-                    /* 🛑 CORRECCIÓN PÁGINA: Reducido el tamaño máximo de la foto para que encaje en DINA4 */
                     width: 70%; 
                     max-width: 160px; 
                     max-height: 180px; 
@@ -243,7 +255,6 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                 }
                 .details-grid {
                     width: 90%;
-                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de margin-top de 20px a 15px */
                     margin: 15px auto 30px auto;
                     font-size: 11pt;
                 }
@@ -271,7 +282,6 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     font-family: 'Courier New', monospace; 
                 }
                 
-                /* Estilos del Footer de Contacto (Iconos y Datos) */
                 .contact-footer {
                     font-size: 9pt;
                     text-align: center;
@@ -293,20 +303,15 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     text-decoration: none;
                     transition: color 0.2s;
                 }
-                .contact-item a:hover {
-                    color: #000;
-                }
                 .contact-item svg {
                     flex-shrink: 0;
                 }
 
-                /* Bloque de Firma */
                 .signature-row {
                     display: flex;
                     justify-content: space-between;
                     align-items: flex-start; 
-                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de margin-top de 30px a 20px */
-                    margin-top: 20px; /* MODIFICADO: 30px -> 20px */
+                    margin-top: 20px; 
                     padding-top: 20px;
                 }
                 .date-col {
@@ -315,7 +320,6 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     font-size: 10pt;
                     color: #333;
                 }
-                /* ALINEACIÓN DERECHA PARA LA FIRMA */
                 .signature-col {
                     flex-basis: 45%; 
                     text-align: right; 
@@ -338,13 +342,13 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                         box-shadow: none; 
                         /* 🛑 FIX BORDER/OUTLINE: Re-declarar el borde para asegurar visibilidad en PDF */
                         border: 1px solid #000 !important; 
-                        outline: 3px solid #d4af37 !important; 
-                        outline-offset: 5px !important;
+                        outline: 3px solid ${GOLD_COLOR} !important; 
+                        outline-offset: ${OUTLINE_OFFSET} !important;
                         
                         max-width: 100%; 
-                        padding: 25px !important; /* Forzar el padding reducido */
+                        padding: 25px !important; 
                         
-                        /* 🛑 FIX BORDER/COLOR: Forzar la impresión de colores y fondos */
+                        /* 🛑 FORZAR COLORES */
                         -webkit-print-color-adjust: exact !important; 
                         print-color-adjust: exact !important;
                     } 
@@ -420,19 +424,17 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
 
 /**
  * Genera el HTML de la CARTA. 
- * 🛑 MODIFICADO: 
- * 1. Marco dorado (elegancia).
- * 2. Posición de texto (bajarlo).
- * 3. Logo más grande.
- * 4. Saludo de cierre a la izquierda.
- * 5. ⚠️ CORREGIDO: Simetría en el marco (T/B/L/R).
- * 6. 🛑 FIX FINAL: Añadir propiedades de borde/outline en @media print
+ * 🛑 FIX BORDER: Ajustes de margin y color dorado para mejor rendering en PDF.
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     
     const seriesText = getSeriesText(artwork);
     
+    // FIX DE COLOR Y ESPACIO: Uso de un tono de oro más oscuro (#b8860b) y más offset.
+    const GOLD_COLOR = "#b8860b"; 
+    const OUTLINE_OFFSET = "6px"; 
+
     // Referencia de la carta para reflejar la edición abierta
     let seriesReference = '';
     if (artwork.seriesIndex !== null) {
@@ -449,14 +451,14 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
         <head>
             <title>Carta Personalizada - ${artwork.title}</title>
             <style>
-                /* MANTENEMOS MARGIN: 20MM en BODY para el espacio entre el borde del papel y el marco dorado */
-                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 13pt; margin: 20mm; color: #111; line-height: 1.8; }
+                /* 🛑 FIX MARGIN: Reducción del margen de la página para dar espacio al marco */
+                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 13pt; margin: 10mm; color: #111; line-height: 1.8; }
                 
                 /* 🛑 CONTENEDOR CON MARCO DORADO PARA LA CARTA */
                 .letter-container { 
                     border: 1px solid #000; 
-                    outline: 3px solid #d4af37; /* Marco grueso dorado */
-                    outline-offset: 5px; /* Espacio entre bordes */
+                    outline: 3px solid ${GOLD_COLOR}; /* Marco grueso dorado */
+                    outline-offset: ${OUTLINE_OFFSET}; /* Espacio entre bordes */
                     
                     /* CORREGIDO: Padding interno uniforme para simetría */
                     padding: 30mm 70px; 
@@ -493,8 +495,8 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                     /* 🛑 FIX BORDE CARTA: Duplicar propiedades de borde para asegurar la impresión */
                     .letter-container { 
                         border: 1px solid #000 !important; 
-                        outline: 3px solid #d4af37 !important; 
-                        outline-offset: 5px !important;
+                        outline: 3px solid ${GOLD_COLOR} !important; 
+                        outline-offset: ${OUTLINE_OFFSET} !important;
                         
                         /* Forzar la impresión de colores y fondos en la carta también */
                         -webkit-print-color-adjust: exact !important; 
@@ -677,7 +679,6 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
 // =========================================================
 
 interface ArtworkFormProps {
-    // 🛑 Modificación: Ahora se acepta el código, estado e isOpenSeries
     onSave: (artwork: Omit<Artwork, 'id' | 'originalIndex'>, idToUpdate: number | null) => void;
     artworkToManage: Artwork | null;
     onCancel: () => void;
@@ -686,15 +687,16 @@ interface ArtworkFormProps {
 const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToManage, onCancel }) => {
     
     // Estado interno del formulario
-    const isEditing = artworkToManage && artworkToManage.id > 0; 
-    const isDuplicating = artworkToManage && artworkToManage.id === -1; 
+    // isEditing será true solo si el ID es > 0. (id: 0 es NEW, id: -1 es DUPLICATING)
+    const isEditing = artworkToManage ? artworkToManage.id > 0 : false; 
+    const isDuplicating = artworkToManage ? artworkToManage.id === -1 : false; 
+    const isAddingNew = artworkToManage ? artworkToManage.id === 0 : false;
 
     const [title, setTitle] = useState('');
     const [certificationDate, setCertificationDate] = useState(new Date().toISOString().substring(0, 10));
     
-    // 🛑 Modificación de estados para la gestión de Ediciones
-    const [isSeries, setIsSeries] = useState(false); // Para Edición Limitada
-    const [isOpenSeries, setIsOpenSeries] = useState(false); // 🛑 NUEVO: Para Edición Seriada Abierta (Giclée)
+    const [isSeries, setIsSeries] = useState(false); 
+    const [isOpenSeries, setIsOpenSeries] = useState(false); 
     const [seriesIndex, setSeriesIndex] = useState<number | ''>('');
     const [seriesTotal, setSeriesTotal] = useState<number | ''>('');
     
@@ -706,39 +708,43 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
     // Hook para PRE-RELLENAR el formulario (al añadir, duplicar o editar)
     useEffect(() => {
         if (artworkToManage) {
+            
+            // Si es nueva obra (id: 0), cargamos los valores por defecto del placeholder
+            if (isAddingNew) {
+                setTitle('');
+                setCertificationDate(new Date().toISOString().substring(0, 10));
+                setSeriesIndex('');
+                setSeriesTotal('');
+                setIsSeries(false);
+                setIsOpenSeries(false);
+                setImagePath(NEW_WORK_PLACEHOLDER.image); // placeholder image
+                setDimensions('');
+                setTechnique('');
+                setManualCode('');
+                return;
+            }
+            
+            // Lógica de carga para Edición (id > 0) o Duplicación (id = -1)
             setTitle(artworkToManage.title);
             setCertificationDate(isDuplicating ? new Date().toISOString().substring(0, 10) : artworkToManage.certificationDate); 
             
-            // Lógica de carga de Edición
-            setIsOpenSeries(artworkToManage.isOpenSeries); // 🛑 NUEVO
+            setIsOpenSeries(artworkToManage.isOpenSeries); 
             
             const isLimitedSeries = artworkToManage.seriesIndex !== null && artworkToManage.seriesTotal !== null && !artworkToManage.isOpenSeries;
-            setIsSeries(isLimitedSeries); // Si tiene índices Y NO es abierta, es limitada.
+            setIsSeries(isLimitedSeries); 
 
-            setSeriesIndex(isLimitedSeries && isDuplicating ? artworkToManage.seriesIndex! + 1 : artworkToManage.seriesIndex ?? '');
+            // Si se duplica, sugiere el siguiente índice, si no, usa el valor actual
+            const initialIndex = isLimitedSeries && isDuplicating ? artworkToManage.seriesIndex! + 1 : artworkToManage.seriesIndex ?? '';
+            setSeriesIndex(initialIndex);
+            
             setSeriesTotal(artworkToManage.seriesTotal ?? '');
 
             setImagePath(artworkToManage.image);
             setDimensions(artworkToManage.dimensions);
             setTechnique(artworkToManage.technique);
             setManualCode(artworkToManage.code ?? '');
-        } else {
-            // Valores por defecto para "Añadir Nueva Obra"
-            setTitle('');
-            setCertificationDate(new Date().toISOString().substring(0, 10));
-            
-            // Reseteo de Edición
-            setSeriesIndex('');
-            setSeriesTotal('');
-            setIsSeries(false);
-            setIsOpenSeries(false); // 🛑 NUEVO
-
-            setImagePath('');
-            setDimensions(''); 
-            setTechnique('');
-            setManualCode('');
-        }
-    }, [artworkToManage, isDuplicating]); 
+        } 
+    }, [artworkToManage, isDuplicating, isAddingNew]); 
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -770,14 +776,15 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
             type: 'PT', 
             seriesIndex: index, // Será null si no es serie limitada
             seriesTotal: total, // Será null si no es serie limitada
-            image: imagePath || '/obras/placeholder-work.jpg', 
+            image: imagePath || NEW_WORK_PLACEHOLDER.image, // Usa la imagen placeholder si está vacío
             dimensions: dimensions.trim(), 
             technique: technique.trim(), 
             code: finalCode,
             status: finalStatus,
-            isOpenSeries: isOpenSeries, // 🛑 NUEVO
+            isOpenSeries: isOpenSeries, 
         };
 
+        // Si id es 0 (nueva) o -1 (duplicado), se pasa null a onSave para crear una nueva
         const idToUpdate = isEditing ? artworkToManage!.id : null;
 
         onSave(newArtworkData, idToUpdate);
@@ -992,6 +999,8 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     
     // 🛑 Inicialización con los datos CORREGIDOS
     const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
+    
+    // 🛑 CAMBIADO: artworkToManage se inicializa en null, pero en el botón se le asigna NEW_WORK_PLACEHOLDER (id: 0)
     const [artworkToManage, setArtworkToManage] = useState<Artwork | null>(null);
 
     // 🛑 Handler para añadir o editar obra (Acepta ahora code y status)
@@ -1084,8 +1093,9 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                     
                     {/* BOTÓN PERMANENTE DE NUEVA OBRA */}
                     <div className="flex gap-4">
+                        {/* 🛑 FIX BOTÓN NUEVA OBRA: Usar el placeholder (id: 0) para forzar la apertura del modal */}
                         <button
-                            onClick={() => setArtworkToManage(null)} // Abre el formulario en modo 'Añadir Nueva'
+                            onClick={() => setArtworkToManage(NEW_WORK_PLACEHOLDER)} // Abre el formulario en modo 'Añadir Nueva'
                             className="flex items-center gap-2 text-sm font-bold text-white bg-gold-500 hover:bg-gold-600 transition-colors py-3 px-4 rounded-lg shadow-md"
                             title="Añadir una nueva obra a tu catálogo"
                         >
