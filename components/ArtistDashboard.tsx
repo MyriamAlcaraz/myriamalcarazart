@@ -146,7 +146,7 @@ const getSeriesText = (artwork: Artwork) => {
 
 /**
  * Genera el HTML del CERTIFICADO. 
- * 🛑 FIX EXTREMO V15: Se reduce el margen superior de 20mm a 10mm para subir la caja y evitar el desbordamiento en la impresión.
+ * (Permanece igual a la V15, que fue declarada perfecta)
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -430,7 +430,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
 
 /**
  * Genera el HTML de la CARTA. 
- * 🛑 FIX V15: Reducción del margen externo a 15mm y del padding inferior interno a 20mm para evitar el corte y buscar simetría.
+ * 🛑 FIX V16: Ajuste final de padding vertical (3mm arriba, 30mm abajo) para forzar la simetría visual y evitar el corte inferior.
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -474,8 +474,8 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                     outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; 
                     outline-offset: ${OUTLINE_OFFSET}; 
                     
-                    /* 🛑 FIX V15: Padding inferior a 20mm (antes 120mm) para evitar el corte inferior */
-                    padding: 5mm 40px 20mm 40px; 
+                    /* 🛑 FIX V16: Padding superior a 3mm e inferior a 30mm para forzar el contenido hacia arriba y crear un buffer de simetría */
+                    padding: 3mm 40px 30mm 40px; 
                 }
 
                 .top-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
@@ -505,14 +505,14 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                 @media print { 
                     body { margin: 0; padding: 0; } 
                     
-                    /* 🛑 APLICAR FIX MARGIN V15 */
+                    /* 🛑 APLICAR FIX MARGIN V16 */
                     .letter-container { 
                         margin: ${MARGIN_SAFETY} auto !important; /* 15MM FIX */
                         width: 180mm !important; 
                         border: 1px solid #000 !important; 
                         outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important; 
                         outline-offset: ${OUTLINE_OFFSET} !important;
-                        padding: 5mm 40px 20mm 40px !important; /* 20mm FIX */
+                        padding: 3mm 40px 30mm 40px !important; /* V16 FIX: 3mm top, 30mm bottom */
                         
                         /* Forzar la impresión de colores y fondos en la carta también */
                         -webkit-print-color-adjust: exact !important; 
