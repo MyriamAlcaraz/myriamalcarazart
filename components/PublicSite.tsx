@@ -87,7 +87,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
         )}
 
         {/* ========================================= */}
-        {/* BIO & TRAYECTORIA TAB (FOTO TAMAÑO MÁXIMO AJUSTADO: w-60 h-60) */}
+        {/* BIO & TRAYECTORIA TAB (CON FOTO MÁXIMA Y ENLACE DE WEB ELIMINADO) */}
         {/* ========================================= */}
         {activeTab === 'bio' && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -99,11 +99,8 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
               <h3 className="text-xl font-semibold mb-3">Declaración del Artista</h3>
               <p className="text-slate-700 leading-relaxed mb-8">{ARTIST_INFO.statement}</p>
               
-              {/* Contacto Rápido */}
+              {/* Contacto Rápido (Se ha quitado 'Web Profesional') */}
               <div className="space-y-3">
-                <a href={ARTIST_INFO.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-slate-600 hover:text-gold-600 transition-colors text-sm">
-                  <ExternalLink size={16} /> Web Profesional
-                </a>
                 <a href={`mailto:${ARTIST_INFO.email}`} className="flex items-center gap-2 text-slate-600 hover:text-gold-600 transition-colors text-sm">
                   <Mail size={16} /> {ARTIST_INFO.email}
                 </a>
