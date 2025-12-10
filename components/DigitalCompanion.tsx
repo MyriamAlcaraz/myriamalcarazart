@@ -1,24 +1,32 @@
-import React, { useState, useRef } from 'react';
-import { Shield, Image as ImageIcon, ZoomIn, Printer, X, AlertTriangle, Mail } from 'lucide-react'; 
-import { ARTWORKS, ARTIST_INFO } from '../constants';
-import { Certificate } from './Certificate';
+// ARCHIVO: ./components/DigitalCompanion.tsx - ¡COMPLETAMENTE MODIFICADO!
 
+import React, { useState, useRef } from 'react';
+// Eliminamos Printer y AlertTriangle que ya no se usan en la Lógica Simplificada
+import { Shield, ZoomIn, X, Mail, Image as ImageIcon } from 'lucide-react'; 
+import { ARTWORKS, ARTIST_INFO } from '../constants';
+// 🛑 ELIMINADA: import { Certificate } from './Certificate';
+
+// 🛑 CAMBIO 1: Nueva prop para abrir el modal bonito en App.tsx
 interface DigitalCompanionProps {
   artworkId: string | null;
   onClose: () => void;
-  showCertificateAccess: boolean; // TRUE solo en MODO ESTUDIO
+  showCertificateAccess: boolean; 
   initialMode?: 'lupa' | 'certificate'; 
+  onOpenCertificateDemo: () => void; // <--- ESTA ES LA CLAVE
 }
 
 export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({ 
     artworkId, 
     onClose,
     showCertificateAccess, 
-    initialMode = 'lupa' 
+    initialMode = 'lupa',
+    // 🛑 CAMBIO 2: Recibimos la nueva prop
+    onOpenCertificateDemo
 }) => {
   const artwork = ARTWORKS.find(a => a.id === artworkId) || ARTWORKS[0];
   
-  const [showCertificate, setShowCertificate] = useState(initialMode === 'certificate');
+  // 🛑 CAMBIO 3: ELIMINAMOS el estado 'showCertificate' que hacía aparecer el certificado pixelado
+  // const [showCertificate, setShowCertificate] = useState(initialMode === 'certificate'); 
   
   const [showZoom, setShowZoom] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
@@ -51,44 +59,16 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     });
   };
 
-  // Si se está mostrando el certificado, renderiza solo el certificado
+  // 🛑 CAMBIO 4: Eliminamos completamente el if que renderizaba el certificado pixelado.
+  /*
   if (showCertificate) {
     return (
-        <div className="fixed inset-0 z-[110] bg-black/90 p-4 md:p-12 overflow-y-auto flex justify-center items-start print-clean-background">
-            <button 
-                onClick={initialMode === 'certificate' ? onClose : () => setShowCertificate(false)} 
-                className="fixed top-6 right-6 z-[120] bg-white text-slate-900 p-3 rounded-full hover:bg-red-500 hover:text-white shadow-xl"
-            >
-                <X size={24} />
-            </button>
-            <div className="transform scale-[0.6] md:scale-90 origin-top">
-                
-                {/* 🛑 MODIFICACIÓN CLAVE: El mensaje solo se muestra si SÍ tenemos acceso al certificado (Modo Taller) */}
-                {showCertificateAccess && (
-                    <div className="bg-amber-50 border-l-4 border-amber-500 text-amber-900 p-4 mb-4" role="alert">
-                        <p className="font-bold flex items-center gap-2"><AlertTriangle size={16}/> NOTA DE IMPRESIÓN</p>
-                        <p className="text-sm">Recuerda usar el botón **Imprimir Original** en la parte inferior para generar el PDF listo.</p>
-                    </div>
-                )}
-                {/* FIN DE LA MODIFICACIÓN */}
-                
-                <Certificate artwork={artwork} isPixelatedDemo={!showCertificateAccess} /> 
-            </div>
-            
-            {/* BOTÓN DE IMPRESIÓN (Solo visible si es MODO ESTUDIO) */}
-            {showCertificateAccess && (
-                <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2">
-                    <button 
-                        onClick={() => window.print()} 
-                        className="bg-gold-600 text-white px-8 py-3 rounded-full flex items-center gap-2 hover:bg-gold-700 text-sm font-bold shadow-xl"
-                    >
-                        <Printer size={18}/> IMPRIMIR ORIGINAL
-                    </button>
-                </div>
-            )}
-        </div>
+      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex justify-center items-center p-4 md:p-8">
+        ... (Código del modal del certificado feo)
+      </div>
     );
   }
+  */
 
   // Vista por defecto (Lupa)
   return (
@@ -139,7 +119,9 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
         {/* Lado Derecho: Metadatos y CTA */}
         <div className="lg:w-1/2 p-8 overflow-y-auto">
           <h2 className="font-serif text-3xl font-bold text-slate-900 mb-2">{artwork.title}</h2>
-          <p className="text-sm uppercase tracking-widest text-gold-600 font-semibold mb-4">{artwork.technique}</p>
+          <p className="text-sm uppercase tracking-widest text-gold-600 font-semibold mb-4">
+              {artwork.technique}
+          </p>
 
           <div className="space-y-4 border-y border-stone-200 py-6 mb-8">
             <p className="text-slate-600"><span className="font-bold text-slate-800">Dimensiones:</span> {artwork.dimensions}</p>
@@ -153,7 +135,8 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
           <div className="space-y-4 pt-4">
             {/* 1. Botón de Certificado (Demo/Real) */}
             <button
-                onClick={() => setShowCertificate(true)}
+                // 🛑 CAMBIO 5: Llama a la prop que abrirá el modal bonito en App.tsx
+                onClick={onOpenCertificateDemo} 
                 className="w-full flex items-center justify-center gap-2 bg-slate-800 text-white p-3 rounded font-bold hover:bg-gold-600 transition-colors shadow-md"
             >
                 <Shield size={18} /> Ver Demo Certificado

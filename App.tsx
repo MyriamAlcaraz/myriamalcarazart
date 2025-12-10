@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-// 🛑 CAMBIO 1.1: Importar la función que genera el HTML del certificado
-import { PublicSite, getCertificateDemoHtmlContent } from './components/PublicSite'; 
+import { PublicSite } from './components/PublicSite'; 
 import { ArtistDashboard } from './components/ArtistDashboard';
 import { DigitalCompanion } from './components/DigitalCompanion';
-// 🛑 CAMBIO 1.2: Añadir ShieldCheck a la lista de íconos importados
-import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield, ShieldCheck } from 'lucide-react'; 
+import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield } from 'lucide-react'; 
 
 // --- CONFIGURACIÓN DE SEGURIDAD (PASSWORD) ---
 const PASSWORD = "arte2026"; 
@@ -76,65 +74,6 @@ const App: React.FC = () => {
     localStorage.removeItem('myriam_auth');
     setView('public'); 
   };
-  
-  // Función de cierre del Compañero (reutilizada para la demo)
-  const handleCloseCompanion = () => setSelectedCompanionId(null); 
-
-
-  // ---------------------------------------------------------
-  // 🛑 CAMBIO 2: Nueva Función para Renderizar el Certificado
-  // ---------------------------------------------------------
-  /**
-   * Función que renderiza el modal de demostración del Certificado de Autenticidad (COA).
-   */
-  const renderCertificateDemo = () => {
-    // 1. Llama a la función que genera el HTML bonito del certificado
-    // Esta función debe existir en tu PublicSite.tsx
-    const htmlContent = getCertificateDemoHtmlContent(); 
-    
-    return (
-        // Contenedor del Modal (fondo oscuro)
-        <div className="fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4">
-            <div className="w-full max-w-4xl bg-white p-6 rounded-xl shadow-2xl relative">
-                <div className="flex justify-between items-center border-b pb-3 mb-4">
-                    <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
-                        {/* Usamos el ícono ShieldCheck que acabamos de importar */}
-                        <ShieldCheck size={28} className="text-gold-500" /> Demo: Certificado de Autenticidad
-                    </h3>
-                    {/* Botón de cierre usa tu handler existente */}
-                    <button onClick={handleCloseCompanion} className="p-1 rounded-full text-slate-400 hover:text-red-500 transition-colors">
-                        <X size={24} />
-                    </button>
-                </div>
-                
-                <p className="text-sm text-slate-600 mb-4">
-                    Visualización en tiempo real del documento que reciben los coleccionistas. (Simulación de impresión A4).
-                </p>
-                
-                <div className="w-full h-[600px] border border-gray-300 rounded-lg overflow-hidden shadow-inner bg-slate-50">
-                    <iframe
-                        title="Certificado Demo Preview"
-                        srcDoc={htmlContent} 
-                        style={{ 
-                            width: '100%', 
-                            height: '100%', 
-                            border: 'none',
-                            // Escala para simular mejor el formato A4 en la vista previa
-                            transform: 'scale(0.8)', 
-                            transformOrigin: 'top left' 
-                        }}
-                        sandbox="allow-scripts allow-same-origin"
-                    />
-                </div>
-                
-                <div className="mt-4 text-right">
-                    <button onClick={handleCloseCompanion} className="bg-slate-500 text-white px-4 py-2 rounded font-semibold hover:bg-slate-600">Cerrar Demo</button>
-                </div>
-            </div>
-        </div>
-    );
-  };
-  // ---------------------------------------------------------
 
 
   // ---------------------------------------------------------
@@ -322,15 +261,11 @@ const App: React.FC = () => {
           </div>
       )}
 
-      {/* 🛑 CAMBIO 3: Renderizado Condicional de la Demo del Certificado y Compañero Digital */}
-      {selectedCompanionId === 'CERTIFICATE_DEMO' ? (
-          // Si el ID es la cadena de la demo, renderiza el modal completo
-          renderCertificateDemo()
-      ) : selectedCompanionId && (
-        // Si hay un ID pero no es la demo (será un ID de obra), renderiza el Compañero Digital
+      {/* COMPAÑERO DIGITAL */}
+      {selectedCompanionId && (
         <DigitalCompanion 
           artworkId={selectedCompanionId} 
-          onClose={handleCloseCompanion} 
+          onClose={() => setSelectedCompanionId(null)} 
           // Mantenemos la lógica para el siguiente paso (certificados)
           showCertificateAccess={view === 'artist'} 
         />
