@@ -150,15 +150,16 @@ const getSeriesText = (artwork: Artwork) => {
 
 /**
  * Genera el HTML del CERTIFICADO. 
- * 🛑 FIX BORDER: Ajustes de margin y color dorado para mejor rendering en PDF.
+ * 🛑 FIX EXTREMO BORDER: Reducción del body margin y aumento del outline/offset.
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const creationMonthAndYear = new Date(artwork.certificationDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
     
-    // FIX DE COLOR Y ESPACIO: Uso de un tono de oro más oscuro (#b8860b) y más offset.
+    // 🛑 FIX EXTREMO DE MARCO: Aumento de grosor y separación.
     const GOLD_COLOR = "#b8860b"; 
-    const OUTLINE_OFFSET = "6px"; 
+    const OUTLINE_WIDTH = "4px"; // 🛑 AUMENTADO de 3px a 4px
+    const OUTLINE_OFFSET = "8px"; // 🛑 AUMENTADO de 6px a 8px
 
     // Diseño de Iconos y Estilos del Footer
     const contactFooterHtml = `
@@ -185,13 +186,13 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
         <head>
             <title>Certificado - ${artwork.title}</title>
             <style>
-                /* 🛑 FIX MARGIN: Reducción del margen de la página para dar espacio al marco */
-                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 12pt; margin: 10mm; color: #111; }
+                /* 🛑 FIX MARGIN EXTREMO: Reducción del margen de la página para dar espacio al marco */
+                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 12pt; margin: 5mm; color: #111; } /* Nuevo: 5mm */
                 .cert-container { 
-                    /* Borde fino (1px negro) + Outline grueso (3px dorado) */
+                    /* Borde fino (1px negro) + Outline grueso (4px dorado) */
                     border: 1px solid #000; 
-                    outline: 3px solid ${GOLD_COLOR}; /* Marco grueso dorado */
-                    outline-offset: ${OUTLINE_OFFSET}; /* Crea el espacio entre el borde fino y el outline grueso */
+                    outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (4px) */
+                    outline-offset: ${OUTLINE_OFFSET}; /* Crea el espacio entre el borde fino y el outline grueso (8px) */
                     padding: 25px; 
                     max-width: 550px; 
                     margin: 0 auto;
@@ -342,7 +343,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                         box-shadow: none; 
                         /* 🛑 FIX BORDER/OUTLINE: Re-declarar el borde para asegurar visibilidad en PDF */
                         border: 1px solid #000 !important; 
-                        outline: 3px solid ${GOLD_COLOR} !important; 
+                        outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important; 
                         outline-offset: ${OUTLINE_OFFSET} !important;
                         
                         max-width: 100%; 
@@ -424,16 +425,17 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
 
 /**
  * Genera el HTML de la CARTA. 
- * 🛑 FIX BORDER: Ajustes de margin y color dorado para mejor rendering en PDF.
+ * 🛑 FIX EXTREMO BORDER: Reducción del body margin y aumento del outline/offset.
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     
     const seriesText = getSeriesText(artwork);
     
-    // FIX DE COLOR Y ESPACIO: Uso de un tono de oro más oscuro (#b8860b) y más offset.
+    // 🛑 FIX EXTREMO DE MARCO: Aumento de grosor y separación.
     const GOLD_COLOR = "#b8860b"; 
-    const OUTLINE_OFFSET = "6px"; 
+    const OUTLINE_WIDTH = "4px"; // 🛑 AUMENTADO de 3px a 4px
+    const OUTLINE_OFFSET = "8px"; // 🛑 AUMENTADO de 6px a 8px
 
     // Referencia de la carta para reflejar la edición abierta
     let seriesReference = '';
@@ -451,14 +453,14 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
         <head>
             <title>Carta Personalizada - ${artwork.title}</title>
             <style>
-                /* 🛑 FIX MARGIN: Reducción del margen de la página para dar espacio al marco */
-                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 13pt; margin: 10mm; color: #111; line-height: 1.8; }
+                /* 🛑 FIX MARGIN EXTREMO: Reducción del margen de la página para dar espacio al marco */
+                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 13pt; margin: 5mm; color: #111; line-height: 1.8; } /* Nuevo: 5mm */
                 
                 /* 🛑 CONTENEDOR CON MARCO DORADO PARA LA CARTA */
                 .letter-container { 
                     border: 1px solid #000; 
-                    outline: 3px solid ${GOLD_COLOR}; /* Marco grueso dorado */
-                    outline-offset: ${OUTLINE_OFFSET}; /* Espacio entre bordes */
+                    outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (4px) */
+                    outline-offset: ${OUTLINE_OFFSET}; /* Espacio entre bordes (8px) */
                     
                     /* CORREGIDO: Padding interno uniforme para simetría */
                     padding: 30mm 70px; 
@@ -495,7 +497,7 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                     /* 🛑 FIX BORDE CARTA: Duplicar propiedades de borde para asegurar la impresión */
                     .letter-container { 
                         border: 1px solid #000 !important; 
-                        outline: 3px solid ${GOLD_COLOR} !important; 
+                        outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important; 
                         outline-offset: ${OUTLINE_OFFSET} !important;
                         
                         /* Forzar la impresión de colores y fondos en la carta también */
