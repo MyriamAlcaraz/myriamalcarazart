@@ -138,6 +138,7 @@ const getSeriesText = (artwork: Artwork) => {
  * 🛑 CORREGIDO: 
  * 1. Tamaño de la foto para que quepa en un DIN A4 (máx 1 página).
  * 2. Propiedad CSS para forzar la impresión del color dorado y el doble borde.
+ * 3. ULTERIORES AJUSTES DE PADDING Y MARGIN PARA EVITAR EL CORTE VERTICAL
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -175,8 +176,8 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     border: 1px solid #000; 
                     outline: 3px solid #d4af37; /* Marco grueso dorado */
                     outline-offset: 5px; /* Crea el espacio entre el borde fino y el outline grueso */
-                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de padding vertical de 40px a 30px */
-                    padding: 30px; 
+                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de padding vertical de 30px a 25px */
+                    padding: 25px; 
                     max-width: 550px; 
                     margin: 0 auto;
                 }
@@ -185,7 +186,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     /* 🛑 CORRECCIÓN PÁGINA: Reducción de margin-bottom de 20px a 15px */
                     padding-bottom: 20px; 
                     border-bottom: 1px solid #ddd;
-                    margin-bottom: 20px;
+                    margin-bottom: 15px; /* MODIFICADO: 20px -> 15px */
                 }
                 .logo { 
                     max-height: 80px; 
@@ -213,8 +214,8 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     text-align: center;
                     font-size: 10pt;
                     color: #333;
-                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de margin vertical de 30px a 20px */
-                    margin: 20px 0;
+                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de margin vertical de 20px a 15px */
+                    margin: 15px 0; /* MODIFICADO: 20px 0 -> 15px 0 */
                     line-height: 1.5;
                 }
                 .fixed-text strong {
@@ -226,10 +227,10 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                 .artwork-image-section {
                     /* 🛑 CORRECCIÓN PÁGINA: Reducido el tamaño máximo de la foto para que encaje en DINA4 */
                     width: 70%; 
-                    max-width: 160px; /* REDUCIDO de 200px a 160px */
-                    max-height: 180px; /* NEW: Límite de altura estricto */
-                    overflow: hidden; /* NEW: Asegura que la imagen no se desborde */
-                    margin: 10px auto; /* Reducido el margen vertical de 15px a 10px */
+                    max-width: 160px; 
+                    max-height: 180px; 
+                    overflow: hidden; 
+                    margin: 10px auto; 
                     border: 1px solid #ccc;
                     padding: 5px;
                     box-shadow: 0 0 8px rgba(0,0,0,0.1);
@@ -304,8 +305,8 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     display: flex;
                     justify-content: space-between;
                     align-items: flex-start; 
-                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de margin-top de 40px a 30px */
-                    margin-top: 30px; 
+                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de margin-top de 30px a 20px */
+                    margin-top: 20px; /* MODIFICADO: 30px -> 20px */
                     padding-top: 20px;
                 }
                 .date-col {
@@ -335,11 +336,13 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     body { margin: 0; padding: 0; } 
                     .cert-container { 
                         box-shadow: none; 
-                        border: 1px solid #000; 
-                        /* Mantener el doble marco también en impresión */
-                        outline: 3px solid #d4af37; 
-                        outline-offset: 5px;
+                        /* 🛑 FIX BORDER/OUTLINE: Re-declarar el borde para asegurar visibilidad en PDF */
+                        border: 1px solid #000 !important; 
+                        outline: 3px solid #d4af37 !important; 
+                        outline-offset: 5px !important;
+                        
                         max-width: 100%; 
+                        padding: 25px !important; /* Forzar el padding reducido */
                         
                         /* 🛑 FIX BORDER/COLOR: Forzar la impresión de colores y fondos */
                         -webkit-print-color-adjust: exact !important; 
@@ -423,6 +426,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
  * 3. Logo más grande.
  * 4. Saludo de cierre a la izquierda.
  * 5. ⚠️ CORREGIDO: Simetría en el marco (T/B/L/R).
+ * 6. 🛑 FIX FINAL: Añadir propiedades de borde/outline en @media print
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -485,8 +489,14 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                 
                 @media print { 
                     body { margin: 0; padding: 0; } 
-                    /* 🛑 FIX BORDER/COLOR: Forzar la impresión de colores y fondos en la carta también */
+                    
+                    /* 🛑 FIX BORDE CARTA: Duplicar propiedades de borde para asegurar la impresión */
                     .letter-container { 
+                        border: 1px solid #000 !important; 
+                        outline: 3px solid #d4af37 !important; 
+                        outline-offset: 5px !important;
+                        
+                        /* Forzar la impresión de colores y fondos en la carta también */
                         -webkit-print-color-adjust: exact !important; 
                         print-color-adjust: exact !important;
                     }
