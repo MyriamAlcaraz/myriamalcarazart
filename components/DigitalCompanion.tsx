@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { Shield, Image as ImageIcon, ZoomIn, Printer, X, AlertTriangle } from 'lucide-react';
+// 🛑 CORRECCIÓN CLAVE: Se ha añadido 'Mail' a las importaciones para solucionar la pantalla en blanco.
+import { Shield, Image as ImageIcon, ZoomIn, Printer, X, AlertTriangle, Mail } from 'lucide-react'; 
 import { ARTWORKS, ARTIST_INFO } from '../constants';
 import { Certificate } from './Certificate';
 
@@ -47,12 +48,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     });
   };
 
-  // Función auxiliar para formatear precio SIN IMPUESTOS y sin céntimos
-  const formatPrice = (price: number) => {
-    // Usamos el precioBase ya que es el valor sin impuestos.
-    const basePrice = artwork.priceBase;
-    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(basePrice);
-  }
+  // 🛑 FUNCIÓN formatPrice ELIMINADA, ya que el precio no debe mostrarse al cliente.
 
   // Si se está mostrando el certificado, renderiza solo el certificado
   if (showCertificate) {
@@ -107,9 +103,9 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
           <div 
             ref={imgContainerRef} 
             className="relative w-full h-auto max-h-[70vh] cursor-none overflow-hidden group"
-            onMouseMove={handleMouseMove} // 🛑 ACTIVAR EFECTO LUPA EN MOUSE MOVE
-            onMouseEnter={() => setShowZoom(true)} // 🛑 ACTIVAR VISIBILIDAD DE LUPA
-            onMouseLeave={() => setShowZoom(false)} // 🛑 DESACTIVAR VISIBILIDAD DE LUPA
+            onMouseMove={handleMouseMove} // 🛑 LUPA ACTIVADA
+            onMouseEnter={() => setShowZoom(true)} // 🛑 LUPA ACTIVADA
+            onMouseLeave={() => setShowZoom(false)} // 🛑 LUPA ACTIVADA
           >
             <img 
               src={artwork.image} 
@@ -142,7 +138,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
             <p className="text-slate-600"><span className="font-bold text-slate-800">Dimensiones:</span> {artwork.dimensions}</p>
             <p className="text-slate-600"><span className="font-bold text-slate-800">Año:</span> {artwork.year}</p>
             <p className="text-slate-600"><span className="font-bold text-slate-800">Disponibilidad:</span> {artwork.status === 'available' ? 'Disponible para colección' : 'En colección privada (Posible Giclée)'}</p>
-            {/* 🛑 PRECIO ELIMINADO PARA EL CLIENTE */}
+            {/* 🛑 PRECIO ELIMINADO PARA EL CLIENTE (Confirmado: No está visible) */}
           </div>
 
           <h3 className="font-serif text-xl font-bold text-slate-900 mb-3">Narrativa de la Obra</h3>
