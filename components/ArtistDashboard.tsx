@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon } from 'lucide-react'; 
+import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe } from 'lucide-react'; 
 
 // ---------------------------------------------------------
 // 🎨 DEFINICIÓN DE TIPOS Y CONSTANTES
@@ -26,6 +26,10 @@ interface DocumentSettings {
   city: string;
   letterOpening: string;
   letterClosing: string;
+  // 🛑 AÑADIDOS: Datos de contacto centralizados
+  website: string;
+  email: string;
+  instagram: string;
 }
 
 interface ArtistDashboardProps {
@@ -34,12 +38,16 @@ interface ArtistDashboardProps {
 
 // 🛑 DATOS DE CONFIGURACIÓN INICIAL (Extraídos de constants.ts y borrador)
 const initialSettings: DocumentSettings = {
-    artistName: "Myriam Alcaraz", // Desde constants.ts
-    artistTitle: "Pintura Figurativa Contemporánea", // Desde borrador.pdf
-    cycleName: "Serie Sin Título (A Definir)", // Placeholder
+    artistName: "Myriam Alcaraz", 
+    artistTitle: "Pintura Figurativa Contemporánea", 
+    cycleName: "Serie Sin Título (A Definir)", 
     city: "Madrid", 
     letterOpening: "Estimado Coleccionista,",
-    letterClosing: "Agradeciendo profundamente su apoyo a mi trayectoria artística, quedo a su disposición para cualquier consulta. Con mis mejores deseos," 
+    letterClosing: "Agradeciendo profundamente su apoyo a mi trayectoria artística, quedo a su disposición para cualquier consulta. Con mis mejores deseos,",
+    // 🛑 DATOS DE CONTACTO CORREGIDOS Y CENTRALIZADOS
+    website: "https://myriamalcaraz.com", 
+    email: "myriamhotmail@hotmail.com",
+    instagram: "@myriamalcaraz.artist",
 };
 
 // 🛑 CATALOGO DE OBRAS REALES (Extraídas de constants.ts, incluyendo sus IDs reales 4, 2, 3, 1...)
@@ -116,15 +124,30 @@ const getSeriesText = (artwork: Artwork) => {
 }
 
 /**
- * Genera el HTML del CERTIFICADO. (CORRECCIÓN DEL DOBLE MARCO APLICADA)
+ * Genera el HTML del CERTIFICADO. (CORRECCIÓN DEL DOBLE MARCO APLICADA Y PIE DE PÁGINA LIMPIO)
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-    const seriesText = getSeriesText(artwork);
     const creationMonthAndYear = new Date(artwork.certificationDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
 
-    // Se asume el logo está en la raíz de /public
-    const artistWebsite = "https://myriamalcaraz.art"; // Se asume el dominio final es .art
+    // 🛑 Diseño de Iconos y Estilos del Footer
+    const contactFooterHtml = `
+        <div class="contact-footer">
+            <span class="contact-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 0 4 10 15.3 15.3 0 0 0-4 10zM22 12A15.3 15.3 0 0 0 18 8m-4-4a15.3 15.3 0 0 0-4 10 15.3 15.3 0 0 0 4 10"/></svg>
+                <a href="${settings.website}" target="_blank">${settings.website.replace('https://', '')}</a>
+            </span>
+            <span class="contact-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <a href="mailto:${settings.email}">${settings.email}</a>
+            </span>
+            <span class="contact-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                ${settings.instagram}
+            </span>
+        </div>
+    `;
+
 
     return `
         <!DOCTYPE html>
@@ -226,17 +249,42 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     padding: 0; 
                     font-family: 'Courier New', monospace; 
                 }
-                .footer-text {
-                    font-size: 10pt;
+                
+                /* 🛑 Estilos del Footer de Contacto (Iconos y Datos) */
+                .contact-footer {
+                    font-size: 9pt;
                     text-align: center;
                     color: #555;
                     margin-top: 20px;
+                    padding-top: 15px;
+                    border-top: 1px solid #eee;
+                    display: flex;
+                    justify-content: center;
+                    gap: 15px;
                 }
+                .contact-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                }
+                .contact-item a {
+                    color: #555;
+                    text-decoration: none;
+                    transition: color 0.2s;
+                }
+                .contact-item a:hover {
+                    color: #000;
+                }
+                .contact-item svg {
+                    flex-shrink: 0;
+                }
+
                 .signature-area { 
                     margin-top: 60px; 
                     text-align: right; 
                     border-top: 1px solid #ddd;
                     padding-top: 15px;
+                    margin-bottom: 10px; /* Reducido al quitar el texto de sello */
                 }
                 .signature-line { 
                     border-top: 1px solid #000; 
@@ -319,12 +367,10 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     <span class="signature-line"></span>
                     <p class="artist-name">${settings.artistName}</p>
                     <p class="artist-title-style">${settings.artistTitle}</p>
-                    <p style="font-size: 8pt; margin-top: 5px;">*Espacio reservado para Sello en Seco</p>
-                </div>
+                    </div>
                 
-                <div class="footer-text">
-                    <a href="${artistWebsite}" style="color: #333; text-decoration: none;">${artistWebsite.toUpperCase()}</a> | MYRIAMHOTMAIL@HOTMAIL.COM | MYRIAMALCARAZ.ARTIST
-                </div>
+                ${contactFooterHtml}
+
             </div>
         </body>
         </html>
@@ -774,6 +820,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     // 🛑 Inicialización con los datos REALES del catálogo completo
     const [artworks, setArtworks] = useState<Artwork[]>(REAL_ARTWORKS);
     
+    // 🛑 Inicialización con los datos CORREGIDOS
     const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
     const [artworkToManage, setArtworkToManage] = useState<Artwork | null>(null);
 
