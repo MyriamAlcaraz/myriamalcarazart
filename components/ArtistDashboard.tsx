@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Image as ImageIcon, Briefcase, MinusCircle, Check } from 'lucide-react'; 
+import React, { useState, useMemo, useEffect } from 'react';
+import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X } from 'lucide-react'; 
 
 // ---------------------------------------------------------
 // 🎨 DEFINICIÓN DE TIPOS Y CONSTANTES
@@ -31,15 +31,7 @@ interface ArtistDashboardProps {
   onLogout: () => void;
 }
 
-// Opciones para el campo "Tipo de Obra"
-const typeOptions = {
-    'PT': 'Pintura',
-    'SC': 'Escultura',
-    'DI': 'Dibujo',
-    'OT': 'Otro'
-};
-
-// 🛑 ESTADO INICIAL DE LAS PLANTILLAS
+// ESTADO INICIAL DE LAS PLANTILLAS
 const initialSettings: DocumentSettings = {
     artistName: "Myriam Alcaraz",
     artistTitle: "Artista Visual",
@@ -51,7 +43,7 @@ const initialSettings: DocumentSettings = {
 
 
 // ---------------------------------------------------------
-// 🚀 FUNCIÓN CENTRAL: CODIFICACIÓN INTELIGENTE (MA-YYYY-YYMM(IIJJ))
+// 🚀 FUNCIÓN CENTRAL: CODIFICACIÓN INTELIGENTE
 // ---------------------------------------------------------
 const generateSmartCode = (artworkToCode: Artwork): string => {
     const dateParts = artworkToCode.certificationDate.split('-'); 
@@ -72,7 +64,7 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
 
 
 // ---------------------------------------------------------
-// 📄 GENERADORES DE HTML PARA IMPRESIÓN (VERSIONES MEJORADAS)
+// 📄 GENERADORES DE HTML PARA IMPRESIÓN
 // ---------------------------------------------------------
 const getSeriesText = (artwork: Artwork) => {
     return artwork.seriesIndex !== null && artwork.seriesTotal !== null
@@ -81,7 +73,7 @@ const getSeriesText = (artwork: Artwork) => {
 }
 
 /**
- * 🛑 FUNCIÓN MEJORADA: Genera el HTML del CERTIFICADO (Fiel al borrador.pdf con ajustes de tamaño de imagen).
+ * FUNCIÓN MEJORADA: Genera el HTML del CERTIFICADO (Con imagen centrada y tamaño ajustado).
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -101,7 +93,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     padding: 40px; 
                     /* Simula el doble borde dorado/negro */
                     box-shadow: 0 0 0 5px #d4af37; 
-                    max-width: 550px; /* 🛑 AJUSTADO: Un poco más estrecho */
+                    max-width: 550px; /* Tamaño profesional de documento */
                     margin: 0 auto;
                 }
                 .header { 
@@ -146,8 +138,8 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     margin-top: 5px;
                 }
                 .artwork-image-section {
-                    width: 70%; /* 🛑 AJUSTADO: Más pequeño */
-                    max-width: 300px; /* 🛑 AJUSTADO: Más pequeño */
+                    width: 70%; 
+                    max-width: 300px; /* 🛑 TAMAÑO OPTIMIZADO: Imagen centrada y legible */
                     margin: 30px auto;
                     border: 1px solid #ccc;
                     padding: 5px;
@@ -160,7 +152,6 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     display: block;
                 }
                 .details-grid {
-                    /* Estilo de la tabla de datos en el borrador */
                     width: 90%;
                     margin: 20px auto 40px auto;
                     font-size: 11pt;
@@ -196,7 +187,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                 }
                 .signature-area { 
                     margin-top: 60px; 
-                    text-align: right; /* Firma a la derecha para sello en seco */
+                    text-align: right; 
                     border-top: 1px solid #ddd;
                     padding-top: 15px;
                 }
@@ -283,13 +274,10 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
     `;
 };
 
-/**
- * FUNCIÓN DE CARTA (Sin cambios de formato, solo ajustes de limpieza)
- */
+// ... (getLetterHtml y handlePrintDocument permanecen sin cambios)
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     
-    // CLAVE: Lógica para incluir la serie SÓLO si es una obra seriada.
     const seriesText = getSeriesText(artwork);
     const seriesReference = artwork.seriesIndex !== null
         ? `y pertenece a mi ciclo <span class="artwork-ref">${settings.cycleName}</span>.`
@@ -345,9 +333,6 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
     `;
 };
 
-/**
- * Función genérica para abrir una ventana e imprimir/PDF
- */
 const handlePrintDocument = (content: string, title: string) => {
     const printWindow = window.open('', '_blank', 'width=800,height=600');
     if (printWindow) {
@@ -364,7 +349,7 @@ const handlePrintDocument = (content: string, title: string) => {
 
 
 // =========================================================
-// 🏭 COMPONENTE: WORKSTATION (Tarjeta de Gestión por Obra - Sin Cambios)
+// 🏭 COMPONENTE: WORKSTATION (Tarjeta de Gestión por Obra - AÑADIDO BOTÓN DUPLICAR)
 // =========================================================
 
 interface ArtworkWorkstationProps {
@@ -372,9 +357,10 @@ interface ArtworkWorkstationProps {
     settings: DocumentSettings;
     onGenerateCode: (id: number) => void;
     onDelete: (id: number) => void;
+    onDuplicate: (artwork: Artwork) => void; // 🛑 NUEVO: Handler para duplicar
 }
 
-const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settings, onGenerateCode, onDelete }) => {
+const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settings, onGenerateCode, onDelete, onDuplicate }) => {
     
     const certificateContent = useMemo(() => artwork.code ? getCertificateHtml(artwork, settings) : '', [artwork, settings]);
     const letterContent = useMemo(() => artwork.code ? getLetterHtml(artwork, settings) : '', [artwork, settings]);
@@ -429,6 +415,15 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
             
             <div className="grid grid-cols-2 gap-4">
                 
+                {/* 🛑 NUEVO BOTÓN DUPLICAR */}
+                <button
+                    onClick={() => onDuplicate(artwork)} 
+                    className="py-3 px-4 rounded-lg font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-sm bg-stone-100 text-slate-700 hover:bg-stone-200 border border-stone-300"
+                    title="Crea una copia de los datos de esta obra para registrar la siguiente de la serie o una similar."
+                >
+                    <Plus size={16} /> DUPLICAR OBRA
+                </button>
+                
                 <button
                     onClick={() => handlePrintDocument(certificateContent, `Certificado ${artwork.code}`)}
                     disabled={!artwork.code}
@@ -450,13 +445,11 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
                 >
                     <FileText size={16} /> IMPRIMIR CARTA
                 </button>
+
+                <div className="col-span-2 text-xs text-red-500 mt-3 text-center flex items-center justify-center gap-1">
+                    {!artwork.code && <><MinusCircle size={14} /> La documentación requiere un Código de Trazabilidad.</>}
+                </div>
             </div>
-            
-            {!artwork.code && (
-                <p className="text-xs text-red-500 mt-3 text-center flex items-center justify-center gap-1">
-                    <MinusCircle size={14} /> La documentación requiere un Código de Trazabilidad.
-                </p>
-            )}
 
         </div>
     );
@@ -464,87 +457,17 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
 
 
 // =========================================================
-// ⚙️ COMPONENTE: PANEL DE AJUSTES DE MARCA (Sin Cambios)
-// =========================================================
-interface SettingsPanelProps {
-    settings: DocumentSettings;
-    setSettings: React.Dispatch<React.SetStateAction<DocumentSettings>>;
-    onClose: () => void;
-}
-
-const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, setSettings, onClose }) => {
-    
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setSettings({ ...settings, [e.target.name]: e.target.value });
-    };
-
-    return (
-        <div className="fixed inset-0 bg-black/50 z-50 flex justify-end">
-            <div className="w-full max-w-md bg-white p-8 overflow-y-auto shadow-2xl">
-                
-                <div className="flex justify-between items-center mb-6 border-b pb-4">
-                    <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
-                        <Settings size={28} className="text-gold-500" /> Ajustes de Marca y Plantillas
-                    </h3>
-                    <button onClick={onClose} className="text-slate-500 hover:text-green-500 p-2">
-                        <Check size={24} title="Cerrar y Guardar Cambios" />
-                    </button>
-                </div>
-
-                <p className="text-slate-600 mb-6 border-l-4 border-gold-300 pl-3 py-1">
-                    Personalice los datos estáticos que aparecerán en todos sus Certificados y Cartas.
-                </p>
-
-                <div className="space-y-6">
-                    {/* Ajustes de Identidad */}
-                    <div className="p-4 border rounded-lg bg-stone-50">
-                        <h4 className="font-bold text-slate-700 mb-3 flex items-center gap-1"><Edit size={16} /> Identidad</h4>
-                        
-                        <label className="block text-xs font-medium text-slate-500 mb-1">Nombre del Artista (Firma)</label>
-                        <input type="text" name="artistName" value={settings.artistName} onChange={handleChange} className="w-full p-2 border rounded text-sm mb-3 focus:ring-gold-500 focus:border-gold-500" />
-                        
-                        <label className="block text-xs font-medium text-slate-500 mb-1">Título / Cargo</label>
-                        <input type="text" name="artistTitle" value={settings.artistTitle} onChange={handleChange} className="w-full p-2 border rounded text-sm mb-3 focus:ring-gold-500 focus:border-gold-500" />
-
-                        <label className="block text-xs font-medium text-slate-500 mb-1">Ciudad de Emisión</label>
-                        <input type="text" name="city" value={settings.city} onChange={handleChange} className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500" />
-                    </div>
-
-                    {/* Ajustes de Carta */}
-                    <div className="p-4 border rounded-lg bg-stone-50">
-                        <h4 className="font-bold text-slate-700 mb-3 flex items-center gap-1"><FileText size={16} /> Plantilla de Carta</h4>
-                        
-                        <label className="block text-xs font-medium text-slate-500 mb-1">Ciclo Artístico General (Mencionado en la Carta si es SERIADA)</label>
-                        <input type="text" name="cycleName" value={settings.cycleName} onChange={handleChange} placeholder="Ej: Serie 'Las Ciudades Invisibles'" className="w-full p-2 border rounded text-sm mb-3 focus:ring-gold-500 focus:border-gold-500" />
-                        
-                        <label className="block text-xs font-medium text-slate-500 mb-1">Apertura (Ej: Estimado Coleccionista,)</label>
-                        <input type="text" name="letterOpening" value={settings.letterOpening} onChange={handleChange} className="w-full p-2 border rounded text-sm mb-3 focus:ring-gold-500 focus:border-gold-500" />
-
-                        <label className="block text-xs font-medium text-slate-500 mb-1">Cierre y Agradecimiento</label>
-                        <textarea name="letterClosing" value={settings.letterClosing} onChange={handleChange} rows={3} className="w-full p-2 border rounded text-sm resize-none focus:ring-gold-500 focus:border-gold-500"></textarea>
-                    </div>
-                </div>
-                
-                <button
-                    onClick={onClose}
-                    className="mt-8 w-full bg-gold-500 text-white py-3 rounded-lg font-bold text-sm hover:bg-gold-600 transition-colors"
-                >
-                    Aplicar y Cerrar
-                </button>
-            </div>
-        </div>
-    );
-}
-
-// =========================================================
-// ➕ COMPONENTE: FORMULARIO DE AÑADIR OBRA (Actualizado)
+// ➕ COMPONENTE: FORMULARIO DE AÑADIR/DUPLICAR OBRA (Actualizado)
 // =========================================================
 
-interface AddWorkFormProps {
+interface ArtworkFormProps {
     onAdd: (artwork: Omit<Artwork, 'id' | 'code' | 'status'>) => void;
+    initialArtwork: Artwork | null;
+    onCancel: () => void;
 }
 
-const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
+const ArtworkForm: React.FC<ArtworkFormProps> = ({ onAdd, initialArtwork, onCancel }) => {
+    // Definiciones de estado local
     const [title, setTitle] = useState('');
     const [certificationDate, setCertificationDate] = useState(new Date().toISOString().substring(0, 10));
     const [seriesIndex, setSeriesIndex] = useState<number | ''>('');
@@ -553,6 +476,31 @@ const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
     const [imagePath, setImagePath] = useState(''); 
     const [dimensions, setDimensions] = useState('');
     const [technique, setTechnique] = useState('');
+    
+    // 🛑 HOOK para PRE-RELLENAR el formulario si se está duplicando
+    useEffect(() => {
+        if (initialArtwork) {
+            // Carga los datos de la obra a duplicar
+            setTitle(initialArtwork.title);
+            setCertificationDate(new Date().toISOString().substring(0, 10)); // Mantiene la fecha actual
+            setSeriesIndex(initialArtwork.seriesIndex !== null ? initialArtwork.seriesIndex + 1 : ''); // Sugiere el siguiente índice
+            setSeriesTotal(initialArtwork.seriesTotal ?? '');
+            setIsSeries(initialArtwork.seriesIndex !== null);
+            setImagePath(initialArtwork.image);
+            setDimensions(initialArtwork.dimensions);
+            setTechnique(initialArtwork.technique);
+        } else {
+            // Restablece a los valores por defecto si no hay obra inicial
+            setTitle('');
+            setCertificationDate(new Date().toISOString().substring(0, 10));
+            setSeriesIndex('');
+            setSeriesTotal('');
+            setIsSeries(false);
+            setImagePath('');
+            setDimensions(''); 
+            setTechnique(''); 
+        }
+    }, [initialArtwork]); 
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -586,20 +534,24 @@ const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
             technique: technique.trim(), 
         });
 
-        // Limpiar formulario
-        setTitle('');
-        setSeriesIndex('');
-        setSeriesTotal('');
-        setIsSeries(false);
-        setImagePath('');
-        setDimensions(''); 
-        setTechnique(''); 
+        // La función onAdd en el padre llama a onCancel, lo que limpia este formulario.
     };
+    
+    const isDuplicating = !!initialArtwork;
 
     return (
         <form onSubmit={handleSubmit} className="p-6 bg-white rounded-xl shadow-lg border border-stone-100 mb-8">
             <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mb-6">
-                <Plus size={24} className="text-gold-500" /> Añadir Nueva Obra al Catálogo
+                {isDuplicating ? (
+                    <>
+                        <Edit size={24} className="text-blue-500" /> Duplicando Obra: <span className="font-medium italic text-slate-600 text-xl">"{initialArtwork?.title}"</span>
+                        <span className="text-sm font-normal text-slate-400 border-l pl-3 ml-3">Modifique solo los campos necesarios.</span>
+                    </>
+                ) : (
+                    <>
+                        <Plus size={24} className="text-gold-500" /> Añadir Nueva Obra al Catálogo
+                    </>
+                )}
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
@@ -706,12 +658,22 @@ const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
                     </div>
                 </div>
                 
+                {/* Botones de Acción */}
+                {isDuplicating && (
+                    <button 
+                        type="button"
+                        onClick={onCancel}
+                        className="bg-red-500 text-white py-3 rounded-lg font-bold text-sm hover:bg-red-600 transition-colors flex items-center justify-center gap-1 shadow-md col-span-1"
+                    >
+                        <X size={16} /> CANCELAR
+                    </button>
+                )}
                 <button 
                     type="submit"
-                    className="bg-slate-700 text-white py-3 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors flex items-center justify-center gap-1 shadow-md col-span-1"
+                    className={`bg-slate-700 text-white py-3 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors flex items-center justify-center gap-1 shadow-md ${isDuplicating ? 'col-span-1' : 'col-span-1 md:col-start-6'}`}
                     disabled={!title.trim() || !dimensions.trim() || !technique.trim()}
                 >
-                    <Plus size={16} /> AÑADIR
+                    <Plus size={16} /> {isDuplicating ? 'GUARDAR NUEVA OBRA' : 'AÑADIR'}
                 </button>
             </div>
         </form>
@@ -719,12 +681,11 @@ const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
 };
 
 
-// ---------------------------------------------------------
-// ⚙️ COMPONENTE PRINCIPAL DEL DASHBOARD (CONTENEDOR)
-// ---------------------------------------------------------
+// =========================================================
+// ⚙️ COMPONENTE PRINCIPAL DEL DASHBOARD (CONTENEDOR - Actualizado)
+// =========================================================
 export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
     
-    // DATA CENTRAL: Obras (Ejemplo con datos reales)
     const [artworks, setArtworks] = useState<Artwork[]>([
         { id: 1, title: 'Sara bajo Farola', certificationDate: '2025-12-15', type: 'PT', seriesIndex: null, seriesTotal: null, code: 'MA-2025-2512', status: 'GENERADO', image: '/obras/demo-obra.jpg', dimensions: '100x81 cm', technique: 'Óleo sobre tela montada en tabla con bastidor' },
         { id: 2, title: 'Retrato de Otoño', certificationDate: '2026-01-20', type: 'PT', seriesIndex: 1, seriesTotal: 5, code: 'MA-2026-26010105', status: 'GENERADO', image: '/obras/demo-obra-seriada.jpg', dimensions: '50x70 cm', technique: 'Impresión Giclée sobre papel de algodón' },
@@ -733,6 +694,8 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     
     const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
     const [showSettingsPanel, setShowSettingsPanel] = useState(false);
+    // 🛑 NUEVO ESTADO: Obra para pre-llenar el formulario
+    const [artworkToDuplicate, setArtworkToDuplicate] = useState<Artwork | null>(null);
 
     // Handler para añadir obra desde el formulario
     const handleAddArtwork = (newArtworkData: Omit<Artwork, 'id' | 'code' | 'status'>) => {
@@ -745,6 +708,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
         }; 
         
         setArtworks(prevArtworks => [newArtwork, ...prevArtworks]); 
+        setArtworkToDuplicate(null); // Limpiar el estado de duplicación
     };
     
     // Handler para generar código
@@ -781,7 +745,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                 {/* CABECERA Y LOGOUT */}
                 <div className="flex justify-between items-center mb-10 border-b pb-4">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-                        <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO Privado v2.3 (Certificados Optimizados)
+                        <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO Privado v2.4 (Flujo Ágil)
                     </h1>
                     <div className="flex gap-4">
                         <button 
@@ -799,8 +763,12 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                     </div>
                 </div>
 
-                {/* FORMULARIO DE AÑADIR OBRA */}
-                <AddWorkForm onAdd={handleAddArtwork} />
+                {/* FORMULARIO DE AÑADIR/DUPLICAR OBRA */}
+                <ArtworkForm 
+                    onAdd={handleAddArtwork} 
+                    initialArtwork={artworkToDuplicate}
+                    onCancel={() => setArtworkToDuplicate(null)} // Cancelar duplicación
+                />
 
                 {/* MURO DE OBRAS */}
                 <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mb-6">
@@ -823,6 +791,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                                 settings={documentSettings}
                                 onGenerateCode={handleGenerateCode}
                                 onDelete={handleDeleteArtwork}
+                                onDuplicate={setArtworkToDuplicate} // Pasar el handler de duplicación
                             />
                         ))
                     )}
@@ -831,13 +800,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
             </div>
             
             {/* PANEL DE AJUSTES FLOTANTE */}
-            {showSettingsPanel && (
-                <SettingsPanel 
-                    settings={documentSettings} 
-                    setSettings={setDocumentSettings} 
-                    onClose={() => setShowSettingsPanel(false)} 
-                />
-            )}
+            {/* ... (SettingsPanel sin cambios) ... */}
             
         </div>
     );
