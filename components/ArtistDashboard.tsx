@@ -75,7 +75,7 @@ const getSeriesText = (artwork: Artwork) => {
 }
 
 /**
- * FUNCIÓN MEJORADA: Genera el HTML del CERTIFICADO (Con imagen centrada y tamaño ajustado).
+ * Genera el HTML del CERTIFICADO.
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -93,9 +93,8 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                 .cert-container { 
                     border: 1px solid #000; 
                     padding: 40px; 
-                    /* Simula el doble borde dorado/negro */
                     box-shadow: 0 0 0 5px #d4af37; 
-                    max-width: 550px; /* Tamaño profesional de documento */
+                    max-width: 550px; 
                     margin: 0 auto;
                 }
                 .header { 
@@ -141,7 +140,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                 }
                 .artwork-image-section {
                     width: 70%; 
-                    max-width: 300px; /* 🛑 TAMAÑO OPTIMIZADO: Imagen centrada y legible */
+                    max-width: 300px; 
                     margin: 30px auto;
                     border: 1px solid #ccc;
                     padding: 5px;
@@ -350,7 +349,7 @@ const handlePrintDocument = (content: string, title: string) => {
 
 
 // =========================================================
-// 🏭 COMPONENTE: TARJETA VISUAL DE GESTIÓN (NUEVA ESTRUCTURA)
+// 🏭 COMPONENTE: TARJETA VISUAL DE GESTIÓN
 // =========================================================
 
 interface ArtworkWorkstationProps {
@@ -424,13 +423,15 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
                     <p className="text-xs text-slate-500 mt-1">{getSeriesText(artwork)}</p>
                 </div>
                 <div className="flex gap-1.5">
+                    {/* El botón de editar es ahora el único acceso al formulario para cambiar datos */}
                     <button
-                        onClick={() => onEdit(artwork)} // Permite editar el título, medidas, etc.
+                        onClick={() => onEdit(artwork)} 
                         className="text-slate-500 hover:text-orange-500 p-1 rounded transition"
                         title="Editar Datos de Obra"
                     >
                         <Edit size={18} />
                     </button>
+                    {/* El botón de duplicar es la forma más rápida de añadir una nueva obra similar */}
                     <button
                         onClick={() => onDuplicate(artwork)}
                         className="text-slate-500 hover:text-blue-500 p-1 rounded transition"
@@ -470,8 +471,8 @@ interface ArtworkFormProps {
 const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToManage, onCancel }) => {
     
     // Estado interno del formulario
-    const isEditing = artworkToManage && artworkToManage.code !== null;
-    const isDuplicating = artworkToManage && artworkToManage.code === null && artworkToManage.id < 0; // Indicador temporal para duplicación
+    const isEditing = artworkToManage && artworkToManage.id > 0; // Si tiene ID positivo, es una obra existente
+    const isDuplicating = artworkToManage && artworkToManage.id === -1; // Indicador temporal para duplicación (ID -1)
 
     const [title, setTitle] = useState('');
     const [certificationDate, setCertificationDate] = useState(new Date().toISOString().substring(0, 10));
@@ -536,8 +537,8 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
             technique: technique.trim(), 
         };
 
-        // Si estamos editando o duplicando un elemento existente, pasamos su ID (o el ID del temporal)
-        const idToUpdate = artworkToManage ? artworkToManage.id : null;
+        // Si estamos editando un elemento existente, pasamos su ID. Si estamos duplicando o añadiendo, pasamos null.
+        const idToUpdate = isEditing ? artworkToManage.id : null;
 
         onSave(newArtworkData, idToUpdate);
         onCancel(); // Cerrar formulario al guardar
@@ -688,19 +689,17 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
 // =========================================================
 export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
     
-    // 🛑 CATALOGO VACÍO POR DEFECTO
-    const [artworks, setArtworks] = useState<Artwork[]>([]);
-    
-    // 🛑 DATOS DE PRUEBA (DESCOMENTAR si se necesitan datos iniciales)
-    // const [artworks, setArtworks] = useState<Artwork[]>([
-    //     { id: 1, title: 'Sara bajo Farola', certificationDate: '2025-12-15', type: 'PT', seriesIndex: null, seriesTotal: null, code: 'MA-2025-2512', status: 'GENERADO', image: '/obras/demo-obra.jpg', dimensions: '100x81 cm', technique: 'Óleo sobre tela montada en tabla con bastidor' },
-    //     { id: 2, title: 'Retrato de Otoño', certificationDate: '2026-01-20', type: 'PT', seriesIndex: 1, seriesTotal: 5, code: 'MA-2026-26010105', status: 'GENERADO', image: '/obras/demo-obra-seriada.jpg', dimensions: '50x70 cm', technique: 'Impresión Giclée sobre papel de algodón' },
-    //     { id: 3, title: 'El Silencio del Estudio', certificationDate: '2025-10-01', type: 'SC', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/placeholder-work.jpg', dimensions: '30x30x60 cm', technique: 'Escultura en bronce a la cera perdida' },
-    // ]);
+    // 🛑 CATALOGO CON DATOS INICIALES (para que la galería se vea)
+    const [artworks, setArtworks] = useState<Artwork[]>([
+        { id: 1, title: 'Sara bajo Farola', certificationDate: '2025-12-15', type: 'PT', seriesIndex: null, seriesTotal: null, code: 'MA-2025-2512', status: 'GENERADO', image: '/obras/demo-obra.jpg', dimensions: '100x81 cm', technique: 'Óleo sobre tela montada en tabla con bastidor' },
+        { id: 2, title: 'Retrato de Otoño', certificationDate: '2026-01-20', type: 'PT', seriesIndex: 1, seriesTotal: 5, code: 'MA-2026-26010105', status: 'GENERADO', image: '/obras/demo-obra-seriada.jpg', dimensions: '50x70 cm', technique: 'Impresión Giclée sobre papel de algodón' },
+        { id: 3, title: 'El Silencio del Estudio', certificationDate: '2025-10-01', type: 'SC', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/placeholder-work.jpg', dimensions: '30x30x60 cm', technique: 'Escultura en bronce a la cera perdida' },
+    ]);
     
     const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
-    const [showSettingsPanel, setShowSettingsPanel] = useState(false);
-    // 🛑 Controla si el formulario está abierto y qué obra está gestionando (null = añadir nuevo)
+    // 🛑 showSettingsPanel ya no se usa, pero se mantiene en el estado por si se recupera la funcionalidad.
+    const [showSettingsPanel, setShowSettingsPanel] = useState(false); 
+    
     const [artworkToManage, setArtworkToManage] = useState<Artwork | null>(null);
 
     // Handler para añadir o editar obra
@@ -732,7 +731,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
         setArtworkToManage(null); // Limpiar el estado de gestión
     };
     
-    // Handler para duplicar (Prepara el formulario con los datos de la obra original, pero sin ID para que se cree como nueva)
+    // Handler para duplicar (Prepara el formulario con los datos de la obra original, pero con ID temporal -1 para que se cree como nueva)
     const handleDuplicateArtwork = (artwork: Artwork) => {
         const temporaryDuplicationArtwork: Artwork = {
             ...artwork,
@@ -781,21 +780,10 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                 {/* CABECERA Y BOTONES GLOBALES */}
                 <div className="flex justify-between items-center mb-10 border-b pb-4">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-                        <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO Privado v2.5 (Galería Visual)
+                        <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO
                     </h1>
+                    {/* 🛑 SOLO MOSTRAR BOTÓN DE SALIR */}
                     <div className="flex gap-4">
-                        <button 
-                            onClick={() => setArtworkToManage(null)} 
-                            className="flex items-center gap-2 text-sm text-white bg-gold-500 hover:bg-gold-600 transition-colors py-3 px-4 rounded-lg font-bold shadow-md"
-                        >
-                            <Plus size={16} /> NUEVA OBRA
-                        </button>
-                        <button 
-                            onClick={() => setShowSettingsPanel(true)} 
-                            className="flex items-center gap-2 text-sm text-slate-500 hover:text-blue-500 transition-colors py-3 px-4 border border-stone-200 rounded-lg hover:border-blue-500"
-                        >
-                            <Settings size={16} /> Ajustes
-                        </button>
                         <button 
                             onClick={onLogout} 
                             className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-500 transition-colors py-3 px-4 border border-stone-200 rounded-lg hover:border-red-500"
@@ -816,7 +804,19 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                             <p className="text-xl text-slate-500 font-semibold flex items-center justify-center gap-2">
                                 <MinusCircle size={24} /> Catálogo de Obras vacío.
                             </p>
-                            <p className="text-slate-400 mt-2">Pulse "+ NUEVA OBRA" para añadir su primera pieza y comenzar a generar documentos.</p>
+                            {/* Proporcionamos una forma de añadir la primera obra, ya que se eliminó el botón "+ NUEVA OBRA" */}
+                            <p className="text-slate-400 mt-2">
+                                Para añadir su primera pieza, haga click aquí:
+                                <button 
+                                    onClick={() => setArtworkToManage(null)} 
+                                    className="ml-2 text-blue-500 hover:text-blue-700 font-semibold underline"
+                                >
+                                    Añadir Obra Nueva
+                                </button>
+                            </p>
+                            <p className="text-xs text-slate-300 mt-4">
+                                Nota: Si ya tiene obras, use el botón <Edit size={12} className="inline-block" /> o <Copy size={12} className="inline-block" /> que aparece en cada foto para gestionar.
+                            </p>
                         </div>
                     ) : (
                         sortedArtworks.map(artwork => (
@@ -826,8 +826,8 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                                 settings={documentSettings}
                                 onGenerateCode={handleGenerateCode}
                                 onDelete={handleDeleteArtwork}
-                                onDuplicate={handleDuplicateArtwork} // Pasamos el handler de duplicación
-                                onEdit={setArtworkToManage} // Al editar, establece la obra para que se muestre en el formulario
+                                onDuplicate={handleDuplicateArtwork} 
+                                onEdit={setArtworkToManage} 
                             />
                         ))
                     )}
@@ -835,16 +835,18 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
 
             </div>
             
-            {/* PANEL DE AJUSTES FLOTANTE */}
-            {showSettingsPanel && (
+            {/* 🛑 PANEL DE AJUSTES FLOTANTE (SE PUEDE ELIMINAR O MANTENER OCULTO) */}
+            {/* Se ha eliminado el botón de activación, por lo que este panel es inaccesible */}
+            {/* showSettingsPanel && (
                 <SettingsPanel 
                     settings={documentSettings} 
                     setSettings={setDocumentSettings} 
                     onClose={() => setShowSettingsPanel(false)} 
                 />
-            )}
+            )*/}
             
             {/* FORMULARIO DE GESTIÓN DE OBRA (Flotante) */}
+            {/* Se mantiene accesible a través de los botones Editar y Duplicar en las tarjetas */}
             {artworkToManage !== null && (
                 <ArtworkManagementForm 
                     onSave={handleSaveArtwork} 
