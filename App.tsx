@@ -1,11 +1,10 @@
-// ARCHIVO: App.tsx - CÓDIGO FINAL Y COMPLETO
+// ARCHIVO: ./App.tsx - CÓDIGO FINAL Y COMPLETO
 
-import React, { useState, useEffect } from 'react';
-// 🛑 CORRECCIÓN CLAVE: Importamos la función de generación de HTML del PublicSite
+import React, { useState, useEffect, useCallback } from 'react';
 import { PublicSite, getCertificateDemoHtmlContent } from './components/PublicSite'; 
 import { ArtistDashboard } from './components/ArtistDashboard';
 import { DigitalCompanion } from './components/DigitalCompanion';
-import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield, ShieldCheck } from 'lucide-react'; 
+import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield, Printer } from 'lucide-react'; 
 
 // --- CONFIGURACIÓN DE SEGURIDAD (PASSWORD) ---
 const PASSWORD = "arte2026"; 
@@ -21,8 +20,10 @@ const App: React.FC = () => {
   // 'public' = Web en modo "Vista Previa" o "En Construcción"
   // 'artist' = ESTUDIO
   const [view, setView] = useState<'public' | 'artist'>('public');
-  // selectedCompanionId contendrá el ID de la obra o 'CERTIFICATE_DEMO'
-  const [selectedCompanionId, setSelectedCompanionId] = useState<string | null>(null);
+  
+  // 🛑 ESTADO CLAVE: Gestiona el Companion o la Demo del Certificado
+  // Valor: Artwork ID (string) | 'CERTIFICATE_DEMO' | null
+  const [selectedCompanionId, setSelectedCompanionId] = useState<string | null>(null); 
   
   // Hooks para el formulario de login (reutilizados para ambos candados)
   const [passwordInput, setPasswordInput] = useState("");
@@ -31,271 +32,161 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const savedAuth = localStorage.getItem('myriam_auth');
+    const savedView = localStorage.getItem('myriam_view');
+
     if (savedAuth === 'true') {
         setIsAuthenticated(true);
-        setView('public'); 
+        setView((savedView as 'public' | 'artist') || 'public');
     }
   }, []);
-  
 
-  // Handler para el PRIMER candado (Acceso inicial a la web/Preview)
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordInput === PASSWORD) {
       setIsAuthenticated(true);
-      localStorage.setItem('myriam_auth', 'true');
       setError(false);
-      setShowLoginModal(false); 
-      setView('public'); 
-      setPasswordInput(""); 
+      setShowLoginModal(false);
+      setShowStudioLoginModal(false);
+      setView('artist'); // El login siempre lleva al modo Artista/Estudio
+      localStorage.setItem('myriam_auth', 'true');
+      localStorage.setItem('myriam_view', 'artist');
     } else {
       setError(true);
-      setPasswordInput(""); 
     }
+    setPasswordInput("");
   };
 
-  // Handler para el SEGUNDO candado (Acceso a ESTUDIO)
-  const handleStudioLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passwordInput === PASSWORD) {
-        setShowStudioLoginModal(false);
-        setView('artist'); 
-        setError(false);
-        setPasswordInput(""); 
-    } else {
-        setError(true);
-        setPasswordInput("");
-    }
-  };
-
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     setIsAuthenticated(false);
+    setView('public');
     localStorage.removeItem('myriam_auth');
-    setView('public'); 
+    localStorage.removeItem('myriam_view');
+  }, []);
+  
+  // Función para cerrar el modal de login (reutilizable)
+  const closeLoginModal = () => {
+    setShowLoginModal(false);
+    setShowStudioLoginModal(false);
+    setPasswordInput("");
+    setError(false);
+  };
+
+  // Función de navegación para el modo público (cambia de vista sin cerrar sesión)
+  const togglePublicViewMode = () => {
+    setView(view === 'public' ? 'artist' : 'public');
+    localStorage.setItem('myriam_view', view === 'public' ? 'artist' : 'public');
   };
   
-  // Función de cierre del Compañero (reutilizada para la demo)
-  const handleCloseCompanion = () => setSelectedCompanionId(null); 
-
-
-  // ---------------------------------------------------------
-  // Función para Renderizar el Certificado BONITO
-  // ---------------------------------------------------------
-  const renderCertificateDemo = () => {
-    // Llama a la función que genera el HTML bonito (exportada de PublicSite.tsx)
-    const htmlContent = getCertificateDemoHtmlContent(); 
-    
-    return (
-        // Contenedor del Modal (fondo oscuro)
-        <div className="fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4">
-            <div className="w-full max-w-4xl bg-white p-6 rounded-xl shadow-2xl relative">
-                <div className="flex justify-between items-center border-b pb-3 mb-4">
-                    <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
-                        <ShieldCheck size={28} className="text-gold-500" /> Demo: Certificado de Autenticidad
-                    </h3>
-                    <button onClick={handleCloseCompanion} className="p-1 rounded-full text-slate-400 hover:text-red-500 transition-colors">
-                        <X size={24} />
-                    </button>
-                </div>
-                
-                <p className="text-sm text-slate-600 mb-4">
-                    Visualización en tiempo real del documento que reciben los coleccionistas. (Simulación de impresión A4).
-                </p>
-                
-                <div className="w-full h-[600px] border border-gray-300 rounded-lg overflow-hidden shadow-inner bg-slate-50">
-                    <iframe
-                        title="Certificado Demo Preview"
-                        srcDoc={htmlContent} // ¡Usa el HTML generado!
-                        style={{ 
-                            width: '100%', 
-                            height: '100%', 
-                            border: 'none',
-                            transform: 'scale(0.8)', 
-                            transformOrigin: 'top left' 
-                        }}
-                        sandbox="allow-scripts allow-same-origin"
-                    />
-                </div>
-                
-                <div className="mt-4 text-right">
-                    <button onClick={handleCloseCompanion} className="bg-slate-500 text-white px-4 py-2 rounded font-semibold hover:bg-slate-600">Cerrar Demo</button>
-                </div>
-            </div>
-        </div>
-    );
-  };
-  // ---------------------------------------------------------
-
-
-  // ---------------------------------------------------------
-  // 🔒 PANTALLA DE CONSTRUCCIÓN / PRIMER CANDADO (No Autenticado)
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-stone-50 flex flex-col items-center justify-center p-6 relative font-serif">
-        
-        {/* Contenido Público: Logo y Mensaje de Construcción */}
-        <div className="text-center animate-fade-in max-w-lg">
-          <img 
-            src="/logo-myriam.png" 
-            alt="Myriam Alcaraz" 
-            className="h-24 md:h-32 w-auto mx-auto mb-8 object-contain opacity-90" 
-          />
-          <h1 className="text-2xl md:text-4xl text-slate-800 tracking-widest uppercase mb-4">
-            Sitio Web en Construcción
-          </h1>
-          <div className="w-16 h-1 bg-gold-500 mx-auto mb-6"></div>
-          <p className="text-slate-500 font-light text-lg">
-            Estamos preparando una nueva experiencia artística. <br />
-            Próximamente disponible.
-          </p>
-        </div>
-
-        {/* 🔒 BOTÓN DE ACCESO PRIVADO (Candado discreto) */}
-        <button 
-          onClick={() => setShowLoginModal(true)}
-          className="absolute bottom-6 right-6 text-stone-300 hover:text-gold-500 transition-colors p-2"
-          title="Acceso Privado"
-        >
-          <Lock size={20} />
-        </button>
-
-        {/* Modal de Login */}
-        {showLoginModal && (
-          <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white p-8 rounded-xl shadow-2xl max-w-sm w-full relative animate-scale-in">
-              
-              <button 
-                onClick={() => setShowLoginModal(false)}
-                className="absolute top-4 right-4 text-slate-400 hover:text-slate-800"
-                aria-label="Cerrar"
-              >
-                <X size={20} />
-              </button>
-
-              <div className="text-center mb-6">
-                <Shield size={32} className="text-gold-500 mx-auto mb-2" />
-                <h2 className="text-xl font-bold text-slate-800">Acceso de Artista</h2>
-                <p className="text-sm text-slate-500">Para ver la web en vista previa.</p>
-              </div>
-
-              <form onSubmit={handleLogin} className="flex flex-col gap-4">
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Introduce tu clave privada" 
-                    value={passwordInput}
-                    onChange={(e) => {
-                      setPasswordInput(e.target.value);
-                      if (error) setError(false);
-                    }}
-                    className={`w-full p-3 pr-12 text-center border-2 rounded-lg outline-none transition-all focus:border-gold-500 ${
-                      error ? 'border-red-500 bg-red-50' : 'border-stone-200'
-                    }`}
-                    autoFocus
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(prev => !prev)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gold-500"
-                    aria-label={showPassword ? "Ocultar clave" : "Mostrar clave"}
-                  >
-                    {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
-                  </button>
-                </div>
-                {error && <p className="text-xs text-red-500 text-center font-bold">Clave incorrecta</p>}
-                <button type="submit" className="bg-gold-500 text-white py-3 rounded-lg font-bold hover:bg-gold-600 transition-colors text-sm tracking-wider flex items-center justify-center gap-2">
-                    ACCEDER A LA PREVIEW <ArrowRight size={18} />
-                </button>
-              </form>
-            </div>
-          </div>
-        )}
-      </div>
-    );
+  // 🛑 NUEVA FUNCIÓN: Abre el Certificado Demo (llamado desde DigitalCompanion.tsx)
+  const handleOpenCertificateDemo = () => {
+      setSelectedCompanionId('CERTIFICATE_DEMO');
   }
 
-  // ---------------------------------------------------------
-  // CONTENIDO DE LA APP (Usuario Autenticado)
-  // ---------------------------------------------------------
-  return (
-    <div className="min-h-screen animate-fade-in relative">
+  // 🛑 NUEVO COMPONENTE: Renderiza el Certificado Demo en un Iframe para simular el PDF
+  const renderCertificateDemo = () => {
+      const htmlContent = getCertificateDemoHtmlContent();
       
-      {/* VISTA PRINCIPAL (Alterna entre PublicSite y ArtistDashboard) */}
-      {view === 'public' ? (
-        <PublicSite 
-            onOpenCompanion={(id) => setSelectedCompanionId(id)} 
-            onOpenStudioLogin={() => setShowStudioLoginModal(true)}
-        />
-      ) : (
+      return (
+        <div className="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-2xl max-w-[210mm] w-full relative animate-scale-in flex flex-col h-[95vh]">
+                
+                {/* Header */}
+                <header className="flex justify-between items-center p-4 border-b border-stone-100 bg-white rounded-t-xl sticky top-0 z-10">
+                    <h2 className="text-xl font-bold text-slate-800 flex items-center gap-3">
+                        <Shield size={22} className="text-gold-500" /> Demo Certificado de Autenticidad
+                    </h2>
+                    <div className="flex gap-2">
+                        <button 
+                            onClick={() => alert("Simulación de Impresión / Exportación a PDF")}
+                            className="p-2 rounded text-slate-700 bg-slate-100 hover:bg-gold-500 hover:text-white transition-colors"
+                            title="Imprimir"
+                        >
+                            <Printer size={20} />
+                        </button>
+                        <button 
+                            onClick={() => setSelectedCompanionId(null)} 
+                            className="p-1 rounded-full text-slate-400 hover:text-red-500 transition-colors"
+                        >
+                            <X size={24} />
+                        </button>
+                    </div>
+                </header>
+                
+                {/* Contenido del Certificado en Iframe */}
+                <iframe 
+                    srcDoc={htmlContent} 
+                    className="flex-1 w-full border-none rounded-b-xl"
+                    title="Certificado de Autenticidad Demo"
+                ></iframe>
+
+            </div>
+        </div>
+      );
+  }
+
+
+  // --- RENDERIZADO PRINCIPAL ---
+  return (
+    <div className="min-h-screen">
+      
+      {/* 1. MODO ARTISTA (DASHBOARD) */}
+      {view === 'artist' ? (
         <ArtistDashboard onLogout={handleLogout} />
+      ) : (
+        // 2. MODO PÚBLICO (SITIO WEB)
+        <PublicSite 
+          onOpenCompanion={setSelectedCompanionId} 
+          onOpenStudioLogin={() => setShowStudioLoginModal(true)} // Abre el segundo candado
+        />
       )}
 
-      {/* 🛡️ SISTEMA DE NAVEGACIÓN PRIVADO (Solo el botón ESTUDIO/PREVIEW) */}
-      <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 items-end">
-        
-        {/* Botón de ESTUDIO/Vista Previa */}
-        <button 
-          onClick={() => {
-            if (view === 'public') {
-              setShowStudioLoginModal(true);
-            } else {
-              setView('public'); 
-            }
-          }}
-          className="bg-slate-900/50 backdrop-blur p-2 rounded-full shadow-xl transition-all hover:scale-110 text-white/70 hover:text-gold-500"
-          title={view === 'public' ? "Entrar en ESTUDIO" : "Volver a Vista Previa"} 
-        >
-          {view === 'public' ? <Lock size={16} /> : <Eye size={16} />} 
-        </button>
-        
-      </div>
-
-      {/* MODAL DEL SEGUNDO CANDADO (ACCESO A ESTUDIO) */}
-      {showStudioLoginModal && (
-          <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white p-8 rounded-xl shadow-2xl max-w-sm w-full relative animate-scale-in">
-              
+      {/* --- MODAL DE LOGIN (REUTILIZADO) --- */}
+      {(showLoginModal || showStudioLoginModal) && (
+          <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-2xl max-w-sm w-full p-8 relative animate-scale-in">
+                
               <button 
-                onClick={() => {
-                    setShowStudioLoginModal(false);
-                    setError(false);
-                    setPasswordInput(""); 
-                }}
-                className="absolute top-4 right-4 text-slate-400 hover:text-slate-800"
-                aria-label="Cerrar"
+                onClick={closeLoginModal} 
+                className="absolute top-4 right-4 p-1 rounded-full text-slate-400 hover:text-red-500 transition-colors"
               >
-                <X size={20} />
+                  <X size={24} />
               </button>
-
-              <div className="text-center mb-6">
-                <Shield size={32} className="text-gold-500 mx-auto mb-2" />
-                <h2 className="text-xl font-bold text-slate-800">Acceso a ESTUDIO</h2>
-                <p className="text-sm text-slate-500">Introduce la clave para acceder a la gestión.</p>
-              </div>
-
-              <form onSubmit={handleStudioLogin} className="flex flex-col gap-4"> 
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Introduce tu clave privada" 
-                    value={passwordInput}
-                    onChange={(e) => {
-                      setPasswordInput(e.target.value);
-                      if (error) setError(false);
-                    }}
-                    className={`w-full p-3 pr-12 text-center border-2 rounded-lg outline-none transition-all focus:border-gold-500 ${
-                      error ? 'border-red-500 bg-red-50' : 'border-stone-200'
-                    }`}
-                    autoFocus
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(prev => !prev)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gold-500"
-                    aria-label={showPassword ? "Ocultar clave" : "Mostrar clave"}
-                  >
-                    {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
-                  </button>
+              
+              <Lock size={40} className="text-gold-500 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-slate-800 text-center mb-2">Acceso a {showStudioLoginModal ? 'Estudio' : 'Vista Previa'}</h2>
+              <p className="text-sm text-slate-500 text-center mb-6">
+                {showStudioLoginModal 
+                    ? 'Introduce la clave de artista para acceder al Dashboard.' 
+                    : 'Accede como Artista/Curador para el modo Estudio.'}
+              </p>
+              
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div>
+                  <label htmlFor="password" className="sr-only">Clave</label>
+                  <div className="relative">
+                    <input
+                      id="password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={passwordInput}
+                      onChange={(e) => {
+                        setPasswordInput(e.target.value);
+                        setError(false);
+                      }}
+                      placeholder="Introduce la clave"
+                      className={`w-full p-3 pr-12 rounded-lg text-sm bg-stone-50 outline-none transition-all focus:border-gold-500 ${
+                        error ? 'border-red-500 bg-red-50' : 'border-stone-200'
+                      }`}
+                      autoFocus
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(prev => !prev)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gold-500"
+                      aria-label={showPassword ? "Ocultar clave" : "Mostrar clave"}
+                    >
+                      {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                    </button>
+                  </div>
                 </div>
                 {error && <p className="text-xs text-red-500 text-center font-bold">Clave incorrecta</p>}
                 <button type="submit" className="bg-gold-500 text-white py-3 rounded-lg font-bold hover:bg-gold-600 transition-colors text-sm tracking-wider flex items-center justify-center gap-2">
@@ -306,18 +197,19 @@ const App: React.FC = () => {
           </div>
       )}
 
-      {/* RENDERIZADO CONDICIONAL DEL CERTIFICADO BONITO O DEL COMPAÑERO DIGITAL */}
-      {selectedCompanionId === 'CERTIFICATE_DEMO' ? (
-          // 1. Si el ID es la cadena de la demo, renderiza el modal completo (el bonito)
-          renderCertificateDemo()
-      ) : selectedCompanionId && (
-        // 2. Si hay un ID pero no es la demo (será un ID de obra), renderiza el Compañero Digital
+      {/* 🛑 RENDERIZADO CONDICIONAL CLAVE 🛑 */}
+      
+      {/* 3. CERTIFICADO DIGITAL (DEMO) */}
+      {selectedCompanionId === 'CERTIFICATE_DEMO' && renderCertificateDemo()}
+
+      {/* 4. COMPAÑERO DIGITAL (LUPA/INFO) */}
+      {selectedCompanionId && selectedCompanionId !== 'CERTIFICATE_DEMO' && (
         <DigitalCompanion 
           artworkId={selectedCompanionId} 
-          onClose={handleCloseCompanion} 
+          onClose={() => setSelectedCompanionId(null)} 
           showCertificateAccess={view === 'artist'} 
-          // Pasamos la función que abre el modal bonito
-          onOpenCertificateDemo={() => setSelectedCompanionId('CERTIFICATE_DEMO')} 
+          // 🛑 PROP CLAVE: Pasa la función para abrir el modal del certificado
+          onOpenCertificateDemo={handleOpenCertificateDemo}
         />
       )}
     </div>
