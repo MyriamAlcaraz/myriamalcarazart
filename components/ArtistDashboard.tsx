@@ -150,16 +150,16 @@ const getSeriesText = (artwork: Artwork) => {
 
 /**
  * Genera el HTML del CERTIFICADO. 
- * 🛑 FIX EXTREMO BORDER V3: Cero margin en body y aumento de outline/offset para compensar.
+ * 🛑 FIX EXTREMO BORDER V4: Se aplica margin fijo en MM al contenedor para alejarlo del borde.
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const creationMonthAndYear = new Date(artwork.certificationDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
     
-    // 🛑 FIX EXTREMO DE MARCO V3: Aumento de grosor y separación + CERO margin en body.
+    // 🛑 FIX EXTREMO DE MARCO V3/V4: Aumento de grosor y separación + CERO margin en body.
     const GOLD_COLOR = "#b8860b"; 
-    const OUTLINE_WIDTH = "5px"; // 🛑 AUMENTADO de 4px a 5px
-    const OUTLINE_OFFSET = "10px"; // 🛑 AUMENTADO de 8px a 10px
+    const OUTLINE_WIDTH = "5px"; 
+    const OUTLINE_OFFSET = "10px"; 
 
     // Diseño de Iconos y Estilos del Footer
     const contactFooterHtml = `
@@ -186,16 +186,20 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
         <head>
             <title>Certificado - ${artwork.title}</title>
             <style>
-                /* 🛑 FIX MARGIN EXTREMO V3: CERO margin en body para maximizar el área imprimible */
+                /* 🛑 FIX MARGIN EXTREMO V4: CERO margin en body para maximizar el área imprimible */
                 body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 12pt; margin: 0mm; padding: 0; color: #111; } 
+                
                 .cert-container { 
+                    /* 🛑 FIX EXTREMO BORDER V4: MARGEN FIJO DE SEGURIDAD (15MM) */
+                    margin: 15mm auto !important; /* Mueve el contenedor entero 15mm de los bordes del papel */
+                    width: 180mm; /* Ancho fijo para A4 (210mm - 30mm de margen de seguridad) */
+                    box-sizing: border-box; /* Asegura que padding y border se incluyan en el ancho */
+                    
                     /* Borde fino (1px negro) + Outline grueso (5px dorado) */
                     border: 1px solid #000; 
                     outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (5px) */
                     outline-offset: ${OUTLINE_OFFSET}; /* Crea el espacio entre el borde fino y el outline grueso (10px) */
-                    padding: 35px; /* 🛑 AUMENTADO de 25px a 35px para centrar el contenido */
-                    max-width: 550px; 
-                    margin: 0 auto;
+                    padding: 35px; /* Padding interno */
                 }
                 .header { 
                     text-align: center; 
@@ -341,13 +345,13 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     body { margin: 0; padding: 0; } 
                     .cert-container { 
                         box-shadow: none; 
-                        /* 🛑 FIX BORDER/OUTLINE: Re-declarar el borde para asegurar visibilidad en PDF */
+                        /* 🛑 MANTENER FIX BORDER/OUTLINE V4 */
+                        margin: 15mm auto !important;
+                        width: 180mm !important; 
                         border: 1px solid #000 !important; 
                         outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important; 
                         outline-offset: ${OUTLINE_OFFSET} !important;
-                        
-                        max-width: 100%; 
-                        padding: 35px !important; /* Asegurar el padding */
+                        padding: 35px !important; 
                         
                         /* 🛑 FORZAR COLORES */
                         -webkit-print-color-adjust: exact !important; 
@@ -425,17 +429,17 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
 
 /**
  * Genera el HTML de la CARTA. 
- * 🛑 FIX EXTREMO BORDER V3: Cero margin en body y aumento de outline/offset para compensar.
+ * 🛑 FIX EXTREMO BORDER V4: Se aplica margin fijo en MM al contenedor para alejarlo del borde.
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     
     const seriesText = getSeriesText(artwork);
     
-    // 🛑 FIX EXTREMO DE MARCO V3: Aumento de grosor y separación + CERO margin en body.
+    // 🛑 FIX EXTREMO DE MARCO V3/V4: Aumento de grosor y separación + CERO margin en body.
     const GOLD_COLOR = "#b8860b"; 
-    const OUTLINE_WIDTH = "5px"; // 🛑 AUMENTADO de 4px a 5px
-    const OUTLINE_OFFSET = "10px"; // 🛑 AUMENTADO de 8px a 10px
+    const OUTLINE_WIDTH = "5px"; 
+    const OUTLINE_OFFSET = "10px"; 
 
     // Referencia de la carta para reflejar la edición abierta
     let seriesReference = '';
@@ -453,18 +457,22 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
         <head>
             <title>Carta Personalizada - ${artwork.title}</title>
             <style>
-                /* 🛑 FIX MARGIN EXTREMO V3: CERO margin en body para maximizar el área imprimible */
+                /* 🛑 FIX MARGIN EXTREMO V4: CERO margin en body para maximizar el área imprimible */
                 body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 13pt; margin: 0mm; padding: 0; color: #111; line-height: 1.8; } 
                 
                 /* 🛑 CONTENEDOR CON MARCO DORADO PARA LA CARTA */
                 .letter-container { 
+                    /* 🛑 FIX EXTREMO BORDER V4: MARGEN FIJO DE SEGURIDAD (15MM) */
+                    margin: 15mm auto !important; /* Mueve el contenedor entero 15mm de los bordes del papel */
+                    width: 180mm; /* Ancho fijo para A4 (210mm - 30mm de margen de seguridad) */
+                    box-sizing: border-box; 
+
                     border: 1px solid #000; 
                     outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (5px) */
                     outline-offset: ${OUTLINE_OFFSET}; /* Espacio entre bordes (10px) */
                     
-                    /* CORREGIDO: Padding interno aumentado para compensar el offset y centrar */
-                    padding: 40mm 80px; /* 🛑 AUMENTADO de 30mm 70px */
-                    margin: 0 auto; 
+                    /* CORREGIDO: Padding interno ajustado al nuevo ancho fijo (180mm) */
+                    padding: 40mm 40px; 
                 }
 
                 .top-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
@@ -494,12 +502,14 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                 @media print { 
                     body { margin: 0; padding: 0; } 
                     
-                    /* 🛑 FIX BORDE CARTA: Duplicar propiedades de borde para asegurar la impresión */
+                    /* 🛑 MANTENER FIX BORDE CARTA V4 */
                     .letter-container { 
+                        margin: 15mm auto !important;
+                        width: 180mm !important; 
                         border: 1px solid #000 !important; 
                         outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important; 
                         outline-offset: ${OUTLINE_OFFSET} !important;
-                        padding: 40mm 80px !important; /* Asegurar el padding */
+                        padding: 40mm 40px !important; 
                         
                         /* Forzar la impresión de colores y fondos en la carta también */
                         -webkit-print-color-adjust: exact !important; 
