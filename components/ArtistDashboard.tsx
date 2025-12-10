@@ -150,16 +150,16 @@ const getSeriesText = (artwork: Artwork) => {
 
 /**
  * Genera el HTML del CERTIFICADO. 
- * 🛑 FIX EXTREMO BORDER V8: Se mantiene el padding vertical interno a 7.5mm para simetría.
+ * 🛑 FIX EXTREMO BORDER V11: Se reduce el tamaño total del marco.
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const creationMonthAndYear = new Date(artwork.certificationDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
     
-    // 🛑 FIX EXTREMO DE MARCO V3/V4: Aumento de grosor y separación + CERO margin en body.
+    // 🛑 FIX EXTREMO DE MARCO V11: Reducción de offset y ancho.
     const GOLD_COLOR = "#b8860b"; 
-    const OUTLINE_WIDTH = "5px"; 
-    const OUTLINE_OFFSET = "10px"; 
+    const OUTLINE_WIDTH = "4px"; // REDUCIDO de 5px a 4px (V11)
+    const OUTLINE_OFFSET = "5px"; // REDUCIDO de 10px a 5px (V11)
 
     // Diseño de Iconos y Estilos del Footer
     const contactFooterHtml = `
@@ -195,13 +195,13 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     width: 180mm; /* Ancho fijo para A4 (210mm - 30mm de margen de seguridad) */
                     box-sizing: border-box; /* Asegura que padding y border se incluyan en el ancho */
                     
-                    /* Borde fino (1px negro) + Outline grueso (5px dorado) */
+                    /* Borde fino (1px negro) + Outline grueso (4px dorado) */
                     border: 1px solid #000; 
-                    outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (5px) */
-                    outline-offset: ${OUTLINE_OFFSET}; /* Crea el espacio entre el borde fino y el outline grueso (10px) */
+                    outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (4px) */
+                    outline-offset: ${OUTLINE_OFFSET}; /* Crea el espacio entre el borde fino y el outline grueso (5px) */
                     
-                    /* 🛑 FIX V8 (Mantenido): Padding ajustado a 7.5mm verticalmente para SIMETRÍA. */
-                    padding: 7.5mm 35px 7.5mm 35px; 
+                    /* 🛑 FIX V10: Padding ajustado a 5mm verticalmente para SIMETRÍA y subir ligeramente. */
+                    padding: 5mm 35px 5mm 35px; 
                 }
                 .header { 
                     text-align: center; 
@@ -347,13 +347,13 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     body { margin: 0; padding: 0; } 
                     .cert-container { 
                         box-shadow: none; 
-                        /* 🛑 MANTENER FIX BORDER/OUTLINE V4 y aplicar V8 */
+                        /* 🛑 MANTENER FIX BORDER/OUTLINE V11 */
                         margin: 15mm auto !important;
                         width: 180mm !important; 
                         border: 1px solid #000 !important; 
                         outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important; 
                         outline-offset: ${OUTLINE_OFFSET} !important;
-                        padding: 7.5mm 35px 7.5mm 35px !important; /* 🛑 FIX V8 (7.5mm simetría) */
+                        padding: 5mm 35px 5mm 35px !important; /* 🛑 FIX V10 (5mm simetría) */
                         
                         /* 🛑 FORZAR COLORES */
                         -webkit-print-color-adjust: exact !important; 
@@ -431,17 +431,17 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
 
 /**
  * Genera el HTML de la CARTA. 
- * 🛑 FIX EXTREMO BORDER V9: Se aumenta el padding inferior a 80mm para subir el contenido y liberar la zona inferior.
+ * 🛑 FIX EXTREMO BORDER V11: Se aumenta el padding inferior a 120mm y se reduce el tamaño total del marco.
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     
     const seriesText = getSeriesText(artwork);
     
-    // 🛑 FIX EXTREMO DE MARCO V3/V4: Aumento de grosor y separación + CERO margin en body.
+    // 🛑 FIX EXTREMO DE MARCO V11: Reducción de offset y ancho.
     const GOLD_COLOR = "#b8860b"; 
-    const OUTLINE_WIDTH = "5px"; 
-    const OUTLINE_OFFSET = "10px"; 
+    const OUTLINE_WIDTH = "4px"; // REDUCIDO de 5px a 4px (V11)
+    const OUTLINE_OFFSET = "5px"; // REDUCIDO de 10px a 5px (V11)
 
     // Referencia de la carta para reflejar la edición abierta
     let seriesReference = '';
@@ -470,11 +470,11 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                     box-sizing: border-box; 
 
                     border: 1px solid #000; 
-                    outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (5px) */
-                    outline-offset: ${OUTLINE_OFFSET}; /* Espacio entre bordes (10px) */
+                    outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; /* Marco grueso dorado (4px) */
+                    outline-offset: ${OUTLINE_OFFSET}; /* Espacio entre bordes (5px) */
                     
-                    /* 🛑 FIX V9: Padding ajustado para SUBIR el contenido (5mm top, 40px side, 80mm bottom) */
-                    padding: 5mm 40px 80mm 40px; /* **CAMBIO: 80mm inferior** */
+                    /* 🛑 FIX V11 EXTREMO: Padding ajustado para SUBIR AÚN MÁS el contenido y liberar el borde inferior (120mm) */
+                    padding: 5mm 40px 120mm 40px; /* **CAMBIO: 120mm inferior** */
                 }
 
                 .top-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
@@ -504,14 +504,14 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                 @media print { 
                     body { margin: 0; padding: 0; } 
                     
-                    /* 🛑 MANTENER FIX BORDE CARTA V4 y aplicar V9 */
+                    /* 🛑 MANTENER FIX BORDE CARTA V11 */
                     .letter-container { 
                         margin: 15mm auto !important;
                         width: 180mm !important; 
                         border: 1px solid #000 !important; 
                         outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important; 
                         outline-offset: ${OUTLINE_OFFSET} !important;
-                        padding: 5mm 40px 80mm 40px !important; /* 🛑 FIX V9 (80mm bottom) */
+                        padding: 5mm 40px 120mm 40px !important; /* 🛑 FIX V11 (120mm bottom) */
                         
                         /* Forzar la impresión de colores y fondos en la carta también */
                         -webkit-print-color-adjust: exact !important; 
