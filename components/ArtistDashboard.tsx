@@ -146,7 +146,7 @@ const getSeriesText = (artwork: Artwork) => {
 
 /**
  * Genera el HTML del CERTIFICADO. 
- * 🛑 FIX EXTREMO V14: Reducción de 180mm a 178mm de ancho y de 5mm a 4mm de padding vertical para asegurar el ajuste en PDF.
+ * 🛑 FIX EXTREMO V15: Se reduce el margen superior de 20mm a 10mm para subir la caja y evitar el desbordamiento en la impresión.
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -157,8 +157,8 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
     const OUTLINE_WIDTH = "4px"; 
     const OUTLINE_OFFSET = "5px"; 
     
-    // 🛑 FIX EXTREMO V13: Se mantiene el margen superior a 20mm y el inferior a 0mm para pegar la caja arriba.
-    const MARGIN_SAFETY_CSS = "20mm auto 0 auto"; 
+    // 🛑 FIX EXTREMO V15: Se reduce el margen superior de 20mm a 10mm.
+    const MARGIN_SAFETY_CSS = "10mm auto 0 auto"; 
 
     // Diseño de Iconos y Estilos del Footer
     const contactFooterHtml = `
@@ -189,9 +189,9 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                 body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 12pt; margin: 0mm; padding: 0; color: #111; } 
                 
                 .cert-container { 
-                    /* 🛑 FIX EXTREMO BORDER V13/V14: MARGEN FIJO DE SEGURIDAD 20mm arriba, 0mm abajo. */
+                    /* 🛑 FIX EXTREMO BORDER V15: MARGEN FIJO DE SEGURIDAD 10mm arriba, 0mm abajo. */
                     margin: ${MARGIN_SAFETY_CSS} !important; 
-                    width: 178mm; /* 🛑 REDUCCIÓN DE ANCHO (V14) */
+                    width: 178mm; /* FIX V14: Ancho reducido */
                     box-sizing: border-box; 
                     
                     /* Borde fino (1px negro) + Outline grueso (4px dorado) */
@@ -346,13 +346,13 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     body { margin: 0; padding: 0; } 
                     .cert-container { 
                         box-shadow: none; 
-                        /* 🛑 MANTENER FIX BORDER/OUTLINE V11 y APLICAR FIX MARGIN V13 (20mm arriba, 0mm abajo) */
+                        /* 🛑 APLICAR FIX MARGIN V15 (10mm arriba, 0mm abajo) */
                         margin: ${MARGIN_SAFETY_CSS} !important; 
-                        width: 178mm !important; /* 🛑 REDUCCIÓN DE ANCHO (V14) */
+                        width: 178mm !important; 
                         border: 1px solid #000 !important; 
                         outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important; 
                         outline-offset: ${OUTLINE_OFFSET} !important;
-                        padding: 4mm 35px 4mm 35px !important; /* 🛑 REDUCCIÓN DE PADDING (V14) */
+                        padding: 4mm 35px 4mm 35px !important; 
                         
                         /* 🛑 FORZAR COLORES */
                         -webkit-print-color-adjust: exact !important; 
@@ -430,7 +430,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
 
 /**
  * Genera el HTML de la CARTA. 
- * 🛑 FIX EXTREMO BORDER V12: Se mantiene el margen de seguridad de 20mm arriba/abajo y el padding inferior a 120mm.
+ * 🛑 FIX V15: Reducción del margen externo a 15mm y del padding inferior interno a 20mm para evitar el corte y buscar simetría.
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -441,7 +441,8 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
     const GOLD_COLOR = "#b8860b"; 
     const OUTLINE_WIDTH = "4px"; 
     const OUTLINE_OFFSET = "5px"; 
-    const MARGIN_SAFETY = "20mm"; // Margen simétrico de 20mm arriba y abajo
+    // 🛑 FIX V15: Margen simétrico de 15mm arriba y abajo
+    const MARGIN_SAFETY = "15mm"; 
 
     // Referencia de la carta para reflejar la edición abierta
     let seriesReference = '';
@@ -464,7 +465,7 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                 
                 /* 🛑 CONTENEDOR CON MARCO DORADO PARA LA CARTA */
                 .letter-container { 
-                    /* 🛑 FIX EXTREMO BORDER V12: MARGEN FIJO DE SEGURIDAD 20mm simétrico */
+                    /* 🛑 FIX EXTREMO BORDER V15: MARGEN FIJO DE SEGURIDAD 15mm simétrico (arriba/abajo) */
                     margin: ${MARGIN_SAFETY} auto !important; 
                     width: 180mm; 
                     box-sizing: border-box; 
@@ -473,8 +474,8 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                     outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; 
                     outline-offset: ${OUTLINE_OFFSET}; 
                     
-                    /* 🛑 FIX V11 EXTREMO: Padding ajustado para SUBIR AÚN MÁS el contenido y liberar el borde inferior (120mm) */
-                    padding: 5mm 40px 120mm 40px; 
+                    /* 🛑 FIX V15: Padding inferior a 20mm (antes 120mm) para evitar el corte inferior */
+                    padding: 5mm 40px 20mm 40px; 
                 }
 
                 .top-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
@@ -504,14 +505,14 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                 @media print { 
                     body { margin: 0; padding: 0; } 
                     
-                    /* 🛑 MANTENER FIX BORDE CARTA V11 y APLICAR FIX MARGIN V12 */
+                    /* 🛑 APLICAR FIX MARGIN V15 */
                     .letter-container { 
-                        margin: ${MARGIN_SAFETY} auto !important; /* 20MM FIX */
+                        margin: ${MARGIN_SAFETY} auto !important; /* 15MM FIX */
                         width: 180mm !important; 
                         border: 1px solid #000 !important; 
                         outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important; 
                         outline-offset: ${OUTLINE_OFFSET} !important;
-                        padding: 5mm 40px 120mm 40px !important; 
+                        padding: 5mm 40px 20mm 40px !important; /* 20mm FIX */
                         
                         /* Forzar la impresión de colores y fondos en la carta también */
                         -webkit-print-color-adjust: exact !important; 
