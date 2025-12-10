@@ -11,7 +11,7 @@ export const ARTIST_INFO = {
   statement: "Trabajo la figura humana desde una mirada íntima y contemporánea. Busco un equilibrio preciso entre técnica y emoción, donde la luz y el color construyen atmósferas que invitan a la contemplación. Cada obra es un diálogo silencioso con el tiempo.",
   
   // =======================================================
-  // 🛑 SECCIÓN DE MÉRITOS - ¡SUSTITUIDA POR TU TEXTO EXACTO!
+  // 🛑 DATOS DE TRAYECTORIA Y PUBLICACIONES - ¡ACTUALIZADOS!
   // =======================================================
 
   accolades: {
@@ -23,22 +23,16 @@ export const ARTIST_INFO = {
       ],
       concursos: [
           'Finalista en el concurso internacional ModPortrait 2022 con “Pablo en Cascada”',
-          // Se corrigió la sintaxis de la lista de obras a un formato más limpio y válido:
-          'Semifinalista en concurso internacional TargetPrice 2025 con tres obras: “Laura en Parque Oeste”, “La Farola” y “La Viajera”', 
+          'Semifinalista en concurso internacional TargetPrice 2025 con tres obras: “Laura en Parque Oeste”, “La Farola” y “La Viajera”',
       ]
   },
 
   publications: [
-      // Se corrigió la sintaxis de la lista de obras a un formato más limpio y válido:
-      'Obras incluidas en la Guía Leonardo 2025: "Ana y la Habana", "Laura en el Crepúsculo", "Pablo en Cascada", "Sara bajo farola" y "Sara en marquesina".',
+      'Obras incluidas en la Guía Leonardo 2025: "Ana y la Habana", "Laura en el Crepúsculo", "Pablo en Cascada", "Sara bajo farola" y "Sara en marquesina"',
       'Anuarios ModPortrait 2022 y 2024.',
       'Participación en la guía virtual de Galería Arte Libre, ModPortrait 2025: https://www.artelibre-store.com/guialeonardo-2025/listado-participantes-2025/',
   ]
 };
-
-// =======================================================
-// EL RESTO DEL ARCHIVO PERMANECE SIN CAMBIOS
-// =======================================================
 
 export const ARTWORKS: Artwork[] = [
   // --- OBRAS DESTACADAS ---
@@ -267,15 +261,3 @@ export const ANALYSIS_POINTS = {
     "Reconocimiento Institucional Completo: Selección en 92 Salón de Otoño (Casa de Vacas), X Salón de Realismo (La Vaguada) y Certamen Pequeño Formato (C.C. Príncipe de Asturias).",
     "Premios Internacionales: Finalista ModPortrait 2022 y Semifinalista Target Prize 2025.",
     "Publicaciones de Prestigio: Obra incluida en la Guía de Arte y Artistas Leonardo 2025 y Catálogos ModPortrait.",
-    "Identidad & Gestión: Marca personal premium ('Alma y Sofisticación') con control total del inventario y venta directa."
-  ], 
-  opportunities: [
-    "Mercado Internacional: Potenciar origen suizo y premios internacionales para captar coleccionistas en Zúrich y NY.",
-    "Logística Giclée (Dropshipping Híbrido): Implementar modelo de 'Doble Envío'. El impresor envía la obra en tubo directo al cliente; Tú envías por separado una carta de lujo con el Certificado Original firmado y Sello Seco. Esto maximiza el margen, simplifica la logística y mantiene la experiencia de exclusividad.",
-    "Sector Interiorismo: Alianzas con estudios de arquitectura (como la demo Mónaco) para proyectos residenciales.",
-    "Fidelización Digital: Uso del 'Pasaporte Digital' para aumentar el valor percibido y generar repetición de compra."
-  ] 
-};
-
-export const SOCIAL_CONTENT = [];
-export const MOCK_WORKFLOW = []; 
