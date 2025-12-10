@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-// 🛑 RUTAS CORREGIDAS: Asumiendo que todos los componentes están en el mismo directorio.
-import { PublicSite } from './PublicSite'; 
-import { ArtistDashboard } from './ArtistDashboard';
-import { DigitalCompanion } from './DigitalCompanion';
+import { PublicSite } from './components/PublicSite'; 
+import { ArtistDashboard } from './components/ArtistDashboard';
+import { DigitalCompanion } from './components/DigitalCompanion';
 import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield } from 'lucide-react'; 
 
 // --- CONFIGURACIÓN DE SEGURIDAD (PASSWORD) ---
@@ -13,7 +12,7 @@ const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false); 
   
-  // 🛑 ESTADO: Para el segundo candado (acceso a ESTUDIO)
+  // 🛑 NUEVO ESTADO: Para el segundo candado (acceso a ESTUDIO)
   const [showStudioLoginModal, setShowStudioLoginModal] = useState(false);
 
   // 'public' = Web en modo "Vista Previa" o "En Construcción"
@@ -30,22 +29,21 @@ const App: React.FC = () => {
     const savedAuth = localStorage.getItem('myriam_auth');
     if (savedAuth === 'true') {
         setIsAuthenticated(true);
-        // Si el usuario ya está autenticado, lo dejamos en la vista pública por defecto al cargar.
         setView('public'); 
     }
   }, []);
   
-  // 🚀 SOLUCIÓN A LA VENTANA EN BLANCO: Cierra el modal solo cuando el cambio de vista a 'artist' ha sido confirmado.
+  // 🚀 CAMBIO CLAVE: Cierra el modal solo cuando la vista ha cambiado correctamente a 'artist'
   useEffect(() => {
     if (view === 'artist' && showStudioLoginModal) {
-      // Usamos un ligero timeout para darle tiempo a React de renderizar ArtistDashboard
+      // Pequeño retraso para asegurar que ArtistDashboard se monta primero
       const timer = setTimeout(() => {
         setShowStudioLoginModal(false);
       }, 50); 
       
       return () => clearTimeout(timer);
     }
-  }, [view, showStudioLoginModal]); // Depende solo de la vista y si el modal está abierto.
+  }, [view, showStudioLoginModal]); // Depende de la vista y si el modal está abierto
 
   // Handler para el PRIMER candado (Acceso inicial a la web/Preview)
   const handleLogin = (e: React.FormEvent) => {
@@ -63,13 +61,13 @@ const App: React.FC = () => {
     }
   };
 
-  // 🛑 HANDLER para el SEGUNDO candado (Acceso al ESTUDIO)
+  // 🛑 HANDLER MODIFICADO para el SEGUNDO candado (Acceso al ESTUDIO)
   const handleStudioLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordInput === PASSWORD) {
-        setView('artist'); // Cambia a la vista de ESTUDIO (esto dispara el useEffect de cierre)
+        setView('artist'); // Cambia a la vista de ESTUDIO (esto activa el useEffect de cierre)
         setError(false);
-        // 🛑 Importante: NO cerramos el modal aquí, el useEffect lo hará.
+        // 🛑 ELIMINAMOS ESTA LÍNEA: NO CERRAMOS EL MODAL AQUÍ
         setPasswordInput(""); // Limpiar la clave
     } else {
         setError(true);
@@ -183,10 +181,12 @@ const App: React.FC = () => {
       {view === 'public' ? (
         <PublicSite 
             onOpenCompanion={(id) => setSelectedCompanionId(id)} 
+            // 💡 Necesario: Función para que PublicSite pueda abrir el modal del estudio
             onOpenStudioLogin={() => setShowStudioLoginModal(true)}
         />
       ) : (
-        <ArtistDashboard onLogout={handleLogout} /> 
+        // 💡 Necesario: Pasar la función para que el Dashboard pueda cerrar la sesión.
+        <ArtistDashboard onLogout={handleLogout} />
       )}
 
       {/* 🛡️ SISTEMA DE NAVEGACIÓN PRIVADO (Solo el botón ESTUDIO/PREVIEW) */}
@@ -235,7 +235,7 @@ const App: React.FC = () => {
                 <p className="text-sm text-slate-500">Introduce la clave para acceder a la gestión.</p>
               </div>
 
-              {/* Utiliza el nuevo handler handleStudioLogin */}
+              {/* Utiliza el handler handleStudioLogin (modificado arriba) */}
               <form onSubmit={handleStudioLogin} className="flex flex-col gap-4"> 
                 <div className="relative">
                   <input
