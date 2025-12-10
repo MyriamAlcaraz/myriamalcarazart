@@ -1,7 +1,7 @@
 // ARCHIVO: App.tsx - CÓDIGO FINAL Y COMPLETO
 
 import React, { useState, useEffect } from 'react';
-// 🛑 IMPORTANTE: Importamos la función de generación de HTML
+// 🛑 CORRECCIÓN CLAVE: Importamos la función de generación de HTML del PublicSite
 import { PublicSite, getCertificateDemoHtmlContent } from './components/PublicSite'; 
 import { ArtistDashboard } from './components/ArtistDashboard';
 import { DigitalCompanion } from './components/DigitalCompanion';
