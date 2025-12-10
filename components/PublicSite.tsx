@@ -87,7 +87,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
         )}
 
         {/* ========================================= */}
-        {/* BIO & TRAYECTORIA TAB (FOTO FINAL - w-48) */}
+        {/* BIO & TRAYECTORIA TAB (FOTO TAMAÑO MÁXIMO AJUSTADO: w-60 h-60) */}
         {/* ========================================= */}
         {activeTab === 'bio' && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -120,8 +120,8 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
               <div className="flex justify-between items-start relative"> 
                   <h2 className="font-serif text-4xl font-bold text-slate-900">Trayectoria & Reconocimientos</h2>
                   
-                  {/* FOTO DEL ARTISTA (¡w-48 h-48!) */}
-                  <div className="w-48 h-48 overflow-hidden rounded-lg shadow-lg border-2 border-stone-200 ml-4 group transition-all duration-300 hover:shadow-xl">
+                  {/* FOTO DEL ARTISTA (¡w-60 h-60!) */}
+                  <div className="w-60 h-60 overflow-hidden rounded-lg shadow-lg border-2 border-stone-200 ml-4 group transition-all duration-300 hover:shadow-xl">
                       <img
                           src="/obras/ARTISTA.jpg"
                           alt="Retrato de la Artista Myriam Alcaraz"
