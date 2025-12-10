@@ -4,112 +4,124 @@ import React from 'react';
 import { ARTIST_INFO } from '../constants';
 import { Artwork } from '../types';
 
-export const Certificate: React.FC<{ artwork: Artwork }> = ({ artwork }) => {
-  // Inicializa la fecha en formato día, mes y año largo
-  const currentDate = new Date().toLocaleDateString('es-ES', { 
-    day: '2-digit', 
-    month: 'long', 
-    year: 'numeric' 
-  });
-  
-  // Función auxiliar para formatear precio con puntos y euros (Mantenida por si acaso)
-  const formatPrice = (price: number) => 
-    new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(price);
+// 🛑 MODIFICAR INTERFAZ DE PROPS
+interface CertificateProps {
+    artwork: Artwork;
+    isPixelatedDemo?: boolean; // Nuevo prop opcional para el pixelado
+}
 
-  return (
-    <div className="bg-white w-[210mm] min-h-[297mm] p-[20mm] mx-auto shadow-2xl relative text-slate-900 font-sans print:shadow-none print:w-full print:h-full">
-      {/* Marco Exterior */}
-      <div className="border-2 border-gold-500 h-full p-[15mm] relative flex flex-col justify-between">
-        <div className="absolute inset-2 border border-gold-500 opacity-60 pointer-events-none"></div>
+// 🛑 USAR LA NUEVA INTERFAZ Y EL PROP
+export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDemo = false }) => {
+	// Inicializa la fecha en formato día, mes y año largo
+	const currentDate = new Date().toLocaleDateString('es-ES', {	
+		day: '2-digit',	
+		month: 'long',	
+		year: 'numeric'	
+	});
+	
+	// Función auxiliar para formatear precio con puntos y euros (Mantenida por si acaso)
+	const formatPrice = (price: number) =>	
+		new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(price);
 
-        {/* 1. SECCIÓN SUPERIOR Y DETALLE */}
-        <div className="text-center relative z-10">
-            
-            {/* ENCABEZADO: Nombre y Frase Corporativa */}
-            <div className="flex flex-col items-center mb-6">
-                <h1 className="font-serif text-2xl md:text-3xl tracking-[0.3em] text-gold-600 uppercase mb-1">{ARTIST_INFO.name}</h1>
-                {/* Asumo que tienes una propiedad 'tagline' en ARTIST_INFO, si no, usa un texto fijo */}
-                <p className="text-xs uppercase tracking-[0.3em] text-slate-500 mb-6">{ARTIST_INFO.tagline || "Pintura Figurtiva Contemporánea"}</p>
-            </div>
+	// ID de certificado simulado para la demo
+    const certificateId = isPixelatedDemo ? 'DEMO-PIXELADO' : `MA-AOC-${artwork.id.slice(-4).toUpperCase()}-${artwork.year}`;
 
-            {/* TÍTULO PRINCIPAL */}
-            <h2 className="font-serif text-4xl tracking-[0.2em] text-slate-900 border-b-2 border-gold-500 inline-block pb-4 mb-2">CERTIFICADO DE AUTENTICIDAD</h2>
-            
-            {/* Subtítulo del Tipo de Obra */}
-            <p className="text-base text-slate-700 font-serif italic mb-6">PINTURA FIGURATIVA CONTEMPORÁNEA</p>
-            
-            {/* Texto de Certificación */}
-            <p className="text-sm text-slate-600 mb-8">Por la presente se certifica que la obra de arte descrita a continuación es una creación original y auténtica de la artista Myriam Alcaraz.</p>
+	// Clase CSS condicional para pixelar
+	const pixelationClass = isPixelatedDemo ? 'filter blur-sm pointer-events-none' : '';
 
-            {/* IMAGEN DE LA OBRA (Ajuste para optimización) */}
-            <div className="flex justify-center mb-10">
-                <img 
-                    src={artwork.image} 
-                    alt={artwork.title} 
-                    // 🛑 OPTIMIZACIÓN: Añadir clase para asegurar que el tamaño máximo en impresión es manejable
-                    className="max-w-[120mm] max-h-56 object-contain shadow-lg border border-slate-200" 
-                />
-            </div>
+	return (
+		<div className="bg-white w-[210mm] min-h-[297mm] p-[20mm] mx-auto shadow-2xl relative text-slate-900 font-sans print:shadow-none print:w-full print:h-full">
+			{/* Marco Exterior */}
+			<div className="border-2 border-gold-500 h-full p-[15mm] relative flex flex-col justify-between">
+				<div className="absolute inset-2 border border-gold-500 opacity-60 pointer-events-none"></div>
 
-            {/* DETALLES DE LA OBRA */}
-            <div className="max-w-xl mx-auto text-left border-t border-slate-300 pt-4">
-              
-              {/* 1. Título de la Obra */}
-              <div className="flex border-b border-slate-300 py-2"> 
-                <span className="w-40 font-bold text-slate-700 text-sm uppercase tracking-wide">Título de la Obra:</span>
-                <span className="flex-1 text-lg text-slate-800 font-serif italic">{artwork.title}</span>
-              </div>
-              
-              {/* 2. Dimensiones */}
-              <div className="flex border-b border-slate-300 py-2">
-                <span className="w-40 font-bold text-slate-700 text-sm uppercase tracking-wide">Dimensiones:</span>
-                <span className="flex-1 text-lg text-slate-800">{artwork.dimensions}</span>
-              </div>
-              
-              {/* 3. Técnica / Medio */}
-              <div className="flex border-b border-slate-300 py-2">
-                <span className="w-40 font-bold text-slate-700 text-sm uppercase tracking-wide">Técnica / Medio:</span>
-                <span className="flex-1 text-lg text-slate-800">{artwork.technique}</span>
-              </div>
-              
-              {/* 4. ID de Referencia */}
-              <div className="flex py-2">
-                <span className="w-40 font-bold text-slate-700 text-sm uppercase tracking-wide">ID de Referencia:</span>
-                <span className="flex-1 text-lg text-slate-800">MA-{new Date().getFullYear()}-{artwork.id.padStart(2,'0')}</span>
-              </div>
-            </div>
-        </div>
+				{/* --- 1. Encabezado y Titular --- */}
+				<header className="text-center mb-12">
+					<img src="/logo-myriam.png" alt="Logo Myriam Alcaraz" className="h-16 mx-auto mb-4" />
+					<h1 className="font-serif text-4xl font-bold text-slate-900 mb-2">CERTIFICADO DE AUTENTICIDAD</h1>
+					<h2 className="text-sm uppercase tracking-[0.3em] text-gold-600">{ARTIST_INFO.tagline}</h2>
+				</header>
 
-        {/* 2. PIE DE PÁGINA (Footer) */}
-        <div className="text-center relative z-10 mt-auto">
-          {/* Notas de Certificación y Derechos */}
-          <p className="text-slate-500 italic text-sm mb-12">
-            Este documento certifica que la obra ha sido inspeccionada y aprobada personalmente por la artista.<br/>
-            Todos los derechos de autor y reproducción están reservados.
-          </p>
-          
-          {/* Secciones de Fecha y Firma */}
-          <div className="flex justify-between px-16 items-end mb-12">
-            <div className="text-center w-40">
-                <div className="h-16 mb-2 flex items-end justify-center pb-2 text-slate-600 font-serif">{currentDate}</div>
-                <div className="border-b border-slate-900/20 w-full"></div>
-                <p className="font-serif text-xs font-bold uppercase tracking-wider text-slate-700">Fecha de Emisión</p>
-            </div>
-            <div className="text-center w-40">
-                <div className="h-16 mb-2 border-b border-slate-900/20"></div>
-                <p className="font-serif text-xs font-bold uppercase tracking-wider text-slate-700">Firma de la Artista</p>
-            </div>
-          </div>
-          
-          {/* Información de Contacto al Pie (ELIMINADA URL ANTIGUA) */}
-          <div className="mt-8 text-[10px] text-slate-500 uppercase tracking-wider space-x-4">
-              {/* 🛑 Eliminado: <span>{ARTIST_INFO.website}</span> | */}
-              <span>{ARTIST_INFO.email}</span> |
-              <span>{ARTIST_INFO.instagram || "@myriamalcaraz.artist"}</span>
-          </div>
-        </div>
-        
-      </div>
-    </div>
-  );
+				<main className="flex-grow">
+					
+					{/* 🛑 Bloque de ID de Registro (PIXELADO) */}
+					<div className={`text-center py-2 mb-8 bg-stone-100/50 rounded-lg ${pixelationClass}`}>
+						<p className="text-xs uppercase tracking-widest text-slate-500 font-semibold mb-1">ID de Registro Único</p>
+						<p className="font-mono text-xl font-bold text-slate-800">{certificateId}</p>
+					</div>
+
+					{/* --- 2. Bloque de Obra Certificada --- */}
+					<h2 className="text-2xl font-serif font-bold text-gold-600 mb-6 border-b border-gold-500 pb-2">Obra Certificada</h2>
+					
+					{/* 🛑 DATOS DE LA OBRA (PIXELADO) */}
+					<div className={`grid grid-cols-2 gap-x-12 gap-y-6 text-sm mb-12 ${pixelationClass}`}>
+						
+						{/* Columna Izquierda: Datos Técnicos */}
+						<div className="space-y-4">
+							<div className="border-b border-stone-200 pb-1">
+								<span className="font-semibold block text-slate-700">Título:</span>
+								<span className="font-serif italic text-lg">{artwork.title}</span>
+							</div>
+							<div className="border-b border-stone-200 pb-1">
+								<span className="font-semibold block text-slate-700">Artista:</span>
+								<span className="font-serif italic text-lg">{ARTIST_INFO.name}</span>
+							</div>
+							<div className="border-b border-stone-200 pb-1">
+								<span className="font-semibold block text-slate-700">Año de Creación:</span>
+								<span className="font-serif italic text-lg">{artwork.year}</span>
+							</div>
+							<div className="border-b border-stone-200 pb-1">
+								<span className="font-semibold block text-slate-700">Técnica:</span>
+								<span className="font-serif italic text-lg">{artwork.technique}</span>
+							</div>
+							<div className="border-b border-stone-200 pb-1">
+								<span className="font-semibold block text-slate-700">Dimensiones:</span>
+								<span className="font-serif italic text-lg">{artwork.dimensions}</span>
+							</div>
+						</div>
+
+						{/* Columna Derecha: Imagen y Precios */}
+						<div className="space-y-4">
+							<div className="bg-stone-50 p-3 shadow-inner">
+								<img src={artwork.image} alt={`Obra: ${artwork.title}`} className="w-full h-auto object-contain max-h-56 mx-auto" />
+								<p className="text-xs text-center text-slate-500 italic mt-2">Fotografía de Referencia</p>
+							</div>
+							<div className="pt-2">
+								<span className="font-semibold block text-slate-700">Precio de Venta Original:</span>
+								<span className="font-serif text-xl font-bold text-gold-600">{formatPrice(artwork.price)}</span>
+							</div>
+						</div>
+					</div>
+
+					{/* --- 3. Declaración y Sello Seco --- */}
+					<p className="text-slate-500 italic text-sm mb-12">
+						Este documento certifica que la obra ha sido inspeccionada y aprobada personalmente por la artista.<br/>
+						Todos los derechos de autor y reproducción están reservados.
+					</p>
+					
+
+				</main>
+				
+				{/* --- 4. Bloque de Autenticación y Firma --- */}
+				<footer className="flex justify-between px-16 items-end">
+					
+					{/* Bloque de Fecha */}
+					<div className="text-center w-40">
+						<div className="h-16 mb-2 flex items-end justify-center pb-2 text-slate-600 font-serif">{currentDate}</div>
+						<div className="border-b border-slate-900/20 w-full"></div>
+						<p className="font-serif text-xs font-bold uppercase tracking-wider text-slate-700">Fecha de Emisión</p>
+					</div>
+
+					{/* Bloque de Firma 🛑 (PIXELADO EN DEMO) */}
+					<div className="text-center w-60 relative">
+						<div className={`h-24 mb-1 border-b-2 border-slate-900/10 ${pixelationClass}`}>
+							{/* Imagen de la firma */}
+							<img src="/obras/FIRMA.png" alt="Firma de Myriam Alcaraz" className="max-h-full w-auto mx-auto object-contain" />
+						</div>
+						<p className="font-serif text-sm font-bold uppercase tracking-wider text-slate-700">Myriam Alcaraz</p>
+					</div>
+				</footer>
+			</div>
+		</div>
+	);
 };
