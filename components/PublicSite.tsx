@@ -1,4 +1,4 @@
-// ARCHIVO: ./components/PublicSite.tsx - CÓDIGO FINAL CORREGIDO
+// ARCHIVO: ./components/PublicSite.tsx - CÓDIGO FINAL CORREGIDO Y LIMPIO
 
 import React, { useState } from 'react';
 import { ARTIST_INFO, ARTWORKS, PRICING_TABLE } from '../constants';
@@ -35,8 +35,7 @@ const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
 );
 
 // =======================================================
-// 🛑 LÓGICA DE GENERACIÓN DE HTML DEL CERTIFICADO (PARA DEMO)
-// Esto es lo que soluciona el problema de que 'no hace nada'.
+// 2. LÓGICA DE GENERACIÓN DE HTML DEL CERTIFICADO (PARA DEMO)
 // =======================================================
 
 interface DemoArtwork {
@@ -59,16 +58,14 @@ interface DemoSettings {
   instagram: string;
 }
 
-// 🛑 DATOS DE CONFIGURACIÓN DE LA ARTISTA (Usando ARTIST_INFO importado)
 const DEMO_SETTINGS: DemoSettings = {
     artistName: ARTIST_INFO.name,
-    artistTitle: ARTIST_INFO.tagline, // 🛑 CORRECCIÓN: Usar 'tagline' en lugar de 'title'
+    artistTitle: ARTIST_INFO.tagline, 
     website: ARTIST_INFO.website,
     email: ARTIST_INFO.email,
     instagram: ARTIST_INFO.instagram,
 };
 
-// 🛑 DATOS DE LA OBRA DE DEMOSTRACIÓN (Obra de ejemplo)
 const DEMO_ARTWORK: DemoArtwork = {
     title: "El Alma de Mónaco",
     certificationDate: "2025-11-20", 
@@ -81,7 +78,6 @@ const DEMO_ARTWORK: DemoArtwork = {
     isOpenSeries: false,
 };
 
-// 🛑 FUNCIÓN CLAVE: La exportamos para usarla en App.tsx
 export const getCertificateDemoHtmlContent = (
   artwork: DemoArtwork = DEMO_ARTWORK, 
   settings: DemoSettings = DEMO_SETTINGS
@@ -104,6 +100,7 @@ export const getCertificateDemoHtmlContent = (
           ? artwork.code?.replace(/0+$/, artwork.seriesIndex.toString().padStart(3, '0'))
           : artwork.code;
 
+  // Se mantiene el HTML generado para la demo...
   return `
     <html>
     <head>
@@ -234,11 +231,8 @@ export const getCertificateDemoHtmlContent = (
 
 // =======================================================
 
-// 🛑 AÑADIDO: onOpenStudioLogin en las props
 export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin }) => {
   const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices'>('portfolio');
-
-  // ... (El resto del código del componente PublicSite)
 
   return (
     <div className="min-h-screen bg-stone-50 font-sans text-slate-800">
@@ -441,12 +435,12 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
         )}
       </main>
 
-      {/* Footer 🛑 MODIFICADO: Añadido el botón de acceso al Estudio */}
+      {/* Footer */}
       <footer className="bg-white text-slate-500 py-16 text-center border-t border-slate-100">
         <div className="max-w-4xl mx-auto px-6">
           <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
           
-          {/* 🛑 BOTÓN DE ACCESO AL ESTUDIO (Solo visible en la vista pública) */}
+          {/* BOTÓN DE ACCESO AL ESTUDIO (Solo visible en la vista pública) */}
           <button 
               onClick={onOpenStudioLogin} 
               className="mt-4 mb-8 text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-gold-600 transition-colors flex items-center gap-1 mx-auto"

@@ -1,11 +1,10 @@
 // ARCHIVO: App.tsx - CÓDIGO FINAL Y COMPLETO
 
 import React, { useState, useEffect } from 'react';
-// 🛑 MODIFICACIÓN 1: Importamos la función de generación de HTML
+// 🛑 IMPORTANTE: Importamos la función de generación de HTML
 import { PublicSite, getCertificateDemoHtmlContent } from './components/PublicSite'; 
 import { ArtistDashboard } from './components/ArtistDashboard';
 import { DigitalCompanion } from './components/DigitalCompanion';
-// 🛑 MODIFICACIÓN 2: Añadimos ShieldCheck a la lista de íconos
 import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield, ShieldCheck } from 'lucide-react'; 
 
 // --- CONFIGURACIÓN DE SEGURIDAD (PASSWORD) ---
@@ -16,7 +15,7 @@ const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false); 
   
-  // 🛑 ESTADO: Para el segundo candado (acceso a ESTUDIO)
+  // ESTADO: Para el segundo candado (acceso a ESTUDIO)
   const [showStudioLoginModal, setShowStudioLoginModal] = useState(false);
 
   // 'public' = Web en modo "Vista Previa" o "En Construcción"
@@ -80,7 +79,7 @@ const App: React.FC = () => {
 
 
   // ---------------------------------------------------------
-  // 🛑 MODIFICACIÓN 3: Función para Renderizar el Certificado BONITO
+  // Función para Renderizar el Certificado BONITO
   // ---------------------------------------------------------
   const renderCertificateDemo = () => {
     // Llama a la función que genera el HTML bonito (exportada de PublicSite.tsx)
@@ -234,7 +233,7 @@ const App: React.FC = () => {
       {/* 🛡️ SISTEMA DE NAVEGACIÓN PRIVADO (Solo el botón ESTUDIO/PREVIEW) */}
       <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 items-end">
         
-        {/* 🛑 Botón de ESTUDIO/Vista Previa */}
+        {/* Botón de ESTUDIO/Vista Previa */}
         <button 
           onClick={() => {
             if (view === 'public') {
@@ -251,7 +250,7 @@ const App: React.FC = () => {
         
       </div>
 
-      {/* 🛑 MODAL DEL SEGUNDO CANDADO (ACCESO A ESTUDIO) */}
+      {/* MODAL DEL SEGUNDO CANDADO (ACCESO A ESTUDIO) */}
       {showStudioLoginModal && (
           <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-white p-8 rounded-xl shadow-2xl max-w-sm w-full relative animate-scale-in">
@@ -307,7 +306,7 @@ const App: React.FC = () => {
           </div>
       )}
 
-      {/* 🛑 MODIFICACIÓN 4: Renderizado Condicional del Certificado Bonito o del Compañero Digital */}
+      {/* RENDERIZADO CONDICIONAL DEL CERTIFICADO BONITO O DEL COMPAÑERO DIGITAL */}
       {selectedCompanionId === 'CERTIFICATE_DEMO' ? (
           // 1. Si el ID es la cadena de la demo, renderiza el modal completo (el bonito)
           renderCertificateDemo()
@@ -317,7 +316,7 @@ const App: React.FC = () => {
           artworkId={selectedCompanionId} 
           onClose={handleCloseCompanion} 
           showCertificateAccess={view === 'artist'} 
-          // 🛑 MODIFICACIÓN 5: Pasamos la función que abre el modal bonito
+          // Pasamos la función que abre el modal bonito
           onOpenCertificateDemo={() => setSelectedCompanionId('CERTIFICATE_DEMO')} 
         />
       )}

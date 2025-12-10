@@ -1,33 +1,29 @@
-// ARCHIVO: ./components/DigitalCompanion.tsx - CÓDIGO FINAL CORREGIDO
+// ARCHIVO: ./components/DigitalCompanion.tsx - CÓDIGO FINAL CORREGIDO Y LIMPIO
 
 import React, { useState, useRef } from 'react';
-// 🛑 MODIFICACIÓN 1: Solo dejamos los iconos necesarios
 import { Shield, Image as ImageIcon, ZoomIn, X, Mail } from 'lucide-react'; 
 import { ARTWORKS, ARTIST_INFO } from '../constants';
-// 🛑 MODIFICACIÓN 2: Eliminamos la importación del certificado feo
-// import { Certificate } from './Certificate';
+// 🛑 IMPORTANTE: Eliminamos la importación del certificado antiguo (Certificate)
 
 interface DigitalCompanionProps {
   artworkId: string | null;
   onClose: () => void;
   showCertificateAccess: boolean; 
   initialMode?: 'lupa' | 'certificate'; 
-  // 🛑 MODIFICACIÓN 3: Nueva prop para decirle a App.tsx que abra la demo
+  // Propiedad para abrir la demo del certificado bonito
   onOpenCertificateDemo: () => void; 
 }
 
 export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({ 
     artworkId, 
     onClose,
-    showCertificateAccess, 
-    initialMode = 'lupa',
-    // 🛑 MODIFICACIÓN 4: Recibimos la nueva prop
-    onOpenCertificateDemo
+    // showCertificateAccess, // Prop no usada en la vista de lupa/metadatos
+    // initialMode = 'lupa', // Prop no usada con la nueva lógica de certificado
+    onOpenCertificateDemo // Usamos la nueva prop
 }) => {
   const artwork = ARTWORKS.find(a => a.id === artworkId) || ARTWORKS[0];
   
-  // 🛑 MODIFICACIÓN 5: ELIMINAMOS el estado 'showCertificate'
-  // const [showCertificate, setShowCertificate] = useState(initialMode === 'certificate'); 
+  // 🛑 IMPORTANTE: ELIMINAMOS el estado 'showCertificate' y toda la lógica asociada.
   
   const [showZoom, setShowZoom] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
@@ -60,8 +56,8 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     });
   };
 
-  // 🛑 MODIFICACIÓN 6: Eliminamos el bloque 'if (showCertificate)' entero.
-
+  // 🛑 El renderizado condicional del viejo certificado ha sido eliminado.
+  
   // Vista por defecto (Lupa)
   return (
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex justify-center items-center p-4 md:p-8">
@@ -127,7 +123,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
           <div className="space-y-4 pt-4">
             {/* 1. Botón de Certificado (Demo/Real) */}
             <button
-                // 🛑 MODIFICACIÓN 7: Llama a la prop para abrir la demo bonita en App.tsx
+                // Llama a la prop para abrir la demo bonita en App.tsx
                 onClick={onOpenCertificateDemo} 
                 className="w-full flex items-center justify-center gap-2 bg-slate-800 text-white p-3 rounded font-bold hover:bg-gold-600 transition-colors shadow-md"
             >
