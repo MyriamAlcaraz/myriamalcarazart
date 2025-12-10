@@ -11,7 +11,7 @@ export const ARTIST_INFO = {
   statement: "Trabajo la figura humana desde una mirada íntima y contemporánea. Busco un equilibrio preciso entre técnica y emoción, donde la luz y el color construyen atmósferas que invitan a la contemplación. Cada obra es un diálogo silencioso con el tiempo.",
   
   // =======================================================
-  // 🛑 DATOS DE TRAYECTORIA Y PUBLICACIONES - ¡ACTUALIZADOS!
+  // 🛑 DATOS DE TRAYECTORIA Y PUBLICACIONES - ACTUALIZADO
   // =======================================================
 
   accolades: {
@@ -28,7 +28,7 @@ export const ARTIST_INFO = {
   },
 
   publications: [
-      'Obras incluidas en la Guía Leonardo 2025: "Ana y la Habana", "Laura en el Crepúsculo", "Pablo en Cascada", "Sara bajo farola" y "Sara en marquesina"',
+      'Obras incluidas en la Guía Leonardo 2025: “Ana y la Habana”, “Laura en el Crepúsculo”, “Pablo en Cascada”, “Sara bajo farola” y “Sara en marquesina”.',
       'Anuarios ModPortrait 2022 y 2024.',
       'Participación en la guía virtual de Galería Arte Libre, ModPortrait 2025: https://www.artelibre-store.com/guialeonardo-2025/listado-participantes-2025/',
   ]
@@ -36,7 +36,6 @@ export const ARTIST_INFO = {
 
 export const ARTWORKS: Artwork[] = [
   // --- OBRAS DESTACADAS ---
-  // Nota: Todas sus obras ya tienen 'dimensions' y 'technique', lo cual es genial.
   { 
     id: '4', 
     title: 'Sara en Marquesina', 
@@ -244,20 +243,4 @@ export const ARTWORKS: Artwork[] = [
 
 export const PRICING_TABLE = [
   { dimensions: '55x46', priceBase: 632, priceWithTax: 764.72 },
-  { dimensions: '60x50', priceBase: 750, priceWithTax: 907.50 },
-  { dimensions: '65x54', priceBase: 877, priceWithTax: 1061.17 },
-  { dimensions: '70x60', priceBase: 1050, priceWithTax: 1270.50 },
-  { dimensions: '73x60', priceBase: 1095, priceWithTax: 1324.95 },
-  { dimensions: '80x60', priceBase: 1200, priceWithTax: 1452.00 },
-  { dimensions: '81x60', priceBase: 1215, priceWithTax: 1470.15 },
-  { dimensions: '90x70', priceBase: 1575, priceWithTax: 1905.75 },
-  { dimensions: '92x73', priceBase: 1680, priceWithTax: 2032.80 },
-  { dimensions: '100x70', priceBase: 1750, priceWithTax: 2117.50 },
-  { dimensions: '100x81', priceBase: 2025, priceWithTax: 2450.25 },
-];
-
-export const ANALYSIS_POINTS = { 
-  strengths: [
-    "Reconocimiento Institucional Completo: Selección en 92 Salón de Otoño (Casa de Vacas), X Salón de Realismo (La Vaguada) y Certamen Pequeño Formato (C.C. Príncipe de Asturias).",
-    "Premios Internacionales: Finalista ModPortrait 2022 y Semifinalista Target Prize 2025.",
-    "Publicaciones de Prestigio: Obra incluida en la Guía de Arte y Artistas Leonardo 2025 y Catálogos ModPortrait.",
+  { dimensions: '60x50', priceBase: 7
