@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X } from 'lucide-react'; 
+import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon } from 'lucide-react'; 
 
 // ---------------------------------------------------------
 // 🎨 DEFINICIÓN DE TIPOS Y CONSTANTES
@@ -54,17 +54,19 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
 
     let seriesCode = '';
     if (artworkToCode.seriesIndex !== null && artworkToCode.seriesTotal !== null) {
+        // Aseguramos que el índice y el total sean de 2 dígitos
         const indexFmtd = String(artworkToCode.seriesIndex).padStart(2, '0');
         const totalFmtd = String(artworkToCode.seriesTotal).padStart(2, '0');
         seriesCode = `${indexFmtd}${totalFmtd}`;
     }
     
+    // El formato final es MA-AÑOCOMPLETO-AÑOMES(INDEXTOTAL)
     return `MA-${year}-${dateCode}${seriesCode}`;
 };
 
 
 // ---------------------------------------------------------
-// 📄 GENERADORES DE HTML PARA IMPRESIÓN
+// 📄 GENERADORES DE HTML PARA IMPRESIÓN (SIN CAMBIOS)
 // ---------------------------------------------------------
 const getSeriesText = (artwork: Artwork) => {
     return artwork.seriesIndex !== null && artwork.seriesTotal !== null
@@ -247,7 +249,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     </p>
                     <p style="border-bottom: none;">
                         <strong>Edición:</strong>
-                        <span>${seriesText}</span>
+                        <span>${getSeriesText(artwork)}</span>
                     </p>
                 </div>
 
@@ -274,7 +276,6 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
     `;
 };
 
-// ... (getLetterHtml y handlePrintDocument permanecen sin cambios)
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     
@@ -349,7 +350,7 @@ const handlePrintDocument = (content: string, title: string) => {
 
 
 // =========================================================
-// 🏭 COMPONENTE: WORKSTATION (Tarjeta de Gestión por Obra - AÑADIDO BOTÓN DUPLICAR)
+// 🏭 COMPONENTE: TARJETA VISUAL DE GESTIÓN (NUEVA ESTRUCTURA)
 // =========================================================
 
 interface ArtworkWorkstationProps {
@@ -357,117 +358,121 @@ interface ArtworkWorkstationProps {
     settings: DocumentSettings;
     onGenerateCode: (id: number) => void;
     onDelete: (id: number) => void;
-    onDuplicate: (artwork: Artwork) => void; // 🛑 NUEVO: Handler para duplicar
+    onDuplicate: (artwork: Artwork) => void;
+    onEdit: (artwork: Artwork) => void;
 }
 
-const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settings, onGenerateCode, onDelete, onDuplicate }) => {
+const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settings, onGenerateCode, onDelete, onDuplicate, onEdit }) => {
     
     const certificateContent = useMemo(() => artwork.code ? getCertificateHtml(artwork, settings) : '', [artwork, settings]);
     const letterContent = useMemo(() => artwork.code ? getLetterHtml(artwork, settings) : '', [artwork, settings]);
 
     return (
-        <div className={`bg-white p-6 rounded-xl shadow-xl transition-all border-l-4 ${artwork.code ? 'border-gold-500' : 'border-red-500'}`}>
+        // Estilo de Galería
+        <div className="relative bg-white rounded-xl shadow-lg group overflow-hidden transition-all hover:shadow-2xl hover:scale-[1.01]">
             
-            <div className="flex justify-between items-start border-b pb-4 mb-4">
-                <div className="flex items-center gap-3">
-                    <img src={artwork.image} alt={artwork.title} className="h-10 w-10 object-cover rounded-full border border-stone-200" />
-                    <div>
-                        <h4 className="text-xl font-bold text-slate-800">{artwork.title}</h4>
-                        <p className="text-xs text-slate-500 mt-1">
-                            Cert. {artwork.certificationDate.substring(0, 4)} | {getSeriesText(artwork)}
-                        </p>
-                    </div>
-                </div>
+            {/* Imagen y Tools (Overlay) */}
+            <div className="relative aspect-[4/3] bg-stone-100 cursor-pointer">
+                <img 
+                    src={artwork.image || '/obras/placeholder-work.jpg'} 
+                    alt={artwork.title} 
+                    className="w-full h-full object-cover transition-opacity group-hover:opacity-50" 
+                />
                 
-                <button
-                    onClick={() => onDelete(artwork.id)}
-                    className="text-red-500 hover:text-red-700 p-1 rounded transition"
-                    title="Eliminar Obra"
-                >
-                    <Trash2 size={20} />
-                </button>
+                {/* Overlay con los botones de Certificado/Carta (Aparece al hacer hover/click) */}
+                <div className={`absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity p-4 ${!artwork.code && 'opacity-100 bg-red-800/80'}`}>
+                    
+                    {/* ACCIÓN PRINCIPAL (GENERAR CÓDIGO) */}
+                    {!artwork.code ? (
+                        <>
+                            <p className="text-white text-xs font-semibold uppercase tracking-wider mb-2">Paso Requerido</p>
+                            <button
+                                onClick={() => onGenerateCode(artwork.id)}
+                                className="bg-gold-500 text-white py-3 px-6 rounded-lg font-bold text-sm hover:bg-gold-600 transition-colors flex items-center gap-2 w-full justify-center shadow-lg"
+                                title="Generar Código Único de Trazabilidad para esta obra"
+                            >
+                                <Code size={18} /> GENERAR CÓDIGO
+                            </button>
+                        </>
+                    ) : (
+                        // ACCIONES DE DOCUMENTACIÓN (CERTIFICADO Y CARTA)
+                        <>
+                            <p className="text-white text-xs font-semibold uppercase tracking-wider mb-2">Documentos Listos</p>
+                            
+                            <button
+                                onClick={() => handlePrintDocument(certificateContent, `Certificado ${artwork.code}`)}
+                                className="bg-blue-600 text-white py-3 px-6 rounded-lg font-bold text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 w-full shadow-lg"
+                            >
+                                <Printer size={16} /> CERTIFICADO
+                            </button>
+                            
+                            <button
+                                onClick={() => handlePrintDocument(letterContent, `Carta ${artwork.code}`)}
+                                className="bg-blue-600/80 text-white py-3 px-6 rounded-lg font-bold text-sm hover:bg-blue-700/80 transition-colors flex items-center justify-center gap-2 w-full shadow-lg"
+                            >
+                                <FileText size={16} /> CARTA
+                            </button>
+                        </>
+                    )}
+                </div>
             </div>
 
-            <div className={`p-3 rounded-lg flex items-center justify-between gap-4 mb-4 ${artwork.code ? 'bg-green-50' : 'bg-red-50'}`}>
-                {artwork.code ? (
-                    <>
-                        <p className="text-sm font-semibold text-green-700 flex items-center gap-2">
-                            <CheckCircle size={18} /> CÓDIGO GENERADO:
-                        </p>
-                        <p className="font-mono text-lg font-bold text-slate-900 border border-dashed border-slate-300 p-1 px-3 rounded">
-                            {artwork.code}
-                        </p>
-                    </>
-                ) : (
+            {/* Título y Acciones Secundarias (Siempre visibles) */}
+            <div className="p-4 flex justify-between items-center">
+                <div>
+                    <h4 className="text-lg font-bold text-slate-800 leading-tight">{artwork.title}</h4>
+                    <p className="text-xs text-slate-500 mt-1">{getSeriesText(artwork)}</p>
+                </div>
+                <div className="flex gap-1.5">
                     <button
-                        onClick={() => onGenerateCode(artwork.id)}
-                        className="bg-gold-500 text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-gold-600 transition-colors flex items-center gap-2 w-full justify-center shadow-md"
-                        title="Generar Código Único para esta obra"
+                        onClick={() => onEdit(artwork)} // Permite editar el título, medidas, etc.
+                        className="text-slate-500 hover:text-orange-500 p-1 rounded transition"
+                        title="Editar Datos de Obra"
                     >
-                        <Code size={18} /> GENERAR CÓDIGO ÚNICO
+                        <Edit size={18} />
                     </button>
-                )}
-            </div>
-            
-            <h5 className="text-sm font-bold text-slate-700 flex items-center gap-1 mt-6 mb-3 border-t pt-4">
-                <Briefcase size={16} /> HERRAMIENTAS DE PRODUCCIÓN
-            </h5>
-            
-            <div className="grid grid-cols-2 gap-4">
-                
-                {/* 🛑 NUEVO BOTÓN DUPLICAR */}
-                <button
-                    onClick={() => onDuplicate(artwork)} 
-                    className="py-3 px-4 rounded-lg font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-sm bg-stone-100 text-slate-700 hover:bg-stone-200 border border-stone-300"
-                    title="Crea una copia de los datos de esta obra para registrar la siguiente de la serie o una similar."
-                >
-                    <Plus size={16} /> DUPLICAR OBRA
-                </button>
-                
-                <button
-                    onClick={() => handlePrintDocument(certificateContent, `Certificado ${artwork.code}`)}
-                    disabled={!artwork.code}
-                    className={`py-3 px-4 rounded-lg font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-sm ${
-                        artwork.code ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-stone-200 text-slate-400 cursor-not-allowed'
-                    }`}
-                    title={artwork.code ? "Abrir vista de impresión PDF para el Certificado" : "Genere el código primero"}
-                >
-                    <Printer size={16} /> IMPRIMIR CERTIFICADO
-                </button>
-                
-                <button
-                    onClick={() => handlePrintDocument(letterContent, `Carta ${artwork.code}`)}
-                    disabled={!artwork.code}
-                    className={`py-3 px-4 rounded-lg font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-sm ${
-                        artwork.code ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-stone-200 text-slate-400 cursor-not-allowed'
-                    }`}
-                    title={artwork.code ? "Abrir vista de impresión PDF para la Carta al Coleccionista" : "Genere el código primero"}
-                >
-                    <FileText size={16} /> IMPRIMIR CARTA
-                </button>
-
-                <div className="col-span-2 text-xs text-red-500 mt-3 text-center flex items-center justify-center gap-1">
-                    {!artwork.code && <><MinusCircle size={14} /> La documentación requiere un Código de Trazabilidad.</>}
+                    <button
+                        onClick={() => onDuplicate(artwork)}
+                        className="text-slate-500 hover:text-blue-500 p-1 rounded transition"
+                        title="Duplicar Obra (para siguiente de la serie o similar)"
+                    >
+                        <Copy size={18} />
+                    </button>
+                    <button
+                        onClick={() => onDelete(artwork.id)}
+                        className="text-red-500 hover:text-red-700 p-1 rounded transition"
+                        title="Eliminar Obra"
+                    >
+                        <Trash2 size={18} />
+                    </button>
                 </div>
             </div>
 
+            {/* Cinta de Estado (Arriba a la derecha) */}
+            <div className={`absolute top-0 right-0 text-white text-[10px] font-bold px-3 py-1 rounded-bl ${artwork.code ? 'bg-green-600' : 'bg-red-600'}`}>
+                {artwork.code ? `ID: ${artwork.code}` : 'PENDIENTE'}
+            </div>
         </div>
     );
 };
 
 
 // =========================================================
-// ➕ COMPONENTE: FORMULARIO DE AÑADIR/DUPLICAR OBRA (Actualizado)
+// ➕ COMPONENTE: FORMULARIO DE GESTIÓN (Modal/Panel Flotante)
 // =========================================================
 
 interface ArtworkFormProps {
-    onAdd: (artwork: Omit<Artwork, 'id' | 'code' | 'status'>) => void;
-    initialArtwork: Artwork | null;
+    onSave: (artwork: Omit<Artwork, 'id' | 'code' | 'status'>, idToUpdate: number | null) => void;
+    artworkToManage: Artwork | null;
     onCancel: () => void;
 }
 
-const ArtworkForm: React.FC<ArtworkFormProps> = ({ onAdd, initialArtwork, onCancel }) => {
-    // Definiciones de estado local
+const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToManage, onCancel }) => {
+    
+    // Estado interno del formulario
+    const isEditing = artworkToManage && artworkToManage.code !== null;
+    const isDuplicating = artworkToManage && artworkToManage.code === null && artworkToManage.id < 0; // Indicador temporal para duplicación
+
     const [title, setTitle] = useState('');
     const [certificationDate, setCertificationDate] = useState(new Date().toISOString().substring(0, 10));
     const [seriesIndex, setSeriesIndex] = useState<number | ''>('');
@@ -477,20 +482,21 @@ const ArtworkForm: React.FC<ArtworkFormProps> = ({ onAdd, initialArtwork, onCanc
     const [dimensions, setDimensions] = useState('');
     const [technique, setTechnique] = useState('');
     
-    // 🛑 HOOK para PRE-RELLENAR el formulario si se está duplicando
+    // Hook para PRE-RELLENAR el formulario (al añadir, duplicar o editar)
     useEffect(() => {
-        if (initialArtwork) {
-            // Carga los datos de la obra a duplicar
-            setTitle(initialArtwork.title);
-            setCertificationDate(new Date().toISOString().substring(0, 10)); // Mantiene la fecha actual
-            setSeriesIndex(initialArtwork.seriesIndex !== null ? initialArtwork.seriesIndex + 1 : ''); // Sugiere el siguiente índice
-            setSeriesTotal(initialArtwork.seriesTotal ?? '');
-            setIsSeries(initialArtwork.seriesIndex !== null);
-            setImagePath(initialArtwork.image);
-            setDimensions(initialArtwork.dimensions);
-            setTechnique(initialArtwork.technique);
+        if (artworkToManage) {
+            // Carga los datos existentes (para duplicar o editar)
+            setTitle(artworkToManage.title);
+            // Si es una duplicación, usa la fecha de hoy y sugiere el siguiente índice
+            setCertificationDate(isDuplicating ? new Date().toISOString().substring(0, 10) : artworkToManage.certificationDate); 
+            setSeriesIndex(isDuplicating && artworkToManage.seriesIndex !== null ? artworkToManage.seriesIndex + 1 : artworkToManage.seriesIndex ?? '');
+            setSeriesTotal(artworkToManage.seriesTotal ?? '');
+            setIsSeries(artworkToManage.seriesIndex !== null);
+            setImagePath(artworkToManage.image);
+            setDimensions(artworkToManage.dimensions);
+            setTechnique(artworkToManage.technique);
         } else {
-            // Restablece a los valores por defecto si no hay obra inicial
+            // Valores por defecto para "Añadir Nueva Obra"
             setTitle('');
             setCertificationDate(new Date().toISOString().substring(0, 10));
             setSeriesIndex('');
@@ -500,7 +506,7 @@ const ArtworkForm: React.FC<ArtworkFormProps> = ({ onAdd, initialArtwork, onCanc
             setDimensions(''); 
             setTechnique(''); 
         }
-    }, [initialArtwork]); 
+    }, [artworkToManage, isDuplicating]); 
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -509,12 +515,8 @@ const ArtworkForm: React.FC<ArtworkFormProps> = ({ onAdd, initialArtwork, onCanc
         let total = isSeries ? (seriesTotal === '' ? null : Number(seriesTotal)) : null;
 
         if (isSeries) {
-            if (index === null || total === null) {
-                alert("Debe completar Pieza N° y Total Edición para una obra seriada.");
-                return;
-            }
-            if (index > total) {
-                 alert("El índice de la pieza no puede ser mayor que el total de la serie.");
+            if (index === null || total === null || index > total) {
+                alert("Revise los campos de la edición seriada (N° Pieza y Total Edición).");
                 return;
             }
         }
@@ -523,7 +525,7 @@ const ArtworkForm: React.FC<ArtworkFormProps> = ({ onAdd, initialArtwork, onCanc
              return;
         }
 
-        onAdd({
+        const newArtworkData: Omit<Artwork, 'id' | 'code' | 'status'> = {
             title: title.trim(),
             certificationDate: certificationDate,
             type: 'PT', // Pintura por defecto
@@ -532,185 +534,216 @@ const ArtworkForm: React.FC<ArtworkFormProps> = ({ onAdd, initialArtwork, onCanc
             image: imagePath || '/obras/placeholder-work.jpg', 
             dimensions: dimensions.trim(), 
             technique: technique.trim(), 
-        });
+        };
 
-        // La función onAdd en el padre llama a onCancel, lo que limpia este formulario.
+        // Si estamos editando o duplicando un elemento existente, pasamos su ID (o el ID del temporal)
+        const idToUpdate = artworkToManage ? artworkToManage.id : null;
+
+        onSave(newArtworkData, idToUpdate);
+        onCancel(); // Cerrar formulario al guardar
     };
-    
-    const isDuplicating = !!initialArtwork;
+
+    const headerText = isEditing ? 'EDITAR Datos de Obra' : (isDuplicating ? 'DUPLICANDO Obra Seriada' : 'Añadir Nueva Obra al Catálogo');
 
     return (
-        <form onSubmit={handleSubmit} className="p-6 bg-white rounded-xl shadow-lg border border-stone-100 mb-8">
-            <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mb-6">
-                {isDuplicating ? (
-                    <>
-                        <Edit size={24} className="text-blue-500" /> Duplicando Obra: <span className="font-medium italic text-slate-600 text-xl">"{initialArtwork?.title}"</span>
-                        <span className="text-sm font-normal text-slate-400 border-l pl-3 ml-3">Modifique solo los campos necesarios.</span>
-                    </>
-                ) : (
-                    <>
-                        <Plus size={24} className="text-gold-500" /> Añadir Nueva Obra al Catálogo
-                    </>
-                )}
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-start justify-center p-8">
+            <form onSubmit={handleSubmit} className="w-full max-w-4xl bg-white p-8 rounded-xl shadow-2xl mt-10 relative">
                 
-                {/* Título */}
-                <div className="col-span-1 md:col-span-2">
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Título de la Obra</label>
-                    <input 
-                        type="text" 
-                        value={title} 
-                        onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Ej: La Ciudad Secreta"
-                        className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
-                        required
-                    />
-                </div>
-                
-                {/* Fecha */}
-                <div className="col-span-1 md:col-span-1">
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Fecha de Creación</label>
-                    <input 
-                        type="date" 
-                        value={certificationDate} 
-                        onChange={(e) => setCertificationDate(e.target.value)}
-                        className="p-2 border rounded text-sm w-full text-center focus:ring-gold-500 focus:border-gold-500"
-                        max={new Date().toISOString().substring(0, 10)}
-                        required
-                    />
-                </div>
+                <button 
+                    type="button" 
+                    onClick={onCancel} 
+                    className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
+                    title="Cerrar Formulario"
+                >
+                    <X size={24} />
+                </button>
 
-                {/* Dimensiones */}
-                <div className="col-span-1 md:col-span-1">
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Medidas (Ej: 100x81 cm)</label>
-                    <input 
-                        type="text" 
-                        value={dimensions} 
-                        onChange={(e) => setDimensions(e.target.value)}
-                        placeholder="Ej: 100x81 cm"
-                        className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
-                        required
-                    />
-                </div>
+                <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mb-6 border-b pb-3">
+                    {isEditing ? <Edit size={24} className="text-orange-500" /> : <Plus size={24} className="text-gold-500" />} {headerText}
+                </h3>
                 
-                {/* Técnica */}
-                <div className="col-span-1 md:col-span-2">
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Técnica/Medio</label>
-                    <input 
-                        type="text" 
-                        value={technique} 
-                        onChange={(e) => setTechnique(e.target.value)}
-                        placeholder="Ej: Óleo sobre tela en tabla con bastidor"
-                        className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
-                        required
-                    />
-                </div>
-                 
-                {/* Imagen URL */}
-                <div className="col-span-1 md:col-span-3">
-                    <label className="block text-xs font-medium text-slate-500 mb-1 flex justify-between items-center">
-                        Ruta/URL de Imagen de la Obra (Para Certificado)
-                        <span className="text-blue-500 hover:underline cursor-pointer" onClick={() => setImagePath('/obras/demo-obra.jpg')}>Usar Demo</span>
-                    </label>
-                    <input 
-                        type="text" 
-                        value={imagePath} 
-                        onChange={(e) => setImagePath(e.target.value)}
-                        placeholder="/obras/Sara-Farola.jpg"
-                        className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
-                    />
-                </div>
-                
-                {/* Control de Serie */}
-                <div className="flex flex-col gap-2 col-span-1 md:col-span-2">
-                    <label className="flex items-center text-xs font-medium text-slate-500 cursor-pointer">
+                <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+                    
+                    {/* Título */}
+                    <div className="col-span-1 md:col-span-3">
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Título de la Obra</label>
                         <input 
-                            type="checkbox"
-                            checked={isSeries}
-                            onChange={(e) => setIsSeries(e.target.checked)}
-                            className="mr-2 rounded text-gold-500 focus:ring-gold-500"
-                        />
-                        ¿Obra Seriada?
-                    </label>
-                    <div className="flex gap-2">
-                        <input 
-                            type="number" 
-                            value={seriesIndex} 
-                            onChange={(e) => setSeriesIndex(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
-                            placeholder="N° Pieza"
-                            className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
-                            min="1"
-                            required={isSeries}
-                            disabled={!isSeries}
-                        />
-                        <input 
-                            type="number" 
-                            value={seriesTotal} 
-                            onChange={(e) => setSeriesTotal(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
-                            placeholder="Total Edición"
-                            className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
-                            min="1"
-                            required={isSeries}
-                            disabled={!isSeries}
+                            type="text" 
+                            value={title} 
+                            onChange={(e) => setTitle(e.target.value)}
+                            placeholder="Ej: La Ciudad Secreta"
+                            className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
+                            required
                         />
                     </div>
+                    
+                    {/* Fecha */}
+                    <div className="col-span-1 md:col-span-3">
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Fecha de Creación/Certificación</label>
+                        <input 
+                            type="date" 
+                            value={certificationDate} 
+                            onChange={(e) => setCertificationDate(e.target.value)}
+                            className="p-2 border rounded text-sm w-full text-center focus:ring-gold-500 focus:border-gold-500"
+                            max={new Date().toISOString().substring(0, 10)}
+                            required
+                        />
+                    </div>
+
+                    {/* Dimensiones */}
+                    <div className="col-span-1 md:col-span-2">
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Medidas (Ej: 100x81 cm)</label>
+                        <input 
+                            type="text" 
+                            value={dimensions} 
+                            onChange={(e) => setDimensions(e.target.value)}
+                            placeholder="Ej: 100x81 cm"
+                            className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
+                            required
+                        />
+                    </div>
+                    
+                    {/* Técnica */}
+                    <div className="col-span-1 md:col-span-4">
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Técnica/Medio</label>
+                        <input 
+                            type="text" 
+                            value={technique} 
+                            onChange={(e) => setTechnique(e.target.value)}
+                            placeholder="Ej: Óleo sobre tela en tabla con bastidor"
+                            className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
+                            required
+                        />
+                    </div>
+                     
+                    {/* Imagen URL */}
+                    <div className="col-span-1 md:col-span-3">
+                        <label className="block text-xs font-medium text-slate-500 mb-1 flex justify-between items-center">
+                            Ruta/URL de Imagen de la Obra (Para Certificado)
+                            <span className="text-blue-500 hover:underline cursor-pointer" onClick={() => setImagePath('/obras/demo-obra.jpg')}>Usar Demo</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            value={imagePath} 
+                            onChange={(e) => setImagePath(e.target.value)}
+                            placeholder="/obras/Sara-Farola.jpg"
+                            className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
+                        />
+                    </div>
+                    
+                    {/* Control de Serie */}
+                    <div className="flex flex-col gap-2 col-span-1 md:col-span-3">
+                        <label className="flex items-center text-xs font-medium text-slate-500 cursor-pointer">
+                            <input 
+                                type="checkbox"
+                                checked={isSeries}
+                                onChange={(e) => setIsSeries(e.target.checked)}
+                                className="mr-2 rounded text-gold-500 focus:ring-gold-500"
+                            />
+                            ¿Obra Seriada?
+                        </label>
+                        <div className="flex gap-2">
+                            <input 
+                                type="number" 
+                                value={seriesIndex} 
+                                onChange={(e) => setSeriesIndex(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
+                                placeholder="N° Pieza"
+                                className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
+                                min="1"
+                                required={isSeries}
+                                disabled={!isSeries}
+                            />
+                            <input 
+                                type="number" 
+                                value={seriesTotal} 
+                                onChange={(e) => setSeriesTotal(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
+                                placeholder="Total Edición"
+                                className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
+                                min="1"
+                                required={isSeries}
+                                disabled={!isSeries}
+                            />
+                        </div>
+                    </div>
+                    
+                    {/* Botón Guardar */}
+                    <div className="col-span-6 mt-4">
+                        <button 
+                            type="submit"
+                            className="w-full bg-slate-700 text-white py-3 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors flex items-center justify-center gap-2 shadow-md"
+                            disabled={!title.trim() || !dimensions.trim() || !technique.trim()}
+                        >
+                            <Check size={18} /> {isEditing ? 'ACTUALIZAR OBRA' : 'GUARDAR Y VOLVER'}
+                        </button>
+                    </div>
                 </div>
-                
-                {/* Botones de Acción */}
-                {isDuplicating && (
-                    <button 
-                        type="button"
-                        onClick={onCancel}
-                        className="bg-red-500 text-white py-3 rounded-lg font-bold text-sm hover:bg-red-600 transition-colors flex items-center justify-center gap-1 shadow-md col-span-1"
-                    >
-                        <X size={16} /> CANCELAR
-                    </button>
-                )}
-                <button 
-                    type="submit"
-                    className={`bg-slate-700 text-white py-3 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors flex items-center justify-center gap-1 shadow-md ${isDuplicating ? 'col-span-1' : 'col-span-1 md:col-start-6'}`}
-                    disabled={!title.trim() || !dimensions.trim() || !technique.trim()}
-                >
-                    <Plus size={16} /> {isDuplicating ? 'GUARDAR NUEVA OBRA' : 'AÑADIR'}
-                </button>
-            </div>
-        </form>
+            </form>
+        </div>
     );
 };
 
 
 // =========================================================
-// ⚙️ COMPONENTE PRINCIPAL DEL DASHBOARD (CONTENEDOR - Actualizado)
+// ⚙️ COMPONENTE PRINCIPAL DEL DASHBOARD (CONTENEDOR)
 // =========================================================
 export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
     
-    const [artworks, setArtworks] = useState<Artwork[]>([
-        { id: 1, title: 'Sara bajo Farola', certificationDate: '2025-12-15', type: 'PT', seriesIndex: null, seriesTotal: null, code: 'MA-2025-2512', status: 'GENERADO', image: '/obras/demo-obra.jpg', dimensions: '100x81 cm', technique: 'Óleo sobre tela montada en tabla con bastidor' },
-        { id: 2, title: 'Retrato de Otoño', certificationDate: '2026-01-20', type: 'PT', seriesIndex: 1, seriesTotal: 5, code: 'MA-2026-26010105', status: 'GENERADO', image: '/obras/demo-obra-seriada.jpg', dimensions: '50x70 cm', technique: 'Impresión Giclée sobre papel de algodón' },
-        { id: 3, title: 'El Silencio del Estudio', certificationDate: '2025-10-01', type: 'SC', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/placeholder-work.jpg', dimensions: '30x30x60 cm', technique: 'Escultura en bronce a la cera perdida' },
-    ]);
+    // 🛑 CATALOGO VACÍO POR DEFECTO
+    const [artworks, setArtworks] = useState<Artwork[]>([]);
+    
+    // 🛑 DATOS DE PRUEBA (DESCOMENTAR si se necesitan datos iniciales)
+    // const [artworks, setArtworks] = useState<Artwork[]>([
+    //     { id: 1, title: 'Sara bajo Farola', certificationDate: '2025-12-15', type: 'PT', seriesIndex: null, seriesTotal: null, code: 'MA-2025-2512', status: 'GENERADO', image: '/obras/demo-obra.jpg', dimensions: '100x81 cm', technique: 'Óleo sobre tela montada en tabla con bastidor' },
+    //     { id: 2, title: 'Retrato de Otoño', certificationDate: '2026-01-20', type: 'PT', seriesIndex: 1, seriesTotal: 5, code: 'MA-2026-26010105', status: 'GENERADO', image: '/obras/demo-obra-seriada.jpg', dimensions: '50x70 cm', technique: 'Impresión Giclée sobre papel de algodón' },
+    //     { id: 3, title: 'El Silencio del Estudio', certificationDate: '2025-10-01', type: 'SC', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/placeholder-work.jpg', dimensions: '30x30x60 cm', technique: 'Escultura en bronce a la cera perdida' },
+    // ]);
     
     const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
     const [showSettingsPanel, setShowSettingsPanel] = useState(false);
-    // 🛑 NUEVO ESTADO: Obra para pre-llenar el formulario
-    const [artworkToDuplicate, setArtworkToDuplicate] = useState<Artwork | null>(null);
+    // 🛑 Controla si el formulario está abierto y qué obra está gestionando (null = añadir nuevo)
+    const [artworkToManage, setArtworkToManage] = useState<Artwork | null>(null);
 
-    // Handler para añadir obra desde el formulario
-    const handleAddArtwork = (newArtworkData: Omit<Artwork, 'id' | 'code' | 'status'>) => {
-        const newId = Math.max(0, ...artworks.map(a => a.id)) + 1;
-        const newArtwork: Artwork = {
-            id: newId,
-            ...newArtworkData,
-            code: null,
-            status: 'PENDIENTE'
-        }; 
+    // Handler para añadir o editar obra
+    const handleSaveArtwork = (newArtworkData: Omit<Artwork, 'id' | 'code' | 'status'>, idToUpdate: number | null) => {
         
-        setArtworks(prevArtworks => [newArtwork, ...prevArtworks]); 
-        setArtworkToDuplicate(null); // Limpiar el estado de duplicación
+        if (idToUpdate) {
+            // EDICIÓN
+            setArtworks(prevArtworks => prevArtworks.map(artwork => {
+                if (artwork.id === idToUpdate) {
+                    // Mantiene el código y el estado si existían, solo actualiza los datos
+                    return { 
+                        ...artwork, 
+                        ...newArtworkData,
+                    };
+                }
+                return artwork;
+            }));
+        } else {
+            // AÑADIR NUEVA
+            const newId = Math.max(0, ...artworks.map(a => a.id)) + 1;
+            const newArtwork: Artwork = {
+                id: newId,
+                ...newArtworkData,
+                code: null,
+                status: 'PENDIENTE'
+            }; 
+            setArtworks(prevArtworks => [newArtwork, ...prevArtworks]); 
+        }
+        setArtworkToManage(null); // Limpiar el estado de gestión
     };
     
+    // Handler para duplicar (Prepara el formulario con los datos de la obra original, pero sin ID para que se cree como nueva)
+    const handleDuplicateArtwork = (artwork: Artwork) => {
+        const temporaryDuplicationArtwork: Artwork = {
+            ...artwork,
+            id: -1, // ID temporal que indica duplicación
+            code: null,
+            status: 'PENDIENTE',
+            seriesIndex: artwork.seriesIndex !== null ? artwork.seriesIndex + 1 : artwork.seriesIndex, // Sugiere el siguiente índice
+        };
+        setArtworkToManage(temporaryDuplicationArtwork);
+    };
+
     // Handler para generar código
     const handleGenerateCode = (id: number) => {
         setArtworks(prevArtworks => prevArtworks.map(artwork => {
@@ -733,6 +766,9 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     const sortedArtworks = useMemo(() => {
         const generated = artworks.filter(a => a.status === 'GENERADO');
         const pending = artworks.filter(a => a.status === 'PENDIENTE');
+        // Ordenar por ID para mantener un orden consistente dentro de cada grupo
+        generated.sort((a, b) => b.id - a.id);
+        pending.sort((a, b) => b.id - a.id);
         return [...generated, ...pending];
     }, [artworks]);
 
@@ -742,46 +778,45 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
         
             <div className="max-w-6xl mx-auto">
                 
-                {/* CABECERA Y LOGOUT */}
+                {/* CABECERA Y BOTONES GLOBALES */}
                 <div className="flex justify-between items-center mb-10 border-b pb-4">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-                        <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO Privado v2.4 (Flujo Ágil)
+                        <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO Privado v2.5 (Galería Visual)
                     </h1>
                     <div className="flex gap-4">
                         <button 
-                            onClick={() => setShowSettingsPanel(true)} 
-                            className="flex items-center gap-2 text-sm text-slate-500 hover:text-blue-500 transition-colors py-2 px-3 border border-stone-200 rounded-lg hover:border-blue-500"
+                            onClick={() => setArtworkToManage(null)} 
+                            className="flex items-center gap-2 text-sm text-white bg-gold-500 hover:bg-gold-600 transition-colors py-3 px-4 rounded-lg font-bold shadow-md"
                         >
-                            <Settings size={16} /> Ajustes de Marca
+                            <Plus size={16} /> NUEVA OBRA
+                        </button>
+                        <button 
+                            onClick={() => setShowSettingsPanel(true)} 
+                            className="flex items-center gap-2 text-sm text-slate-500 hover:text-blue-500 transition-colors py-3 px-4 border border-stone-200 rounded-lg hover:border-blue-500"
+                        >
+                            <Settings size={16} /> Ajustes
                         </button>
                         <button 
                             onClick={onLogout} 
-                            className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-500 transition-colors py-2 px-3 border border-stone-200 rounded-lg hover:border-red-500"
+                            className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-500 transition-colors py-3 px-4 border border-stone-200 rounded-lg hover:border-red-500"
                         >
-                            <LogOut size={16} /> Cerrar Sesión
+                            <LogOut size={16} /> Salir
                         </button>
                     </div>
                 </div>
 
-                {/* FORMULARIO DE AÑADIR/DUPLICAR OBRA */}
-                <ArtworkForm 
-                    onAdd={handleAddArtwork} 
-                    initialArtwork={artworkToDuplicate}
-                    onCancel={() => setArtworkToDuplicate(null)} // Cancelar duplicación
-                />
-
-                {/* MURO DE OBRAS */}
+                {/* GALERÍA DE OBRAS */}
                 <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mb-6">
-                    <Code size={24} className="text-gold-500" /> Muro de Workstations ({artworks.length} Obras)
+                    <ImageIcon size={24} className="text-gold-500" /> Obras en Catálogo ({artworks.length})
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {artworks.length === 0 ? (
-                        <div className="md:col-span-3 p-12 bg-white rounded-xl shadow-lg border border-stone-100 text-center">
+                        <div className="md:col-span-4 p-12 bg-white rounded-xl shadow-lg border border-stone-100 text-center">
                             <p className="text-xl text-slate-500 font-semibold flex items-center justify-center gap-2">
-                                <MinusCircle size={24} /> Aún no hay obras en el catálogo.
+                                <MinusCircle size={24} /> Catálogo de Obras vacío.
                             </p>
-                            <p className="text-slate-400 mt-2">Use el formulario de arriba para añadir su primera pieza y comenzar el proceso de codificación.</p>
+                            <p className="text-slate-400 mt-2">Pulse "+ NUEVA OBRA" para añadir su primera pieza y comenzar a generar documentos.</p>
                         </div>
                     ) : (
                         sortedArtworks.map(artwork => (
@@ -791,7 +826,8 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                                 settings={documentSettings}
                                 onGenerateCode={handleGenerateCode}
                                 onDelete={handleDeleteArtwork}
-                                onDuplicate={setArtworkToDuplicate} // Pasar el handler de duplicación
+                                onDuplicate={handleDuplicateArtwork} // Pasamos el handler de duplicación
+                                onEdit={setArtworkToManage} // Al editar, establece la obra para que se muestre en el formulario
                             />
                         ))
                     )}
@@ -800,7 +836,22 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
             </div>
             
             {/* PANEL DE AJUSTES FLOTANTE */}
-            {/* ... (SettingsPanel sin cambios) ... */}
+            {showSettingsPanel && (
+                <SettingsPanel 
+                    settings={documentSettings} 
+                    setSettings={setDocumentSettings} 
+                    onClose={() => setShowSettingsPanel(false)} 
+                />
+            )}
+            
+            {/* FORMULARIO DE GESTIÓN DE OBRA (Flotante) */}
+            {artworkToManage !== null && (
+                <ArtworkManagementForm 
+                    onSave={handleSaveArtwork} 
+                    artworkToManage={artworkToManage}
+                    onCancel={() => setArtworkToManage(null)}
+                />
+            )}
             
         </div>
     );
