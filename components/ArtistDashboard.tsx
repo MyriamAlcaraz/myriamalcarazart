@@ -430,7 +430,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
 
 /**
  * Genera el HTML de la CARTA. 
- * 🛑 FIX V16: Ajuste final de padding vertical (3mm arriba, 30mm abajo) para forzar la simetría visual y evitar el corte inferior.
+ * 🛑 FIX V17: Ajuste final de padding vertical (8mm arriba, 25mm abajo) para forzar la simetría visual y evitar el corte inferior.
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -474,8 +474,8 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                     outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; 
                     outline-offset: ${OUTLINE_OFFSET}; 
                     
-                    /* 🛑 FIX V16: Padding superior a 3mm e inferior a 30mm para forzar el contenido hacia arriba y crear un buffer de simetría */
-                    padding: 3mm 40px 30mm 40px; 
+                    /* 🛑 FIX V17: Padding superior a 8mm e inferior a 25mm. Aumenta el margen superior para 'bajar' el contenido y equilibrar visualmente el espacio. */
+                    padding: 8mm 40px 25mm 40px; 
                 }
 
                 .top-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
@@ -505,14 +505,14 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                 @media print { 
                     body { margin: 0; padding: 0; } 
                     
-                    /* 🛑 APLICAR FIX MARGIN V16 */
+                    /* 🛑 APLICAR FIX MARGIN V17 */
                     .letter-container { 
                         margin: ${MARGIN_SAFETY} auto !important; /* 15MM FIX */
                         width: 180mm !important; 
                         border: 1px solid #000 !important; 
                         outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important; 
                         outline-offset: ${OUTLINE_OFFSET} !important;
-                        padding: 3mm 40px 30mm 40px !important; /* V16 FIX: 3mm top, 30mm bottom */
+                        padding: 8mm 40px 25mm 40px !important; /* V17 FIX: 8mm top, 25mm bottom para mayor simetría */
                         
                         /* Forzar la impresión de colores y fondos en la carta también */
                         -webkit-print-color-adjust: exact !important; 
