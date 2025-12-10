@@ -3,20 +3,24 @@ import { Shield, Image as ImageIcon, ZoomIn, Printer, X, AlertTriangle, Mail } f
 import { ARTWORKS, ARTIST_INFO } from '../constants';
 import { Certificate } from './Certificate';
 
-// 🛑 AÑADIMOS LA INTERFAZ DE PROPS Y EL PROP DE SEGURIDAD
 interface DigitalCompanionProps {
-  artworkId: string;
+  artworkId: string | null; // 🛑 Permite null o ID especial para iniciar solo certificado
   onClose: () => void;
   showCertificateAccess: boolean; // TRUE solo en MODO ESTUDIO
+  initialMode?: 'lupa' | 'certificate'; // 🛑 NUEVO PROP: Para forzar la apertura en modo Certificado
 }
 
 export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({ 
     artworkId, 
     onClose,
-    showCertificateAccess // 🛑 Recibimos el prop de seguridad
+    showCertificateAccess, 
+    initialMode = 'lupa' // Por defecto abre la Lupa
 }) => {
+  // Encuentra la obra o usa la primera como fallback si artworkId es null/no encontrado
   const artwork = ARTWORKS.find(a => a.id === artworkId) || ARTWORKS[0];
-  const [showCertificate, setShowCertificate] = useState(false);
+  
+  // 🛑 Lógica para iniciar el estado de showCertificate
+  const [showCertificate, setShowCertificate] = useState(initialMode === 'certificate');
   
   const [showZoom, setShowZoom] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
@@ -37,16 +41,14 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     if(x < 0) x = 0; if(x > width) x = width;
     if(y < 0) y = 0; if(y > height) y = height;
 
-    const zoomFactor = 3.5; // Factor de zoom (Mantenido a 3.5x)
+    const zoomFactor = 3.5;
     const backgroundPositionX = (x / width) * 100;
     const backgroundPositionY = (y / height) * 100;
 
     setZoomStyle({
-      // ESTILOS PARA LA LUPA: Fondo oscuro elegante y borde dorado
       backgroundImage: `url(${artwork.image})`,
       backgroundPosition: `${backgroundPositionX}% ${backgroundPositionY}%`,
       backgroundSize: `${width * zoomFactor}px ${height * zoomFactor}px`,
-      // Posicionar la lupa junto al cursor
       top: y + 20, 
       left: x + 20,
     });
@@ -57,20 +59,21 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     return (
         <div className="fixed inset-0 z-[110] bg-black/90 p-4 md:p-12 overflow-y-auto flex justify-center items-start print-clean-background">
             <button 
-                onClick={() => setShowCertificate(false)} 
+                onClick={initialMode === 'certificate' ? onClose : () => setShowCertificate(false)} // 🛑 Si se inicia en certificado, el botón de cierre lo saca del modal
                 className="fixed top-6 right-6 z-[120] bg-white text-slate-900 p-3 rounded-full hover:bg-red-500 hover:text-white shadow-xl"
             >
                 <X size={24} />
             </button>
             <div className="transform scale-[0.6] md:scale-90 origin-top">
-                {/* 🛑 AVISO DE USO SOLO EN ESTUDIO */}
+                {/* 🛑 El aviso se mantiene para recordar que el uso final es en el KIT */}
                 <div className="bg-amber-50 border-l-4 border-amber-500 text-amber-900 p-4 mb-4" role="alert">
                     <p className="font-bold flex items-center gap-2"><AlertTriangle size={16}/> PREVISUALIZACIÓN DE CERTIFICADO</p>
-                    <p className="text-sm">Esto es solo una previsualización. Para generar la versión final, usa la sección KIT del panel principal del ESTUDIO.</p>
+                    <p className="text-sm">Esta es la vista de alta resolución. Para generar la versión final en PDF, usa la opción **Imprimir Original**.</p>
                 </div>
-                {/* Usamos la versión pixelada para la demo pública */}
+                {/* Usamos showCertificateAccess para controlar si se pixela o no */}
                 <Certificate artwork={artwork} isPixelatedDemo={!showCertificateAccess} /> 
             </div>
+            
             {/* 🛑 BOTÓN DE IMPRESIÓN (Solo visible si es MODO ESTUDIO) */}
             {showCertificateAccess && (
                 <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2">
@@ -86,6 +89,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     );
   }
 
+  // Vista por defecto (Lupa)
   return (
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex justify-center items-center p-4 md:p-8">
       
@@ -100,11 +104,11 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
       {/* Contenedor Principal */}
       <div className="bg-white rounded-xl shadow-2xl flex flex-col lg:flex-row max-w-5xl w-full max-h-[95vh] overflow-hidden">
         
-        {/* Lado Izquierdo: Imagen y Lupa 🛑 MODIFICADO: Añadido flex-grow y height/max-height ajustados */}
+        {/* Lado Izquierdo: Imagen y Lupa */}
         <div className="lg:w-1/2 relative bg-slate-100 flex items-center justify-center p-4 flex-grow h-full max-h-full">
           <div 
             ref={imgContainerRef} 
-            className="relative w-full h-full cursor-none overflow-hidden group" // 🛑 MODIFICACIÓN: h-full en lugar de max-h-[70vh]
+            className="relative w-full h-full cursor-none overflow-hidden group"
             onMouseMove={handleMouseMove} 
             onMouseEnter={() => setShowZoom(true)} 
             onMouseLeave={() => setShowZoom(false)} 
@@ -112,7 +116,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
             <img 
               src={artwork.image} 
               alt={artwork.title} 
-              className="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-80" // 🛑 MODIFICACIÓN: h-full
+              className="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-80"
             />
             
             {/* 🛑 LUPA (Magnifier) */}
@@ -138,7 +142,6 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
 
           <div className="space-y-4 border-y border-stone-200 py-6 mb-8">
             <p className="text-slate-600"><span className="font-bold text-slate-800">Dimensiones:</span> {artwork.dimensions}</p>
-            {/* USO DEL AÑO DE CREACIÓN (SOLO EL DATO) */}
             <p className="text-slate-600"><span className="font-bold text-slate-800">Año:</span> {displayYear}</p>
             <p className="text-slate-600"><span className="font-bold text-slate-800">Disponibilidad:</span> {artwork.status === 'available' ? 'Disponible para colección' : 'En colección privada (Posible Giclée)'}</p>
           </div>
