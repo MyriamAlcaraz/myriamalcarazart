@@ -213,4 +213,60 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
               {/* Opción 3: Encargo Personalizado (Creación desde Cero) */}
               <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 flex flex-col items-center text-center">
                 <Briefcase size={36} className="text-gold-600 mb-4" />
-                <h3 className="font-serif text-2xl font-bold text-slate-900 mb-3
+                <h3 className="font-serif text-2xl font-bold text-slate-900 mb-3">3. Encargo Personalizado</h3>
+                <p className="text-slate-600 mb-4 text-sm leading-relaxed flex-grow">
+                  Partimos de tus fotografías o ideas más queridas para crear una obra única, **pintada desde cero**. El precio se determina antes de comenzar, tras una consulta personal sobre el formato y la complejidad.
+                </p>
+                <a 
+                  href={`mailto:${ARTIST_INFO.email}`} 
+                  className="mt-4 bg-slate-800 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors"
+                >
+                  Solicitar Consulta
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Cierre - CTA Final (Solo para Portfolio y Bio) 🛑 BLOQUE CORREGIDO */}
+        {activeTab !== 'prices' && (
+          <div className="mt-16 bg-slate-800 p-12 text-center">
+            <div className="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="text-left">
+                    <h3 className="font-serif text-2xl text-white mb-2 italic">Commissions & Encargos</h3>
+                    <p className="text-sm font-light leading-relaxed opacity-80 text-slate-200">
+                        {/* 🛑 TEXTO FINAL MÍNIMO Y DIRECTO */}
+                        Realizo proyectos personalizados para coleccionistas privados. 
+                        Toda obra es entregada con su Certificado de Autenticidad.
+                    </p>
+                </div>
+                <a 
+                    href={`mailto:${ARTIST_INFO.email}`} 
+                    className="bg-gold-500 text-white px-8 py-3 hover:bg-gold-600 transition-colors uppercase tracking-widest text-xs font-bold whitespace-nowrap"
+                >
+                    Solicitar Propuesta
+                </a>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Footer 🛑 MODIFICADO: Añadido el botón de acceso al Estudio */}
+      <footer className="bg-white text-slate-500 py-16 text-center border-t border-slate-100">
+        <div className="max-w-4xl mx-auto px-6">
+          <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
+          
+          {/* 🛑 BOTÓN DE ACCESO AL ESTUDIO (Solo visible en la vista pública) */}
+          <button 
+              onClick={onOpenStudioLogin} 
+              className="mt-4 mb-8 text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-gold-600 transition-colors flex items-center gap-1 mx-auto"
+          >
+              <Lock size={12} /> Acceder al Estudio
+          </button>
+
+          <p className="text-[10px] opacity-40 uppercase tracking-wide">© 2025 Myriam Alcaraz. Todos los derechos reservados.</p>
+        </div>
+      </footer>
+    </div>
+  );
+};
