@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, Download, CheckCircle, FileText, ChevronLeft, Image as ImageIcon, Search } from 'lucide-react';
+import { LogOut, Printer, Code, Layout, Plus, Trash2, Download, CheckCircle, FileText, Settings, Image as ImageIcon, Edit, Check } from 'lucide-react';
 
 // ---------------------------------------------------------
 // 🎨 DEFINICIÓN DE TIPOS Y CONSTANTES
@@ -8,11 +8,20 @@ interface Artwork {
   id: number;
   title: string;
   certificationDate: string; // Formato YYYY-MM-DD
-  type: 'PT' | 'SC' | 'DI' | 'OT'; // Pintura, Escultura, Dibujo, Otro
-  seriesIndex: number | null; // N de pieza en la serie (Ej: 2)
-  seriesTotal: number | null; // Total de la serie (Ej: 10)
+  type: 'PT' | 'SC' | 'DI' | 'OT';
+  seriesIndex: number | null;
+  seriesTotal: number | null;
   code: string | null;
   status: 'PENDIENTE' | 'GENERADO';
+}
+
+interface DocumentSettings {
+  artistName: string;
+  artistTitle: string;
+  cycleName: string;
+  city: string;
+  letterOpening: string;
+  letterClosing: string;
 }
 
 interface ArtistDashboardProps {
@@ -25,6 +34,16 @@ const typeOptions = {
     'SC': 'Escultura',
     'DI': 'Dibujo',
     'OT': 'Otro'
+};
+
+// 🛑 ESTADO INICIAL DE LAS PLANTILLAS (Personalizable en CUADRO 3)
+const initialSettings: DocumentSettings = {
+    artistName: "Myriam Alcaraz",
+    artistTitle: "Artista Visual",
+    cycleName: "Serie 'Ítaca' de la Temporada 2024",
+    city: "Móstoles",
+    letterOpening: "Estimado Coleccionista,",
+    letterClosing: "Con mis mejores deseos, le agradezco sinceramente su apoyo y su pasión por el arte."
 };
 
 
@@ -51,7 +70,7 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
 
 
 // ---------------------------------------------------------
-// 📄 GENERADORES DE HTML PARA IMPRESIÓN (Separados)
+// 📄 GENERADORES DE HTML PARA IMPRESIÓN (Optimizado para PDF)
 // ---------------------------------------------------------
 
 const getSeriesText = (artwork: Artwork) => {
@@ -61,26 +80,27 @@ const getSeriesText = (artwork: Artwork) => {
 }
 
 /**
- * Genera el HTML exclusivo del CERTIFICADO.
+ * Genera el HTML exclusivo del CERTIFICADO, usando la configuración global.
  */
-const getCertificateHtml = (artwork: Artwork): string => {
+const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const seriesText = getSeriesText(artwork);
 
+    // 🛑 ESTILOS PROFESIONALES EN LÍNEA para garantizar la impresión
     return `
         <!DOCTYPE html>
         <html lang="es">
         <head>
             <title>Certificado - ${artwork.title}</title>
             <style>
-                body { font-family: 'Georgia', serif; font-size: 11pt; margin: 30mm; color: #333; }
-                .cert-box { border: 2px solid #999; padding: 40px; }
-                h1 { font-size: 24pt; text-align: center; margin-bottom: 40px; font-weight: bold; }
-                .details p { margin: 12px 0; font-size: 12pt;}
-                .code-display { font-size: 16pt; font-weight: bold; color: #000; border: 1px dashed #ccc; padding: 5px 10px; display: inline-block; margin-left: 10px; font-family: monospace; }
-                .signature { margin-top: 80px; text-align: left; }
-                .signature-line { border-top: 1px solid #333; display: block; width: 300px; padding-top: 5px; }
-                .artist-name { font-weight: bold; font-size: 14pt; margin-top: 5px; }
+                body { font-family: 'Times New Roman', serif; font-size: 11pt; margin: 30mm; color: #000; }
+                .cert-box { border: 4px solid #000; padding: 40px; }
+                h1 { font-size: 26pt; text-align: center; margin-bottom: 50px; font-weight: bold; text-transform: uppercase; }
+                .details p { margin: 15px 0; font-size: 13pt; line-height: 1.4;}
+                .code-display { font-size: 20pt; font-weight: bold; color: #000; border: 2px dashed #ccc; padding: 5px 15px; display: inline-block; margin-left: 20px; font-family: 'Courier New', monospace; }
+                .signature { margin-top: 100px; text-align: left; }
+                .signature-line { border-top: 1px solid #000; display: block; width: 40%; padding-top: 5px; }
+                .artist-name { font-weight: bold; font-size: 14pt; margin-top: 10px; }
                 @media print { body { margin: 0; padding: 0; } }
             </style>
         </head>
@@ -88,23 +108,23 @@ const getCertificateHtml = (artwork: Artwork): string => {
             <div class="cert-box">
                 <h1>CERTIFICADO DE AUTENTICIDAD</h1>
                 <div class="details">
-                    <p><strong>Artista:</strong> Myriam Alcaraz (MA)</p>
+                    <p><strong>Artista:</strong> ${settings.artistName}</p>
                     <p><strong>Título de la Obra:</strong> ${artwork.title}</p>
                     <p><strong>Código de Trazabilidad:</strong> <span class="code-display">${artwork.code}</span></p>
                     <p><strong>Tipo de Obra:</strong> ${typeOptions[artwork.type]}</p>
                     <p><strong>Año de Creación:</strong> ${artwork.certificationDate.substring(0, 4)}</p>
                     <p><strong>Edición:</strong> ${seriesText}</p>
                     <p><strong>Medidas:</strong> [DIMENSIONES EN CM]</p>
-                    <p style="margin-top: 40px; font-size: 11pt;">
-                        <strong>Garantía:</strong> Por la presente, certifico que la obra descrita es original y ha sido creada y firmada por la artista Myriam Alcaraz.
+                    <p style="margin-top: 40px; font-size: 12pt; font-style: italic;">
+                        <strong>Garantía:</strong> Por la presente, certifico que la obra descrita es original y ha sido creada y firmada por la artista ${settings.artistName}, ${settings.artistTitle}.
                     </p>
                 </div>
             </div>
 
             <div class="signature">
-                <p style="font-size: 9pt; margin-bottom: 5px;">Fecha de Certificación: ${today}</p>
+                <p style="font-size: 10pt; margin-bottom: 5px;">Fecha de Emisión: ${today}</p>
                 <span class="signature-line"></span>
-                <p class="artist-name">Firma de Myriam Alcaraz</p>
+                <p class="artist-name">Firma de ${settings.artistName}</p>
             </div>
         </body>
         </html>
@@ -112,48 +132,49 @@ const getCertificateHtml = (artwork: Artwork): string => {
 };
 
 /**
- * Genera el HTML exclusivo de la CARTA.
+ * Genera el HTML exclusivo de la CARTA, usando la configuración global.
  */
-const getLetterHtml = (artwork: Artwork): string => {
+const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const seriesText = getSeriesText(artwork);
-    const cycleName = "[NOMBRE DEL CICLO DE LA OBRA]"; 
 
+    // 🛑 ESTILOS PROFESIONALES EN LÍNEA para garantizar la impresión
     return `
         <!DOCTYPE html>
         <html lang="es">
         <head>
             <title>Carta - ${artwork.title}</title>
             <style>
-                body { font-family: 'Georgia', serif; font-size: 12pt; margin: 30mm; color: #333; line-height: 1.6; }
-                .date { text-align: right; font-size: 10pt; margin-bottom: 50px; }
-                .signature { margin-top: 80px; text-align: right; }
-                .signature p { margin: 0; }
+                body { font-family: 'Times New Roman', serif; font-size: 12pt; margin: 30mm; color: #000; line-height: 1.8; }
+                .date { text-align: right; font-size: 11pt; margin-bottom: 50px; }
+                .signature { margin-top: 80px; text-align: left; }
+                .signature p { margin: 5px 0; }
                 .signature .artist-name { font-weight: bold; font-size: 14pt; }
                 @media print { body { margin: 0; padding: 0; } }
             </style>
         </head>
         <body>
-            <div class="date">Móstoles, a ${today}</div>
+            <div class="date">${settings.city}, a ${today}</div>
             
-            <p>Estimado Coleccionista,</p>
+            <p style="font-weight: bold; margin-bottom: 30px;">${settings.letterOpening}</p>
 
-            <p style="margin-top: 30px;">
+            <p>
                 Me dirijo a usted con gran entusiasmo para adjuntarle el Certificado de Autenticidad de la obra que ahora forma parte de su colección. Este documento garantiza la originalidad y la procedencia directa de mi estudio.
             </p>
             
-            <p style="margin-top: 20px;">
-                La pieza, <strong>"${artwork.title}"</strong> (${seriesText}), con código de trazabilidad **${artwork.code}**, fue creada durante mi ${cycleName}. Espero que le proporcione tanta satisfacción como a mí me dio crearla.
+            <p style="margin-top: 25px;">
+                La pieza, <strong>"${artwork.title}"</strong> (${seriesText}), con código de trazabilidad **${artwork.code}**, fue creada durante mi ${settings.cycleName}. Espero que le proporcione tanta satisfacción como a mí me dio crearla.
             </p>
             
             <p style="margin-top: 40px;">
-                Le agradezco sinceramente su apoyo y su pasión por el arte.
+                ${settings.letterClosing}
             </p>
             
             <div class="signature">
-                <p>Con mis mejores deseos,</p>
-                <p class="artist-name">Myriam Alcaraz</p>
-                <p>Artista Visual</p>
+                <p style="font-style: italic; margin-bottom: 15px;">Atentamente,</p>
+                <p style="height: 50px; border-bottom: 1px dashed #999; width: 50%; margin-bottom: 5px;"></p>
+                <p class="artist-name">${settings.artistName}</p>
+                <p>${settings.artistTitle}</p>
             </div>
         </body>
         </html>
@@ -169,6 +190,7 @@ const handlePrintDocument = (content: string, title: string) => {
         printWindow.document.write(content);
         printWindow.document.title = title;
         printWindow.document.close();
+        // Damos tiempo a que se carguen los estilos antes de llamar a la impresión
         setTimeout(() => {
             printWindow.print();
         }, 500); 
@@ -179,17 +201,95 @@ const handlePrintDocument = (content: string, title: string) => {
 
 
 // =========================================================
-// 🔬 COMPONENTE 2 Y 3: LABORATORIO DE DOCUMENTOS (3 Columnas)
+// ⚙️ CUADRO 3: CENTRO DE CONTENIDO Y PLANTILLAS (NUEVO)
+// =========================================================
+interface ContentSettingsProps {
+    settings: DocumentSettings;
+    setSettings: React.Dispatch<React.SetStateAction<DocumentSettings>>;
+}
+
+const ContentSettings: React.FC<ContentSettingsProps> = ({ settings, setSettings }) => {
+    const [isSaved, setIsSaved] = useState(false);
+    
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setSettings({ ...settings, [e.target.name]: e.target.value });
+        setIsSaved(false);
+    };
+    
+    const handleSave = () => {
+        // En un entorno real, aquí se guardaría en una base de datos.
+        setIsSaved(true);
+        setTimeout(() => setIsSaved(false), 3000);
+    };
+
+    return (
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-stone-100 transition-shadow">
+            <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-6 border-b pb-3">
+                <Settings size={24} className="text-gold-500" /> CUADRO 3: Centro de Contenido y Plantillas
+            </h3>
+            
+            <p className="text-slate-600 mb-6">
+                Personalice los datos estáticos de sus documentos. Estos ajustes se aplicarán inmediatamente en el **Laboratorio de Documentos** (Cuadro 2).
+            </p>
+
+            <div className="grid grid-cols-2 gap-6">
+                {/* Ajustes de Identidad */}
+                <div className="p-4 border rounded-lg bg-stone-50">
+                    <h4 className="font-bold text-slate-700 mb-3 flex items-center gap-1"><Edit size={16} /> Identidad</h4>
+                    <label className="block text-xs font-medium text-slate-500 mb-1">Nombre del Artista (Para firma)</label>
+                    <input type="text" name="artistName" value={settings.artistName} onChange={handleChange} className="w-full p-2 border rounded text-sm mb-3" />
+                    
+                    <label className="block text-xs font-medium text-slate-500 mb-1">Título / Cargo</label>
+                    <input type="text" name="artistTitle" value={settings.artistTitle} onChange={handleChange} className="w-full p-2 border rounded text-sm mb-3" />
+
+                    <label className="block text-xs font-medium text-slate-500 mb-1">Ciudad de Emisión</label>
+                    <input type="text" name="city" value={settings.city} onChange={handleChange} className="w-full p-2 border rounded text-sm mb-3" />
+                </div>
+
+                {/* Ajustes de Carta */}
+                <div className="p-4 border rounded-lg bg-stone-50">
+                    <h4 className="font-bold text-slate-700 mb-3 flex items-center gap-1"><FileText size={16} /> Plantilla de Carta</h4>
+                    
+                    <label className="block text-xs font-medium text-slate-500 mb-1">Ciclo Artístico General</label>
+                    <input type="text" name="cycleName" value={settings.cycleName} onChange={handleChange} placeholder="Ej: Serie 'Las Ciudades Invisibles'" className="w-full p-2 border rounded text-sm mb-3" />
+                    
+                    <label className="block text-xs font-medium text-slate-500 mb-1">Apertura (Ej: Estimado Coleccionista,)</label>
+                    <input type="text" name="letterOpening" value={settings.letterOpening} onChange={handleChange} className="w-full p-2 border rounded text-sm mb-3" />
+
+                    <label className="block text-xs font-medium text-slate-500 mb-1">Cierre y Agradecimiento</label>
+                    <textarea name="letterClosing" value={settings.letterClosing} onChange={handleChange} rows={3} className="w-full p-2 border rounded text-sm resize-none"></textarea>
+                </div>
+            </div>
+            
+            <div className="mt-6 flex justify-end">
+                <button
+                    onClick={handleSave}
+                    className={`py-2 px-4 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${
+                        isSaved ? 'bg-green-500 text-white' : 'bg-gold-500 text-white hover:bg-gold-600'
+                    }`}
+                >
+                    {isSaved ? <Check size={16} /> : <Edit size={16} />} 
+                    {isSaved ? 'Guardado' : 'Guardar Configuración'}
+                </button>
+            </div>
+        </div>
+    );
+}
+
+
+// =========================================================
+// 🔬 CUADRO 2: LABORATORIO DE DOCUMENTOS
 // =========================================================
 interface DocumentLaboratoryProps {
     artworks: Artwork[];
+    settings: DocumentSettings;
 }
 
-const DocumentLaboratory: React.FC<DocumentLaboratoryProps> = ({ artworks }) => {
-    // Buscar todas las obras que ya tienen código asignado
+const DocumentLaboratory: React.FC<DocumentLaboratoryProps> = ({ artworks, settings }) => {
+    
     const codedArtworks = useMemo(() => artworks.filter(a => a.code), [artworks]);
     
-    // Estado para la obra seleccionada dentro del Laboratorio (Se inicializa con la primera ID, si existe)
+    // El estado guarda el ID de la obra seleccionada.
     const [selectedId, setSelectedId] = useState<number | null>(codedArtworks.length > 0 ? codedArtworks[0].id : null);
     
     // Obra actualmente visible
@@ -198,54 +298,49 @@ const DocumentLaboratory: React.FC<DocumentLaboratoryProps> = ({ artworks }) => 
         [artworks, selectedId]
     );
 
-    // Si no hay obras codificadas, muestra un mensaje
+    // Ajuste: Sincronizar selectedId si la lista cambia y la ID no existe.
+    if (codedArtworks.length > 0 && (!selectedArtwork || selectedId === null)) {
+        // CORRECCIÓN: Si no hay obra seleccionada, pero hay obras, selecciona la primera.
+        setSelectedId(codedArtworks[0].id);
+    }
+
     if (codedArtworks.length === 0) {
         return (
             <div className="bg-white p-8 rounded-xl shadow-lg border border-stone-100 transition-shadow text-center">
                 <h3 className="text-xl font-bold text-slate-800 flex items-center justify-center gap-2 mb-4">
-                    <FileText size={24} className="text-gold-500" /> LABORATORIO DE DOCUMENTOS
+                    <FileText size={24} className="text-gold-500" /> CUADRO 2: LABORATORIO DE DOCUMENTOS
                 </h3>
                 <p className="text-slate-600 mt-4">
-                    Primero debe <strong className="text-gold-600">Generar el Código</strong> de autenticidad en el panel de **Gestión de Obras** para que aparezcan aquí.
+                    Primero debe <strong className="text-gold-600">Generar el Código</strong> de autenticidad en el Cuadro 1 para que las obras aparezcan aquí.
                 </p>
             </div>
         );
     }
     
-    // Si la ID seleccionada se ha perdido (ej. la obra se borró), reseteamos a la primera disponible.
-    if (!selectedArtwork) {
-        // Esto solo ocurre si seleccionId es null o la obra no existe, y codedArtworks tiene elementos.
-        // Lo reseteamos a la primera ID disponible para evitar errores.
-        setSelectedId(codedArtworks[0].id);
-        return <p className="p-4 text-center text-slate-500">Cargando Laboratorio...</p>;
-    }
+    if (!selectedArtwork) return <p className="p-4 text-center text-slate-500">Cargando Laboratorio...</p>;
     
-    // --- Renderizado de la Vista de 3 Columnas (El Laboratorio) ---
-    
-    // Prepara el HTML de la Carta y el Certificado (para la impresión)
-    const certificateContent = getCertificateHtml(selectedArtwork);
-    const letterContent = getLetterHtml(selectedArtwork);
+    // Generación de contenido usando la configuración global
+    const certificateContent = getCertificateHtml(selectedArtwork, settings);
+    const letterContent = getLetterHtml(selectedArtwork, settings);
 
     return (
         <div className="bg-white p-6 rounded-xl shadow-lg border border-stone-100 transition-shadow">
             <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-6 border-b pb-3">
-                <FileText size={24} className="text-gold-500" /> LABORATORIO DE DOCUMENTOS
+                <FileText size={24} className="text-gold-500" /> CUADRO 2: LABORATORIO DE DOCUMENTOS
             </h3>
             
-            {/* Selector de Obra (Si hay más de una) */}
+            {/* Selector de Obra */}
             <div className="mb-4 flex items-center gap-4">
                 <label className="text-sm font-medium text-slate-600 whitespace-nowrap">Obra Seleccionada:</label>
                 <select
                     className="p-2 border rounded text-sm flex-1 focus:ring-gold-500 focus:border-gold-500"
-                    // Al cambiar, convertimos el valor del string a number
+                    // CORRECCIÓN PERMANENTE: Convertimos el ID a string para el SELECT.
                     onChange={(e) => setSelectedId(Number(e.target.value))}
-                    // CORRECCIÓN: Convertimos el ID a string para que el select no dé error de tipado.
                     value={String(selectedId)} 
                 >
                     {codedArtworks.map(a => (
                         <option 
                             key={a.id} 
-                            // CORRECCIÓN: Aseguramos que el valor de la opción sea un string.
                             value={String(a.id)}
                         >
                             {a.title} ({a.code})
@@ -261,38 +356,42 @@ const DocumentLaboratory: React.FC<DocumentLaboratoryProps> = ({ artworks }) => 
                 {/* COLUMNA 1: FOTO/MINIATURA */}
                 <div className="col-span-1 border border-stone-200 p-4 rounded-lg bg-stone-50">
                     <h4 className="text-sm font-bold text-slate-700 flex items-center gap-1 mb-3">
-                        <ImageIcon size={16} /> FOTO DE OBRA
+                        <ImageIcon size={16} /> Detalle de Obra
                     </h4>
                     <div className="aspect-[4/3] bg-stone-200 flex items-center justify-center text-slate-500 rounded mb-4">
-                        [IMAGEN DE LA OBRA O MINIATURA]
+                        [ESPACIO PARA MINIATURA DE OBRA]
                     </div>
                     <p className="text-xs text-slate-600 font-semibold mb-1">Título: {selectedArtwork.title}</p>
                     <p className="text-xs font-mono text-slate-700">Código: {selectedArtwork.code}</p>
                     <p className="text-xs text-slate-500 mt-2">
-                        {getSeriesText(selectedArtwork)} / {typeOptions[selectedArtwork.type]}
+                        {getSeriesText(selectedArtwork)} / Creado en {selectedArtwork.certificationDate.substring(0, 4)}
                     </p>
+                    <p className="text-xs text-gold-600 mt-4 font-bold">Configuración de Plantilla Activa:</p>
+                    <p className="text-xs text-slate-500">Ciclo: {settings.cycleName}</p>
+                    <p className="text-xs text-slate-500">Firma: {settings.artistName}</p>
                 </div>
                 
                 {/* COLUMNA 2: CERTIFICADO */}
                 <div className="col-span-1 border border-stone-200 p-4 rounded-lg bg-white flex flex-col justify-between">
                     <div>
                         <h4 className="text-base font-bold text-slate-800 mb-3 flex items-center gap-1">
-                            CUADRO 2: Certificado
+                            Certificado de Autenticidad
                         </h4>
-                        <div className="p-3 border border-dashed border-red-300 bg-red-50 text-xs font-serif leading-snug max-h-[300px] overflow-hidden relative">
+                        <div className="p-3 border border-dashed border-blue-300 bg-blue-50 text-xs font-serif leading-snug max-h-[300px] overflow-hidden relative">
                             <p className="text-center font-bold text-sm mb-2">CERTIFICADO DE AUTENTICIDAD</p>
                             <p className="text-left mt-2">Título: {selectedArtwork.title}</p>
                             <p className="text-left">Código: <span className="font-mono">{selectedArtwork.code}</span></p>
-                            <p className="text-left mt-4">Garantía: Obra original creada por Myriam Alcaraz...</p>
+                            <p className="text-left mt-4 text-xs font-bold">Listo para Impresión Profesional.</p>
                              <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
                         </div>
                     </div>
 
                     <button
                         onClick={() => handlePrintDocument(certificateContent, `Certificado ${selectedArtwork.code}`)}
-                        className="mt-4 bg-blue-600 text-white py-2 px-3 rounded-lg font-bold text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-1 w-full"
+                        className="mt-4 bg-red-600 text-white py-3 px-3 rounded-lg font-bold text-sm hover:bg-red-700 transition-colors flex items-center justify-center gap-1 w-full shadow-md"
+                        title="Genera un PDF limpio para impresión de alta calidad."
                     >
-                        <Printer size={16} /> Imprimir / PDF (Certificado)
+                        <Printer size={16} /> GENERAR PDF (Certificado)
                     </button>
                 </div>
 
@@ -300,29 +399,29 @@ const DocumentLaboratory: React.FC<DocumentLaboratoryProps> = ({ artworks }) => 
                 <div className="col-span-1 border border-stone-200 p-4 rounded-lg bg-white flex flex-col justify-between">
                     <div>
                         <h4 className="text-base font-bold text-slate-800 mb-3 flex items-center gap-1">
-                            CUADRO 3: Carta
+                            Carta al Coleccionista
                         </h4>
                         <div className="p-3 border border-dashed border-red-300 bg-red-50 text-xs font-serif leading-snug max-h-[300px] overflow-hidden relative">
-                            <p className="text-right text-slate-500 mb-3">[Fecha Actual]</p>
-                            <p className="font-bold mb-2">Estimado Coleccionista,</p>
-                            <p className="mb-2">Me dirijo a usted con gran entusiasmo para adjuntarle el Certificado...</p>
-                            <p className="mb-4">La pieza, **{selectedArtwork.title}**, con código **{selectedArtwork.code}**...</p>
-                            <p className="text-right mt-6">Con mis mejores deseos, Myriam Alcaraz</p>
+                            <p className="text-right text-slate-500 mb-3">{settings.city}, [Fecha Actual]</p>
+                            <p className="font-bold mb-2">{settings.letterOpening}</p>
+                            <p className="mb-2">La pieza, **{selectedArtwork.title}**, con código **{selectedArtwork.code}**, fue creada durante mi {settings.cycleName}...</p>
+                            <p className="text-right mt-6">Atentamente, {settings.artistName}</p>
                             <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
                         </div>
                     </div>
                     
                     <button
                         onClick={() => handlePrintDocument(letterContent, `Carta ${selectedArtwork.code}`)}
-                        className="mt-4 bg-blue-600 text-white py-2 px-3 rounded-lg font-bold text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-1 w-full"
+                        className="mt-4 bg-red-600 text-white py-3 px-3 rounded-lg font-bold text-sm hover:bg-red-700 transition-colors flex items-center justify-center gap-1 w-full shadow-md"
+                        title="Genera un PDF limpio para impresión de alta calidad."
                     >
-                        <Printer size={16} /> Imprimir / PDF (Carta)
+                        <Printer size={16} /> GENERAR PDF (Carta)
                     </button>
                 </div>
             </div>
             
             <p className="text-xs text-slate-500 mt-6 p-2 border-t text-center">
-                *Haga clic en los botones azules para generar el documento en una nueva ventana. Allí podrá elegir "Guardar como PDF" para la impresión en papel especial.
+                *Los botones **GENERAR PDF** abrirán la ventana de impresión de su navegador. Para el PDF, elija "Guardar como PDF" como destino de impresión.
             </p>
         </div>
     );
@@ -330,12 +429,12 @@ const DocumentLaboratory: React.FC<DocumentLaboratoryProps> = ({ artworks }) => 
 
 
 // =========================================================
-// 🖼️ COMPONENTE 1: Gestión de Obras (Tabla)
+// 🖼️ CUADRO 1: Gestión de Obras (Tabla)
 // =========================================================
 interface WorkManagementTableProps {
     artworks: Artwork[];
     setArtworks: React.Dispatch<React.SetStateAction<Artwork[]>>;
-    onNavigateTo: (tool: 'management' | 'print') => void;
+    onNavigateTo: (tool: 'management' | 'print' | 'settings') => void;
 }
 
 const WorkManagementTable: React.FC<WorkManagementTableProps> = ({ artworks, setArtworks, onNavigateTo }) => {
@@ -539,7 +638,7 @@ const WorkManagementTable: React.FC<WorkManagementTableProps> = ({ artworks, set
                                         <button
                                             // Navega al Laboratorio
                                             onClick={() => onNavigateTo('print')}
-                                            className="text-blue-600 hover:text-blue-900 flex items-center gap-1 p-1 rounded hover:bg-blue-50 transition"
+                                            className="text-red-600 hover:text-red-900 flex items-center gap-1 p-1 rounded hover:bg-red-50 transition"
                                             title="Ir al LABORATORIO DE DOCUMENTOS"
                                         >
                                             <FileText size={16} /> Crear Doc.
@@ -576,11 +675,15 @@ const WorkManagementTable: React.FC<WorkManagementTableProps> = ({ artworks, set
 // ⚙️ COMPONENTE PRINCIPAL DEL DASHBOARD (CONTENEDOR)
 // ---------------------------------------------------------
 export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
-    // 🛑 DATA: Inicializa la lista de obras vacía para empezar desde cero
+    
+    // 🛑 DATA CENTRAL: Obras
     const [artworks, setArtworks] = useState<Artwork[]>([]);
     
-    // Estado para la navegación entre paneles: 'management' o 'print' (Laboratorio)
-    const [activeTool, setActiveTool] = useState<'management' | 'print'>('management'); 
+    // 🛑 DATA CENTRAL: Configuración de documentos (Nuevo)
+    const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
+    
+    // Estado para la navegación entre paneles: 'management', 'print' (Laboratorio) o 'settings' (Plantillas)
+    const [activeTool, setActiveTool] = useState<'management' | 'print' | 'settings'>('management'); 
     
     // Filtramos si hay obras codificadas para el botón de navegación
     const hasCodedArtworks = artworks.some(a => a.code);
@@ -603,7 +706,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                 </button>
             </div>
 
-            {/* LISTADO DE HERRAMIENTAS DE NAVEGACIÓN */}
+            {/* LISTADO DE HERRAMIENTAS DE NAVEGACIÓN (TRES CUADROS) */}
             <div className="flex flex-wrap gap-4 mb-8 border-b pb-4">
                 <button 
                     onClick={() => setActiveTool('management')}
@@ -615,7 +718,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                 </button>
                 <button 
                     onClick={() => setActiveTool('print')}
-                    disabled={!hasCodedArtworks} // Deshabilita si no hay obras codificadas
+                    disabled={!hasCodedArtworks} 
                     className={`py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 ${
                         activeTool === 'print' ? 'bg-gold-500 text-white' : 
                         hasCodedArtworks ? 'bg-white text-slate-700 hover:bg-stone-100 border' : 
@@ -623,14 +726,22 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                     }`}
                     title={!hasCodedArtworks ? "Necesita al menos una obra con código generado" : "Ir al Laboratorio de Documentos"}
                 >
-                    <Printer size={18} /> LABORATORIO DE DOCUMENTOS
+                    <Printer size={18} /> CUADRO 2: Laboratorio de Documentos
+                </button>
+                <button 
+                    onClick={() => setActiveTool('settings')}
+                    className={`py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 ${
+                        activeTool === 'settings' ? 'bg-gold-500 text-white' : 'bg-white text-slate-700 hover:bg-stone-100 border'
+                    }`}
+                >
+                    <Settings size={18} /> CUADRO 3: Centro de Plantillas
                 </button>
             </div>
 
             {/* VISTA DE HERRAMIENTA ACTIVA */}
             <div className="mt-6">
                 
-                {/* Muestra la tabla de gestión */}
+                {/* 1. Gestión de Obras */}
                 {activeTool === 'management' && (
                     <WorkManagementTable 
                         artworks={artworks} 
@@ -639,18 +750,27 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                     />
                 )}
                 
-                {/* Muestra el Laboratorio de Documentos (si hay obras codificadas) */}
+                {/* 2. Laboratorio de Documentos */}
                 {activeTool === 'print' && hasCodedArtworks && (
                     <DocumentLaboratory 
                         artworks={artworks} 
+                        settings={documentSettings}
                     />
                 )}
-
-                {/* Mensaje si el Laboratorio está vacío */}
+                
+                {/* 3. Centro de Configuración */}
+                {activeTool === 'settings' && (
+                    <ContentSettings 
+                        settings={documentSettings} 
+                        setSettings={setDocumentSettings} 
+                    />
+                )}
+                
+                {/* Mensaje de Laboratorio vacío (solo si la herramienta activa es 'print' y no hay datos) */}
                 {activeTool === 'print' && !hasCodedArtworks && (
                     <div className="bg-white p-8 rounded-xl shadow-lg border border-stone-100 transition-shadow text-center">
                         <h3 className="text-xl font-bold text-slate-800 flex items-center justify-center gap-2 mb-4">
-                            <FileText size={24} className="text-gold-500" /> LABORATORIO DE DOCUMENTOS
+                            <FileText size={24} className="text-gold-500" /> CUADRO 2: LABORATORIO DE DOCUMENTOS
                         </h3>
                         <p className="text-slate-600 mt-4">
                             No hay obras codificadas disponibles. Por favor, vuelva a **Gestión y Codificación** para asignar códigos.
