@@ -79,7 +79,7 @@ const DEMO_ARTWORK: DemoArtwork = {
     isOpenSeries: false,
 };
 
-// 🛑 EXPORTACIÓN CLAVE
+// 🛑 EXPORTACIÓN CLAVE (Usada por App.tsx para el Iframe)
 export const getCertificateDemoHtmlContent = (
   artwork: DemoArtwork = DEMO_ARTWORK, 
   settings: DemoSettings = DEMO_SETTINGS
