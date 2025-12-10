@@ -26,7 +26,8 @@ interface DocumentSettings {
   cycleName: string; 
   city: string;
   letterOpening: string;
-  letterClosing: string;
+  // 🛑 MODIFICADO: Nueva frase de cierre, más profesional
+  letterClosing: string; 
   // 🛑 AÑADIDOS: Datos de contacto centralizados
   website: string;
   email: string;
@@ -44,7 +45,8 @@ const initialSettings: DocumentSettings = {
     cycleName: "Serie Sin Título (A Definir)", 
     city: "Madrid", 
     letterOpening: "Estimado Coleccionista,",
-    letterClosing: "Agradeciendo profundamente su apoyo a mi trayectoria artística, quedo a su disposición para cualquier consulta. Con mis mejores deseos,",
+    // 🛑 NUEVO TEXTO DE CIERRE
+    letterClosing: "Con mis mejores deseos, le extiendo mi más sincero agradecimiento por su confianza en mi trabajo y quedo a su disposición para cualquier consulta.",
     // 🛑 DATOS DE CONTACTO CORREGIDOS Y CENTRALIZADOS
     website: "https://myriamalcaraz.com", 
     email: "myriamhotmail@hotmail.com",
@@ -216,9 +218,10 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     margin-top: 5px;
                 }
                 .artwork-image-section {
+                    /* 🛑 AJUSTE SOLICITADO: Reducido el tamaño máximo de la foto para evitar el desbordamiento en DINA4 */
                     width: 70%; 
-                    max-width: 250px; /* 🛑 REDUCIDO para ajuste a A4 */
-                    margin: 20px auto; /* Reducido el margen vertical */
+                    max-width: 200px; /* REDUCIDO de 250px a 200px */
+                    margin: 15px auto; /* Reducido el margen vertical */
                     border: 1px solid #ccc;
                     padding: 5px;
                     box-shadow: 0 0 8px rgba(0,0,0,0.1);
@@ -287,14 +290,13 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     flex-shrink: 0;
                 }
 
-                /* 🛑 AJUSTE SOLICITADO: ELIMINACIÓN DE LA LÍNEA SOBRE EL BLOQUE DE FIRMA */
+                /* 🛑 AJUSTE SOLICITADO: Bloque de Firma */
                 .signature-row {
                     display: flex;
                     justify-content: space-between;
                     align-items: flex-start; 
                     margin-top: 40px; 
                     padding-top: 20px;
-                    /* border-top: 1px solid #ddd; 🛑 ELIMINADA por solicitud del usuario */
                 }
                 .date-col {
                     flex-basis: 45%; 
@@ -302,15 +304,15 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     font-size: 10pt;
                     color: #333;
                 }
+                /* 🛑 ALINEACIÓN DERECHA PARA LA FIRMA */
                 .signature-col {
                     flex-basis: 45%; 
-                    text-align: right;
-                    /* Aumentamos el margen superior para el espacio del sello y firma */
+                    text-align: right; 
                     padding-top: 15px; 
                 }
                 .signature-line { 
                     border-top: 1px solid #000; 
-                    display: block; /* Ocupa todo el ancho de la columna (45% del total) */
+                    display: block; 
                     width: 100%; 
                     margin-bottom: 5px; 
                 }
@@ -399,13 +401,20 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
     `;
 };
 
+/**
+ * Genera el HTML de la CARTA. 
+ * 🛑 MODIFICADO: 
+ * 1. Añadido el Logo en el encabezado.
+ * 2. Eliminada la referencia a la "unicidad" en el primer párrafo.
+ * 3. Nueva frase de agradecimiento en el cierre.
+ * 4. Firma movida a la derecha.
+ */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
-    // ... (El código de la carta se mantiene sin cambios)
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     
     const seriesText = getSeriesText(artwork);
     
-    // 🛑 MODIFICADO: Referencia de la carta para reflejar la edición abierta
+    // Referencia de la carta para reflejar la edición abierta
     let seriesReference = '';
     if (artwork.seriesIndex !== null) {
         seriesReference = `y pertenece a mi ciclo <span class="artwork-ref">${settings.cycleName}</span>.`;
@@ -422,27 +431,39 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
             <title>Carta Personalizada - ${artwork.title}</title>
             <style>
                 body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 13pt; margin: 30mm; color: #111; line-height: 1.8; }
-                .header { text-align: right; margin-bottom: 60px; }
-                .header p { margin: 0; font-size: 11pt; color: #333; }
+                .top-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
+                .logo-container img { max-height: 60px; width: auto; opacity: 0.8; }
+                .address-container { text-align: right; }
+                .address-container p { margin: 0; font-size: 11pt; color: #333; }
+                
                 .body-content { margin-top: 30px; }
                 .artwork-ref { font-style: italic; font-weight: bold; color: #000; }
-                .signature-area { margin-top: 100px; text-align: left; }
-                .signature-line { height: 50px; border-bottom: 1px dashed #999; width: 50%; margin-bottom: 5px; }
+                
+                /* 🛑 MODIFICADO: Bloque de Firma movido a la derecha */
+                .signature-area { margin-top: 100px; text-align: right; }
+                .signature-line { height: 50px; border-bottom: 1px solid #999; width: 50%; margin-left: 50%; margin-bottom: 5px; }
                 .signature-area p { margin: 5px 0; }
                 .artist-name { font-weight: bold; font-size: 16pt; margin-top: 10px; }
+                
                 @media print { body { margin: 0; padding: 0; } }
             </style>
         </head>
         <body>
-            <div class="header">
-                <p>${settings.city}, a ${today}</p>
+            
+            <div class="top-header">
+                <div class="logo-container">
+                    <img src="/logo-myriam.png" alt="${settings.artistName} Logo" />
+                </div>
+                <div class="address-container">
+                    <p>${settings.city}, a ${today}</p>
+                </div>
             </div>
             
             <p style="font-weight: bold; margin-bottom: 40px;">${settings.letterOpening}</p>
 
             <div class="body-content">
                 <p>
-                    Es un honor para mí que haya elegido una de mis creaciones para enriquecer su colección. Con esta carta, le hago entrega formal del Certificado de Autenticidad, el cual respalda la procedencia y la unicidad de su nueva obra.
+                    Es un honor para mí que haya elegido una de mis creaciones para enriquecer su colección. Con esta carta, le hago entrega formal del Certificado de Autenticidad, el cual respalda la procedencia y la calidad de su nueva obra.
                 </p>
                 
                 <p style="margin-top: 30px;">
@@ -456,7 +477,7 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
             
             <div class="signature-area">
                 <p style="font-style: italic; margin-bottom: 15px;">Reciba un cordial saludo,</p>
-                <div class="signature-line"></div>
+                <div class="signature-line"></div> 
                 <p class="artist-name">${settings.artistName}</p>
                 <p>${settings.artistTitle}</p>
             </div>
