@@ -17,6 +17,7 @@ interface Artwork {
   dimensions: string; 
   technique: string; 
   originalIndex: number; // 🛑 NUEVO: Para mantener el orden de constants.ts
+  isOpenSeries: boolean; // 🛑 NUEVO: Si es una serie sin límite fijo (ej. Giclée abierta)
 }
 
 interface DocumentSettings {
@@ -87,6 +88,7 @@ const REAL_ARTWORKS: Artwork[] = ARTWORKS_FOR_INITIALIZATION.map((art, index) =>
     dimensions: art.dimensions, 
     technique: art.technique, 
     originalIndex: index, // Mantiene el orden de constants.ts
+    isOpenSeries: false, // 🛑 NUEVO: Por defecto no es serie abierta
 }));
 
 
@@ -101,15 +103,14 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
     const dateCode = `${yearShort}${month}`;
 
     let seriesCode = '';
-    if (artworkToCode.seriesIndex !== null && artworkToCode.seriesTotal !== null) {
-        // Aseguramos que el índice y el total sean de 2 dígitos (o más si es necesario)
+    // Si es serie limitada, usa el formato Index/Total al final
+    if (artworkToCode.seriesIndex !== null && artworkToCode.seriesTotal !== null && !artworkToCode.isOpenSeries) {
         const indexFmtd = String(artworkToCode.seriesIndex).padStart(2, '0');
         const totalFmtd = String(artworkToCode.seriesTotal).padStart(2, '0');
-        // Para Giclée: se puede usar el formato Index/Total al final (ej: 01/50)
         return `MA-${year}-${dateCode}-${indexFmtd}/${totalFmtd}`; 
     }
     
-    // El formato final es MA-AÑOCOMPLETO-AÑOMES-IDDEOBRA
+    // Si es única o serie abierta, usa el ID de obra
     return `MA-${year}-${dateCode}-${String(artworkToCode.id).padStart(2, '0')}`;
 };
 
@@ -117,14 +118,21 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
 // ---------------------------------------------------------
 // 📄 GENERADORES DE HTML PARA IMPRESIÓN 
 // ---------------------------------------------------------
+/**
+ * 🛑 MODIFICADO: Ahora maneja Edición Seriada Abierta (Giclée)
+ */
 const getSeriesText = (artwork: Artwork) => {
-    return artwork.seriesIndex !== null && artwork.seriesTotal !== null
-        ? `Edición ${artwork.seriesIndex}/${artwork.seriesTotal}`
-        : `Obra Única`;
+    if (artwork.seriesIndex !== null && artwork.seriesTotal !== null && !artwork.isOpenSeries) {
+        return `Edición Limitada ${artwork.seriesIndex}/${artwork.seriesTotal}`;
+    }
+    if (artwork.isOpenSeries) { 
+        return `Edición Seriada Abierta (Giclée)`;
+    }
+    return `Obra Única Original`;
 }
 
 /**
- * Genera el HTML del CERTIFICADO. (CAMBIOS DE LAYOUT PARA A4 APLICADOS Y ULTIMAS MEJORAS ESTÉTICAS)
+ * Genera el HTML del CERTIFICADO. 
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -279,14 +287,14 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     flex-shrink: 0;
                 }
 
-                /* 🛑 NUEVOS ESTILOS PARA FECHA/FIRMA SEPARADOS */
+                /* 🛑 AJUSTE SOLICITADO: ELIMINACIÓN DE LA LÍNEA SOBRE EL BLOQUE DE FIRMA */
                 .signature-row {
                     display: flex;
                     justify-content: space-between;
-                    align-items: flex-start; /* Alinea por la parte superior */
+                    align-items: flex-start; 
                     margin-top: 40px; 
                     padding-top: 20px;
-                    border-top: 1px solid #ddd; /* Separador elegante por encima del bloque */
+                    /* border-top: 1px solid #ddd; 🛑 ELIMINADA por solicitud del usuario */
                 }
                 .date-col {
                     flex-basis: 45%; 
@@ -396,10 +404,17 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     
     const seriesText = getSeriesText(artwork);
-    const seriesReference = artwork.seriesIndex !== null
-        ? `y pertenece a mi ciclo <span class="artwork-ref">${settings.cycleName}</span>.`
-        : `y es una pieza única.`;
     
+    // 🛑 MODIFICADO: Referencia de la carta para reflejar la edición abierta
+    let seriesReference = '';
+    if (artwork.seriesIndex !== null) {
+        seriesReference = `y pertenece a mi ciclo <span class="artwork-ref">${settings.cycleName}</span>.`;
+    } else if (artwork.isOpenSeries) {
+        seriesReference = `y forma parte de la <span class="artwork-ref">Edición Seriada Abierta (Giclée)</span>.`;
+    } else {
+        seriesReference = `y es una <span class="artwork-ref">pieza única original</span>.`;
+    }
+
     return `
         <!DOCTYPE html>
         <html lang="es">
@@ -431,7 +446,7 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                 </p>
                 
                 <p style="margin-top: 30px;">
-                    La pieza, <span class="artwork-ref">"${artwork.title}"</span> (${seriesText}), ha sido registrada con el código de trazabilidad **${artwork.code}** ${seriesReference}
+                    La pieza, <span class="artwork-ref">"${artwork.title}"</span> (${seriesText}), ha sido registrada con el código de trazabilidad **${artwork.code}**, ${seriesReference}
                 </p>
                 
                 <p style="margin-top: 40px;">
@@ -582,7 +597,7 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
 // =========================================================
 
 interface ArtworkFormProps {
-    // 🛑 Modificación: Ahora se acepta el código y el estado, no se omiten.
+    // 🛑 Modificación: Ahora se acepta el código, estado e isOpenSeries
     onSave: (artwork: Omit<Artwork, 'id' | 'originalIndex'>, idToUpdate: number | null) => void;
     artworkToManage: Artwork | null;
     onCancel: () => void;
@@ -596,13 +611,16 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
 
     const [title, setTitle] = useState('');
     const [certificationDate, setCertificationDate] = useState(new Date().toISOString().substring(0, 10));
+    
+    // 🛑 Modificación de estados para la gestión de Ediciones
+    const [isSeries, setIsSeries] = useState(false); // Para Edición Limitada
+    const [isOpenSeries, setIsOpenSeries] = useState(false); // 🛑 NUEVO: Para Edición Seriada Abierta (Giclée)
     const [seriesIndex, setSeriesIndex] = useState<number | ''>('');
     const [seriesTotal, setSeriesTotal] = useState<number | ''>('');
-    const [isSeries, setIsSeries] = useState(false);
+    
     const [imagePath, setImagePath] = useState(''); 
     const [dimensions, setDimensions] = useState('');
     const [technique, setTechnique] = useState('');
-    // 🛑 NUEVO: Estado para el código manual
     const [manualCode, setManualCode] = useState<string>(''); 
     
     // Hook para PRE-RELLENAR el formulario (al añadir, duplicar o editar)
@@ -610,40 +628,54 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
         if (artworkToManage) {
             setTitle(artworkToManage.title);
             setCertificationDate(isDuplicating ? new Date().toISOString().substring(0, 10) : artworkToManage.certificationDate); 
-            setSeriesIndex(isDuplicating && artworkToManage.seriesIndex !== null ? artworkToManage.seriesIndex + 1 : artworkToManage.seriesIndex ?? '');
+            
+            // Lógica de carga de Edición
+            setIsOpenSeries(artworkToManage.isOpenSeries); // 🛑 NUEVO
+            
+            const isLimitedSeries = artworkToManage.seriesIndex !== null && artworkToManage.seriesTotal !== null && !artworkToManage.isOpenSeries;
+            setIsSeries(isLimitedSeries); // Si tiene índices Y NO es abierta, es limitada.
+
+            setSeriesIndex(isLimitedSeries && isDuplicating ? artworkToManage.seriesIndex! + 1 : artworkToManage.seriesIndex ?? '');
             setSeriesTotal(artworkToManage.seriesTotal ?? '');
-            setIsSeries(artworkToManage.seriesIndex !== null);
+
             setImagePath(artworkToManage.image);
             setDimensions(artworkToManage.dimensions);
             setTechnique(artworkToManage.technique);
-            // 🛑 Carga el código existente si estamos editando
             setManualCode(artworkToManage.code ?? '');
         } else {
             // Valores por defecto para "Añadir Nueva Obra"
             setTitle('');
             setCertificationDate(new Date().toISOString().substring(0, 10));
+            
+            // Reseteo de Edición
             setSeriesIndex('');
             setSeriesTotal('');
             setIsSeries(false);
+            setIsOpenSeries(false); // 🛑 NUEVO
+
             setImagePath('');
             setDimensions(''); 
             setTechnique('');
-            setManualCode(''); // Limpiar código manual
+            setManualCode('');
         }
     }, [artworkToManage, isDuplicating]); 
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         
-        let index = isSeries ? (seriesIndex === '' ? null : Number(seriesIndex)) : null;
-        let total = isSeries ? (seriesTotal === '' ? null : Number(seriesTotal)) : null;
+        let index = null;
+        let total = null;
 
-        if (isSeries) {
+        if (isSeries && !isOpenSeries) { // Solo si es serie limitada
+            index = seriesIndex === '' ? null : Number(seriesIndex);
+            total = seriesTotal === '' ? null : Number(seriesTotal);
+            
             if (index === null || total === null || index > total) {
-                alert("Revise los campos de la edición seriada (N° Pieza y Total Edición).");
+                alert("Revise los campos de la edición seriada limitada (N° Pieza y Total Edición).");
                 return;
             }
-        }
+        } 
+        
         if (title.trim() === '' || dimensions.trim() === '' || technique.trim() === '') {
              alert("El título, las dimensiones y la técnica de la obra son obligatorios.");
              return;
@@ -656,14 +688,14 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
             title: title.trim(),
             certificationDate: certificationDate,
             type: 'PT', 
-            seriesIndex: index, 
-            seriesTotal: total,
+            seriesIndex: index, // Será null si no es serie limitada
+            seriesTotal: total, // Será null si no es serie limitada
             image: imagePath || '/obras/placeholder-work.jpg', 
             dimensions: dimensions.trim(), 
             technique: technique.trim(), 
-            // 🛑 Se incluyen código y estado para la opción manual (Giclée)
             code: finalCode,
             status: finalStatus,
+            isOpenSeries: isOpenSeries, // 🛑 NUEVO
         };
 
         const idToUpdate = isEditing ? artworkToManage!.id : null;
@@ -774,39 +806,83 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                     </div>
 
                     
-                    {/* Control de Serie */}
+                    {/* Control de Serie 🛑 MODIFICADO */}
                     <div className="flex flex-col gap-2 col-span-1 md:col-span-6 border-t pt-4 mt-4">
-                        <label className="flex items-center text-xs font-medium text-slate-500 cursor-pointer">
-                            <input 
-                                type="checkbox"
-                                checked={isSeries}
-                                onChange={(e) => setIsSeries(e.target.checked)}
-                                className="mr-2 rounded text-gold-500 focus:ring-gold-500"
-                            />
-                            ¿Obra Seriada? (Ej. Giclée)
-                        </label>
-                        <div className="flex gap-4 max-w-md">
-                            <input 
-                                type="number" 
-                                value={seriesIndex} 
-                                onChange={(e) => setSeriesIndex(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
-                                placeholder="N° Pieza (Ej: 1)"
-                                className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
-                                min="1"
-                                required={isSeries}
-                                disabled={!isSeries}
-                            />
-                            <input 
-                                type="number" 
-                                value={seriesTotal} 
-                                onChange={(e) => setSeriesTotal(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
-                                placeholder="Total Edición (Ej: 50)"
-                                className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
-                                min="1"
-                                required={isSeries}
-                                disabled={!isSeries}
-                            />
+                        <label className="text-xs font-medium text-slate-500 mb-1">Tipo de Edición</label>
+                        
+                        <div className="flex items-center gap-6">
+                            {/* Opción Obra Única (Default) */}
+                            <label className="flex items-center text-sm cursor-pointer">
+                                <input 
+                                    type="radio"
+                                    checked={!isSeries && !isOpenSeries}
+                                    onChange={() => {
+                                        setIsSeries(false); 
+                                        setIsOpenSeries(false);
+                                    }}
+                                    className="mr-2 rounded-full text-gold-500 focus:ring-gold-500"
+                                    name="editionType"
+                                />
+                                Obra Única Original
+                            </label>
+                            
+                            {/* Opción Edición Limitada (Con índices) */}
+                            <label className="flex items-center text-sm cursor-pointer">
+                                <input 
+                                    type="radio"
+                                    checked={isSeries && !isOpenSeries}
+                                    onChange={() => {
+                                        setIsSeries(true);
+                                        setIsOpenSeries(false);
+                                    }}
+                                    className="mr-2 rounded-full text-gold-500 focus:ring-gold-500"
+                                    name="editionType"
+                                />
+                                Edición Seriada Limitada
+                            </label>
+                            
+                            {/* Opción Edición Abierta (Giclée) */}
+                            <label className="flex items-center text-sm cursor-pointer">
+                                <input 
+                                    type="radio"
+                                    checked={isOpenSeries}
+                                    onChange={() => {
+                                        setIsOpenSeries(true);
+                                        setIsSeries(false); 
+                                        // Cuando es Abierta, no hay índices, así que se fuerzan a null
+                                        setSeriesIndex(''); 
+                                        setSeriesTotal('');
+                                    }}
+                                    className="mr-2 rounded-full text-gold-500 focus:ring-gold-500"
+                                    name="editionType"
+                                />
+                                Edición Seriada Abierta (Giclée)
+                            </label>
                         </div>
+
+                        {/* Inputs de Series Limitadas (Visibles solo si es Edición Limitada) */}
+                        {isSeries && !isOpenSeries && (
+                            <div className="flex gap-4 max-w-md mt-3 p-3 bg-stone-50 rounded border">
+                                <input 
+                                    type="number" 
+                                    value={seriesIndex} 
+                                    onChange={(e) => setSeriesIndex(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
+                                    placeholder="N° Pieza (Ej: 1)"
+                                    className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
+                                    min="1"
+                                    required
+                                />
+                                <input 
+                                    type="number" 
+                                    value={seriesTotal} 
+                                    onChange={(e) => setSeriesTotal(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
+                                    placeholder="Total Edición (Ej: 50)"
+                                    className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
+                                    min="1"
+                                    required
+                                />
+                            </div>
+                        )}
                     </div>
                     
                     {/* Botón Guardar */}
