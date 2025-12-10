@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, Download, CheckCircle, FileText, Settings, Edit, Image as ImageIcon, Briefcase, MinusCircle, Check } from 'lucide-react';
+import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Image as ImageIcon, Briefcase, MinusCircle, Check } from 'lucide-react'; // ⬅️ Ícono 'Download' eliminado
 
 // ---------------------------------------------------------
 // 🎨 DEFINICIÓN DE TIPOS Y CONSTANTES
@@ -543,4 +543,136 @@ const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
                 </div>
                 
                 <button 
-                    type="submit
+                    type="submit"
+                    className="bg-slate-700 text-white py-3 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors flex items-center justify-center gap-1 shadow-md"
+                    disabled={!title.trim()}
+                >
+                    <Plus size={16} /> AÑADIR AL MURO
+                </button>
+            </div>
+        </form>
+    );
+};
+
+
+// ---------------------------------------------------------
+// ⚙️ COMPONENTE PRINCIPAL DEL DASHBOARD (CONTENEDOR)
+// ---------------------------------------------------------
+export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
+    
+    // 🛑 DATA CENTRAL: Obras (Inicialmente vacío)
+    const [artworks, setArtworks] = useState<Artwork[]>([]);
+    
+    // 🛑 DATA CENTRAL: Configuración de documentos
+    const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
+    
+    const [showSettingsPanel, setShowSettingsPanel] = useState(false);
+
+    // Handler para añadir obra desde el formulario
+    const handleAddArtwork = (newArtworkData: Omit<Artwork, 'id' | 'code' | 'status'>) => {
+        const newId = Math.max(0, ...artworks.map(a => a.id)) + 1;
+        const newArtwork: Artwork = {
+            id: newId,
+            ...newArtworkData,
+            code: null,
+            status: 'PENDIENTE'
+        };
+        setArtworks(prevArtworks => [newArtwork, ...prevArtworks]); // Añadir al principio
+    };
+    
+    // Handler para generar código
+    const handleGenerateCode = (id: number) => {
+        setArtworks(prevArtworks => prevArtworks.map(artwork => {
+            if (artwork.id === id && artwork.status === 'PENDIENTE') {
+                const newCode = generateSmartCode(artwork); 
+                return { ...artwork, code: newCode, status: 'GENERADO' };
+            }
+            return artwork;
+        }));
+    };
+    
+    // Handler para eliminar obra
+    const handleDeleteArtwork = (id: number) => {
+        if (window.confirm("¿Seguro que quieres eliminar esta obra de la lista de gestión? Esta acción es irreversible.")) {
+            setArtworks(prevArtworks => prevArtworks.filter(artwork => artwork.id !== id));
+        }
+    };
+    
+    // Obras ordenadas: Generadas primero, luego pendientes.
+    const sortedArtworks = useMemo(() => {
+        const generated = artworks.filter(a => a.status === 'GENERADO');
+        const pending = artworks.filter(a => a.status === 'PENDIENTE');
+        return [...generated, ...pending];
+    }, [artworks]);
+
+
+    return (
+        <div className="min-h-screen bg-slate-50 p-8 font-sans">
+        
+            <div className="max-w-6xl mx-auto">
+                
+                {/* CABECERA Y LOGOUT */}
+                <div className="flex justify-between items-center mb-10 border-b pb-4">
+                    <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
+                        {/* El cambio para forzar compilación se mantiene */}
+                        <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO Privado v2.0 
+                    </h1>
+                    <div className="flex gap-4">
+                        <button 
+                            onClick={() => setShowSettingsPanel(true)} 
+                            className="flex items-center gap-2 text-sm text-slate-500 hover:text-blue-500 transition-colors py-2 px-3 border border-stone-200 rounded-lg hover:border-blue-500"
+                        >
+                            <Settings size={16} /> Ajustes de Marca
+                        </button>
+                        <button 
+                            onClick={onLogout} 
+                            className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-500 transition-colors py-2 px-3 border border-stone-200 rounded-lg hover:border-red-500"
+                        >
+                            <LogOut size={16} /> Cerrar Sesión
+                        </button>
+                    </div>
+                </div>
+
+                {/* FORMULARIO DE AÑADIR OBRA */}
+                <AddWorkForm onAdd={handleAddArtwork} />
+
+                {/* MURO DE OBRAS */}
+                <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mb-6">
+                    <Code size={24} className="text-gold-500" /> Muro de Workstations ({artworks.length} Obras)
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {artworks.length === 0 ? (
+                        <div className="md:col-span-3 p-12 bg-white rounded-xl shadow-lg border border-stone-100 text-center">
+                            <p className="text-xl text-slate-500 font-semibold flex items-center justify-center gap-2">
+                                <MinusCircle size={24} /> Aún no hay obras en el catálogo.
+                            </p>
+                            <p className="text-slate-400 mt-2">Use el formulario de arriba para añadir su primera pieza y comenzar el proceso de codificación.</p>
+                        </div>
+                    ) : (
+                        sortedArtworks.map(artwork => (
+                            <ArtworkWorkstation
+                                key={artwork.id}
+                                artwork={artwork}
+                                settings={documentSettings}
+                                onGenerateCode={handleGenerateCode}
+                                onDelete={handleDeleteArtwork}
+                            />
+                        ))
+                    )}
+                </div>
+
+            </div>
+            
+            {/* PANEL DE AJUSTES FLOTANTE */}
+            {showSettingsPanel && (
+                <SettingsPanel 
+                    settings={documentSettings} 
+                    setSettings={setDocumentSettings} 
+                    onClose={() => setShowSettingsPanel(false)} 
+                />
+            )}
+            
+        </div>
+    );
+};
