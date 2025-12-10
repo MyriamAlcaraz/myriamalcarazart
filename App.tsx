@@ -12,7 +12,7 @@ const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false); 
   
-  // 🛑 NUEVO ESTADO: Para el segundo candado (acceso a ESTUDIO)
+  // 🛑 ESTADO: Para el segundo candado (acceso a ESTUDIO)
   const [showStudioLoginModal, setShowStudioLoginModal] = useState(false);
 
   // 'public' = Web en modo "Vista Previa" o "En Construcción"
@@ -33,17 +33,8 @@ const App: React.FC = () => {
     }
   }, []);
   
-  // 🚀 CAMBIO CLAVE: Cierra el modal solo cuando la vista ha cambiado correctamente a 'artist'
-  useEffect(() => {
-    if (view === 'artist' && showStudioLoginModal) {
-      // Pequeño retraso para asegurar que ArtistDashboard se monta primero
-      const timer = setTimeout(() => {
-        setShowStudioLoginModal(false);
-      }, 50); 
-      
-      return () => clearTimeout(timer);
-    }
-  }, [view, showStudioLoginModal]); // Depende de la vista y si el modal está abierto
+  // 🛑 ELIMINAMOS EL useEffect que causaba el conflicto de timing.
+  // ---------------------------------------------------------
 
   // Handler para el PRIMER candado (Acceso inicial a la web/Preview)
   const handleLogin = (e: React.FormEvent) => {
@@ -61,13 +52,15 @@ const App: React.FC = () => {
     }
   };
 
-  // 🛑 HANDLER MODIFICADO para el SEGUNDO candado (Acceso al ESTUDIO)
+  // 🚀 CORRECCIÓN CLAVE: El handler ahora cierra el modal y cambia la vista AL MISMO TIEMPO.
   const handleStudioLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordInput === PASSWORD) {
-        setView('artist'); // Cambia a la vista de ESTUDIO (esto activa el useEffect de cierre)
+        // Primero, cerramos el modal.
+        setShowStudioLoginModal(false);
+        // Segundo, cambiamos la vista. El modal ya no interfiere.
+        setView('artist'); 
         setError(false);
-        // 🛑 ELIMINAMOS ESTA LÍNEA: NO CERRAMOS EL MODAL AQUÍ
         setPasswordInput(""); // Limpiar la clave
     } else {
         setError(true);
@@ -181,11 +174,11 @@ const App: React.FC = () => {
       {view === 'public' ? (
         <PublicSite 
             onOpenCompanion={(id) => setSelectedCompanionId(id)} 
-            // 💡 Necesario: Función para que PublicSite pueda abrir el modal del estudio
+            // 💡 Asegúrate de que PublicSite usa esta prop:
             onOpenStudioLogin={() => setShowStudioLoginModal(true)}
         />
       ) : (
-        // 💡 Necesario: Pasar la función para que el Dashboard pueda cerrar la sesión.
+        // 💡 Asegúrate de que ArtistDashboard espera esta prop:
         <ArtistDashboard onLogout={handleLogout} />
       )}
 
@@ -204,7 +197,6 @@ const App: React.FC = () => {
             }
           }}
           className="bg-slate-900/50 backdrop-blur p-2 rounded-full shadow-xl transition-all hover:scale-110 text-white/70 hover:text-gold-500"
-          // 🛑 TEXTO RENOMBRADO
           title={view === 'public' ? "Entrar en ESTUDIO" : "Volver a Vista Previa"} 
         >
           {view === 'public' ? <Lock size={16} /> : <Eye size={16} />} 
@@ -231,11 +223,11 @@ const App: React.FC = () => {
 
               <div className="text-center mb-6">
                 <Shield size={32} className="text-gold-500 mx-auto mb-2" />
-                <h2 className="text-xl font-bold text-slate-800">Acceso a ESTUDIO</h2> {/* Renombrado */}
+                <h2 className="text-xl font-bold text-slate-800">Acceso a ESTUDIO</h2>
                 <p className="text-sm text-slate-500">Introduce la clave para acceder a la gestión.</p>
               </div>
 
-              {/* Utiliza el handler handleStudioLogin (modificado arriba) */}
+              {/* Utiliza el handler handleStudioLogin (CORREGIDO) */}
               <form onSubmit={handleStudioLogin} className="flex flex-col gap-4"> 
                 <div className="relative">
                   <input
