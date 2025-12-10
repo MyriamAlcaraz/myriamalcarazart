@@ -66,7 +66,7 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
 
 
 // ---------------------------------------------------------
-// 📄 GENERADORES DE HTML PARA IMPRESIÓN (SIN CAMBIOS)
+// 📄 GENERADORES DE HTML PARA IMPRESIÓN (Sin cambios)
 // ---------------------------------------------------------
 const getSeriesText = (artwork: Artwork) => {
     return artwork.seriesIndex !== null && artwork.seriesTotal !== null
@@ -350,6 +350,7 @@ const handlePrintDocument = (content: string, title: string) => {
 
 // =========================================================
 // 🏭 COMPONENTE: TARJETA VISUAL DE GESTIÓN
+// (La vista de cada foto individual)
 // =========================================================
 
 interface ArtworkWorkstationProps {
@@ -383,6 +384,7 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
                     
                     {/* ACCIÓN PRINCIPAL (GENERAR CÓDIGO) */}
                     {!artwork.code ? (
+                        // Esto solo se mostrará para las obras que añada el usuario sin código.
                         <>
                             <p className="text-white text-xs font-semibold uppercase tracking-wider mb-2">Paso Requerido</p>
                             <button
@@ -394,7 +396,7 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
                             </button>
                         </>
                     ) : (
-                        // ACCIONES DE DOCUMENTACIÓN (CERTIFICADO Y CARTA)
+                        // ACCIONES DE DOCUMENTACIÓN (CERTIFICADO Y CARTA) - Esto se verá si ya tienen código.
                         <>
                             <p className="text-white text-xs font-semibold uppercase tracking-wider mb-2">Documentos Listos</p>
                             
@@ -416,14 +418,14 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
                 </div>
             </div>
 
-            {/* Título y Acciones Secundarias (Siempre visibles) */}
+            {/* Título y Acciones Secundarias (Siempre visibles: Editar, Duplicar, Eliminar) */}
             <div className="p-4 flex justify-between items-center">
                 <div>
                     <h4 className="text-lg font-bold text-slate-800 leading-tight">{artwork.title}</h4>
                     <p className="text-xs text-slate-500 mt-1">{getSeriesText(artwork)}</p>
                 </div>
                 <div className="flex gap-1.5">
-                    {/* El botón de editar es ahora el único acceso al formulario para cambiar datos */}
+                    {/* Botón para abrir el formulario y EDITAR datos (Acceso al formulario de gestión) */}
                     <button
                         onClick={() => onEdit(artwork)} 
                         className="text-slate-500 hover:text-orange-500 p-1 rounded transition"
@@ -431,7 +433,7 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
                     >
                         <Edit size={18} />
                     </button>
-                    {/* El botón de duplicar es la forma más rápida de añadir una nueva obra similar */}
+                    {/* Botón para DUPLICAR (Crea una obra nueva con datos pre-rellenados) */}
                     <button
                         onClick={() => onDuplicate(artwork)}
                         className="text-slate-500 hover:text-blue-500 p-1 rounded transition"
@@ -689,17 +691,20 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
 // =========================================================
 export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
     
-    // 🛑 CATALOGO CON DATOS INICIALES (para que la galería se vea)
+    // 🛑 -------------------------------------------------------------------------
+    // 🛑 AQUÍ DEBE INTRODUCIR LA LISTA COMPLETA DE SU CATÁLOGO DE OBRAS. 
+    // 🛑 SUSTITUYA EL CONTENIDO DE ESTE ARRAY CON TODAS SUS OBRAS.
+    // 🛑 -------------------------------------------------------------------------
     const [artworks, setArtworks] = useState<Artwork[]>([
+        // Por favor, reemplace estos ejemplos con su catálogo.
         { id: 1, title: 'Sara bajo Farola', certificationDate: '2025-12-15', type: 'PT', seriesIndex: null, seriesTotal: null, code: 'MA-2025-2512', status: 'GENERADO', image: '/obras/demo-obra.jpg', dimensions: '100x81 cm', technique: 'Óleo sobre tela montada en tabla con bastidor' },
-        { id: 2, title: 'Retrato de Otoño', certificationDate: '2026-01-20', type: 'PT', seriesIndex: 1, seriesTotal: 5, code: 'MA-2026-26010105', status: 'GENERADO', image: '/obras/demo-obra-seriada.jpg', dimensions: '50x70 cm', technique: 'Impresión Giclée sobre papel de algodón' },
-        { id: 3, title: 'El Silencio del Estudio', certificationDate: '2025-10-01', type: 'SC', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/placeholder-work.jpg', dimensions: '30x30x60 cm', technique: 'Escultura en bronce a la cera perdida' },
+        { id: 2, title: 'Retrato de Otoño (Ed. 1/5)', certificationDate: '2026-01-20', type: 'PT', seriesIndex: 1, seriesTotal: 5, code: 'MA-2026-26010105', status: 'GENERADO', image: '/obras/demo-obra-seriada.jpg', dimensions: '50x70 cm', technique: 'Impresión Giclée sobre papel de algodón' },
+        { id: 3, title: 'El Silencio del Estudio', certificationDate: '2025-10-01', type: 'SC', seriesIndex: null, seriesTotal: null, code: 'MA-2025-2510', status: 'GENERADO', image: '/obras/placeholder-work.jpg', dimensions: '30x30x60 cm', technique: 'Escultura en bronce a la cera perdida' },
+        { id: 4, title: 'Geometría Urbana N°4 (Ed. 4/10)', certificationDate: '2024-05-10', type: 'DI', seriesIndex: 4, seriesTotal: 10, code: 'MA-2024-24050410', status: 'GENERADO', image: '/obras/demo-obra-seriada.jpg', dimensions: '30x40 cm', technique: 'Tinta y carbón sobre papel' }, 
+        { id: 5, title: 'La Mirada de Clara', certificationDate: '2025-08-22', type: 'PT', seriesIndex: null, seriesTotal: null, code: 'MA-2025-2508', status: 'GENERADO', image: '/obras/demo-obra.jpg', dimensions: '70x70 cm', technique: 'Acrílico y collage sobre lienzo' }, 
     ]);
     
     const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
-    // 🛑 showSettingsPanel ya no se usa, pero se mantiene en el estado por si se recupera la funcionalidad.
-    const [showSettingsPanel, setShowSettingsPanel] = useState(false); 
-    
     const [artworkToManage, setArtworkToManage] = useState<Artwork | null>(null);
 
     // Handler para añadir o editar obra
@@ -723,7 +728,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
             const newArtwork: Artwork = {
                 id: newId,
                 ...newArtworkData,
-                code: null,
+                code: null, // El código se generará en el siguiente paso (GENERAR CÓDIGO)
                 status: 'PENDIENTE'
             }; 
             setArtworks(prevArtworks => [newArtwork, ...prevArtworks]); 
@@ -743,7 +748,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
         setArtworkToManage(temporaryDuplicationArtwork);
     };
 
-    // Handler para generar código
+    // Handler para generar código (Se activa con el botón azul/rojo de la tarjeta)
     const handleGenerateCode = (id: number) => {
         setArtworks(prevArtworks => prevArtworks.map(artwork => {
             if (artwork.id === id && artwork.status === 'PENDIENTE') {
@@ -777,7 +782,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
         
             <div className="max-w-6xl mx-auto">
                 
-                {/* CABECERA Y BOTONES GLOBALES */}
+                {/* CABECERA Y BOTONES GLOBALES (LIMPIOS) */}
                 <div className="flex justify-between items-center mb-10 border-b pb-4">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
                         <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO
@@ -804,7 +809,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                             <p className="text-xl text-slate-500 font-semibold flex items-center justify-center gap-2">
                                 <MinusCircle size={24} /> Catálogo de Obras vacío.
                             </p>
-                            {/* Proporcionamos una forma de añadir la primera obra, ya que se eliminó el botón "+ NUEVA OBRA" */}
+                            {/* Única forma de añadir la primera obra, ya que se eliminó el botón "+ NUEVA OBRA" */}
                             <p className="text-slate-400 mt-2">
                                 Para añadir su primera pieza, haga click aquí:
                                 <button 
@@ -815,7 +820,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                                 </button>
                             </p>
                             <p className="text-xs text-slate-300 mt-4">
-                                Nota: Si ya tiene obras, use el botón <Edit size={12} className="inline-block" /> o <Copy size={12} className="inline-block" /> que aparece en cada foto para gestionar.
+                                Nota: Para editar o duplicar una obra, use el icono <Edit size={12} className="inline-block" /> o <Copy size={12} className="inline-block" /> que aparece en cada foto.
                             </p>
                         </div>
                     ) : (
@@ -835,18 +840,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
 
             </div>
             
-            {/* 🛑 PANEL DE AJUSTES FLOTANTE (SE PUEDE ELIMINAR O MANTENER OCULTO) */}
-            {/* Se ha eliminado el botón de activación, por lo que este panel es inaccesible */}
-            {/* showSettingsPanel && (
-                <SettingsPanel 
-                    settings={documentSettings} 
-                    setSettings={setDocumentSettings} 
-                    onClose={() => setShowSettingsPanel(false)} 
-                />
-            )*/}
-            
-            {/* FORMULARIO DE GESTIÓN DE OBRA (Flotante) */}
-            {/* Se mantiene accesible a través de los botones Editar y Duplicar en las tarjetas */}
+            {/* 🛑 FORMULARIO DE GESTIÓN DE OBRA (Flotante - accesible solo desde los iconos de las tarjetas) */}
             {artworkToManage !== null && (
                 <ArtworkManagementForm 
                     onSave={handleSaveArtwork} 
