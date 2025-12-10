@@ -4,29 +4,26 @@ import { ARTWORKS, ARTIST_INFO } from '../constants';
 import { Certificate } from './Certificate';
 
 interface DigitalCompanionProps {
-  artworkId: string | null; // 🛑 Permite null o ID especial para iniciar solo certificado
+  artworkId: string | null;
   onClose: () => void;
   showCertificateAccess: boolean; // TRUE solo en MODO ESTUDIO
-  initialMode?: 'lupa' | 'certificate'; // 🛑 NUEVO PROP: Para forzar la apertura en modo Certificado
+  initialMode?: 'lupa' | 'certificate'; 
 }
 
 export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({ 
     artworkId, 
     onClose,
     showCertificateAccess, 
-    initialMode = 'lupa' // Por defecto abre la Lupa
+    initialMode = 'lupa' 
 }) => {
-  // Encuentra la obra o usa la primera como fallback si artworkId es null/no encontrado
   const artwork = ARTWORKS.find(a => a.id === artworkId) || ARTWORKS[0];
   
-  // 🛑 Lógica para iniciar el estado de showCertificate
   const [showCertificate, setShowCertificate] = useState(initialMode === 'certificate');
   
   const [showZoom, setShowZoom] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
   const imgContainerRef = useRef<HTMLDivElement>(null);
 
-  // Lógica para el Año de Creación por defecto (2025) sin etiqueta
   const displayYear = artwork.year && artwork.year.toString().trim() !== '' 
                       ? artwork.year 
                       : '2025'; 
@@ -59,22 +56,26 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     return (
         <div className="fixed inset-0 z-[110] bg-black/90 p-4 md:p-12 overflow-y-auto flex justify-center items-start print-clean-background">
             <button 
-                onClick={initialMode === 'certificate' ? onClose : () => setShowCertificate(false)} // 🛑 Si se inicia en certificado, el botón de cierre lo saca del modal
+                onClick={initialMode === 'certificate' ? onClose : () => setShowCertificate(false)} 
                 className="fixed top-6 right-6 z-[120] bg-white text-slate-900 p-3 rounded-full hover:bg-red-500 hover:text-white shadow-xl"
             >
                 <X size={24} />
             </button>
             <div className="transform scale-[0.6] md:scale-90 origin-top">
-                {/* 🛑 El aviso se mantiene para recordar que el uso final es en el KIT */}
-                <div className="bg-amber-50 border-l-4 border-amber-500 text-amber-900 p-4 mb-4" role="alert">
-                    <p className="font-bold flex items-center gap-2"><AlertTriangle size={16}/> PREVISUALIZACIÓN DE CERTIFICADO</p>
-                    <p className="text-sm">Esta es la vista de alta resolución. Para generar la versión final en PDF, usa la opción **Imprimir Original**.</p>
-                </div>
-                {/* Usamos showCertificateAccess para controlar si se pixela o no */}
+                
+                {/* 🛑 MODIFICACIÓN CLAVE: El mensaje solo se muestra si SÍ tenemos acceso al certificado (Modo Taller) */}
+                {showCertificateAccess && (
+                    <div className="bg-amber-50 border-l-4 border-amber-500 text-amber-900 p-4 mb-4" role="alert">
+                        <p className="font-bold flex items-center gap-2"><AlertTriangle size={16}/> NOTA DE IMPRESIÓN</p>
+                        <p className="text-sm">Recuerda usar el botón **Imprimir Original** en la parte inferior para generar el PDF listo.</p>
+                    </div>
+                )}
+                {/* FIN DE LA MODIFICACIÓN */}
+                
                 <Certificate artwork={artwork} isPixelatedDemo={!showCertificateAccess} /> 
             </div>
             
-            {/* 🛑 BOTÓN DE IMPRESIÓN (Solo visible si es MODO ESTUDIO) */}
+            {/* BOTÓN DE IMPRESIÓN (Solo visible si es MODO ESTUDIO) */}
             {showCertificateAccess && (
                 <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2">
                     <button 
@@ -119,7 +120,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
               className="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-80"
             />
             
-            {/* 🛑 LUPA (Magnifier) */}
+            {/* LUPA (Magnifier) */}
             {showZoom && (
               <div 
                 className="absolute w-36 h-36 border-4 border-gold-500 rounded-full shadow-2xl pointer-events-none transform -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-black/50 transition-opacity duration-200"
