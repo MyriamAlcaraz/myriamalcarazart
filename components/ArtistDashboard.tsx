@@ -31,15 +31,40 @@ interface ArtistDashboardProps {
   onLogout: () => void;
 }
 
-// ESTADO INICIAL DE LAS PLANTILLAS
+// 🛑 DATOS DE CONFIGURACIÓN INICIAL (Extraídos de constants.ts y borrador)
 const initialSettings: DocumentSettings = {
-    artistName: "Myriam Alcaraz",
-    artistTitle: "Artista Visual",
-    cycleName: "Serie 'Las Ciudades Invisibles'", 
+    artistName: "Myriam Alcaraz", // Desde constants.ts
+    artistTitle: "Pintura Figurativa Contemporánea", // Desde borrador.pdf
+    cycleName: "Serie Sin Título (A Definir)", // Placeholder
     city: "Madrid", 
     letterOpening: "Estimado Coleccionista,",
     letterClosing: "Agradeciendo profundamente su apoyo a mi trayectoria artística, quedo a su disposición para cualquier consulta. Con mis mejores deseos," 
 };
+
+// 🛑 CATÁLOGO DE OBRAS REALES (Extraídas de constants.ts - Todas PENDIENTES)
+// Nota: La fecha de certificación es '2025-12-10' por defecto. El usuario debe actualizarla si lo necesita.
+const REAL_ARTWORKS: Artwork[] = [
+    { id: 4, title: 'Sara en Marquesina', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_04.jpg', dimensions: '100x81 cm', technique: 'Óleo en tela' },
+    { id: 2, title: 'Laura en el Crepúsculo', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_02.jpg', dimensions: '100x81 cm', technique: 'Óleo en tela montada en tabla' },
+    { id: 3, title: 'Sara bajo la farola', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_03.jpg', dimensions: '92x60 cm', technique: 'Óleo sobre tela' },
+    { id: 1, title: 'Autorretrato en siglo XIX', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_01.jpg', dimensions: '100x81 cm', technique: 'Óleo en tela montada en tabla' },
+    { id: 5, title: 'Ana y la Habana', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_05.jpg', dimensions: '92x60 cm', technique: 'Óleo sobre tela' },
+    { id: 6, title: 'Viajera', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_06.jpg', dimensions: '81x100 cm', technique: 'Óleo sobre tela' },
+    { id: 7, title: 'Memorias de Mekong I', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_07.jpg', dimensions: '100x65 cm', technique: 'Óleo sobre tela' },
+    { id: 8, title: 'Memorias de Mekong II', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_08.jpg', dimensions: '100x65 cm', technique: 'Óleo sobre tela' },
+    { id: 9, title: 'El niño de la capucha', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_09.jpg', dimensions: '92x65 cm', technique: 'Óleo sobre tela' },
+    { id: 10, title: 'Joven en piscina', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_10.jpg', dimensions: '73x100 cm', technique: 'Óleo sobre lienzo' },
+    { id: 11, title: 'Pablo en Cascada', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_11.jpg', dimensions: '55x46 cm', technique: 'Óleo sobre tela' },
+    { id: 12, title: 'Pablo en Cascada II', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_12.jpg', dimensions: '80x65 cm', technique: 'Óleo sobre tela' },
+    { id: 13, title: 'Niños en playa valenciana', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_13.jpg', dimensions: '80x60 cm', technique: 'Óleo sobre tela' },
+    { id: 14, title: 'Buceando', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_14.jpg', dimensions: '100x65 cm', technique: 'Óleo sobre tela' },
+    { id: 15, title: 'Niños con capucha', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_15.jpg', dimensions: '100x81 cm', technique: 'Óleo sobre tela' },
+    { id: 16, title: 'Niños en playa rocosa', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_16.jpg', dimensions: '55x46 cm', technique: 'Óleo sobre lienzo' },
+    { id: 17, title: 'Jilguero en charca del Botánico', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_17.jpg', dimensions: '46x38 cm', technique: 'Óleo sobre lienzo' },
+    { id: 18, title: 'Porteadores', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_18.jpg', dimensions: '55x46 cm', technique: 'Óleo sobre lienzo' },
+    { id: 19, title: 'Carpe Diem', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_19.jpg', dimensions: '140x50 cm', technique: 'Óleo sobre tela' },
+    { id: 20, title: 'Más que amigos', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_20.jpg', dimensions: '100x60 cm', technique: 'Óleo sobre tela' },
+];
 
 
 // ---------------------------------------------------------
@@ -66,7 +91,7 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
 
 
 // ---------------------------------------------------------
-// 📄 GENERADORES DE HTML PARA IMPRESIÓN (Sin cambios)
+// 📄 GENERADORES DE HTML PARA IMPRESIÓN 
 // ---------------------------------------------------------
 const getSeriesText = (artwork: Artwork) => {
     return artwork.seriesIndex !== null && artwork.seriesTotal !== null
@@ -75,12 +100,15 @@ const getSeriesText = (artwork: Artwork) => {
 }
 
 /**
- * Genera el HTML del CERTIFICADO.
+ * Genera el HTML del CERTIFICADO. (Mantiene la corrección del Doble Marco)
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const seriesText = getSeriesText(artwork);
     const creationMonthAndYear = new Date(artwork.certificationDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
+
+    // Se asume el logo está en la raíz de /public
+    const artistWebsite = "https://myriamalcaraz.art"; // Se asume el dominio final es .art
 
     return `
         <!DOCTYPE html>
@@ -91,9 +119,10 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                 /* Estilos Fieles al Borrador: Tipografía Serifa, Doble Borde, Centro */
                 body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 12pt; margin: 20mm; color: #111; }
                 .cert-container { 
-                    border: 1px solid #000; 
+                    /* 🛑 CORRECCIÓN DEL MARCO: Borde fino (1px) + Borde grueso (box-shadow de 5px dorado) */
+                    border: 1px solid #000; /* Marco fino (negro) */
                     padding: 40px; 
-                    box-shadow: 0 0 0 5px #d4af37; 
+                    box-shadow: 0 0 0 5px #d4af37; /* Marco grueso (dorado) */
                     max-width: 550px; 
                     margin: 0 auto;
                 }
@@ -203,7 +232,16 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     color: #333; 
                     margin-top: 2px;
                 }
-                @media print { body { margin: 0; padding: 0; } .cert-container { box-shadow: none; border: 1px solid #000; max-width: 100%; } }
+                @media print { 
+                    body { margin: 0; padding: 0; } 
+                    .cert-container { 
+                        box-shadow: none; 
+                        border: 1px solid #000; 
+                        outline: 5px solid #d4af37; /* Usamos outline para simular el doble marco en impresión */
+                        outline-offset: -1px;
+                        max-width: 100%; 
+                    } 
+                }
             </style>
         </head>
         <body>
@@ -267,7 +305,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                 </div>
                 
                 <div class="footer-text">
-                    <a href="https://myriamalcaraz.art" style="color: #333; text-decoration: none;">HTTPS://MYRIAMALCARAZ.ART</a> | MYRIAMHOTMAIL@HOTMAIL.COM | MYRIAMALCARAZ.ARTIST
+                    <a href="${artistWebsite}" style="color: #333; text-decoration: none;">${artistWebsite.toUpperCase()}</a> | MYRIAMHOTMAIL@HOTMAIL.COM | MYRIAMALCARAZ.ARTIST
                 </div>
             </div>
         </body>
@@ -350,7 +388,6 @@ const handlePrintDocument = (content: string, title: string) => {
 
 // =========================================================
 // 🏭 COMPONENTE: TARJETA VISUAL DE GESTIÓN
-// (La vista de cada foto individual)
 // =========================================================
 
 interface ArtworkWorkstationProps {
@@ -540,7 +577,7 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
         };
 
         // Si estamos editando un elemento existente, pasamos su ID. Si estamos duplicando o añadiendo, pasamos null.
-        const idToUpdate = isEditing ? artworkToManage.id : null;
+        const idToUpdate = isEditing ? artworkToManage!.id : null;
 
         onSave(newArtworkData, idToUpdate);
         onCancel(); // Cerrar formulario al guardar
@@ -691,18 +728,8 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
 // =========================================================
 export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
     
-    // 🛑 -------------------------------------------------------------------------
-    // 🛑 AQUÍ DEBE INTRODUCIR LA LISTA COMPLETA DE SU CATÁLOGO DE OBRAS. 
-    // 🛑 SUSTITUYA EL CONTENIDO DE ESTE ARRAY CON TODAS SUS OBRAS.
-    // 🛑 -------------------------------------------------------------------------
-    const [artworks, setArtworks] = useState<Artwork[]>([
-        // Por favor, reemplace estos ejemplos con su catálogo.
-        { id: 1, title: 'Sara bajo Farola', certificationDate: '2025-12-15', type: 'PT', seriesIndex: null, seriesTotal: null, code: 'MA-2025-2512', status: 'GENERADO', image: '/obras/demo-obra.jpg', dimensions: '100x81 cm', technique: 'Óleo sobre tela montada en tabla con bastidor' },
-        { id: 2, title: 'Retrato de Otoño (Ed. 1/5)', certificationDate: '2026-01-20', type: 'PT', seriesIndex: 1, seriesTotal: 5, code: 'MA-2026-26010105', status: 'GENERADO', image: '/obras/demo-obra-seriada.jpg', dimensions: '50x70 cm', technique: 'Impresión Giclée sobre papel de algodón' },
-        { id: 3, title: 'El Silencio del Estudio', certificationDate: '2025-10-01', type: 'SC', seriesIndex: null, seriesTotal: null, code: 'MA-2025-2510', status: 'GENERADO', image: '/obras/placeholder-work.jpg', dimensions: '30x30x60 cm', technique: 'Escultura en bronce a la cera perdida' },
-        { id: 4, title: 'Geometría Urbana N°4 (Ed. 4/10)', certificationDate: '2024-05-10', type: 'DI', seriesIndex: 4, seriesTotal: 10, code: 'MA-2024-24050410', status: 'GENERADO', image: '/obras/demo-obra-seriada.jpg', dimensions: '30x40 cm', technique: 'Tinta y carbón sobre papel' }, 
-        { id: 5, title: 'La Mirada de Clara', certificationDate: '2025-08-22', type: 'PT', seriesIndex: null, seriesTotal: null, code: 'MA-2025-2508', status: 'GENERADO', image: '/obras/demo-obra.jpg', dimensions: '70x70 cm', technique: 'Acrílico y collage sobre lienzo' }, 
-    ]);
+    // 🛑 Inicialización con los datos REALES del catálogo completo
+    const [artworks, setArtworks] = useState<Artwork[]>(REAL_ARTWORKS);
     
     const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
     const [artworkToManage, setArtworkToManage] = useState<Artwork | null>(null);
@@ -724,6 +751,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
             }));
         } else {
             // AÑADIR NUEVA
+            // El Math.max asegura un ID único incluso si la lista está vacía (comienza en 1)
             const newId = Math.max(0, ...artworks.map(a => a.id)) + 1;
             const newArtwork: Artwork = {
                 id: newId,
@@ -787,8 +815,16 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
                         <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO
                     </h1>
-                    {/* 🛑 SOLO MOSTRAR BOTÓN DE SALIR */}
+                    
+                    {/* BOTÓN PERMANENTE DE NUEVA OBRA */}
                     <div className="flex gap-4">
+                        <button
+                            onClick={() => setArtworkToManage(null)} // Abre el formulario en modo 'Añadir Nueva'
+                            className="flex items-center gap-2 text-sm font-bold text-white bg-gold-500 hover:bg-gold-600 transition-colors py-3 px-4 rounded-lg shadow-md"
+                            title="Añadir una nueva obra a tu catálogo"
+                        >
+                            <Plus size={16} /> NUEVA OBRA
+                        </button>
                         <button 
                             onClick={onLogout} 
                             className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-500 transition-colors py-3 px-4 border border-stone-200 rounded-lg hover:border-red-500"
@@ -809,15 +845,8 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                             <p className="text-xl text-slate-500 font-semibold flex items-center justify-center gap-2">
                                 <MinusCircle size={24} /> Catálogo de Obras vacío.
                             </p>
-                            {/* Única forma de añadir la primera obra, ya que se eliminó el botón "+ NUEVA OBRA" */}
                             <p className="text-slate-400 mt-2">
-                                Para añadir su primera pieza, haga click aquí:
-                                <button 
-                                    onClick={() => setArtworkToManage(null)} 
-                                    className="ml-2 text-blue-500 hover:text-blue-700 font-semibold underline"
-                                >
-                                    Añadir Obra Nueva
-                                </button>
+                                Para añadir su primera pieza, haga click en el botón **NUEVA OBRA** arriba a la derecha.
                             </p>
                             <p className="text-xs text-slate-300 mt-4">
                                 Nota: Para editar o duplicar una obra, use el icono <Edit size={12} className="inline-block" /> o <Copy size={12} className="inline-block" /> que aparece en cada foto.
@@ -840,7 +869,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
 
             </div>
             
-            {/* 🛑 FORMULARIO DE GESTIÓN DE OBRA (Flotante - accesible solo desde los iconos de las tarjetas) */}
+            {/* FORMULARIO DE GESTIÓN DE OBRA (Flotante) */}
             {artworkToManage !== null && (
                 <ArtworkManagementForm 
                     onSave={handleSaveArtwork} 
