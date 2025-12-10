@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { Shield, Image as ImageIcon, ZoomIn, Printer, X, AlertTriangle } from 'lucide-react';
 import { ARTWORKS, ARTIST_INFO } from '../constants';
 import { Certificate } from './Certificate';
@@ -13,10 +13,21 @@ interface DigitalCompanionProps {
 export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({ 
     artworkId, 
     onClose,
-    showCertificateAccess // 🛑 Recibimos el prop de seguridad
+    showCertificateAccess 
 }) => {
-  const artwork = ARTWORKS.find(a => a.id === artworkId) || ARTWORKS[0];
-  const [showCertificate, setShowCertificate] = useState(false);
+  
+  // 🛑 Lógica para el manejo de la Obra y el modo DEMO
+  const isDemoMode = artworkId === 'CERTIFICATE_DEMO';
+  
+  // Seleccionar la obra: Si es modo demo o no se encuentra, usamos la primera como template.
+  const artwork = useMemo(() => {
+    const selected = ARTWORKS.find(a => a.id === artworkId);
+    // Usamos ARTWORKS[0] como template para el certificado
+    return selected || ARTWORKS[0]; 
+  }, [artworkId]);
+  
+  // 🛑 Estado inicial: Si es modo DEMO, empezamos directamente en el certificado.
+  const [showCertificate, setShowCertificate] = useState(isDemoMode);
   
   const [showZoom, setShowZoom] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
@@ -118,7 +129,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
       {showCertificate && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 print-clean-background">
             {/* Botón de cierre (Oculto en impresión) */}
-            <button onClick={() => setShowCertificate(false)} className="fixed top-6 right-6 z-[120] bg-white text-slate-900 p-3 rounded-full hover:bg-red-500 hover:text-white shadow-xl transition-colors print-hidden"><X size={24} /></button>
+            <button onClick={() => isDemoMode ? onClose() : setShowCertificate(false)} className="fixed top-6 right-6 z-[120] bg-white text-slate-900 p-3 rounded-full hover:bg-red-500 hover:text-white shadow-xl transition-colors print-hidden"><X size={24} /></button>
             
             <div className={`relative ${isPublicPreview ? 'p-12' : 'transform scale-[0.6] md:scale-90 origin-top'}`}>
                 
@@ -136,12 +147,13 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                     </p>
                 </div>
                 
+                {/* Aplicamos filtro de pixelado en modo demo público */}
                 <div className={`bg-white shadow-2xl relative ${isPublicPreview ? 'filter blur-sm pointer-events-none' : ''}`}>
                     <Certificate artwork={artwork} />
                 </div>
 
-                {/* BOTÓN DE IMPRESIÓN (Solo visible en ESTUDIO) */}
-                {showCertificateAccess && (
+                {/* BOTÓN DE IMPRESIÓN (Solo visible en ESTUDIO y no en Demo Mode) */}
+                {showCertificateAccess && !isDemoMode && (
                     <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 print-hidden">
                         <button 
                             onClick={() => window.print()} 
