@@ -199,9 +199,9 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion }) => {
                 <p className="text-slate-600 mb-4 text-sm leading-relaxed">
                   ¿Buscas una opción más accesible o un formato específico? Ofrezco copias de museo Giclée (impresión de altísima fidelidad). Cada reproducción incluye un **Certificado de Autenticidad** original, numerado y firmado.
                 </p>
-                {/* Botón de Teasing para Certificado Pixelado */}
+                {/* Botón de Teasing para Certificado Pixelado 🛑 CORRECCIÓN CLAVE AQUÍ */}
                 <button
-                  onClick={() => onOpenCompanion(ARTWORKS[0].id)} // Usamos A001 como ejemplo para la demo
+                  onClick={() => onOpenCompanion('CERTIFICATE_DEMO')} 
                   className="mt-4 bg-gold-500 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors flex items-center gap-2"
                 >
                   <Eye size={16}/> Ver Demo Certificado
