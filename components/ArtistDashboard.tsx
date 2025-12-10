@@ -189,7 +189,7 @@ const DocumentLaboratory: React.FC<DocumentLaboratoryProps> = ({ artworks }) => 
     // Buscar todas las obras que ya tienen código asignado
     const codedArtworks = useMemo(() => artworks.filter(a => a.code), [artworks]);
     
-    // Estado para la obra seleccionada dentro del Laboratorio
+    // Estado para la obra seleccionada dentro del Laboratorio (Se inicializa con la primera ID, si existe)
     const [selectedId, setSelectedId] = useState<number | null>(codedArtworks.length > 0 ? codedArtworks[0].id : null);
     
     // Obra actualmente visible
@@ -212,27 +212,12 @@ const DocumentLaboratory: React.FC<DocumentLaboratoryProps> = ({ artworks }) => 
         );
     }
     
-    // Si no hay obra seleccionada, seleccionamos la primera por defecto
+    // Si la ID seleccionada se ha perdido (ej. la obra se borró), reseteamos a la primera disponible.
     if (!selectedArtwork) {
-        return (
-            <div className="bg-white p-8 rounded-xl shadow-lg border border-stone-100 transition-shadow">
-                <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-4">
-                    <FileText size={24} className="text-gold-500" /> LABORATORIO DE DOCUMENTOS
-                </h3>
-                 <p className="text-slate-600">Seleccione una obra codificada de la lista a continuación para visualizar sus documentos.</p>
-                <select
-                    className="mt-4 p-2 border rounded text-sm w-full focus:ring-gold-500 focus:border-gold-500"
-                    onChange={(e) => setSelectedId(Number(e.target.value))}
-                    value={selectedId || (codedArtworks.length > 0 ? codedArtworks[0].id : '')}
-                >
-                    {codedArtworks.map(a => (
-                        <option key={a.id} value={a.id}>
-                            {a.title} ({a.code})
-                        </option>
-                    ))}
-                </select>
-            </div>
-        );
+        // Esto solo ocurre si seleccionId es null o la obra no existe, y codedArtworks tiene elementos.
+        // Lo reseteamos a la primera ID disponible para evitar errores.
+        setSelectedId(codedArtworks[0].id);
+        return <p className="p-4 text-center text-slate-500">Cargando Laboratorio...</p>;
     }
     
     // --- Renderizado de la Vista de 3 Columnas (El Laboratorio) ---
@@ -252,11 +237,17 @@ const DocumentLaboratory: React.FC<DocumentLaboratoryProps> = ({ artworks }) => 
                 <label className="text-sm font-medium text-slate-600 whitespace-nowrap">Obra Seleccionada:</label>
                 <select
                     className="p-2 border rounded text-sm flex-1 focus:ring-gold-500 focus:border-gold-500"
+                    // Al cambiar, convertimos el valor del string a number
                     onChange={(e) => setSelectedId(Number(e.target.value))}
-                    value={selectedId}
+                    // CORRECCIÓN: Convertimos el ID a string para que el select no dé error de tipado.
+                    value={String(selectedId)} 
                 >
                     {codedArtworks.map(a => (
-                        <option key={a.id} value={a.id}>
+                        <option 
+                            key={a.id} 
+                            // CORRECCIÓN: Aseguramos que el valor de la opción sea un string.
+                            value={String(a.id)}
+                        >
                             {a.title} ({a.code})
                         </option>
                     ))}
@@ -487,4 +478,189 @@ const WorkManagementTable: React.FC<WorkManagementTableProps> = ({ artworks, set
                 
                 <button 
                     type="submit"
-                    className="bg-slate-700 text-white py-2 px-4 rounded-lg font-bold
+                    className="bg-slate-700 text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors flex items-center gap-1"
+                    disabled={!newTitle.trim()}
+                >
+                    <Plus size={16} /> Añadir Obra
+                </button>
+                
+                <button 
+                    type="button" 
+                    onClick={handleExportCSV}
+                    className="bg-blue-600 text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-blue-700 transition-colors flex items-center gap-1"
+                >
+                    <Download size={16} /> Exportar CSV
+                </button>
+                
+            </form>
+            
+            {/* Tabla de Obras */}
+            <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-stone-200">
+                    <thead className="bg-stone-50">
+                        <tr>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Título</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Certificación / Edición</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">CÓDIGO DE AUTENTICIDAD</th>
+                            <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Acciones</th>
+                            <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider"></th>
+                        </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-stone-100">
+                        {artworks.length === 0 && (
+                            <tr>
+                                <td colSpan={5} className="px-4 py-8 text-center text-slate-500 italic">
+                                    No hay obras en la lista. ¡Añada su primera obra arriba!
+                                </td>
+                            </tr>
+                        )}
+                        {artworks.map(artwork => (
+                            <tr key={artwork.id}>
+                                <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-800">
+                                    {artwork.title}
+                                </td>
+                                <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">
+                                    {artwork.certificationDate.substring(0, 4)} / {artwork.seriesIndex !== null ? `Pieza ${artwork.seriesIndex} de ${artwork.seriesTotal}` : 'Obra Única'}
+                                </td>
+                                <td className="px-4 py-3 whitespace-nowrap text-sm font-mono text-slate-900">
+                                    {artwork.code || <span className="text-red-500 italic">PENDIENTE</span>}
+                                </td>
+                                
+                                <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium flex justify-center items-center gap-2">
+                                    {artwork.status === 'PENDIENTE' ? (
+                                        <button
+                                            onClick={() => handleGenerateCode(artwork.id)}
+                                            className="text-gold-600 hover:text-gold-900 flex items-center gap-1 p-1 rounded hover:bg-gold-50 transition"
+                                            title="Generar Código Único"
+                                        >
+                                            <Code size={16} /> Asignar Código
+                                        </button>
+                                    ) : (
+                                        <button
+                                            // Navega al Laboratorio
+                                            onClick={() => onNavigateTo('print')}
+                                            className="text-blue-600 hover:text-blue-900 flex items-center gap-1 p-1 rounded hover:bg-blue-50 transition"
+                                            title="Ir al LABORATORIO DE DOCUMENTOS"
+                                        >
+                                            <FileText size={16} /> Crear Doc.
+                                        </button>
+                                    )}
+                                </td>
+                                <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium flex justify-center items-center gap-2">
+                                    <button
+                                        onClick={() => handleDeleteArtwork(artwork.id)}
+                                        className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 transition"
+                                        title="Eliminar Obra"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            <div className="mt-6 p-4 bg-slate-50 border-t border-stone-200 rounded-b-lg">
+                <p className="text-xs font-medium text-slate-600">
+                    <CheckCircle size={14} className="inline mr-1 text-green-500"/>
+                    Fórmula de Codificación: MA-[AÑO COMPLETO]-[AÑO CORTO + MES][ÍNDICE SERIE][TOTAL SERIE]
+                </p>
+            </div>
+        </div>
+    );
+};
+
+
+// ---------------------------------------------------------
+// ⚙️ COMPONENTE PRINCIPAL DEL DASHBOARD (CONTENEDOR)
+// ---------------------------------------------------------
+export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
+    // 🛑 DATA: Inicializa la lista de obras vacía para empezar desde cero
+    const [artworks, setArtworks] = useState<Artwork[]>([]);
+    
+    // Estado para la navegación entre paneles: 'management' o 'print' (Laboratorio)
+    const [activeTool, setActiveTool] = useState<'management' | 'print'>('management'); 
+    
+    // Filtramos si hay obras codificadas para el botón de navegación
+    const hasCodedArtworks = artworks.some(a => a.code);
+
+    return (
+        <div className="min-h-screen bg-slate-50 p-8 font-sans">
+        
+        <div className="max-w-6xl mx-auto">
+            
+            {/* CABECERA Y LOGOUT */}
+            <div className="flex justify-between items-center mb-10 border-b pb-4">
+                <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
+                    <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO Privado
+                </h1>
+                <button 
+                    onClick={onLogout} 
+                    className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-500 transition-colors py-2 px-3 border border-stone-200 rounded-lg hover:border-red-500"
+                >
+                    <LogOut size={16} /> Cerrar Sesión
+                </button>
+            </div>
+
+            {/* LISTADO DE HERRAMIENTAS DE NAVEGACIÓN */}
+            <div className="flex flex-wrap gap-4 mb-8 border-b pb-4">
+                <button 
+                    onClick={() => setActiveTool('management')}
+                    className={`py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 ${
+                        activeTool === 'management' ? 'bg-gold-500 text-white' : 'bg-white text-slate-700 hover:bg-stone-100 border'
+                    }`}
+                >
+                    <Code size={18} /> CUADRO 1: Gestión y Codificación
+                </button>
+                <button 
+                    onClick={() => setActiveTool('print')}
+                    disabled={!hasCodedArtworks} // Deshabilita si no hay obras codificadas
+                    className={`py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 ${
+                        activeTool === 'print' ? 'bg-gold-500 text-white' : 
+                        hasCodedArtworks ? 'bg-white text-slate-700 hover:bg-stone-100 border' : 
+                        'bg-stone-100 text-slate-400 border cursor-not-allowed'
+                    }`}
+                    title={!hasCodedArtworks ? "Necesita al menos una obra con código generado" : "Ir al Laboratorio de Documentos"}
+                >
+                    <Printer size={18} /> LABORATORIO DE DOCUMENTOS
+                </button>
+            </div>
+
+            {/* VISTA DE HERRAMIENTA ACTIVA */}
+            <div className="mt-6">
+                
+                {/* Muestra la tabla de gestión */}
+                {activeTool === 'management' && (
+                    <WorkManagementTable 
+                        artworks={artworks} 
+                        setArtworks={setArtworks} 
+                        onNavigateTo={setActiveTool}
+                    />
+                )}
+                
+                {/* Muestra el Laboratorio de Documentos (si hay obras codificadas) */}
+                {activeTool === 'print' && hasCodedArtworks && (
+                    <DocumentLaboratory 
+                        artworks={artworks} 
+                    />
+                )}
+
+                {/* Mensaje si el Laboratorio está vacío */}
+                {activeTool === 'print' && !hasCodedArtworks && (
+                    <div className="bg-white p-8 rounded-xl shadow-lg border border-stone-100 transition-shadow text-center">
+                        <h3 className="text-xl font-bold text-slate-800 flex items-center justify-center gap-2 mb-4">
+                            <FileText size={24} className="text-gold-500" /> LABORATORIO DE DOCUMENTOS
+                        </h3>
+                        <p className="text-slate-600 mt-4">
+                            No hay obras codificadas disponibles. Por favor, vuelva a **Gestión y Codificación** para asignar códigos.
+                        </p>
+                    </div>
+                )}
+                
+            </div>
+
+        </div>
+        </div>
+    );
+};
