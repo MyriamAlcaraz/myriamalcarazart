@@ -124,7 +124,7 @@ const getSeriesText = (artwork: Artwork) => {
 }
 
 /**
- * Genera el HTML del CERTIFICADO. (CAMBIOS DE LAYOUT PARA A4 APLICADOS)
+ * Genera el HTML del CERTIFICADO. (CAMBIOS DE LAYOUT PARA A4 APLICADOS Y ULTIMAS MEJORAS ESTÉTICAS)
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -279,17 +279,31 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     flex-shrink: 0;
                 }
 
-                .signature-area { 
-                    margin-top: 60px; 
-                    text-align: right; 
-                    border-top: 1px solid #ddd;
-                    padding-top: 15px;
-                    margin-bottom: 10px; /* Reducido al quitar el texto de sello */
+                /* 🛑 NUEVOS ESTILOS PARA FECHA/FIRMA SEPARADOS */
+                .signature-row {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start; /* Alinea por la parte superior */
+                    margin-top: 40px; 
+                    padding-top: 20px;
+                    border-top: 1px solid #ddd; /* Separador elegante por encima del bloque */
+                }
+                .date-col {
+                    flex-basis: 45%; 
+                    text-align: left;
+                    font-size: 10pt;
+                    color: #333;
+                }
+                .signature-col {
+                    flex-basis: 45%; 
+                    text-align: right;
+                    /* Aumentamos el margen superior para el espacio del sello y firma */
+                    padding-top: 15px; 
                 }
                 .signature-line { 
                     border-top: 1px solid #000; 
-                    display: inline-block; 
-                    width: 45%; 
+                    display: block; /* Ocupa todo el ancho de la columna (45% del total) */
+                    width: 100%; 
                     margin-bottom: 5px; 
                 }
                 .artist-title-style {
@@ -357,13 +371,16 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     </p>
                 </div>
 
-                <div class="signature-area">
-                    <p style="font-size: 10pt; margin-bottom: 5px;">
-                        FECHA: ${today}
-                    </p>
-                    <span class="signature-line"></span>
-                    <p class="artist-name">${settings.artistName}</p>
-                    <p class="artist-title-style">${settings.artistTitle}</p>
+                <div class="signature-row">
+                    <div class="date-col">
+                        <p>FECHA: ${today}</p>
+                    </div>
+
+                    <div class="signature-col">
+                        <span class="signature-line"></span>
+                        <p class="artist-name">${settings.artistName}</p>
+                        <p class="artist-title-style">${settings.artistTitle}</p>
+                    </div>
                 </div>
                 
                 ${contactFooterHtml}
