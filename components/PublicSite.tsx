@@ -60,6 +60,7 @@ interface DemoSettings {
 
 const DEMO_SETTINGS: DemoSettings = {
     artistName: ARTIST_INFO.name,
+    // 🛑 CORRECCIÓN CLAVE: Usamos 'tagline' que es el campo correcto en constants.ts
     artistTitle: ARTIST_INFO.tagline, 
     website: ARTIST_INFO.website,
     email: ARTIST_INFO.email,
@@ -78,6 +79,7 @@ const DEMO_ARTWORK: DemoArtwork = {
     isOpenSeries: false,
 };
 
+// 🛑 EXPORTACIÓN CLAVE
 export const getCertificateDemoHtmlContent = (
   artwork: DemoArtwork = DEMO_ARTWORK, 
   settings: DemoSettings = DEMO_SETTINGS
