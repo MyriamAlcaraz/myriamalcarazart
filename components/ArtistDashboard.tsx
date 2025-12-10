@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Image as ImageIcon, Briefcase, MinusCircle, Check } from 'lucide-react'; // ⬅️ Ícono 'Download' eliminado
+// Importaciones completas de Lucide
+import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Image as ImageIcon, Briefcase, MinusCircle, Check } from 'lucide-react'; 
 
 // ---------------------------------------------------------
 // 🎨 DEFINICIÓN DE TIPOS Y CONSTANTES
@@ -13,12 +14,14 @@ interface Artwork {
   seriesTotal: number | null;
   code: string | null;
   status: 'PENDIENTE' | 'GENERADO';
+  // 🛑 AÑADIDO: Campo para la imagen de la obra (necesario para la impresión)
+  image: string; // URL o ruta de la imagen
 }
 
 interface DocumentSettings {
   artistName: string;
   artistTitle: string;
-  cycleName: string;
+  cycleName: string; // Usado solo condicionalmente en la carta
   city: string;
   letterOpening: string;
   letterClosing: string;
@@ -36,11 +39,11 @@ const typeOptions = {
     'OT': 'Otro'
 };
 
-// 🛑 ESTADO INICIAL DE LAS PLANTILLAS (MADRID y texto elegante)
+// 🛑 ESTADO INICIAL DE LAS PLANTILLAS
 const initialSettings: DocumentSettings = {
     artistName: "Myriam Alcaraz",
     artistTitle: "Artista Visual",
-    cycleName: "Serie 'Las Ciudades Invisibles'",
+    cycleName: "Serie 'Las Ciudades Invisibles'", // Nombre de una serie genérica si aplica
     city: "Madrid", 
     letterOpening: "Estimado Coleccionista,",
     letterClosing: "Agradeciendo profundamente su apoyo a mi trayectoria artística, quedo a su disposición para cualquier consulta. Con mis mejores deseos," 
@@ -59,7 +62,6 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
 
     let seriesCode = '';
     if (artworkToCode.seriesIndex !== null && artworkToCode.seriesTotal !== null) {
-        // Aseguramos que tengan 2 dígitos
         const indexFmtd = String(artworkToCode.seriesIndex).padStart(2, '0');
         const totalFmtd = String(artworkToCode.seriesTotal).padStart(2, '0');
         seriesCode = `${indexFmtd}${totalFmtd}`;
@@ -70,7 +72,7 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
 
 
 // ---------------------------------------------------------
-// 📄 GENERADORES DE HTML PARA IMPRESIÓN (EXQUISITAMENTE SOFISTICADO)
+// 📄 GENERADORES DE HTML PARA IMPRESIÓN (VERSIONES MEJORADAS)
 // ---------------------------------------------------------
 const getSeriesText = (artwork: Artwork) => {
     return artwork.seriesIndex !== null && artwork.seriesTotal !== null
@@ -79,13 +81,13 @@ const getSeriesText = (artwork: Artwork) => {
 }
 
 /**
- * Genera el HTML limpio y profesional del CERTIFICADO.
+ * 🛑 FUNCIÓN MEJORADA: Genera el HTML limpio y profesional del CERTIFICADO.
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const seriesText = getSeriesText(artwork);
 
-    // HTML con estilos en línea optimizados para una apariencia sofisticada (Palatino, borde sutil dorado)
+    // HTML con estilos en línea optimizados para una apariencia muy sofisticada (Palatino, doble borde, espacio para logo y foto)
     return `
         <!DOCTYPE html>
         <html lang="es">
@@ -93,75 +95,123 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
             <title>Certificado - ${artwork.title}</title>
             <style>
                 /* Estilos Exquisitos: Tipografía Serifa, Márgenes amplios y color sutil */
-                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 12pt; margin: 30mm; color: #111; }
+                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 12pt; margin: 20mm; color: #111; }
                 .cert-container { 
                     border: 1px solid #000; 
-                    padding: 50px; 
-                    /* Simula un borde dorado sutil - ESTO LE DA LA SOFISTICACIÓN */
-                    box-shadow: 0 0 0 5px #d4af37; 
+                    padding: 40px; 
+                    /* 🛑 CLAVE: Simula un doble borde (grueso + fino) */
+                    box-shadow: 0 0 0 5px #d4af37, 0 0 0 6px #000; 
+                }
+                .header { 
+                    text-align: center; 
+                    padding-bottom: 20px; 
+                    border-bottom: 1px solid #ddd;
+                    margin-bottom: 40px;
+                }
+                .logo { 
+                    max-height: 80px; 
+                    width: auto; 
+                    margin-bottom: 10px; 
+                    opacity: 0.8;
                 }
                 h1 { 
-                    font-size: 30pt; 
+                    font-size: 24pt; 
                     text-align: center; 
-                    margin-bottom: 5px; 
+                    margin: 0; 
                     font-weight: 300; 
-                    letter-spacing: 5px; 
+                    letter-spacing: 3px; 
                     color: #d4af37; /* Color dorado/marrón sutil */
                     text-transform: uppercase;
-                    border-bottom: 1px solid #ddd;
-                    padding-bottom: 20px;
                 }
                 h2 { 
                     font-size: 14pt; 
                     text-align: center; 
-                    margin-bottom: 50px; 
+                    margin-top: 5px;
                     font-weight: normal; 
                     color: #555; 
                     font-style: italic; 
                 }
-                .details p { margin: 20px 0; font-size: 14pt; line-height: 1.6;}
-                .details strong { color: #000; font-weight: bold; display: inline-block; width: 250px; } /* Alineación profesional */
+                .content-grid { 
+                    display: flex; 
+                    gap: 30px; 
+                }
+                .details { 
+                    flex: 1; 
+                }
+                .artwork-image { 
+                    flex: 1; 
+                    max-width: 45%; 
+                    border: 1px solid #ccc; 
+                    padding: 5px; 
+                    background-color: #f9f9f9;
+                }
+                .artwork-image img { 
+                    width: 100%; 
+                    height: auto; 
+                    display: block; 
+                }
+                .details p { margin: 15px 0; font-size: 12pt; line-height: 1.5;}
+                .details strong { color: #000; font-weight: bold; display: inline-block; width: 180px; } /* Alineación profesional */
                 .code-display { 
-                    font-size: 18pt; 
+                    font-size: 14pt; 
                     font-weight: bold; 
                     color: #333; 
-                    border: 1px solid #ccc; 
-                    padding: 8px 15px; 
+                    padding: 5px 10px; 
                     display: inline-block; 
-                    margin-left: 20px; 
                     font-family: 'Courier New', monospace; 
-                    background: #f9f9f9;
+                    background: #fff8e1; /* Fondo sutil para el código */
+                    border: 1px solid #d4af37;
                 }
-                .guarantee { margin-top: 60px; font-size: 11pt; border-top: 1px solid #eee; padding-top: 20px; font-style: italic; color: #444; }
-                .signature-area { margin-top: 80px; text-align: left; }
-                .signature-line { border-top: 1px solid #000; display: block; width: 45%; padding-top: 5px; margin-bottom: 5px; }
-                .artist-name { font-weight: bold; font-size: 16pt; margin-top: 10px; }
-                @media print { body { margin: 0; padding: 0; } }
+                .guarantee { margin-top: 40px; font-size: 11pt; border-top: 1px solid #eee; padding-top: 20px; font-style: italic; color: #444; }
+                .signature-area { margin-top: 60px; text-align: right; } /* 🛑 MOVIDO A LA DERECHA */
+                .signature-line { border-top: 1px solid #000; display: block; width: 50%; float: right; padding-top: 5px; margin-bottom: 5px; }
+                .artist-name { font-weight: bold; font-size: 14pt; margin-top: 10px; }
+                .clear-fix { clear: both; } /* Para limpiar el float de la línea de firma */
+                @media print { body { margin: 0; padding: 0; } .cert-container { box-shadow: none; border: 1px solid #000; } }
             </style>
         </head>
         <body>
             <div class="cert-container">
-                <h1>AUTENTICIDAD</h1>
-                <h2>Certificado de Obra Original</h2>
-                <div class="details">
-                    <p><strong>Artista:</strong> ${settings.artistName}</p>
-                    <p><strong>Título:</strong> ${artwork.title}</p>
-                    <p><strong>Tipo de Obra:</strong> ${typeOptions[artwork.type]}</p>
-                    <p><strong>Año de Creación:</strong> ${artwork.certificationDate.substring(0, 4)}</p>
-                    <p><strong>Edición:</strong> ${seriesText}</p>
-                    <p><strong>Código de Trazabilidad:</strong> <span class="code-display">${artwork.code}</span></p>
-                    <p><strong>Medidas:</strong> [DIMENSIONES EN CM]</p>
-                    
-                    <div class="guarantee">
-                        La artista certifica que la obra anteriormente descrita es original, ha sido creada en su estudio y registrada bajo el código único de trazabilidad. Este certificado es la máxima garantía de procedencia y autoría.
-                    </div>
+                <div class="header">
+                    <img src="/logo-myriam.png" alt="${settings.artistName} Logo" class="logo"/>
+                    <h1>CERTIFICADO DE AUTENTICIDAD</h1>
+                    <h2>Arte con Alma y Sofisticación</h2>
                 </div>
 
+                <div class="content-grid">
+                    
+                    <div class="artwork-image">
+                        <img src="${artwork.image}" alt="${artwork.title} (Imagen de Obra)"/>
+                        <div style="text-align: center; margin-top: 10px; font-size: 10pt;">
+                            Código Único: <span class="code-display">${artwork.code}</span>
+                        </div>
+                    </div>
+
+                    <div class="details">
+                        <p><strong>Título de la Obra:</strong> ${artwork.title}</p>
+                        <p><strong>Artista:</strong> ${settings.artistName}</p>
+                        <p><strong>Tipo de Obra:</strong> ${typeOptions[artwork.type]}</p>
+                        <p><strong>Año de Creación:</strong> ${artwork.certificationDate.substring(0, 4)}</p>
+                        <p><strong>Edición:</strong> ${seriesText}</p>
+                        <p><strong>Medidas:</strong> [DIMENSIONES EN CM]</p>
+                        <p><strong>Técnica:</strong> [TÉCNICA Y SOPORTE]</p>
+                        <p><strong>ID de Trazabilidad:</strong> <span class="code-display">${artwork.code}</span></p>
+
+                        <div class="guarantee">
+                            La artista certifica que la obra anteriormente descrita es original, ha sido creada en su estudio y registrada bajo el código único de trazabilidad. Este certificado es la máxima garantía de procedencia y autoría.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="clear-fix"></div>
+
                 <div class="signature-area">
-                    <p style="font-size: 10pt; margin-bottom: 5px;">Fecha de Emisión: ${today}</p>
+                    <p style="font-size: 10pt; margin-bottom: 5px;">Fecha de Emisión: ${today} en ${settings.city}</p>
                     <span class="signature-line"></span>
+                    <div class="clear-fix"></div>
                     <p class="artist-name">${settings.artistName}</p>
                     <p>${settings.artistTitle}</p>
+                    <p style="font-size: 8pt; margin-top: 20px;">*Espacio reservado para Sello en Seco</p>
                 </div>
             </div>
         </body>
@@ -170,10 +220,16 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
 };
 
 /**
- * Genera el HTML limpio y profesional de la CARTA.
+ * 🛑 FUNCIÓN MEJORADA: Genera el HTML limpio y profesional de la CARTA.
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+    
+    // 🛑 CLAVE: Lógica para incluir la serie SÓLO si es una obra seriada.
+    const seriesText = getSeriesText(artwork);
+    const seriesReference = artwork.seriesIndex !== null
+        ? `y pertenece a mi ciclo <span class="artwork-ref">${settings.cycleName}</span>.`
+        : `y es una pieza única.`;
     
     // HTML con estilos en línea optimizados para una apariencia sofisticada (Palatino, estructura de carta formal)
     return `
@@ -207,7 +263,7 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                 </p>
                 
                 <p style="margin-top: 30px;">
-                    La pieza, <span class="artwork-ref">"${artwork.title}"</span> (${getSeriesText(artwork)}), pertenece a mi <span class="artwork-ref">${settings.cycleName}</span> y ha sido registrada con el código de trazabilidad **${artwork.code}**. Espero sinceramente que el diálogo con esta obra le brinde tanta satisfacción como la que encontré al concebirla.
+                    La pieza, <span class="artwork-ref">"${artwork.title}"</span> (${seriesText}), ha sido registrada con el código de trazabilidad **${artwork.code}** ${seriesReference}
                 </p>
                 
                 <p style="margin-top: 40px;">
@@ -268,7 +324,8 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
             {/* CABECERA Y TÍTULO */}
             <div className="flex justify-between items-start border-b pb-4 mb-4">
                 <div className="flex items-center gap-3">
-                    <ImageIcon size={24} className="text-slate-600" />
+                    {/* 🛑 Muestra la imagen de la obra */}
+                    <img src={artwork.image} alt={artwork.title} className="h-10 w-10 object-cover rounded-full border border-stone-200" />
                     <div>
                         <h4 className="text-xl font-bold text-slate-800">{artwork.title}</h4>
                         <p className="text-xs text-slate-500 mt-1">
@@ -402,7 +459,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, setSettings, on
                     <div className="p-4 border rounded-lg bg-stone-50">
                         <h4 className="font-bold text-slate-700 mb-3 flex items-center gap-1"><FileText size={16} /> Plantilla de Carta</h4>
                         
-                        <label className="block text-xs font-medium text-slate-500 mb-1">Ciclo Artístico General (Mencionado en la Carta)</label>
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Ciclo Artístico General (Mencionado en la Carta si es SERIADA)</label>
                         <input type="text" name="cycleName" value={settings.cycleName} onChange={handleChange} placeholder="Ej: Serie 'Las Ciudades Invisibles'" className="w-full p-2 border rounded text-sm mb-3 focus:ring-gold-500 focus:border-gold-500" />
                         
                         <label className="block text-xs font-medium text-slate-500 mb-1">Apertura (Ej: Estimado Coleccionista,)</label>
@@ -429,7 +486,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, setSettings, on
 // =========================================================
 
 interface AddWorkFormProps {
-    onAdd: (artwork: Omit<Artwork, 'id' | 'code' | 'status'>) => void;
+    onAdd: (artwork: Omit<Artwork, 'id' | 'code' | 'status' | 'image'> & { image: string }) => void;
 }
 
 const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
@@ -438,6 +495,8 @@ const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
     const [seriesIndex, setSeriesIndex] = useState<number | ''>('');
     const [seriesTotal, setSeriesTotal] = useState<number | ''>('');
     const [isSeries, setIsSeries] = useState(false);
+    // 🛑 NUEVO ESTADO: Ruta/URL de la imagen (simulada por ahora)
+    const [imagePath, setImagePath] = useState(''); 
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -466,6 +525,7 @@ const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
             type: 'PT', // Pintura por defecto
             seriesIndex: index, 
             seriesTotal: total,
+            image: imagePath || '/obras/placeholder-work.jpg' // Imagen por defecto si no se da una
         });
 
         // Limpiar formulario
@@ -473,6 +533,7 @@ const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
         setSeriesIndex('');
         setSeriesTotal('');
         setIsSeries(false);
+        setImagePath('');
     };
 
     return (
@@ -481,7 +542,7 @@ const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
                 <Plus size={24} className="text-gold-500" /> Añadir Nueva Obra al Catálogo
             </h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+            <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
                 
                 <div className="col-span-1 md:col-span-2">
                     <label className="block text-xs font-medium text-slate-500 mb-1">Título de la Obra</label>
@@ -506,6 +567,20 @@ const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
                         required
                     />
                 </div>
+                 
+                <div className="col-span-1 md:col-span-2">
+                    <label className="block text-xs font-medium text-slate-500 mb-1 flex justify-between items-center">
+                        Ruta/URL de Imagen (Temporal)
+                        <span className="text-blue-500 hover:underline cursor-pointer" onClick={() => setImagePath('/obras/demo-obra.jpg')}>Usar Demo</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        value={imagePath} 
+                        onChange={(e) => setImagePath(e.target.value)}
+                        placeholder="/obras/Sara-Farola.jpg"
+                        className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
+                    />
+                </div>
                 
                 {/* Control de Serie */}
                 <div className="flex flex-col gap-2">
@@ -516,7 +591,7 @@ const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
                             onChange={(e) => setIsSeries(e.target.checked)}
                             className="mr-2 rounded text-gold-500 focus:ring-gold-500"
                         />
-                        ¿Obra Seriada?
+                        ¿Seriada?
                     </label>
                     {isSeries && (
                         <div className="flex gap-2">
@@ -544,10 +619,10 @@ const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
                 
                 <button 
                     type="submit"
-                    className="bg-slate-700 text-white py-3 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors flex items-center justify-center gap-1 shadow-md"
+                    className="bg-slate-700 text-white py-3 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors flex items-center justify-center gap-1 shadow-md col-span-1"
                     disabled={!title.trim()}
                 >
-                    <Plus size={16} /> AÑADIR AL MURO
+                    <Plus size={16} /> AÑADIR
                 </button>
             </div>
         </form>
@@ -560,8 +635,12 @@ const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
 // ---------------------------------------------------------
 export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
     
-    // 🛑 DATA CENTRAL: Obras (Inicialmente vacío)
-    const [artworks, setArtworks] = useState<Artwork[]>([]);
+    // 🛑 DATA CENTRAL: Obras (Simulamos un ejemplo)
+    const [artworks, setArtworks] = useState<Artwork[]>([
+        { id: 1, title: 'Sara bajo Farola', certificationDate: '2025-12-15', type: 'PT', seriesIndex: null, seriesTotal: null, code: 'MA-2025-2512', status: 'GENERADO', image: '/obras/demo-obra.jpg' },
+        { id: 2, title: 'Retrato de Otoño (Ser. 1)', certificationDate: '2026-01-20', type: 'PT', seriesIndex: 1, seriesTotal: 5, code: 'MA-2026-26010105', status: 'GENERADO', image: '/obras/demo-obra-seriada.jpg' },
+        { id: 3, title: 'El Silencio del Estudio', certificationDate: '2025-10-01', type: 'SC', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/placeholder-work.jpg' },
+    ]);
     
     // 🛑 DATA CENTRAL: Configuración de documentos
     const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
@@ -576,7 +655,8 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
             ...newArtworkData,
             code: null,
             status: 'PENDIENTE'
-        };
+        } as Artwork; // Forzamos el tipo, 'image' ya está incluido.
+        
         setArtworks(prevArtworks => [newArtwork, ...prevArtworks]); // Añadir al principio
     };
     
@@ -614,8 +694,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                 {/* CABECERA Y LOGOUT */}
                 <div className="flex justify-between items-center mb-10 border-b pb-4">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-                        {/* El cambio para forzar compilación se mantiene */}
-                        <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO Privado v2.0 
+                        <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO Privado v2.1 (Documentos)
                     </h1>
                     <div className="flex gap-4">
                         <button 
