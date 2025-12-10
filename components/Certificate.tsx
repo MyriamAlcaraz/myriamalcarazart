@@ -19,10 +19,6 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 		year: 'numeric'	
 	});
 	
-	// Función auxiliar para formatear precio con puntos y euros (Mantenida por si acaso)
-	const formatPrice = (price: number) =>	
-		new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(price);
-
 	// ID de certificado simulado para la demo
     const certificateId = isPixelatedDemo ? 'DEMO-PIXELADO' : `MA-AOC-${artwork.id.slice(-4).toUpperCase()}-${artwork.year}`;
 
@@ -35,11 +31,19 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 			<div className="border-2 border-gold-500 h-full p-[15mm] relative flex flex-col justify-between">
 				<div className="absolute inset-2 border border-gold-500 opacity-60 pointer-events-none"></div>
 
-				{/* --- 1. Encabezado y Titular --- */}
+				{/* --- 1. Encabezado y Titular (RE-DISEÑADO para Nombre Dorado) --- */}
 				<header className="text-center mb-12">
+					{/* Logo */}
 					<img src="/logo-myriam.png" alt="Logo Myriam Alcaraz" className="h-16 mx-auto mb-4" />
-					<h1 className="font-serif text-4xl font-bold text-slate-900 mb-2">CERTIFICADO DE AUTENTICIDAD</h1>
-					<h2 className="text-sm uppercase tracking-[0.3em] text-gold-600">{ARTIST_INFO.tagline}</h2>
+					
+					{/* Nombre Dorado Grande 🛑 MODIFICACIÓN: Nombre Dorado y en Serif Grande */}
+					<h1 className="font-serif text-5xl font-extrabold text-gold-600 mb-2 tracking-tighter">{ARTIST_INFO.name.toUpperCase()}</h1>
+					
+					{/* Tagline */}
+					<h2 className="text-xs uppercase tracking-[0.5em] text-slate-900 mb-8">{ARTIST_INFO.tagline}</h2>
+					
+					{/* Título del Documento */}
+					<p className="font-serif text-2xl font-bold text-slate-800 border-t border-b border-gold-500 py-3 mx-auto w-fit px-8">CERTIFICADO DE AUTENTICIDAD</p>
 				</header>
 
 				<main className="flex-grow">
@@ -80,16 +84,13 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 							</div>
 						</div>
 
-						{/* Columna Derecha: Imagen y Precios */}
+						{/* Columna Derecha: Imagen */}
 						<div className="space-y-4">
 							<div className="bg-stone-50 p-3 shadow-inner">
 								<img src={artwork.image} alt={`Obra: ${artwork.title}`} className="w-full h-auto object-contain max-h-56 mx-auto" />
 								<p className="text-xs text-center text-slate-500 italic mt-2">Fotografía de Referencia</p>
 							</div>
-							<div className="pt-2">
-								<span className="font-semibold block text-slate-700">Precio de Venta Original:</span>
-								<span className="font-serif text-xl font-bold text-gold-600">{formatPrice(artwork.price)}</span>
-							</div>
+							{/* 🛑 MODIFICACIÓN: Bloque de Precio ELIMINADO */}
 						</div>
 					</div>
 
