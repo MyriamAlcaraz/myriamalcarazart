@@ -135,6 +135,9 @@ const getSeriesText = (artwork: Artwork) => {
 
 /**
  * Genera el HTML del CERTIFICADO. 
+ * 🛑 CORREGIDO: 
+ * 1. Tamaño de la foto para que quepa en un DIN A4 (máx 1 página).
+ * 2. Propiedad CSS para forzar la impresión del color dorado y el doble borde.
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -168,19 +171,21 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                 /* Estilos Fieles al Borrador: Tipografía Serifa, Doble Borde, Centro */
                 body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 12pt; margin: 20mm; color: #111; }
                 .cert-container { 
-                    /* 🛑 CORRECCIÓN DEL MARCO: Borde fino (1px negro) + Outline grueso (3px dorado) */
+                    /* Borde fino (1px negro) + Outline grueso (3px dorado) */
                     border: 1px solid #000; 
                     outline: 3px solid #d4af37; /* Marco grueso dorado */
                     outline-offset: 5px; /* Crea el espacio entre el borde fino y el outline grueso */
-                    padding: 40px; 
+                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de padding vertical de 40px a 30px */
+                    padding: 30px; 
                     max-width: 550px; 
                     margin: 0 auto;
                 }
                 .header { 
                     text-align: center; 
+                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de margin-bottom de 20px a 15px */
                     padding-bottom: 20px; 
                     border-bottom: 1px solid #ddd;
-                    margin-bottom: 30px;
+                    margin-bottom: 20px;
                 }
                 .logo { 
                     max-height: 80px; 
@@ -208,7 +213,8 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     text-align: center;
                     font-size: 10pt;
                     color: #333;
-                    margin: 30px 0;
+                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de margin vertical de 30px a 20px */
+                    margin: 20px 0;
                     line-height: 1.5;
                 }
                 .fixed-text strong {
@@ -218,10 +224,12 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     margin-top: 5px;
                 }
                 .artwork-image-section {
-                    /* 🛑 AJUSTE SOLICITADO: Reducido el tamaño máximo de la foto para evitar el desbordamiento en DINA4 */
+                    /* 🛑 CORRECCIÓN PÁGINA: Reducido el tamaño máximo de la foto para que encaje en DINA4 */
                     width: 70%; 
-                    max-width: 200px; /* REDUCIDO de 250px a 200px */
-                    margin: 15px auto; /* Reducido el margen vertical */
+                    max-width: 160px; /* REDUCIDO de 200px a 160px */
+                    max-height: 180px; /* NEW: Límite de altura estricto */
+                    overflow: hidden; /* NEW: Asegura que la imagen no se desborde */
+                    margin: 10px auto; /* Reducido el margen vertical de 15px a 10px */
                     border: 1px solid #ccc;
                     padding: 5px;
                     box-shadow: 0 0 8px rgba(0,0,0,0.1);
@@ -234,7 +242,8 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                 }
                 .details-grid {
                     width: 90%;
-                    margin: 20px auto 40px auto;
+                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de margin-top de 20px a 15px */
+                    margin: 15px auto 30px auto;
                     font-size: 11pt;
                 }
                 .details-grid p {
@@ -290,12 +299,13 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     flex-shrink: 0;
                 }
 
-                /* 🛑 AJUSTE SOLICITADO: Bloque de Firma */
+                /* Bloque de Firma */
                 .signature-row {
                     display: flex;
                     justify-content: space-between;
                     align-items: flex-start; 
-                    margin-top: 40px; 
+                    /* 🛑 CORRECCIÓN PÁGINA: Reducción de margin-top de 40px a 30px */
+                    margin-top: 30px; 
                     padding-top: 20px;
                 }
                 .date-col {
@@ -304,7 +314,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     font-size: 10pt;
                     color: #333;
                 }
-                /* 🛑 ALINEACIÓN DERECHA PARA LA FIRMA */
+                /* ALINEACIÓN DERECHA PARA LA FIRMA */
                 .signature-col {
                     flex-basis: 45%; 
                     text-align: right; 
@@ -330,6 +340,10 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                         outline: 3px solid #d4af37; 
                         outline-offset: 5px;
                         max-width: 100%; 
+                        
+                        /* 🛑 FIX BORDER/COLOR: Forzar la impresión de colores y fondos */
+                        -webkit-print-color-adjust: exact !important; 
+                        print-color-adjust: exact !important;
                     } 
                 }
             </style>
@@ -431,7 +445,7 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
         <head>
             <title>Carta Personalizada - ${artwork.title}</title>
             <style>
-                /* 🛑 MANTENEMOS MARGIN: 20MM en BODY para el espacio entre el borde del papel y el marco dorado */
+                /* MANTENEMOS MARGIN: 20MM en BODY para el espacio entre el borde del papel y el marco dorado */
                 body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 13pt; margin: 20mm; color: #111; line-height: 1.8; }
                 
                 /* 🛑 CONTENEDOR CON MARCO DORADO PARA LA CARTA */
@@ -440,16 +454,13 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                     outline: 3px solid #d4af37; /* Marco grueso dorado */
                     outline-offset: 5px; /* Espacio entre bordes */
                     
-                    /* 🛑 CORREGIDO: Se aplica un padding interno uniforme 
-                       - 30mm vertical (para bajar el texto simétricamente)
-                       - 70px horizontal (para el espacio lateral)
-                       - margin: 0 auto; para centrado horizontal. */
+                    /* CORREGIDO: Padding interno uniforme para simetría */
                     padding: 30mm 70px; 
                     margin: 0 auto; 
                 }
 
                 .top-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
-                /* 🛑 LOGO MÁS GRANDE */
+                /* LOGO MÁS GRANDE */
                 .logo-container img { max-height: 80px; width: auto; opacity: 0.8; }
                 .address-container { text-align: right; }
                 .address-container p { margin: 0; font-size: 11pt; color: #333; }
@@ -457,9 +468,9 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                 .body-content { margin-top: 30px; }
                 .artwork-ref { font-style: italic; font-weight: bold; color: #000; }
                 
-                /* 🛑 MODIFICADO: Bloque de Firma alineado a la derecha */
+                /* MODIFICADO: Bloque de Firma alineado a la derecha */
                 .signature-area { 
-                    margin-top: 0; /* Ya no lleva el margen grande */
+                    margin-top: 0; 
                     text-align: right; 
                 }
                 .signature-line { 
@@ -472,7 +483,14 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
                 .signature-area p { margin: 5px 0; }
                 .artist-name { font-weight: bold; font-size: 16pt; margin-top: 10px; }
                 
-                @media print { body { margin: 0; padding: 0; } }
+                @media print { 
+                    body { margin: 0; padding: 0; } 
+                    /* 🛑 FIX BORDER/COLOR: Forzar la impresión de colores y fondos en la carta también */
+                    .letter-container { 
+                        -webkit-print-color-adjust: exact !important; 
+                        print-color-adjust: exact !important;
+                    }
+                }
             </style>
         </head>
         <body>
