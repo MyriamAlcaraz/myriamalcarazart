@@ -1,8 +1,12 @@
+// ARCHIVO: App.tsx - CÓDIGO FINAL Y COMPLETO
+
 import React, { useState, useEffect } from 'react';
-import { PublicSite } from './components/PublicSite'; 
+// 🛑 MODIFICACIÓN 1: Importamos la función de generación de HTML
+import { PublicSite, getCertificateDemoHtmlContent } from './components/PublicSite'; 
 import { ArtistDashboard } from './components/ArtistDashboard';
 import { DigitalCompanion } from './components/DigitalCompanion';
-import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield } from 'lucide-react'; 
+// 🛑 MODIFICACIÓN 2: Añadimos ShieldCheck a la lista de íconos
+import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield, ShieldCheck } from 'lucide-react'; 
 
 // --- CONFIGURACIÓN DE SEGURIDAD (PASSWORD) ---
 const PASSWORD = "arte2026"; 
@@ -18,6 +22,7 @@ const App: React.FC = () => {
   // 'public' = Web en modo "Vista Previa" o "En Construcción"
   // 'artist' = ESTUDIO
   const [view, setView] = useState<'public' | 'artist'>('public');
+  // selectedCompanionId contendrá el ID de la obra o 'CERTIFICATE_DEMO'
   const [selectedCompanionId, setSelectedCompanionId] = useState<string | null>(null);
   
   // Hooks para el formulario de login (reutilizados para ambos candados)
@@ -33,8 +38,6 @@ const App: React.FC = () => {
     }
   }, []);
   
-  // 🛑 ELIMINAMOS EL useEffect que causaba el conflicto de timing.
-  // ---------------------------------------------------------
 
   // Handler para el PRIMER candado (Acceso inicial a la web/Preview)
   const handleLogin = (e: React.FormEvent) => {
@@ -45,40 +48,89 @@ const App: React.FC = () => {
       setError(false);
       setShowLoginModal(false); 
       setView('public'); 
-      setPasswordInput(""); // Limpiar para el siguiente uso
+      setPasswordInput(""); 
     } else {
       setError(true);
       setPasswordInput(""); 
     }
   };
 
-  // 🚀 CORRECCIÓN CLAVE: El handler ahora cierra el modal y cambia la vista AL MISMO TIEMPO.
+  // Handler para el SEGUNDO candado (Acceso a ESTUDIO)
   const handleStudioLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordInput === PASSWORD) {
-        // Primero, cerramos el modal.
         setShowStudioLoginModal(false);
-        // Segundo, cambiamos la vista. El modal ya no interfiere.
         setView('artist'); 
         setError(false);
-        setPasswordInput(""); // Limpiar la clave
+        setPasswordInput(""); 
     } else {
         setError(true);
         setPasswordInput("");
     }
   };
 
-
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('myriam_auth');
     setView('public'); 
   };
+  
+  // Función de cierre del Compañero (reutilizada para la demo)
+  const handleCloseCompanion = () => setSelectedCompanionId(null); 
+
+
+  // ---------------------------------------------------------
+  // 🛑 MODIFICACIÓN 3: Función para Renderizar el Certificado BONITO
+  // ---------------------------------------------------------
+  const renderCertificateDemo = () => {
+    // Llama a la función que genera el HTML bonito (exportada de PublicSite.tsx)
+    const htmlContent = getCertificateDemoHtmlContent(); 
+    
+    return (
+        // Contenedor del Modal (fondo oscuro)
+        <div className="fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4">
+            <div className="w-full max-w-4xl bg-white p-6 rounded-xl shadow-2xl relative">
+                <div className="flex justify-between items-center border-b pb-3 mb-4">
+                    <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+                        <ShieldCheck size={28} className="text-gold-500" /> Demo: Certificado de Autenticidad
+                    </h3>
+                    <button onClick={handleCloseCompanion} className="p-1 rounded-full text-slate-400 hover:text-red-500 transition-colors">
+                        <X size={24} />
+                    </button>
+                </div>
+                
+                <p className="text-sm text-slate-600 mb-4">
+                    Visualización en tiempo real del documento que reciben los coleccionistas. (Simulación de impresión A4).
+                </p>
+                
+                <div className="w-full h-[600px] border border-gray-300 rounded-lg overflow-hidden shadow-inner bg-slate-50">
+                    <iframe
+                        title="Certificado Demo Preview"
+                        srcDoc={htmlContent} // ¡Usa el HTML generado!
+                        style={{ 
+                            width: '100%', 
+                            height: '100%', 
+                            border: 'none',
+                            transform: 'scale(0.8)', 
+                            transformOrigin: 'top left' 
+                        }}
+                        sandbox="allow-scripts allow-same-origin"
+                    />
+                </div>
+                
+                <div className="mt-4 text-right">
+                    <button onClick={handleCloseCompanion} className="bg-slate-500 text-white px-4 py-2 rounded font-semibold hover:bg-slate-600">Cerrar Demo</button>
+                </div>
+            </div>
+        </div>
+    );
+  };
+  // ---------------------------------------------------------
 
 
   // ---------------------------------------------------------
   // 🔒 PANTALLA DE CONSTRUCCIÓN / PRIMER CANDADO (No Autenticado)
-  // ---------------------------------------------------------
+  // ... (Código de renderizado de login) ...
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-stone-50 flex flex-col items-center justify-center p-6 relative font-serif">
@@ -166,7 +218,7 @@ const App: React.FC = () => {
 
   // ---------------------------------------------------------
   // CONTENIDO DE LA APP (Usuario Autenticado)
-  // ---------------------------------------------------------
+  // ... (Código de renderizado de nav y studio) ...
   return (
     <div className="min-h-screen animate-fade-in relative">
       
@@ -174,11 +226,9 @@ const App: React.FC = () => {
       {view === 'public' ? (
         <PublicSite 
             onOpenCompanion={(id) => setSelectedCompanionId(id)} 
-            // 💡 Asegúrate de que PublicSite usa esta prop:
             onOpenStudioLogin={() => setShowStudioLoginModal(true)}
         />
       ) : (
-        // 💡 Asegúrate de que ArtistDashboard espera esta prop:
         <ArtistDashboard onLogout={handleLogout} />
       )}
 
@@ -188,11 +238,9 @@ const App: React.FC = () => {
         {/* 🛑 Botón de ESTUDIO/Vista Previa */}
         <button 
           onClick={() => {
-            // Si está en vista pública, activa el segundo candado (el modal)
             if (view === 'public') {
               setShowStudioLoginModal(true);
             } else {
-              // Si está en ESTUDIO, vuelve directamente a la vista pública
               setView('public'); 
             }
           }}
@@ -213,7 +261,7 @@ const App: React.FC = () => {
                 onClick={() => {
                     setShowStudioLoginModal(false);
                     setError(false);
-                    setPasswordInput(""); // Limpiar input
+                    setPasswordInput(""); 
                 }}
                 className="absolute top-4 right-4 text-slate-400 hover:text-slate-800"
                 aria-label="Cerrar"
@@ -227,7 +275,6 @@ const App: React.FC = () => {
                 <p className="text-sm text-slate-500">Introduce la clave para acceder a la gestión.</p>
               </div>
 
-              {/* Utiliza el handler handleStudioLogin (CORREGIDO) */}
               <form onSubmit={handleStudioLogin} className="flex flex-col gap-4"> 
                 <div className="relative">
                   <input
@@ -261,13 +308,18 @@ const App: React.FC = () => {
           </div>
       )}
 
-      {/* COMPAÑERO DIGITAL */}
-      {selectedCompanionId && (
+      {/* 🛑 MODIFICACIÓN 4: Renderizado Condicional del Certificado Bonito o del Compañero Digital */}
+      {selectedCompanionId === 'CERTIFICATE_DEMO' ? (
+          // 1. Si el ID es la cadena de la demo, renderiza el modal completo (el bonito)
+          renderCertificateDemo()
+      ) : selectedCompanionId && (
+        // 2. Si hay un ID pero no es la demo (será un ID de obra), renderiza el Compañero Digital
         <DigitalCompanion 
           artworkId={selectedCompanionId} 
-          onClose={() => setSelectedCompanionId(null)} 
-          // Mantenemos la lógica para el siguiente paso (certificados)
+          onClose={handleCloseCompanion} 
           showCertificateAccess={view === 'artist'} 
+          // 🛑 MODIFICACIÓN 5: Pasamos la función que abre el modal bonito
+          onOpenCertificateDemo={() => setSelectedCompanionId('CERTIFICATE_DEMO')} 
         />
       )}
     </div>

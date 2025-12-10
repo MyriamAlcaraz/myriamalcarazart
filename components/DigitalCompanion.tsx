@@ -1,18 +1,19 @@
-// ARCHIVO: ./components/DigitalCompanion.tsx - ¡COMPLETAMENTE MODIFICADO!
+// ARCHIVO: ./components/DigitalCompanion.tsx - CÓDIGO FINAL CORREGIDO
 
 import React, { useState, useRef } from 'react';
-// Eliminamos Printer y AlertTriangle que ya no se usan en la Lógica Simplificada
-import { Shield, ZoomIn, X, Mail, Image as ImageIcon } from 'lucide-react'; 
+// 🛑 MODIFICACIÓN 1: Eliminamos Printer y AlertTriangle que solo se usaban para el certificado feo
+import { Shield, Image as ImageIcon, ZoomIn, X, Mail } from 'lucide-react'; 
 import { ARTWORKS, ARTIST_INFO } from '../constants';
-// 🛑 ELIMINADA: import { Certificate } from './Certificate';
+// 🛑 MODIFICACIÓN 2: Eliminamos la importación del certificado feo
+// import { Certificate } from './Certificate';
 
-// 🛑 CAMBIO 1: Nueva prop para abrir el modal bonito en App.tsx
 interface DigitalCompanionProps {
   artworkId: string | null;
   onClose: () => void;
   showCertificateAccess: boolean; 
   initialMode?: 'lupa' | 'certificate'; 
-  onOpenCertificateDemo: () => void; // <--- ESTA ES LA CLAVE
+  // 🛑 MODIFICACIÓN 3: Nueva prop para decirle a App.tsx que abra la demo
+  onOpenCertificateDemo: () => void; 
 }
 
 export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({ 
@@ -20,12 +21,12 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     onClose,
     showCertificateAccess, 
     initialMode = 'lupa',
-    // 🛑 CAMBIO 2: Recibimos la nueva prop
+    // 🛑 MODIFICACIÓN 4: Recibimos la nueva prop
     onOpenCertificateDemo
 }) => {
   const artwork = ARTWORKS.find(a => a.id === artworkId) || ARTWORKS[0];
   
-  // 🛑 CAMBIO 3: ELIMINAMOS el estado 'showCertificate' que hacía aparecer el certificado pixelado
+  // 🛑 MODIFICACIÓN 5: ELIMINAMOS el estado 'showCertificate' (que generaba el pixelado)
   // const [showCertificate, setShowCertificate] = useState(initialMode === 'certificate'); 
   
   const [showZoom, setShowZoom] = useState(false);
@@ -59,12 +60,12 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     });
   };
 
-  // 🛑 CAMBIO 4: Eliminamos completamente el if que renderizaba el certificado pixelado.
+  // 🛑 MODIFICACIÓN 6: Eliminamos el bloque 'if (showCertificate)' entero.
   /*
   if (showCertificate) {
     return (
       <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex justify-center items-center p-4 md:p-8">
-        ... (Código del modal del certificado feo)
+        ... (Código del certificado pixelado eliminado)
       </div>
     );
   }
@@ -135,7 +136,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
           <div className="space-y-4 pt-4">
             {/* 1. Botón de Certificado (Demo/Real) */}
             <button
-                // 🛑 CAMBIO 5: Llama a la prop que abrirá el modal bonito en App.tsx
+                // 🛑 MODIFICACIÓN 7: Llama a la prop para abrir la demo bonita en App.tsx
                 onClick={onOpenCertificateDemo} 
                 className="w-full flex items-center justify-center gap-2 bg-slate-800 text-white p-3 rounded font-bold hover:bg-gold-600 transition-colors shadow-md"
             >
