@@ -16,6 +16,7 @@ interface Artwork {
   image: string; // URL o ruta de la imagen
   dimensions: string; 
   technique: string; 
+  originalIndex: number; // 🛑 NUEVO: Para mantener el orden de constants.ts
 }
 
 interface DocumentSettings {
@@ -41,30 +42,44 @@ const initialSettings: DocumentSettings = {
     letterClosing: "Agradeciendo profundamente su apoyo a mi trayectoria artística, quedo a su disposición para cualquier consulta. Con mis mejores deseos," 
 };
 
-// 🛑 CATÁLOGO DE OBRAS REALES (Extraídas de constants.ts - Todas PENDIENTES)
-// Nota: La fecha de certificación es '2025-12-10' por defecto. El usuario debe actualizarla si lo necesita.
-const REAL_ARTWORKS: Artwork[] = [
-    { id: 4, title: 'Sara en Marquesina', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_04.jpg', dimensions: '100x81 cm', technique: 'Óleo en tela' },
-    { id: 2, title: 'Laura en el Crepúsculo', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_02.jpg', dimensions: '100x81 cm', technique: 'Óleo en tela montada en tabla' },
-    { id: 3, title: 'Sara bajo la farola', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_03.jpg', dimensions: '92x60 cm', technique: 'Óleo sobre tela' },
-    { id: 1, title: 'Autorretrato en siglo XIX', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_01.jpg', dimensions: '100x81 cm', technique: 'Óleo en tela montada en tabla' },
-    { id: 5, title: 'Ana y la Habana', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_05.jpg', dimensions: '92x60 cm', technique: 'Óleo sobre tela' },
-    { id: 6, title: 'Viajera', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_06.jpg', dimensions: '81x100 cm', technique: 'Óleo sobre tela' },
-    { id: 7, title: 'Memorias de Mekong I', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_07.jpg', dimensions: '100x65 cm', technique: 'Óleo sobre tela' },
-    { id: 8, title: 'Memorias de Mekong II', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_08.jpg', dimensions: '100x65 cm', technique: 'Óleo sobre tela' },
-    { id: 9, title: 'El niño de la capucha', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_09.jpg', dimensions: '92x65 cm', technique: 'Óleo sobre tela' },
-    { id: 10, title: 'Joven en piscina', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_10.jpg', dimensions: '73x100 cm', technique: 'Óleo sobre lienzo' },
-    { id: 11, title: 'Pablo en Cascada', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_11.jpg', dimensions: '55x46 cm', technique: 'Óleo sobre tela' },
-    { id: 12, title: 'Pablo en Cascada II', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_12.jpg', dimensions: '80x65 cm', technique: 'Óleo sobre tela' },
-    { id: 13, title: 'Niños en playa valenciana', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_13.jpg', dimensions: '80x60 cm', technique: 'Óleo sobre tela' },
-    { id: 14, title: 'Buceando', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_14.jpg', dimensions: '100x65 cm', technique: 'Óleo sobre tela' },
-    { id: 15, title: 'Niños con capucha', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_15.jpg', dimensions: '100x81 cm', technique: 'Óleo sobre tela' },
-    { id: 16, title: 'Niños en playa rocosa', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_16.jpg', dimensions: '55x46 cm', technique: 'Óleo sobre lienzo' },
-    { id: 17, title: 'Jilguero en charca del Botánico', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_17.jpg', dimensions: '46x38 cm', technique: 'Óleo sobre lienzo' },
-    { id: 18, title: 'Porteadores', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_18.jpg', dimensions: '55x46 cm', technique: 'Óleo sobre lienzo' },
-    { id: 19, title: 'Carpe Diem', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_19.jpg', dimensions: '140x50 cm', technique: 'Óleo sobre tela' },
-    { id: 20, title: 'Más que amigos', certificationDate: '2025-12-10', type: 'PT', seriesIndex: null, seriesTotal: null, code: null, status: 'PENDIENTE', image: '/obras/OBRA_20.jpg', dimensions: '100x60 cm', technique: 'Óleo sobre tela' },
+// 🛑 CATALOGO DE OBRAS REALES (Extraídas de constants.ts, incluyendo sus IDs reales 4, 2, 3, 1...)
+const ARTWORKS_FOR_INITIALIZATION = [
+    { id: 4, title: 'Sara en Marquesina', dimensions: '100x81 cm', technique: 'Óleo en tela', image: '/obras/OBRA_04.jpg' },
+    { id: 2, title: 'Laura en el Crepúsculo', dimensions: '100x81 cm', technique: 'Óleo en tela montada en tabla', image: '/obras/OBRA_02.jpg' },
+    { id: 3, title: 'Sara bajo la farola', dimensions: '92x60 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_03.jpg' },
+    { id: 1, title: 'Autorretrato en siglo XIX', dimensions: '100x81 cm', technique: 'Óleo en tela montada en tabla', image: '/obras/OBRA_01.jpg' },
+    { id: 5, title: 'Ana y la Habana', dimensions: '92x60 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_05.jpg' },
+    { id: 6, title: 'Viajera', dimensions: '81x100 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_06.jpg' },
+    { id: 7, title: 'Memorias de Mekong I', dimensions: '100x65 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_07.jpg' },
+    { id: 8, title: 'Memorias de Mekong II', dimensions: '100x65 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_08.jpg' },
+    { id: 9, title: 'El niño de la capucha', dimensions: '92x65 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_09.jpg' },
+    { id: 10, title: 'Joven en piscina', dimensions: '73x100 cm', technique: 'Óleo sobre lienzo', image: '/obras/OBRA_10.jpg' },
+    { id: 11, title: 'Pablo en Cascada', dimensions: '55x46 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_11.jpg' },
+    { id: 12, title: 'Pablo en Cascada II', dimensions: '80x65 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_12.jpg' },
+    { id: 13, title: 'Niños en playa valenciana', dimensions: '80x60 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_13.jpg' },
+    { id: 14, title: 'Buceando', dimensions: '100x65 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_14.jpg' },
+    { id: 15, title: 'Niños con capucha', dimensions: '100x81 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_15.jpg' },
+    { id: 16, title: 'Niños en playa rocosa', dimensions: '55x46 cm', technique: 'Óleo sobre lienzo', image: '/obras/OBRA_16.jpg' },
+    { id: 17, title: 'Jilguero en charca del Botánico', dimensions: '46x38 cm', technique: 'Óleo sobre lienzo', image: '/obras/OBRA_17.jpg' },
+    { id: 18, title: 'Porteadores', dimensions: '55x46 cm', technique: 'Óleo sobre lienzo', image: '/obras/OBRA_18.jpg' },
+    { id: 19, title: 'Carpe Diem', dimensions: '140x50 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_19.jpg' },
+    { id: 20, title: 'Más que amigos', dimensions: '100x60 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_20.jpg' }
 ];
+
+const REAL_ARTWORKS: Artwork[] = ARTWORKS_FOR_INITIALIZATION.map((art, index) => ({
+    id: art.id,
+    title: art.title,
+    certificationDate: '2025-12-10', // Fecha inicial de ejemplo
+    type: 'PT', // Pintura por defecto
+    seriesIndex: null, 
+    seriesTotal: null, 
+    code: null, 
+    status: 'PENDIENTE', 
+    image: art.image, 
+    dimensions: art.dimensions, 
+    technique: art.technique, 
+    originalIndex: index, // Mantiene el orden de constants.ts
+}));
 
 
 // ---------------------------------------------------------
@@ -79,14 +94,15 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
 
     let seriesCode = '';
     if (artworkToCode.seriesIndex !== null && artworkToCode.seriesTotal !== null) {
-        // Aseguramos que el índice y el total sean de 2 dígitos
+        // Aseguramos que el índice y el total sean de 2 dígitos (o más si es necesario)
         const indexFmtd = String(artworkToCode.seriesIndex).padStart(2, '0');
         const totalFmtd = String(artworkToCode.seriesTotal).padStart(2, '0');
-        seriesCode = `${indexFmtd}${totalFmtd}`;
+        // Para Giclée: se puede usar el formato Index/Total al final (ej: 01/50)
+        return `MA-${year}-${dateCode}-${indexFmtd}/${totalFmtd}`; 
     }
     
     // El formato final es MA-AÑOCOMPLETO-AÑOMES(INDEXTOTAL)
-    return `MA-${year}-${dateCode}${seriesCode}`;
+    return `MA-${year}-${dateCode}-${String(artworkToCode.id).padStart(2, '0')}`;
 };
 
 
@@ -100,7 +116,7 @@ const getSeriesText = (artwork: Artwork) => {
 }
 
 /**
- * Genera el HTML del CERTIFICADO. (Mantiene la corrección del Doble Marco)
+ * Genera el HTML del CERTIFICADO. (CORRECCIÓN DEL DOBLE MARCO APLICADA)
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -119,10 +135,11 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                 /* Estilos Fieles al Borrador: Tipografía Serifa, Doble Borde, Centro */
                 body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 12pt; margin: 20mm; color: #111; }
                 .cert-container { 
-                    /* 🛑 CORRECCIÓN DEL MARCO: Borde fino (1px) + Borde grueso (box-shadow de 5px dorado) */
-                    border: 1px solid #000; /* Marco fino (negro) */
+                    /* 🛑 CORRECCIÓN DEL MARCO: Borde fino (1px negro) + Outline grueso (3px dorado) */
+                    border: 1px solid #000; 
+                    outline: 3px solid #d4af37; /* Marco grueso dorado */
+                    outline-offset: 5px; /* Crea el espacio entre el borde fino y el outline grueso */
                     padding: 40px; 
-                    box-shadow: 0 0 0 5px #d4af37; /* Marco grueso (dorado) */
                     max-width: 550px; 
                     margin: 0 auto;
                 }
@@ -237,8 +254,9 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                     .cert-container { 
                         box-shadow: none; 
                         border: 1px solid #000; 
-                        outline: 5px solid #d4af37; /* Usamos outline para simular el doble marco en impresión */
-                        outline-offset: -1px;
+                        /* Mantener el doble marco también en impresión */
+                        outline: 3px solid #d4af37; 
+                        outline-offset: 5px;
                         max-width: 100%; 
                     } 
                 }
@@ -314,6 +332,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
 };
 
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
+    // ... (El código de la carta se mantiene sin cambios)
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     
     const seriesText = getSeriesText(artwork);
@@ -413,7 +432,7 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
                 <img 
                     src={artwork.image || '/obras/placeholder-work.jpg'} 
                     alt={artwork.title} 
-                    className="w-full h-full object-cover transition-opacity group-hover:opacity-50" 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:opacity-50" 
                 />
                 
                 {/* Overlay con los botones de Certificado/Carta (Aparece al hacer hover/click) */}
@@ -421,7 +440,7 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
                     
                     {/* ACCIÓN PRINCIPAL (GENERAR CÓDIGO) */}
                     {!artwork.code ? (
-                        // Esto solo se mostrará para las obras que añada el usuario sin código.
+                        // Se muestra para obras PENDIENTES (manual o nuevas)
                         <>
                             <p className="text-white text-xs font-semibold uppercase tracking-wider mb-2">Paso Requerido</p>
                             <button
@@ -429,8 +448,9 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
                                 className="bg-gold-500 text-white py-3 px-6 rounded-lg font-bold text-sm hover:bg-gold-600 transition-colors flex items-center gap-2 w-full justify-center shadow-lg"
                                 title="Generar Código Único de Trazabilidad para esta obra"
                             >
-                                <Code size={18} /> GENERAR CÓDIGO
+                                <Code size={18} /> GENERAR CÓDIGO INTELIGENTE
                             </button>
+                            <p className="text-white/80 text-xs mt-1">Si ya tiene un código (ej. Giclée), puede introducirlo con el botón "Editar Datos" abajo.</p>
                         </>
                     ) : (
                         // ACCIONES DE DOCUMENTACIÓN (CERTIFICADO Y CARTA) - Esto se verá si ya tienen código.
@@ -441,14 +461,14 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
                                 onClick={() => handlePrintDocument(certificateContent, `Certificado ${artwork.code}`)}
                                 className="bg-blue-600 text-white py-3 px-6 rounded-lg font-bold text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 w-full shadow-lg"
                             >
-                                <Printer size={16} /> CERTIFICADO
+                                <Printer size={16} /> IMPRIMIR CERTIFICADO
                             </button>
                             
                             <button
                                 onClick={() => handlePrintDocument(letterContent, `Carta ${artwork.code}`)}
                                 className="bg-blue-600/80 text-white py-3 px-6 rounded-lg font-bold text-sm hover:bg-blue-700/80 transition-colors flex items-center justify-center gap-2 w-full shadow-lg"
                             >
-                                <FileText size={16} /> CARTA
+                                <FileText size={16} /> IMPRIMIR CARTA
                             </button>
                         </>
                     )}
@@ -502,7 +522,8 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
 // =========================================================
 
 interface ArtworkFormProps {
-    onSave: (artwork: Omit<Artwork, 'id' | 'code' | 'status'>, idToUpdate: number | null) => void;
+    // 🛑 Modificación: Ahora se acepta el código y el estado, no se omiten.
+    onSave: (artwork: Omit<Artwork, 'id' | 'originalIndex'>, idToUpdate: number | null) => void;
     artworkToManage: Artwork | null;
     onCancel: () => void;
 }
@@ -510,8 +531,8 @@ interface ArtworkFormProps {
 const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToManage, onCancel }) => {
     
     // Estado interno del formulario
-    const isEditing = artworkToManage && artworkToManage.id > 0; // Si tiene ID positivo, es una obra existente
-    const isDuplicating = artworkToManage && artworkToManage.id === -1; // Indicador temporal para duplicación (ID -1)
+    const isEditing = artworkToManage && artworkToManage.id > 0; 
+    const isDuplicating = artworkToManage && artworkToManage.id === -1; 
 
     const [title, setTitle] = useState('');
     const [certificationDate, setCertificationDate] = useState(new Date().toISOString().substring(0, 10));
@@ -521,13 +542,13 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
     const [imagePath, setImagePath] = useState(''); 
     const [dimensions, setDimensions] = useState('');
     const [technique, setTechnique] = useState('');
+    // 🛑 NUEVO: Estado para el código manual
+    const [manualCode, setManualCode] = useState<string>(''); 
     
     // Hook para PRE-RELLENAR el formulario (al añadir, duplicar o editar)
     useEffect(() => {
         if (artworkToManage) {
-            // Carga los datos existentes (para duplicar o editar)
             setTitle(artworkToManage.title);
-            // Si es una duplicación, usa la fecha de hoy y sugiere el siguiente índice
             setCertificationDate(isDuplicating ? new Date().toISOString().substring(0, 10) : artworkToManage.certificationDate); 
             setSeriesIndex(isDuplicating && artworkToManage.seriesIndex !== null ? artworkToManage.seriesIndex + 1 : artworkToManage.seriesIndex ?? '');
             setSeriesTotal(artworkToManage.seriesTotal ?? '');
@@ -535,6 +556,8 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
             setImagePath(artworkToManage.image);
             setDimensions(artworkToManage.dimensions);
             setTechnique(artworkToManage.technique);
+            // 🛑 Carga el código existente si estamos editando
+            setManualCode(artworkToManage.code ?? '');
         } else {
             // Valores por defecto para "Añadir Nueva Obra"
             setTitle('');
@@ -544,7 +567,8 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
             setIsSeries(false);
             setImagePath('');
             setDimensions(''); 
-            setTechnique(''); 
+            setTechnique('');
+            setManualCode(''); // Limpiar código manual
         }
     }, [artworkToManage, isDuplicating]); 
 
@@ -564,19 +588,24 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
              alert("El título, las dimensiones y la técnica de la obra son obligatorios.");
              return;
         }
+        
+        const finalCode = manualCode.trim() || null;
+        const finalStatus: 'PENDIENTE' | 'GENERADO' = finalCode ? 'GENERADO' : 'PENDIENTE';
 
-        const newArtworkData: Omit<Artwork, 'id' | 'code' | 'status'> = {
+        const newArtworkData: Omit<Artwork, 'id' | 'originalIndex'> = {
             title: title.trim(),
             certificationDate: certificationDate,
-            type: 'PT', // Pintura por defecto
+            type: 'PT', 
             seriesIndex: index, 
             seriesTotal: total,
             image: imagePath || '/obras/placeholder-work.jpg', 
             dimensions: dimensions.trim(), 
             technique: technique.trim(), 
+            // 🛑 Se incluyen código y estado para la opción manual (Giclée)
+            code: finalCode,
+            status: finalStatus,
         };
 
-        // Si estamos editando un elemento existente, pasamos su ID. Si estamos duplicando o añadiendo, pasamos null.
         const idToUpdate = isEditing ? artworkToManage!.id : null;
 
         onSave(newArtworkData, idToUpdate);
@@ -671,8 +700,22 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                         />
                     </div>
                     
+                    {/* Código Manual/Giclée (NUEVO) */}
+                    <div className="col-span-1 md:col-span-3">
+                        <label className="block text-xs font-medium text-slate-500 mb-1">CÓDIGO de Certificado (Opcional/Giclée)</label>
+                        <input 
+                            type="text" 
+                            value={manualCode} 
+                            onChange={(e) => setManualCode(e.target.value)}
+                            placeholder="Ej: MA-2025-01/50 (Giclée) o MA-2025-09"
+                            className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
+                        />
+                        <p className="text-[10px] text-slate-400 mt-1">Si introduce un código aquí, la obra se marcará como **GENERADA**.</p>
+                    </div>
+
+                    
                     {/* Control de Serie */}
-                    <div className="flex flex-col gap-2 col-span-1 md:col-span-3">
+                    <div className="flex flex-col gap-2 col-span-1 md:col-span-6 border-t pt-4 mt-4">
                         <label className="flex items-center text-xs font-medium text-slate-500 cursor-pointer">
                             <input 
                                 type="checkbox"
@@ -680,14 +723,14 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                                 onChange={(e) => setIsSeries(e.target.checked)}
                                 className="mr-2 rounded text-gold-500 focus:ring-gold-500"
                             />
-                            ¿Obra Seriada?
+                            ¿Obra Seriada? (Ej. Giclée)
                         </label>
-                        <div className="flex gap-2">
+                        <div className="flex gap-4 max-w-md">
                             <input 
                                 type="number" 
                                 value={seriesIndex} 
                                 onChange={(e) => setSeriesIndex(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
-                                placeholder="N° Pieza"
+                                placeholder="N° Pieza (Ej: 1)"
                                 className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
                                 min="1"
                                 required={isSeries}
@@ -697,7 +740,7 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                                 type="number" 
                                 value={seriesTotal} 
                                 onChange={(e) => setSeriesTotal(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
-                                placeholder="Total Edición"
+                                placeholder="Total Edición (Ej: 50)"
                                 className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
                                 min="1"
                                 required={isSeries}
@@ -734,30 +777,33 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
     const [artworkToManage, setArtworkToManage] = useState<Artwork | null>(null);
 
-    // Handler para añadir o editar obra
-    const handleSaveArtwork = (newArtworkData: Omit<Artwork, 'id' | 'code' | 'status'>, idToUpdate: number | null) => {
+    // 🛑 Handler para añadir o editar obra (Acepta ahora code y status)
+    const handleSaveArtwork = (artworkData: Omit<Artwork, 'id' | 'originalIndex'>, idToUpdate: number | null) => {
         
+        // El status ya viene determinado por el formulario (si hay código manual o no)
+        const finalStatus = artworkData.code ? 'GENERADO' : 'PENDIENTE';
+
         if (idToUpdate) {
             // EDICIÓN
             setArtworks(prevArtworks => prevArtworks.map(artwork => {
                 if (artwork.id === idToUpdate) {
-                    // Mantiene el código y el estado si existían, solo actualiza los datos
                     return { 
                         ...artwork, 
-                        ...newArtworkData,
+                        ...artworkData,
+                        status: finalStatus, // Asegura el estado correcto si se puso/quitó el código
                     };
                 }
                 return artwork;
             }));
         } else {
             // AÑADIR NUEVA
-            // El Math.max asegura un ID único incluso si la lista está vacía (comienza en 1)
+            // Genera el ID más alto + 1
             const newId = Math.max(0, ...artworks.map(a => a.id)) + 1;
             const newArtwork: Artwork = {
                 id: newId,
-                ...newArtworkData,
-                code: null, // El código se generará en el siguiente paso (GENERAR CÓDIGO)
-                status: 'PENDIENTE'
+                ...artworkData,
+                status: finalStatus,
+                originalIndex: artworks.length, // Se añade al final
             }; 
             setArtworks(prevArtworks => [newArtwork, ...prevArtworks]); 
         }
@@ -769,7 +815,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
         const temporaryDuplicationArtwork: Artwork = {
             ...artwork,
             id: -1, // ID temporal que indica duplicación
-            code: null,
+            code: null, // El duplicado debe tener el código nulo para forzar la re-certificación
             status: 'PENDIENTE',
             seriesIndex: artwork.seriesIndex !== null ? artwork.seriesIndex + 1 : artwork.seriesIndex, // Sugiere el siguiente índice
         };
@@ -794,14 +840,17 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
         }
     };
     
-    // Obras ordenadas: Generadas primero, luego pendientes.
+    // 🛑 Obras ordenadas: Generadas primero, luego pendientes. Dentro de cada grupo, respeta el orden original (constants.ts).
     const sortedArtworks = useMemo(() => {
-        const generated = artworks.filter(a => a.status === 'GENERADO');
-        const pending = artworks.filter(a => a.status === 'PENDIENTE');
-        // Ordenar por ID para mantener un orden consistente dentro de cada grupo
-        generated.sort((a, b) => b.id - a.id);
-        pending.sort((a, b) => b.id - a.id);
-        return [...generated, ...pending];
+        // Se hace una copia para evitar mutar el estado original durante la ordenación.
+        return [...artworks].sort((a, b) => {
+            // 1. Sort by Status (GENERADO: -1 / PENDIENTE: 1)
+            if (a.status === 'GENERADO' && b.status === 'PENDIENTE') return -1;
+            if (a.status === 'PENDIENTE' && b.status === 'GENERADO') return 1;
+            
+            // 2. Sort by originalIndex (Mantiene el orden de constants.ts)
+            return a.originalIndex - b.originalIndex;
+        });
     }, [artworks]);
 
 
