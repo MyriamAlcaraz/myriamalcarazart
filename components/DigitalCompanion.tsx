@@ -4,8 +4,6 @@ import React, { useState, useRef } from 'react';
 // 🛑 MODIFICADO: Se elimina Printer, se usa en App.tsx. Se eliminan AlertTriangle, Certificate
 import { Shield, Image as ImageIcon, ZoomIn, X, Mail } from 'lucide-react'; 
 import { ARTWORKS, ARTIST_INFO } from '../constants';
-// 🛑 ELIMINADA: La importación de Certificate ya no es necesaria
-// import { Certificate } from './Certificate';
 
 interface DigitalCompanionProps {
   artworkId: string | null;
@@ -51,8 +49,6 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
       backgroundPosition: `${xPercent}% ${yPercent}%`,
     });
   };
-
-  // 🛑 ELIMINADO: Ya no se requiere la lógica de renderizado interno de Certificate
 
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-end p-0 sm:p-4">
@@ -126,6 +122,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
             
             {/* 1. Botón de Certificado (DEMO) */}
             <button
+                // 🛑 CORRECCIÓN CLAVE: Llama al prop de App.tsx para abrir el modal
                 onClick={onOpenCertificateDemo}
                 className={`w-full flex items-center justify-center gap-2 text-white p-3 rounded font-bold transition-colors shadow-md ${
                     showCertificateAccess 
