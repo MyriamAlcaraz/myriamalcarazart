@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, Download, CheckCircle, FileText, Settings, Edit, Image as ImageIcon, Briefcase, MinusCircle } from 'lucide-react';
+import { LogOut, Printer, Code, Layout, Plus, Trash2, Download, CheckCircle, FileText, Settings, Edit, Image as ImageIcon, Briefcase, MinusCircle, Check } from 'lucide-react';
 
 // ---------------------------------------------------------
 // 🎨 DEFINICIÓN DE TIPOS Y CONSTANTES
@@ -36,14 +36,14 @@ const typeOptions = {
     'OT': 'Otro'
 };
 
-// 🛑 ESTADO INICIAL DE LAS PLANTILLAS (Personalizable en el panel de Ajustes)
+// 🛑 ESTADO INICIAL DE LAS PLANTILLAS (MADRID y texto elegante)
 const initialSettings: DocumentSettings = {
     artistName: "Myriam Alcaraz",
     artistTitle: "Artista Visual",
     cycleName: "Serie 'Las Ciudades Invisibles'",
-    city: "Móstoles",
+    city: "Madrid", // <--- CIUDAD FIJA
     letterOpening: "Estimado Coleccionista,",
-    letterClosing: "Con mis mejores deseos, le agradezco sinceramente su apoyo y su pasión por el arte."
+    letterClosing: "Agradeciendo profundamente su apoyo a mi trayectoria artística, quedo a su disposición para cualquier consulta. Con mis mejores deseos," 
 };
 
 
@@ -65,13 +65,12 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
         seriesCode = `${indexFmtd}${totalFmtd}`;
     }
     
-    // Ejemplo: MA-2025-25120110 (Pieza 01 de 10)
     return `MA-${year}-${dateCode}${seriesCode}`;
 };
 
 
 // ---------------------------------------------------------
-// 📄 GENERADORES DE HTML PARA IMPRESIÓN (Optimizado para PDF)
+// 📄 GENERADORES DE HTML PARA IMPRESIÓN (EXQUISITAMENTE SOFISTICADO)
 // ---------------------------------------------------------
 const getSeriesText = (artwork: Artwork) => {
     return artwork.seriesIndex !== null && artwork.seriesTotal !== null
@@ -86,45 +85,84 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const seriesText = getSeriesText(artwork);
 
-    // HTML con estilos en línea para impresión garantizada
+    // HTML con estilos en línea optimizados para una apariencia sofisticada (Palatino, borde sutil dorado)
     return `
         <!DOCTYPE html>
         <html lang="es">
         <head>
             <title>Certificado - ${artwork.title}</title>
             <style>
-                body { font-family: 'Times New Roman', serif; font-size: 11pt; margin: 30mm; color: #000; }
-                .cert-box { border: 4px solid #000; padding: 40px; }
-                h1 { font-size: 26pt; text-align: center; margin-bottom: 50px; font-weight: bold; text-transform: uppercase; }
-                .details p { margin: 15px 0; font-size: 13pt; line-height: 1.4;}
-                .code-display { font-size: 20pt; font-weight: bold; color: #000; border: 2px dashed #ccc; padding: 5px 15px; display: inline-block; margin-left: 20px; font-family: 'Courier New', monospace; }
-                .signature { margin-top: 100px; text-align: left; }
-                .signature-line { border-top: 1px solid #000; display: block; width: 40%; padding-top: 5px; }
-                .artist-name { font-weight: bold; font-size: 14pt; margin-top: 10px; }
+                /* Estilos Exquisitos */
+                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 12pt; margin: 30mm; color: #111; }
+                .cert-container { 
+                    border: 1px solid #000; 
+                    padding: 50px; 
+                    /* Simula un borde dorado sutil - Clave de la sofisticación */
+                    box-shadow: 0 0 0 5px #d4af37; 
+                }
+                h1 { 
+                    font-size: 30pt; 
+                    text-align: center; 
+                    margin-bottom: 5px; 
+                    font-weight: 300; 
+                    letter-spacing: 5px; 
+                    color: #d4af37; /* Color dorado/marrón sutil */
+                    text-transform: uppercase;
+                    border-bottom: 1px solid #ddd;
+                    padding-bottom: 20px;
+                }
+                h2 { 
+                    font-size: 14pt; 
+                    text-align: center; 
+                    margin-bottom: 50px; 
+                    font-weight: normal; 
+                    color: #555; 
+                    font-style: italic; 
+                }
+                .details p { margin: 20px 0; font-size: 14pt; line-height: 1.6;}
+                .details strong { color: #000; font-weight: bold; display: inline-block; width: 250px; } /* Alineación profesional */
+                .code-display { 
+                    font-size: 18pt; 
+                    font-weight: bold; 
+                    color: #333; 
+                    border: 1px solid #ccc; 
+                    padding: 8px 15px; 
+                    display: inline-block; 
+                    margin-left: 20px; 
+                    font-family: 'Courier New', monospace; 
+                    background: #f9f9f9;
+                }
+                .guarantee { margin-top: 60px; font-size: 11pt; border-top: 1px solid #eee; padding-top: 20px; font-style: italic; color: #444; }
+                .signature-area { margin-top: 80px; text-align: left; }
+                .signature-line { border-top: 1px solid #000; display: block; width: 45%; padding-top: 5px; margin-bottom: 5px; }
+                .artist-name { font-weight: bold; font-size: 16pt; margin-top: 10px; }
                 @media print { body { margin: 0; padding: 0; } }
             </style>
         </head>
         <body>
-            <div class="cert-box">
-                <h1>CERTIFICADO DE AUTENTICIDAD</h1>
+            <div class="cert-container">
+                <h1>AUTENTICIDAD</h1>
+                <h2>Certificado de Obra Original</h2>
                 <div class="details">
                     <p><strong>Artista:</strong> ${settings.artistName}</p>
-                    <p><strong>Título de la Obra:</strong> ${artwork.title}</p>
-                    <p><strong>Código de Trazabilidad:</strong> <span class="code-display">${artwork.code}</span></p>
+                    <p><strong>Título:</strong> ${artwork.title}</p>
                     <p><strong>Tipo de Obra:</strong> ${typeOptions[artwork.type]}</p>
                     <p><strong>Año de Creación:</strong> ${artwork.certificationDate.substring(0, 4)}</p>
                     <p><strong>Edición:</strong> ${seriesText}</p>
+                    <p><strong>Código de Trazabilidad:</strong> <span class="code-display">${artwork.code}</span></p>
                     <p><strong>Medidas:</strong> [DIMENSIONES EN CM]</p>
-                    <p style="margin-top: 40px; font-size: 12pt; font-style: italic;">
-                        <strong>Garantía:</strong> Por la presente, certifico que la obra descrita es original y ha sido creada y firmada por la artista ${settings.artistName}, ${settings.artistTitle}.
-                    </p>
+                    
+                    <div class="guarantee">
+                        La artista certifica que la obra anteriormente descrita es original, ha sido creada en su estudio y registrada bajo el código único de trazabilidad. Este certificado es la máxima garantía de procedencia y autoría.
+                    </div>
                 </div>
-            </div>
 
-            <div class="signature">
-                <p style="font-size: 10pt; margin-bottom: 5px;">Fecha de Emisión: ${today}</p>
-                <span class="signature-line"></span>
-                <p class="artist-name">Firma de ${settings.artistName}</p>
+                <div class="signature-area">
+                    <p style="font-size: 10pt; margin-bottom: 5px;">Fecha de Emisión: ${today}</p>
+                    <span class="signature-line"></span>
+                    <p class="artist-name">${settings.artistName}</p>
+                    <p>${settings.artistTitle}</p>
+                </div>
             </div>
         </body>
         </html>
@@ -136,43 +174,50 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-    const seriesText = getSeriesText(artwork);
-
-    // HTML con estilos en línea para impresión garantizada
+    
+    // HTML con estilos en línea optimizados para una apariencia sofisticada (Palatino, estructura de carta formal)
     return `
         <!DOCTYPE html>
         <html lang="es">
         <head>
-            <title>Carta - ${artwork.title}</title>
+            <title>Carta Personalizada - ${artwork.title}</title>
             <style>
-                body { font-family: 'Times New Roman', serif; font-size: 12pt; margin: 30mm; color: #000; line-height: 1.8; }
-                .date { text-align: right; font-size: 11pt; margin-bottom: 50px; }
-                .signature { margin-top: 80px; text-align: left; }
-                .signature p { margin: 5px 0; }
-                .signature .artist-name { font-weight: bold; font-size: 14pt; }
+                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 13pt; margin: 30mm; color: #111; line-height: 1.8; }
+                .header { text-align: right; margin-bottom: 60px; }
+                .header p { margin: 0; font-size: 11pt; color: #333; }
+                .body-content { margin-top: 30px; }
+                .artwork-ref { font-style: italic; font-weight: bold; color: #000; }
+                .signature-area { margin-top: 100px; text-align: left; }
+                .signature-line { height: 50px; border-bottom: 1px dashed #999; width: 50%; margin-bottom: 5px; }
+                .signature-area p { margin: 5px 0; }
+                .artist-name { font-weight: bold; font-size: 16pt; margin-top: 10px; }
                 @media print { body { margin: 0; padding: 0; } }
             </style>
         </head>
         <body>
-            <div class="date">${settings.city}, a ${today}</div>
+            <div class="header">
+                <p>${settings.city}, a ${today}</p>
+            </div>
             
-            <p style="font-weight: bold; margin-bottom: 30px;">${settings.letterOpening}</p>
+            <p style="font-weight: bold; margin-bottom: 40px;">${settings.letterOpening}</p>
 
-            <p>
-                Me dirijo a usted con gran entusiasmo para adjuntarle el Certificado de Autenticidad de la obra que ahora forma parte de su colección. Este documento garantiza la originalidad y la procedencia directa de mi estudio.
-            </p>
+            <div class="body-content">
+                <p>
+                    Es un honor para mí que haya elegido una de mis creaciones para enriquecer su colección. Con esta carta, le hago entrega formal del Certificado de Autenticidad, el cual respalda la procedencia y la unicidad de su nueva obra.
+                </p>
+                
+                <p style="margin-top: 30px;">
+                    La pieza, <span class="artwork-ref">"${artwork.title}"</span> (${getSeriesText(artwork)}), pertenece a mi <span class="artwork-ref">${settings.cycleName}</span> y ha sido registrada con el código de trazabilidad **${artwork.code}**. Espero sinceramente que el diálogo con esta obra le brinde tanta satisfacción como la que encontré al concebirla.
+                </p>
+                
+                <p style="margin-top: 40px;">
+                    ${settings.letterClosing}
+                </p>
+            </div>
             
-            <p style="margin-top: 25px;">
-                La pieza, <strong>"${artwork.title}"</strong> (${seriesText}), con código de trazabilidad **${artwork.code}**, fue creada durante mi ${settings.cycleName}. Espero que le proporcione tanta satisfacción como a mí me dio crearla.
-            </p>
-            
-            <p style="margin-top: 40px;">
-                ${settings.letterClosing}
-            </p>
-            
-            <div class="signature">
-                <p style="font-style: italic; margin-bottom: 15px;">Atentamente,</p>
-                <p style="height: 50px; border-bottom: 1px dashed #999; width: 50%; margin-bottom: 5px;"></p>
+            <div class="signature-area">
+                <p style="font-style: italic; margin-bottom: 15px;">Reciba un cordial saludo,</p>
+                <div class="signature-line"></div>
                 <p class="artist-name">${settings.artistName}</p>
                 <p>${settings.artistTitle}</p>
             </div>
@@ -329,8 +374,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, setSettings, on
                     <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
                         <Settings size={28} className="text-gold-500" /> Ajustes de Marca y Plantillas
                     </h3>
-                    <button onClick={onClose} className="text-slate-500 hover:text-red-500 p-2">
-                        <LogOut size={24} />
+                    <button onClick={onClose} className="text-slate-500 hover:text-green-500 p-2">
+                        <Check size={24} title="Cerrar y Guardar Cambios" />
                     </button>
                 </div>
 
@@ -372,7 +417,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, setSettings, on
                     onClick={onClose}
                     className="mt-8 w-full bg-gold-500 text-white py-3 rounded-lg font-bold text-sm hover:bg-gold-600 transition-colors"
                 >
-                    Cerrar Panel de Ajustes
+                    Aplicar y Cerrar
                 </button>
             </div>
         </div>
@@ -539,94 +584,4 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     const handleGenerateCode = (id: number) => {
         setArtworks(prevArtworks => prevArtworks.map(artwork => {
             if (artwork.id === id && artwork.status === 'PENDIENTE') {
-                const newCode = generateSmartCode(artwork); 
-                return { ...artwork, code: newCode, status: 'GENERADO' };
-            }
-            return artwork;
-        }));
-    };
-    
-    // Handler para eliminar obra
-    const handleDeleteArtwork = (id: number) => {
-        if (window.confirm("¿Seguro que quieres eliminar esta obra de la lista de gestión? Esta acción es irreversible.")) {
-            setArtworks(prevArtworks => prevArtworks.filter(artwork => artwork.id !== id));
-        }
-    };
-    
-    // Obras ordenadas: Generadas primero, luego pendientes.
-    const sortedArtworks = useMemo(() => {
-        const generated = artworks.filter(a => a.status === 'GENERADO');
-        const pending = artworks.filter(a => a.status === 'PENDIENTE');
-        return [...generated, ...pending];
-    }, [artworks]);
-
-
-    return (
-        <div className="min-h-screen bg-slate-50 p-8 font-sans">
-        
-            <div className="max-w-6xl mx-auto">
-                
-                {/* CABECERA Y LOGOUT */}
-                <div className="flex justify-between items-center mb-10 border-b pb-4">
-                    <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-                        <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO Privado
-                    </h1>
-                    <div className="flex gap-4">
-                        <button 
-                            onClick={() => setShowSettingsPanel(true)} 
-                            className="flex items-center gap-2 text-sm text-slate-500 hover:text-blue-500 transition-colors py-2 px-3 border border-stone-200 rounded-lg hover:border-blue-500"
-                        >
-                            <Settings size={16} /> Ajustes de Marca
-                        </button>
-                        <button 
-                            onClick={onLogout} 
-                            className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-500 transition-colors py-2 px-3 border border-stone-200 rounded-lg hover:border-red-500"
-                        >
-                            <LogOut size={16} /> Cerrar Sesión
-                        </button>
-                    </div>
-                </div>
-
-                {/* FORMULARIO DE AÑADIR OBRA */}
-                <AddWorkForm onAdd={handleAddArtwork} />
-
-                {/* MURO DE OBRAS */}
-                <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mb-6">
-                    <Code size={24} className="text-gold-500" /> Muro de Workstations ({artworks.length} Obras)
-                </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {artworks.length === 0 ? (
-                        <div className="md:col-span-3 p-12 bg-white rounded-xl shadow-lg border border-stone-100 text-center">
-                            <p className="text-xl text-slate-500 font-semibold flex items-center justify-center gap-2">
-                                <MinusCircle size={24} /> Aún no hay obras en el catálogo.
-                            </p>
-                            <p className="text-slate-400 mt-2">Use el formulario de arriba para añadir su primera pieza y comenzar el proceso de codificación.</p>
-                        </div>
-                    ) : (
-                        sortedArtworks.map(artwork => (
-                            <ArtworkWorkstation
-                                key={artwork.id}
-                                artwork={artwork}
-                                settings={documentSettings}
-                                onGenerateCode={handleGenerateCode}
-                                onDelete={handleDeleteArtwork}
-                            />
-                        ))
-                    )}
-                </div>
-
-            </div>
-            
-            {/* PANEL DE AJUSTES FLOTANTE */}
-            {showSettingsPanel && (
-                <SettingsPanel 
-                    settings={documentSettings} 
-                    setSettings={setDocumentSettings} 
-                    onClose={() => setShowSettingsPanel(false)} 
-                />
-            )}
-            
-        </div>
-    );
-};
+                const newCode = generateSmartCode(artwork);
