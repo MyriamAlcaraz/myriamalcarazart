@@ -1,16 +1,17 @@
-// ARCHIVO: ./components/DigitalCompanion.tsx - CÓDIGO FINAL Y CONECTADO
+// ARCHIVO: ./components/DigitalCompanion.tsx - CÓDIGO FINAL CORREGIDO Y LIMPIO
 
 import React, { useState, useRef } from 'react';
-import { Shield, Image as ImageIcon, ZoomIn, Printer, X, AlertTriangle, Mail, Lock, CheckCircle } from 'lucide-react'; 
+// 🛑 MODIFICADO: Se elimina Printer, se usa en App.tsx. Se eliminan AlertTriangle, Certificate
+import { Shield, Image as ImageIcon, ZoomIn, X, Mail } from 'lucide-react'; 
 import { ARTWORKS, ARTIST_INFO } from '../constants';
-// 🛑 IMPORTANTE: Ya no se importa ni se usa el componente Certificate.
+// 🛑 ELIMINADA: La importación de Certificate ya no es necesaria
+// import { Certificate } from './Certificate';
 
 interface DigitalCompanionProps {
   artworkId: string | null;
   onClose: () => void;
   showCertificateAccess: boolean; // TRUE solo en MODO ESTUDIO
-  initialMode?: 'lupa' | 'certificate'; 
-  // 🛑 NUEVO PROP: Función para abrir el modal del certificado bonito (gestionado por App.tsx)
+  // 🛑 NUEVO PROP CLAVE: Función para activar el Certificado Demo en App.tsx
   onOpenCertificateDemo: () => void; 
 }
 
@@ -18,12 +19,13 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     artworkId, 
     onClose,
     showCertificateAccess, 
-    initialMode = 'lupa',
-    onOpenCertificateDemo // Prop destructurada y utilizada
+    // 🛑 AÑADIDO: Destructurar el nuevo prop
+    onOpenCertificateDemo,
 }) => {
   const artwork = ARTWORKS.find(a => a.id === artworkId) || ARTWORKS[0];
   
-  // 🛑 ESTADO ELIMINADO: Ya no se necesita el estado interno del certificado.
+  // 🛑 ELIMINADO: El estado showCertificate ya no se necesita, el modal está en App.tsx
+  // const [showCertificate, setShowCertificate] = useState(false); 
   
   const [showZoom, setShowZoom] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
@@ -33,7 +35,6 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                       ? artwork.year 
                       : '2025'; 
   
-  // --- Lógica de la lupa (Se mantiene) ---
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!imgContainerRef.current) return;
     const { left, top, width, height } = imgContainerRef.current.getBoundingClientRect();
@@ -41,116 +42,110 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     let x = e.clientX - left; 
     let y = e.clientY - top;
 
+    // Calcular el porcentaje para el fondo (imagen ampliada)
     const xPercent = (x / width) * 100;
     const yPercent = (y / height) * 100;
 
+    // Mover el fondo en la dirección opuesta
     setZoomStyle({
-      transformOrigin: `${xPercent}% ${yPercent}%`,
+      backgroundPosition: `${xPercent}% ${yPercent}%`,
     });
-    setShowZoom(true); 
   };
 
-  const handleMouseLeave = () => {
-    setShowZoom(false);
-    setZoomStyle({});
-  };
-  // ----------------------------------------
-
+  // 🛑 ELIMINADO: Ya no se requiere la lógica de renderizado interno de Certificate
 
   return (
-    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-xl shadow-2xl max-w-5xl w-full h-[90vh] flex flex-col relative animate-scale-in">
+    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-end p-0 sm:p-4">
+      
+      {/* Panel Principal */}
+      <div className="bg-white rounded-l-xl sm:rounded-xl shadow-2xl h-full sm:h-auto max-h-full sm:max-h-[90vh] w-full max-w-4xl relative overflow-hidden flex flex-col sm:flex-row animate-slide-in-right">
+        
+        {/* Columna de Imagen */}
+        <div className="sm:w-1/2 relative bg-stone-100 flex items-center justify-center p-6 border-r border-stone-200">
+          
+          <button 
+            onClick={onClose} 
+            className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/50 text-slate-700 hover:text-red-500 transition-colors shadow-md backdrop-blur"
+          >
+              <X size={24} />
+          </button>
+
+          <div 
+            ref={imgContainerRef}
+            className="w-full h-full max-w-sm max-h-96 sm:max-h-full relative overflow-hidden rounded-lg shadow-lg"
+            onMouseEnter={() => setShowZoom(true)}
+            onMouseLeave={() => setShowZoom(false)}
+            onMouseMove={handleMouseMove}
+          >
+            <img 
+              src={artwork.image} 
+              alt={artwork.title} 
+              className="w-full h-full object-contain"
+            />
             
-            {/* Encabezado y Botón X */}
-            <header className="flex justify-between items-center p-4 border-b border-stone-100">
-                <h2 className="text-xl font-bold text-slate-800 flex items-center gap-3">
-                    <ImageIcon size={22} className="text-gold-500" /> Compañero Digital
-                </h2>
-                <button 
-                    onClick={onClose} 
-                    className="p-1 rounded-full text-slate-400 hover:text-red-500 transition-colors"
-                >
-                    <X size={24} />
-                </button>
-            </header>
+            {/* Lupa (Zoom) */}
+            {showZoom && (
+              <div 
+                className="absolute inset-0 border-4 border-gold-500/80 cursor-zoom-in opacity-100 transition-opacity duration-300"
+                style={{
+                  backgroundImage: `url(${artwork.image})`,
+                  backgroundSize: '300%',
+                  ...zoomStyle,
+                }}
+              >
+                 <ZoomIn size={24} className="absolute bottom-2 right-2 text-white drop-shadow-lg"/>
+              </div>
+            )}
             
-            {/* Contenido Principal */}
-            <div className="flex flex-1 overflow-hidden">
-                
-                {/* Panel Izquierdo: Imagen */}
-                <div className="w-2/3 relative flex items-center justify-center bg-slate-50 border-r border-slate-100 p-6">
-                    
-                    {/* Contenedor de la Imagen con Lupa */}
-                    <div 
-                        ref={imgContainerRef}
-                        className="w-full h-full max-w-[800px] max-h-[800px] cursor-zoom-in relative overflow-hidden rounded-lg shadow-lg"
-                        onMouseMove={handleMouseMove}
-                        onMouseLeave={handleMouseLeave}
-                    >
-                        <img
-                            src={artwork.image}
-                            alt={artwork.title}
-                            className={`w-full h-full object-contain transition-transform duration-300 ${showZoom ? 'scale-[2.0]' : 'scale-100'}`}
-                            style={zoomStyle}
-                        />
-                        
-                        {/* Indicador de Lupa */}
-                        <div className="absolute top-3 left-3 bg-black/60 text-white text-xs px-3 py-1 rounded-full flex items-center gap-2">
-                            <ZoomIn size={14} /> Mover el ratón para hacer zoom
-                        </div>
-                    </div>
+            {/* Overlay para móvil/touch */}
+            {!showZoom && (
+                <div className="absolute inset-0 bg-black/20 flex items-center justify-center pointer-events-none opacity-0 sm:opacity-100 transition-opacity">
+                    <span className="bg-white/90 text-slate-700 text-sm px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
+                        <ZoomIn size={16} /> Pasa el ratón para hacer zoom
+                    </span>
                 </div>
-
-                {/* Panel Derecho: Info y CTA */}
-                <div className="w-1/3 p-6 flex flex-col overflow-y-auto">
-                    
-                    <h1 className="font-serif text-3xl font-bold text-slate-900 mb-2">{artwork.title}</h1>
-                    <p className="text-gold-600 font-semibold mb-6">{artwork.technique}</p>
-
-                    <div className="space-y-2 mb-6 border-b pb-4">
-                        <p className="text-slate-600"><span className="font-bold text-slate-800">Dimensiones:</span> {artwork.dimensions}</p>
-                        <p className="text-slate-600"><span className="font-bold text-slate-800">Año:</span> {displayYear}</p>
-                        <p className="text-slate-600">
-                            <span className="font-bold text-slate-800">Disponibilidad:</span> 
-                            <span className={artwork.status === 'available' ? 'text-green-600 font-semibold ml-1' : 'text-orange-600 font-semibold ml-1'}>
-                                {artwork.status === 'available' ? 'Disponible para colección' : 'En colección privada (Posible Giclée)'}
-                            </span>
-                        </p>
-                    </div>
-
-                    <h3 className="font-serif text-xl font-bold text-slate-900 mb-3">Narrativa de la Obra</h3>
-                    <p className="text-slate-700 leading-relaxed mb-6 flex-1">{artwork.description}</p> 
-
-                    <div className="space-y-4 pt-4 border-t border-stone-100 mt-auto">
-                        
-                        {/* 1. Botón de Certificado (Ahora llama a onOpenCertificateDemo) */}
-                        <button
-                            onClick={onOpenCertificateDemo} // 🛑 LLAMADA CLAVE
-                            className="w-full flex items-center justify-center gap-2 bg-slate-800 text-white p-3 rounded font-bold hover:bg-gold-600 transition-colors shadow-md"
-                            title="Abre la simulación del certificado de autenticidad final."
-                        >
-                            <Shield size={18} /> {showCertificateAccess ? 'Generar Certificado Digital' : 'Ver Demo Certificado'}
-                        </button>
-
-                        {/* 2. Botón de Consulta / Venta */}
-                        <a 
-                            href={`mailto:${ARTIST_INFO.email}?subject=Consulta de Obra: ${artwork.title}`}
-                            className="w-full flex items-center justify-center gap-2 bg-gold-500 text-white p-3 rounded font-bold hover:bg-gold-600 transition-colors shadow-md"
-                        >
-                            <Mail size={18} /> Consultar Adquisición
-                        </a>
-                        
-                        {/* 3. Indicador de Acceso a Certificado Real (Solo en Modo Estudio) */}
-                        {showCertificateAccess && (
-                            <div className="text-xs text-center text-gold-700 bg-gold-50 p-2 rounded-lg flex items-center justify-center gap-2">
-                                <Lock size={14} /> Modo ESTUDIO: Certificado real disponible en Dashboard
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </div>
-
+            )}
+          </div>
         </div>
+
+        {/* Columna de Información */}
+        <div className="sm:w-1/2 p-8 overflow-y-auto">
+          <h1 className="text-3xl font-serif font-bold text-slate-900 mb-2">{artwork.title}</h1>
+          <p className="text-lg text-gold-600 font-semibold mb-4">{artwork.technique}</p>
+
+          <div className="mb-6 space-y-1 text-sm border-b pb-4">
+            <p className="text-slate-600"><span className="font-bold text-slate-800">Dimensiones:</span> {artwork.dimensions}</p>
+            <p className="text-slate-600"><span className="font-bold text-slate-800">Año:</span> {displayYear}</p>
+            <p className="text-slate-600"><span className="font-bold text-slate-800">Disponibilidad:</span> {artwork.status === 'available' ? 'Disponible para colección' : 'En colección privada (Posible Giclée)'}</p>
+          </div>
+
+          <h3 className="font-serif text-xl font-bold text-slate-900 mb-3">Narrativa de la Obra</h3>
+          <p className="text-slate-700 leading-relaxed mb-6">{artwork.description}</p>
+
+          <div className="space-y-4 pt-4">
+            
+            {/* 1. Botón de Certificado (DEMO) */}
+            <button
+                onClick={onOpenCertificateDemo}
+                className={`w-full flex items-center justify-center gap-2 text-white p-3 rounded font-bold transition-colors shadow-md ${
+                    showCertificateAccess 
+                        ? 'bg-slate-800 hover:bg-gold-600' // Botón de acceso artista
+                        : 'bg-slate-500 hover:bg-slate-600' // Botón de acceso público
+                }`}
+            >
+                <Shield size={18} /> Ver Certificado de Autenticidad (Demo)
+            </button>
+
+            {/* 2. Botón de Consulta / Venta */}
+            <a 
+              href={`mailto:${ARTIST_INFO.email}?subject=Consulta de Obra: ${artwork.title}`}
+              className="w-full flex items-center justify-center gap-2 bg-gold-500 text-white p-3 rounded font-bold hover:bg-gold-600 transition-colors shadow-md"
+            >
+                <Mail size={18} /> Consultar o Adquirir
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
