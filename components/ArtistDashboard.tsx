@@ -404,10 +404,10 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
 /**
  * Genera el HTML de la CARTA. 
  * 🛑 MODIFICADO: 
- * 1. Añadido el Logo en el encabezado.
- * 2. Eliminada la referencia a la "unicidad" en el primer párrafo.
- * 3. Nueva frase de agradecimiento en el cierre.
- * 4. Firma movida a la derecha.
+ * 1. Marco dorado (elegancia).
+ * 2. Posición de texto (bajarlo).
+ * 3. Logo más grande.
+ * 4. Saludo de cierre a la izquierda.
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -430,18 +430,40 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
         <head>
             <title>Carta Personalizada - ${artwork.title}</title>
             <style>
-                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 13pt; margin: 30mm; color: #111; line-height: 1.8; }
+                /* 🛑 AUMENTADO EL MARGEN DEL BODY, Y AJUSTADO EL TAMAÑO */
+                body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 13pt; margin: 20mm; color: #111; line-height: 1.8; }
+                
+                /* 🛑 NUEVO: CONTENEDOR CON MARCO DORADO PARA LA CARTA */
+                .letter-container { 
+                    border: 1px solid #000; 
+                    outline: 3px solid #d4af37; /* Marco grueso dorado */
+                    outline-offset: 5px; /* Espacio entre bordes */
+                    padding: 50px 70px; /* Padding interno y lateral */
+                    margin-top: 30mm; /* AÑADIDO: Para bajar todo el texto */
+                    margin-bottom: 20mm;
+                }
+
                 .top-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
-                .logo-container img { max-height: 60px; width: auto; opacity: 0.8; }
+                /* 🛑 LOGO MÁS GRANDE */
+                .logo-container img { max-height: 80px; width: auto; opacity: 0.8; }
                 .address-container { text-align: right; }
                 .address-container p { margin: 0; font-size: 11pt; color: #333; }
                 
                 .body-content { margin-top: 30px; }
                 .artwork-ref { font-style: italic; font-weight: bold; color: #000; }
                 
-                /* 🛑 MODIFICADO: Bloque de Firma movido a la derecha */
-                .signature-area { margin-top: 100px; text-align: right; }
-                .signature-line { height: 50px; border-bottom: 1px solid #999; width: 50%; margin-left: 50%; margin-bottom: 5px; }
+                /* 🛑 MODIFICADO: Bloque de Firma alineado a la derecha */
+                .signature-area { 
+                    margin-top: 0; /* Ya no lleva el margen grande */
+                    text-align: right; 
+                }
+                .signature-line { 
+                    height: 50px; 
+                    border-bottom: 1px solid #999; 
+                    width: 50%; 
+                    margin-left: 50%; /* Mantiene la línea a la derecha */
+                    margin-bottom: 5px; 
+                }
                 .signature-area p { margin: 5px 0; }
                 .artist-name { font-weight: bold; font-size: 16pt; margin-top: 10px; }
                 
@@ -449,37 +471,41 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
             </style>
         </head>
         <body>
+            <div class="letter-container">
             
-            <div class="top-header">
-                <div class="logo-container">
-                    <img src="/logo-myriam.png" alt="${settings.artistName} Logo" />
+                <div class="top-header">
+                    <div class="logo-container">
+                        <img src="/logo-myriam.png" alt="${settings.artistName} Logo" />
+                    </div>
+                    <div class="address-container">
+                        <p>${settings.city}, a ${today}</p>
+                    </div>
                 </div>
-                <div class="address-container">
-                    <p>${settings.city}, a ${today}</p>
-                </div>
-            </div>
-            
-            <p style="font-weight: bold; margin-bottom: 40px;">${settings.letterOpening}</p>
+                
+                <p style="font-weight: bold; margin-bottom: 40px;">${settings.letterOpening}</p>
 
-            <div class="body-content">
-                <p>
-                    Es un honor para mí que haya elegido una de mis creaciones para enriquecer su colección. Con esta carta, le hago entrega formal del Certificado de Autenticidad, el cual respalda la procedencia y la calidad de su nueva obra.
-                </p>
+                <div class="body-content">
+                    <p>
+                        Es un honor para mí que haya elegido una de mis creaciones para enriquecer su colección. Con esta carta, le hago entrega formal del Certificado de Autenticidad, el cual respalda la procedencia y la calidad de su nueva obra.
+                    </p>
+                    
+                    <p style="margin-top: 30px;">
+                        La pieza, <span class="artwork-ref">"${artwork.title}"</span> (${seriesText}), ha sido registrada con el código de trazabilidad **${artwork.code}**, ${seriesReference}
+                    </p>
+                    
+                    <p style="margin-top: 40px;">
+                        ${settings.letterClosing}
+                    </p>
+                </div>
                 
-                <p style="margin-top: 30px;">
-                    La pieza, <span class="artwork-ref">"${artwork.title}"</span> (${seriesText}), ha sido registrada con el código de trazabilidad **${artwork.code}**, ${seriesReference}
-                </p>
-                
-                <p style="margin-top: 40px;">
-                    ${settings.letterClosing}
-                </p>
-            </div>
-            
-            <div class="signature-area">
-                <p style="font-style: italic; margin-bottom: 15px;">Reciba un cordial saludo,</p>
-                <div class="signature-line"></div> 
-                <p class="artist-name">${settings.artistName}</p>
-                <p>${settings.artistTitle}</p>
+                <p style="font-style: italic; margin-top: 80px; margin-bottom: 15px; text-align: left;">Reciba un cordial saludo,</p>
+
+                <div class="signature-area">
+                    <div class="signature-line"></div> 
+                    <p class="artist-name">${settings.artistName}</p>
+                    <p>${settings.artistTitle}</p>
+                </div>
+
             </div>
         </body>
         </html>
