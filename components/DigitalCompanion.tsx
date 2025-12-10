@@ -1,7 +1,7 @@
 // ARCHIVO: ./components/DigitalCompanion.tsx - CÓDIGO FINAL CORREGIDO
 
 import React, { useState, useRef } from 'react';
-// 🛑 MODIFICACIÓN 1: Eliminamos Printer y AlertTriangle que solo se usaban para el certificado feo
+// 🛑 MODIFICACIÓN 1: Solo dejamos los iconos necesarios
 import { Shield, Image as ImageIcon, ZoomIn, X, Mail } from 'lucide-react'; 
 import { ARTWORKS, ARTIST_INFO } from '../constants';
 // 🛑 MODIFICACIÓN 2: Eliminamos la importación del certificado feo
@@ -26,7 +26,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
 }) => {
   const artwork = ARTWORKS.find(a => a.id === artworkId) || ARTWORKS[0];
   
-  // 🛑 MODIFICACIÓN 5: ELIMINAMOS el estado 'showCertificate' (que generaba el pixelado)
+  // 🛑 MODIFICACIÓN 5: ELIMINAMOS el estado 'showCertificate'
   // const [showCertificate, setShowCertificate] = useState(initialMode === 'certificate'); 
   
   const [showZoom, setShowZoom] = useState(false);
@@ -61,15 +61,6 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
   };
 
   // 🛑 MODIFICACIÓN 6: Eliminamos el bloque 'if (showCertificate)' entero.
-  /*
-  if (showCertificate) {
-    return (
-      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex justify-center items-center p-4 md:p-8">
-        ... (Código del certificado pixelado eliminado)
-      </div>
-    );
-  }
-  */
 
   // Vista por defecto (Lupa)
   return (

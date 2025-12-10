@@ -130,7 +130,6 @@ const App: React.FC = () => {
 
   // ---------------------------------------------------------
   // 🔒 PANTALLA DE CONSTRUCCIÓN / PRIMER CANDADO (No Autenticado)
-  // ... (Código de renderizado de login) ...
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-stone-50 flex flex-col items-center justify-center p-6 relative font-serif">
@@ -218,7 +217,7 @@ const App: React.FC = () => {
 
   // ---------------------------------------------------------
   // CONTENIDO DE LA APP (Usuario Autenticado)
-  // ... (Código de renderizado de nav y studio) ...
+  // ---------------------------------------------------------
   return (
     <div className="min-h-screen animate-fade-in relative">
       
