@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { PublicSite } from './PublicSite'; // Nota: La importación en tu código debe ser relativa: './components/PublicSite'
-import { ArtistDashboard } from './ArtistDashboard'; // Nota: La importación en tu código debe ser relativa: './components/ArtistDashboard'
-import { DigitalCompanion } from './DigitalCompanion'; // Nota: La importación en tu código debe ser relativa: './components/DigitalCompanion'
+// 🛑 RUTAS CORREGIDAS: Asumiendo que todos los componentes están en el mismo directorio.
+import { PublicSite } from './PublicSite'; 
+import { ArtistDashboard } from './ArtistDashboard';
+import { DigitalCompanion } from './DigitalCompanion';
 import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield } from 'lucide-react'; 
 
 // --- CONFIGURACIÓN DE SEGURIDAD (PASSWORD) ---
@@ -180,13 +181,11 @@ const App: React.FC = () => {
       
       {/* VISTA PRINCIPAL (Alterna entre PublicSite y ArtistDashboard) */}
       {view === 'public' ? (
-        // Asumiendo que las props de PublicSite están en la raíz (ej: PublicSite.tsx)
         <PublicSite 
             onOpenCompanion={(id) => setSelectedCompanionId(id)} 
             onOpenStudioLogin={() => setShowStudioLoginModal(true)}
         />
       ) : (
-        // Asumiendo que ArtistDashboard.tsx no necesita props específicas para el logout
         <ArtistDashboard onLogout={handleLogout} /> 
       )}
 
