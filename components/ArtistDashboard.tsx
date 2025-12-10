@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LogOut, Printer, Code, Layout, X, Plus, Trash2, Download, CheckCircle } from 'lucide-react';
+import { LogOut, Printer, Code, Layout, X, Plus, Trash2, Download, CheckCircle, Eye } from 'lucide-react';
 
 // ---------------------------------------------------------
 // 🎨 DEFINICIÓN DE TIPOS
@@ -29,7 +29,7 @@ const typeOptions = {
 
 
 // ---------------------------------------------------------
-// 🛠️ COMPONENTE: TABLA DE GESTIÓN Y CODIFICACIÓN
+// 🛠️ COMPONENTE: TABLA DE GESTIÓN Y CODIFICACIÓN (CON IMPRESIÓN/PDF)
 // ---------------------------------------------------------
 const WorkManagementTable: React.FC = () => {
     // Lista de obras de ejemplo (datos simulados)
@@ -77,6 +77,122 @@ const WorkManagementTable: React.FC = () => {
         return `MA-${year}-${dateCode}${seriesCode}`;
     };
 
+    /**
+     * Handler para generar e imprimir la Carta y Certificado.
+     * Genera una nueva ventana con el HTML listo para imprimir/Guardar como PDF.
+     */
+    const handlePrintCertificate = (artwork: Artwork) => {
+        if (!artwork.code) {
+            alert("¡Error! La obra debe tener un código asignado antes de generar documentos.");
+            return;
+        }
+
+        // --- 1. PREPARAR DATOS Y TEXTOS ---
+        const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+        const seriesText = artwork.seriesIndex !== null && artwork.seriesTotal !== null
+            ? ` (Edición ${artwork.seriesIndex}/${artwork.seriesTotal})`
+            : ` (Obra Única)`;
+
+        // 💡 CAMBIA ESTE TEXTO CON EL NOMBRE DE TU CICLO/SERIE ARTÍSTICA
+        const cycleName = "Ciclo [TU NOMBRE DE SERIE ARTÍSTICA]"; 
+        
+        // --- 2. GENERAR CONTENIDO HTML PARA LA IMPRESIÓN ---
+        // Este HTML se abrirá en una nueva ventana/pestaña para imprimir.
+        const printContent = `
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <title>Documentos - ${artwork.title}</title>
+                <style>
+                    /* Estilos para impresión, que simulan el diseño en papel */
+                    body { font-family: serif; font-size: 11pt; margin: 30mm; color: #333; }
+                    .header { text-align: right; font-size: 9pt; margin-bottom: 50px; }
+                    
+                    /* Estilo para el certificado (opcionalmente un borde decorativo) */
+                    .cert-box { border: 2px solid #555; padding: 25px; margin-top: 40px; }
+                    h1 { font-size: 18pt; text-align: center; margin-bottom: 30px; font-weight: bold; }
+                    .details p { margin: 8px 0; }
+                    .signature { margin-top: 80px; text-align: right; }
+                    .signature p { margin: 0; font-size: 10pt; }
+                    .signature .artist-name { font-weight: bold; font-size: 12pt; }
+                    
+                    /* Asegura que la impresión a PDF se vea correctamente */
+                    @media print {
+                        body { margin: 0; padding: 0; }
+                    }
+                </style>
+            </head>
+            <body>
+                
+                <div class="header">Móstoles, a ${today}</div>
+                
+                <p>Estimado Coleccionista,</p>
+
+                <p style="margin-top: 20px;">
+                    Me dirijo a usted con gran entusiasmo para adjuntarle el Certificado de Autenticidad de la obra que ahora forma parte de su colección. Este documento garantiza la originalidad y la procedencia directa de mi estudio.
+                </p>
+                
+                <p style="margin-top: 20px;">
+                    La pieza, <strong>"${artwork.title}"</strong>${seriesText}, con código de trazabilidad **${artwork.code}**, fue creada durante mi ${cycleName}. Espero que le proporcione tanta satisfacción como a mí me dio crearla.
+                </p>
+                
+                <p style="margin-top: 40px;">
+                    Le agradezco sinceramente su apoyo y su pasión por el arte.
+                </p>
+                
+                <div class="signature">
+                    <p>Con mis mejores deseos,</p>
+                    <p class="artist-name">Myriam Alcaraz</p>
+                    <p>Artista Visual</p>
+                </div>
+
+                <div style="page-break-before: always;"></div>
+
+                <div class="cert-box">
+                    <h1>CERTIFICADO DE AUTENTICIDAD</h1>
+                    <div class="details">
+                        <p><strong>Artista:</strong> Myriam Alcaraz (MA)</p>
+                        <p><strong>Título de la Obra:</strong> ${artwork.title}</p>
+                        <p><strong>Código de Trazabilidad:</strong> <strong style="font-size: 12pt;">${artwork.code}</strong></p>
+                        <p><strong>Tipo de Obra:</strong> ${typeOptions[artwork.type]}</p>
+                        <p><strong>Año de Creación:</strong> ${artwork.certificationDate.substring(0, 4)}</p>
+                        <p><strong>Edición:</strong> ${seriesText.trim() || 'Obra Única'}</p>
+                        <p><strong>Medidas:</strong> [DIMENSIONES DE LA OBRA]</p> 
+                        <p style="margin-top: 20px;">
+                            <strong>Garantía:</strong> Por la presente, certifico que la obra descrita es original y ha sido creada y firmada por la artista Myriam Alcaraz.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="signature" style="text-align: left;">
+                    <p style="font-size: 9pt; margin-bottom: 5px;">Fecha de Certificación: ${today}</p>
+                    <p style="border-top: 1px solid #333; display: inline-block; width: 200px; padding-top: 5px;"></p>
+                    <p class="artist-name" style="margin-top: 5px;">Firma de Myriam Alcaraz</p>
+                </div>
+                
+            </body>
+            </html>
+        `;
+
+        // --- 3. ABRIR VENTANA E IMPRIMIR ---
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            // Esto dispara el diálogo de impresión (donde puedes elegir Guardar como PDF)
+            setTimeout(() => {
+                printWindow.print();
+            }, 500); 
+        } else {
+            alert("Por favor, permite las ventanas emergentes para generar el documento.");
+        }
+    };
+
+
+    // -------------------------------------------------------------------
+    // --- Resto de Handlers (Se mantienen) ---
+    // -------------------------------------------------------------------
+    
     /**
      * Handler para asignar el código a una obra pendiente
      */
@@ -301,11 +417,11 @@ const WorkManagementTable: React.FC = () => {
                                         </button>
                                     ) : (
                                         <button
+                                            onClick={() => handlePrintCertificate(artwork)} // 💡 AHORA LLAMA A LA FUNCIÓN DE IMPRESIÓN
                                             className="text-blue-600 hover:text-blue-900 flex items-center gap-1 p-1 rounded hover:bg-blue-50 transition"
-                                            title="Descargar Certificado y Carta"
-                                            onClick={() => alert(`Simulando descarga de documentos para: ${artwork.code}`)}
+                                            title="Generar e imprimir Carta/Certificado (Guardar como PDF)"
                                         >
-                                            <Download size={16} /> Documentos
+                                            <Printer size={16} /> Imprimir/PDF
                                         </button>
                                     )}
                                     <button
@@ -332,51 +448,6 @@ const WorkManagementTable: React.FC = () => {
                 </p>
                 <p className="text-xs text-slate-500 mt-1">
                     **Ej. Obra en Serie:** `MA-2026-26010210` (Certificada en Enero 2026, Pieza 02 de 10)
-                </p>
-            </div>
-        </div>
-    );
-};
-// ---------------------------------------------------------
-
-
-// ---------------------------------------------------------
-// 🖨️ COMPONENTE: VISTA DE PLANTILLAS Y CARTAS
-// ---------------------------------------------------------
-const PrintingTool: React.FC = () => {
-    const exampleCollector = "Coleccionista X.Y.Z.";
-
-    return (
-        <div className="bg-white p-6 rounded-xl shadow-lg border border-stone-100">
-            <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-4">
-                <Printer size={24} className="text-gold-500" /> Plantillas de Documentos
-            </h3>
-            
-            <div className="p-4 bg-slate-50 border rounded-lg">
-                <h4 className="font-semibold text-slate-700 mb-3">Modelo de Carta al Coleccionista</h4>
-                <div className="border border-dotted border-stone-300 p-6 bg-white shadow-inner font-serif text-sm leading-relaxed">
-                    <p className="text-right text-xs text-slate-500 mb-6">Móstoles, a {new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                    
-                    <p className="font-bold mb-4">Estimado/a {exampleCollector},</p>
-
-                    <p className="mb-4">
-                        Me dirijo a usted con gran entusiasmo para adjuntarle el **Certificado de Autenticidad** de la obra que ahora forma parte de su colección. Este documento garantiza la originalidad y la procedencia directa de mi estudio.
-                    </p>
-                    
-                    <p className="mb-4">
-                        La pieza, **[NOMBRE DE LA OBRA]** con código de trazabilidad **[CÓDIGO DE CERTIFICADO]**, fue creada durante mi ciclo **[NOMBRE DE LA SERIE]**. Espero que le proporcione tanta satisfacción como a mí me dio crearla.
-                    </p>
-                    
-                    <p className="mb-6">
-                        Le agradezco sinceramente su apoyo y su pasión por el arte.
-                    </p>
-                    
-                    <p className="mt-8">Con mis mejores deseos,</p>
-                    <p className="font-bold">Myriam Alcaraz</p>
-                    <p className="text-xs text-slate-500">Artista Visual</p>
-                </div>
-                <p className="text-xs text-slate-500 mt-2">
-                    *Esta es la plantilla base. Los campos entre corchetes **[ ]** se rellenan automáticamente al descargar los documentos desde la tabla de Gestión.
                 </p>
             </div>
         </div>
@@ -441,7 +512,17 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
         {/* VISTA DE HERRAMIENTA ACTIVA */}
         <div className="mt-6">
             {activeTool === 'management' && <WorkManagementTable />}
-            {activeTool === 'print' && <PrintingTool />}
+            {activeTool === 'print' && (
+                <div className="bg-white p-6 rounded-xl shadow-lg border border-stone-100">
+                    <h3 className="text-lg font-bold text-slate-700 flex items-center gap-2 mb-4"><Printer size={20} className="text-gold-500" /> Plantillas de Documentos</h3>
+                    <p className="text-slate-600">
+                        La función de impresión se ha integrado directamente en el botón **'Imprimir/PDF'** de la tabla de Gestión para un acceso más rápido.
+                    </p>
+                    <p className="text-sm text-slate-500 mt-3">
+                         Al hacer clic en ese botón, se abrirá una nueva ventana con la Carta y el Certificado listos para usar la función **Imprimir/Guardar como PDF** de tu navegador.
+                    </p>
+                </div>
+            )}
             {activeTool === 'layout' && (
                 <div className="bg-white p-6 rounded-xl shadow-lg border border-stone-100">
                     <h3 className="text-lg font-bold text-slate-700 flex items-center gap-2 mb-4"><Layout size={20} className="text-gold-500" /> Otros Ajustes del Estudio</h3>
