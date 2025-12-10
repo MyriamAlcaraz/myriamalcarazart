@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, Download, CheckCircle, FileText, Settings, Image as ImageIcon, Edit, Check } from 'lucide-react';
+import { LogOut, Printer, Code, Layout, Plus, Trash2, Download, CheckCircle, FileText, Settings, Edit, Image as ImageIcon, Briefcase, MinusCircle } from 'lucide-react';
 
 // ---------------------------------------------------------
 // 🎨 DEFINICIÓN DE TIPOS Y CONSTANTES
@@ -36,11 +36,11 @@ const typeOptions = {
     'OT': 'Otro'
 };
 
-// 🛑 ESTADO INICIAL DE LAS PLANTILLAS (Personalizable en CUADRO 3)
+// 🛑 ESTADO INICIAL DE LAS PLANTILLAS (Personalizable en el panel de Ajustes)
 const initialSettings: DocumentSettings = {
     artistName: "Myriam Alcaraz",
     artistTitle: "Artista Visual",
-    cycleName: "Serie 'Ítaca' de la Temporada 2024",
+    cycleName: "Serie 'Las Ciudades Invisibles'",
     city: "Móstoles",
     letterOpening: "Estimado Coleccionista,",
     letterClosing: "Con mis mejores deseos, le agradezco sinceramente su apoyo y su pasión por el arte."
@@ -48,10 +48,9 @@ const initialSettings: DocumentSettings = {
 
 
 // ---------------------------------------------------------
-// 🚀 FUNCIÓN CENTRAL: CODIFICACIÓN INTELIGENTE
+// 🚀 FUNCIÓN CENTRAL: CODIFICACIÓN INTELIGENTE (MA-YYYY-YYMM(IIJJ))
 // ---------------------------------------------------------
 const generateSmartCode = (artworkToCode: Artwork): string => {
-    // Implementación de la fórmula: MA-YYYY-YYMM(IIJJ)
     const dateParts = artworkToCode.certificationDate.split('-'); 
     const year = dateParts[0];
     const yearShort = year.substring(2);
@@ -60,11 +59,13 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
 
     let seriesCode = '';
     if (artworkToCode.seriesIndex !== null && artworkToCode.seriesTotal !== null) {
+        // Aseguramos que tengan 2 dígitos
         const indexFmtd = String(artworkToCode.seriesIndex).padStart(2, '0');
         const totalFmtd = String(artworkToCode.seriesTotal).padStart(2, '0');
         seriesCode = `${indexFmtd}${totalFmtd}`;
     }
     
+    // Ejemplo: MA-2025-25120110 (Pieza 01 de 10)
     return `MA-${year}-${dateCode}${seriesCode}`;
 };
 
@@ -72,7 +73,6 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
 // ---------------------------------------------------------
 // 📄 GENERADORES DE HTML PARA IMPRESIÓN (Optimizado para PDF)
 // ---------------------------------------------------------
-
 const getSeriesText = (artwork: Artwork) => {
     return artwork.seriesIndex !== null && artwork.seriesTotal !== null
         ? `Edición ${artwork.seriesIndex}/${artwork.seriesTotal}`
@@ -80,13 +80,13 @@ const getSeriesText = (artwork: Artwork) => {
 }
 
 /**
- * Genera el HTML exclusivo del CERTIFICADO, usando la configuración global.
+ * Genera el HTML limpio y profesional del CERTIFICADO.
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const seriesText = getSeriesText(artwork);
 
-    // 🛑 ESTILOS PROFESIONALES EN LÍNEA para garantizar la impresión
+    // HTML con estilos en línea para impresión garantizada
     return `
         <!DOCTYPE html>
         <html lang="es">
@@ -132,13 +132,13 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
 };
 
 /**
- * Genera el HTML exclusivo de la CARTA, usando la configuración global.
+ * Genera el HTML limpio y profesional de la CARTA.
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const seriesText = getSeriesText(artwork);
 
-    // 🛑 ESTILOS PROFESIONALES EN LÍNEA para garantizar la impresión
+    // HTML con estilos en línea para impresión garantizada
     return `
         <!DOCTYPE html>
         <html lang="es">
@@ -201,251 +201,341 @@ const handlePrintDocument = (content: string, title: string) => {
 
 
 // =========================================================
-// ⚙️ CUADRO 3: CENTRO DE CONTENIDO Y PLANTILLAS (NUEVO)
+// 🏭 COMPONENTE: WORKSTATION (Tarjeta de Gestión por Obra)
 // =========================================================
-interface ContentSettingsProps {
+
+interface ArtworkWorkstationProps {
+    artwork: Artwork;
     settings: DocumentSettings;
-    setSettings: React.Dispatch<React.SetStateAction<DocumentSettings>>;
+    onGenerateCode: (id: number) => void;
+    onDelete: (id: number) => void;
 }
 
-const ContentSettings: React.FC<ContentSettingsProps> = ({ settings, setSettings }) => {
-    const [isSaved, setIsSaved] = useState(false);
-    
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setSettings({ ...settings, [e.target.name]: e.target.value });
-        setIsSaved(false);
-    };
-    
-    const handleSave = () => {
-        // En un entorno real, aquí se guardaría en una base de datos.
-        setIsSaved(true);
-        setTimeout(() => setIsSaved(false), 3000);
-    };
-
-    return (
-        <div className="bg-white p-6 rounded-xl shadow-lg border border-stone-100 transition-shadow">
-            <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-6 border-b pb-3">
-                <Settings size={24} className="text-gold-500" /> CUADRO 3: Centro de Contenido y Plantillas
-            </h3>
-            
-            <p className="text-slate-600 mb-6">
-                Personalice los datos estáticos de sus documentos. Estos ajustes se aplicarán inmediatamente en el **Laboratorio de Documentos** (Cuadro 2).
-            </p>
-
-            <div className="grid grid-cols-2 gap-6">
-                {/* Ajustes de Identidad */}
-                <div className="p-4 border rounded-lg bg-stone-50">
-                    <h4 className="font-bold text-slate-700 mb-3 flex items-center gap-1"><Edit size={16} /> Identidad</h4>
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Nombre del Artista (Para firma)</label>
-                    <input type="text" name="artistName" value={settings.artistName} onChange={handleChange} className="w-full p-2 border rounded text-sm mb-3" />
-                    
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Título / Cargo</label>
-                    <input type="text" name="artistTitle" value={settings.artistTitle} onChange={handleChange} className="w-full p-2 border rounded text-sm mb-3" />
-
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Ciudad de Emisión</label>
-                    <input type="text" name="city" value={settings.city} onChange={handleChange} className="w-full p-2 border rounded text-sm mb-3" />
-                </div>
-
-                {/* Ajustes de Carta */}
-                <div className="p-4 border rounded-lg bg-stone-50">
-                    <h4 className="font-bold text-slate-700 mb-3 flex items-center gap-1"><FileText size={16} /> Plantilla de Carta</h4>
-                    
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Ciclo Artístico General</label>
-                    <input type="text" name="cycleName" value={settings.cycleName} onChange={handleChange} placeholder="Ej: Serie 'Las Ciudades Invisibles'" className="w-full p-2 border rounded text-sm mb-3" />
-                    
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Apertura (Ej: Estimado Coleccionista,)</label>
-                    <input type="text" name="letterOpening" value={settings.letterOpening} onChange={handleChange} className="w-full p-2 border rounded text-sm mb-3" />
-
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Cierre y Agradecimiento</label>
-                    <textarea name="letterClosing" value={settings.letterClosing} onChange={handleChange} rows={3} className="w-full p-2 border rounded text-sm resize-none"></textarea>
-                </div>
-            </div>
-            
-            <div className="mt-6 flex justify-end">
-                <button
-                    onClick={handleSave}
-                    className={`py-2 px-4 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${
-                        isSaved ? 'bg-green-500 text-white' : 'bg-gold-500 text-white hover:bg-gold-600'
-                    }`}
-                >
-                    {isSaved ? <Check size={16} /> : <Edit size={16} />} 
-                    {isSaved ? 'Guardado' : 'Guardar Configuración'}
-                </button>
-            </div>
-        </div>
-    );
-}
-
-
-// =========================================================
-// 🔬 CUADRO 2: LABORATORIO DE DOCUMENTOS
-// =========================================================
-interface DocumentLaboratoryProps {
-    artworks: Artwork[];
-    settings: DocumentSettings;
-}
-
-const DocumentLaboratory: React.FC<DocumentLaboratoryProps> = ({ artworks, settings }) => {
-    
-    const codedArtworks = useMemo(() => artworks.filter(a => a.code), [artworks]);
-    
-    // El estado guarda el ID de la obra seleccionada.
-    const [selectedId, setSelectedId] = useState<number | null>(codedArtworks.length > 0 ? codedArtworks[0].id : null);
-    
-    // Obra actualmente visible
-    const selectedArtwork = useMemo(() => 
-        artworks.find(a => a.id === selectedId), 
-        [artworks, selectedId]
-    );
-
-    // Ajuste: Sincronizar selectedId si la lista cambia y la ID no existe.
-    if (codedArtworks.length > 0 && (!selectedArtwork || selectedId === null)) {
-        // CORRECCIÓN: Si no hay obra seleccionada, pero hay obras, selecciona la primera.
-        setSelectedId(codedArtworks[0].id);
-    }
-
-    if (codedArtworks.length === 0) {
-        return (
-            <div className="bg-white p-8 rounded-xl shadow-lg border border-stone-100 transition-shadow text-center">
-                <h3 className="text-xl font-bold text-slate-800 flex items-center justify-center gap-2 mb-4">
-                    <FileText size={24} className="text-gold-500" /> CUADRO 2: LABORATORIO DE DOCUMENTOS
-                </h3>
-                <p className="text-slate-600 mt-4">
-                    Primero debe <strong className="text-gold-600">Generar el Código</strong> de autenticidad en el Cuadro 1 para que las obras aparezcan aquí.
-                </p>
-            </div>
-        );
-    }
-    
-    if (!selectedArtwork) return <p className="p-4 text-center text-slate-500">Cargando Laboratorio...</p>;
+const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settings, onGenerateCode, onDelete }) => {
     
     // Generación de contenido usando la configuración global
-    const certificateContent = getCertificateHtml(selectedArtwork, settings);
-    const letterContent = getLetterHtml(selectedArtwork, settings);
+    const certificateContent = useMemo(() => artwork.code ? getCertificateHtml(artwork, settings) : '', [artwork, settings]);
+    const letterContent = useMemo(() => artwork.code ? getLetterHtml(artwork, settings) : '', [artwork, settings]);
 
     return (
-        <div className="bg-white p-6 rounded-xl shadow-lg border border-stone-100 transition-shadow">
-            <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-6 border-b pb-3">
-                <FileText size={24} className="text-gold-500" /> CUADRO 2: LABORATORIO DE DOCUMENTOS
-            </h3>
+        <div className={`bg-white p-6 rounded-xl shadow-xl transition-all border-l-4 ${artwork.code ? 'border-gold-500' : 'border-red-500'}`}>
             
-            {/* Selector de Obra */}
-            <div className="mb-4 flex items-center gap-4">
-                <label className="text-sm font-medium text-slate-600 whitespace-nowrap">Obra Seleccionada:</label>
-                <select
-                    className="p-2 border rounded text-sm flex-1 focus:ring-gold-500 focus:border-gold-500"
-                    // CORRECCIÓN PERMANENTE: Convertimos el ID a string para el SELECT.
-                    onChange={(e) => setSelectedId(Number(e.target.value))}
-                    value={String(selectedId)} 
+            {/* CABECERA Y TÍTULO */}
+            <div className="flex justify-between items-start border-b pb-4 mb-4">
+                <div className="flex items-center gap-3">
+                    <ImageIcon size={24} className="text-slate-600" />
+                    <div>
+                        <h4 className="text-xl font-bold text-slate-800">{artwork.title}</h4>
+                        <p className="text-xs text-slate-500 mt-1">
+                            Cert. {artwork.certificationDate.substring(0, 4)} | {getSeriesText(artwork)}
+                        </p>
+                    </div>
+                </div>
+                
+                <button
+                    onClick={() => onDelete(artwork.id)}
+                    className="text-red-500 hover:text-red-700 p-1 rounded transition"
+                    title="Eliminar Obra"
                 >
-                    {codedArtworks.map(a => (
-                        <option 
-                            key={a.id} 
-                            value={String(a.id)}
-                        >
-                            {a.title} ({a.code})
-                        </option>
-                    ))}
-                </select>
+                    <Trash2 size={20} />
+                </button>
             </div>
 
-
-            {/* ESTRUCTURA DE 3 COLUMNAS: Miniatura | Certificado | Carta */}
-            <div className="grid grid-cols-3 gap-6">
-                
-                {/* COLUMNA 1: FOTO/MINIATURA */}
-                <div className="col-span-1 border border-stone-200 p-4 rounded-lg bg-stone-50">
-                    <h4 className="text-sm font-bold text-slate-700 flex items-center gap-1 mb-3">
-                        <ImageIcon size={16} /> Detalle de Obra
-                    </h4>
-                    <div className="aspect-[4/3] bg-stone-200 flex items-center justify-center text-slate-500 rounded mb-4">
-                        [ESPACIO PARA MINIATURA DE OBRA]
-                    </div>
-                    <p className="text-xs text-slate-600 font-semibold mb-1">Título: {selectedArtwork.title}</p>
-                    <p className="text-xs font-mono text-slate-700">Código: {selectedArtwork.code}</p>
-                    <p className="text-xs text-slate-500 mt-2">
-                        {getSeriesText(selectedArtwork)} / Creado en {selectedArtwork.certificationDate.substring(0, 4)}
-                    </p>
-                    <p className="text-xs text-gold-600 mt-4 font-bold">Configuración de Plantilla Activa:</p>
-                    <p className="text-xs text-slate-500">Ciclo: {settings.cycleName}</p>
-                    <p className="text-xs text-slate-500">Firma: {settings.artistName}</p>
-                </div>
-                
-                {/* COLUMNA 2: CERTIFICADO */}
-                <div className="col-span-1 border border-stone-200 p-4 rounded-lg bg-white flex flex-col justify-between">
-                    <div>
-                        <h4 className="text-base font-bold text-slate-800 mb-3 flex items-center gap-1">
-                            Certificado de Autenticidad
-                        </h4>
-                        <div className="p-3 border border-dashed border-blue-300 bg-blue-50 text-xs font-serif leading-snug max-h-[300px] overflow-hidden relative">
-                            <p className="text-center font-bold text-sm mb-2">CERTIFICADO DE AUTENTICIDAD</p>
-                            <p className="text-left mt-2">Título: {selectedArtwork.title}</p>
-                            <p className="text-left">Código: <span className="font-mono">{selectedArtwork.code}</span></p>
-                            <p className="text-left mt-4 text-xs font-bold">Listo para Impresión Profesional.</p>
-                             <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
-                        </div>
-                    </div>
-
+            {/* CÓDIGO DE TRAZABILIDAD */}
+            <div className={`p-3 rounded-lg flex items-center justify-between gap-4 mb-4 ${artwork.code ? 'bg-green-50' : 'bg-red-50'}`}>
+                {artwork.code ? (
+                    <>
+                        <p className="text-sm font-semibold text-green-700 flex items-center gap-2">
+                            <CheckCircle size={18} /> CÓDIGO GENERADO:
+                        </p>
+                        <p className="font-mono text-lg font-bold text-slate-900 border border-dashed border-slate-300 p-1 px-3 rounded">
+                            {artwork.code}
+                        </p>
+                    </>
+                ) : (
                     <button
-                        onClick={() => handlePrintDocument(certificateContent, `Certificado ${selectedArtwork.code}`)}
-                        className="mt-4 bg-red-600 text-white py-3 px-3 rounded-lg font-bold text-sm hover:bg-red-700 transition-colors flex items-center justify-center gap-1 w-full shadow-md"
-                        title="Genera un PDF limpio para impresión de alta calidad."
+                        onClick={() => onGenerateCode(artwork.id)}
+                        className="bg-gold-500 text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-gold-600 transition-colors flex items-center gap-2 w-full justify-center shadow-md"
+                        title="Generar Código Único para esta obra"
                     >
-                        <Printer size={16} /> GENERAR PDF (Certificado)
+                        <Code size={18} /> GENERAR CÓDIGO ÚNICO
                     </button>
-                </div>
-
-                {/* COLUMNA 3: CARTA */}
-                <div className="col-span-1 border border-stone-200 p-4 rounded-lg bg-white flex flex-col justify-between">
-                    <div>
-                        <h4 className="text-base font-bold text-slate-800 mb-3 flex items-center gap-1">
-                            Carta al Coleccionista
-                        </h4>
-                        <div className="p-3 border border-dashed border-red-300 bg-red-50 text-xs font-serif leading-snug max-h-[300px] overflow-hidden relative">
-                            <p className="text-right text-slate-500 mb-3">{settings.city}, [Fecha Actual]</p>
-                            <p className="font-bold mb-2">{settings.letterOpening}</p>
-                            <p className="mb-2">La pieza, **{selectedArtwork.title}**, con código **{selectedArtwork.code}**, fue creada durante mi {settings.cycleName}...</p>
-                            <p className="text-right mt-6">Atentamente, {settings.artistName}</p>
-                            <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
-                        </div>
-                    </div>
-                    
-                    <button
-                        onClick={() => handlePrintDocument(letterContent, `Carta ${selectedArtwork.code}`)}
-                        className="mt-4 bg-red-600 text-white py-3 px-3 rounded-lg font-bold text-sm hover:bg-red-700 transition-colors flex items-center justify-center gap-1 w-full shadow-md"
-                        title="Genera un PDF limpio para impresión de alta calidad."
-                    >
-                        <Printer size={16} /> GENERAR PDF (Carta)
-                    </button>
-                </div>
+                )}
             </div>
             
-            <p className="text-xs text-slate-500 mt-6 p-2 border-t text-center">
-                *Los botones **GENERAR PDF** abrirán la ventana de impresión de su navegador. Para el PDF, elija "Guardar como PDF" como destino de impresión.
-            </p>
+            {/* HERRAMIENTAS DE DOCUMENTACIÓN */}
+            <h5 className="text-sm font-bold text-slate-700 flex items-center gap-1 mt-6 mb-3 border-t pt-4">
+                <Briefcase size={16} /> HERRAMIENTAS DE PRODUCCIÓN
+            </h5>
+            
+            <div className="grid grid-cols-2 gap-4">
+                
+                {/* Botón Certificado */}
+                <button
+                    onClick={() => handlePrintDocument(certificateContent, `Certificado ${artwork.code}`)}
+                    disabled={!artwork.code}
+                    className={`py-3 px-4 rounded-lg font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-sm ${
+                        artwork.code ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-stone-200 text-slate-400 cursor-not-allowed'
+                    }`}
+                    title={artwork.code ? "Abrir vista de impresión PDF para el Certificado" : "Genere el código primero"}
+                >
+                    <Printer size={16} /> IMPRIMIR CERTIFICADO
+                </button>
+                
+                {/* Botón Carta */}
+                <button
+                    onClick={() => handlePrintDocument(letterContent, `Carta ${artwork.code}`)}
+                    disabled={!artwork.code}
+                    className={`py-3 px-4 rounded-lg font-bold text-xs transition-colors flex items-center justify-center gap-2 shadow-sm ${
+                        artwork.code ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-stone-200 text-slate-400 cursor-not-allowed'
+                    }`}
+                    title={artwork.code ? "Abrir vista de impresión PDF para la Carta al Coleccionista" : "Genere el código primero"}
+                >
+                    <FileText size={16} /> IMPRIMIR CARTA
+                </button>
+            </div>
+            
+            {!artwork.code && (
+                <p className="text-xs text-red-500 mt-3 text-center flex items-center justify-center gap-1">
+                    <MinusCircle size={14} /> La documentación requiere un Código de Trazabilidad.
+                </p>
+            )}
+
         </div>
     );
 };
 
 
 // =========================================================
-// 🖼️ CUADRO 1: Gestión de Obras (Tabla)
+// ⚙️ COMPONENTE: PANEL DE AJUSTES DE MARCA
 // =========================================================
-interface WorkManagementTableProps {
-    artworks: Artwork[];
-    setArtworks: React.Dispatch<React.SetStateAction<Artwork[]>>;
-    onNavigateTo: (tool: 'management' | 'print' | 'settings') => void;
+interface SettingsPanelProps {
+    settings: DocumentSettings;
+    setSettings: React.Dispatch<React.SetStateAction<DocumentSettings>>;
+    onClose: () => void;
 }
 
-const WorkManagementTable: React.FC<WorkManagementTableProps> = ({ artworks, setArtworks, onNavigateTo }) => {
+const SettingsPanel: React.FC<SettingsPanelProps> = ({ settings, setSettings, onClose }) => {
     
-    // ... (Estados y Handlers de Formulario y Código) ...
-    const [newTitle, setNewTitle] = useState('');
-    const [newCertificationDate, setNewCertificationDate] = useState(new Date().toISOString().substring(0, 10));
-    const [newSeriesIndex, setNewSeriesIndex] = useState<number | ''>('');
-    const [newSeriesTotal, setNewSeriesTotal] = useState<number | ''>('');
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setSettings({ ...settings, [e.target.name]: e.target.value });
+    };
 
-    // Handler para asignar el código a una obra pendiente
+    return (
+        <div className="fixed inset-0 bg-black/50 z-50 flex justify-end">
+            <div className="w-full max-w-md bg-white p-8 overflow-y-auto shadow-2xl">
+                
+                <div className="flex justify-between items-center mb-6 border-b pb-4">
+                    <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+                        <Settings size={28} className="text-gold-500" /> Ajustes de Marca y Plantillas
+                    </h3>
+                    <button onClick={onClose} className="text-slate-500 hover:text-red-500 p-2">
+                        <LogOut size={24} />
+                    </button>
+                </div>
+
+                <p className="text-slate-600 mb-6 border-l-4 border-gold-300 pl-3 py-1">
+                    Personalice los datos estáticos que aparecerán en todos sus Certificados y Cartas.
+                </p>
+
+                <div className="space-y-6">
+                    {/* Ajustes de Identidad */}
+                    <div className="p-4 border rounded-lg bg-stone-50">
+                        <h4 className="font-bold text-slate-700 mb-3 flex items-center gap-1"><Edit size={16} /> Identidad</h4>
+                        
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Nombre del Artista (Firma)</label>
+                        <input type="text" name="artistName" value={settings.artistName} onChange={handleChange} className="w-full p-2 border rounded text-sm mb-3 focus:ring-gold-500 focus:border-gold-500" />
+                        
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Título / Cargo</label>
+                        <input type="text" name="artistTitle" value={settings.artistTitle} onChange={handleChange} className="w-full p-2 border rounded text-sm mb-3 focus:ring-gold-500 focus:border-gold-500" />
+
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Ciudad de Emisión</label>
+                        <input type="text" name="city" value={settings.city} onChange={handleChange} className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500" />
+                    </div>
+
+                    {/* Ajustes de Carta */}
+                    <div className="p-4 border rounded-lg bg-stone-50">
+                        <h4 className="font-bold text-slate-700 mb-3 flex items-center gap-1"><FileText size={16} /> Plantilla de Carta</h4>
+                        
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Ciclo Artístico General (Mencionado en la Carta)</label>
+                        <input type="text" name="cycleName" value={settings.cycleName} onChange={handleChange} placeholder="Ej: Serie 'Las Ciudades Invisibles'" className="w-full p-2 border rounded text-sm mb-3 focus:ring-gold-500 focus:border-gold-500" />
+                        
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Apertura (Ej: Estimado Coleccionista,)</label>
+                        <input type="text" name="letterOpening" value={settings.letterOpening} onChange={handleChange} className="w-full p-2 border rounded text-sm mb-3 focus:ring-gold-500 focus:border-gold-500" />
+
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Cierre y Agradecimiento</label>
+                        <textarea name="letterClosing" value={settings.letterClosing} onChange={handleChange} rows={3} className="w-full p-2 border rounded text-sm resize-none focus:ring-gold-500 focus:border-gold-500"></textarea>
+                    </div>
+                </div>
+                
+                <button
+                    onClick={onClose}
+                    className="mt-8 w-full bg-gold-500 text-white py-3 rounded-lg font-bold text-sm hover:bg-gold-600 transition-colors"
+                >
+                    Cerrar Panel de Ajustes
+                </button>
+            </div>
+        </div>
+    );
+}
+
+// =========================================================
+// ➕ COMPONENTE: FORMULARIO DE AÑADIR OBRA
+// =========================================================
+
+interface AddWorkFormProps {
+    onAdd: (artwork: Omit<Artwork, 'id' | 'code' | 'status'>) => void;
+}
+
+const AddWorkForm: React.FC<AddWorkFormProps> = ({ onAdd }) => {
+    const [title, setTitle] = useState('');
+    const [certificationDate, setCertificationDate] = useState(new Date().toISOString().substring(0, 10));
+    const [seriesIndex, setSeriesIndex] = useState<number | ''>('');
+    const [seriesTotal, setSeriesTotal] = useState<number | ''>('');
+    const [isSeries, setIsSeries] = useState(false);
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        let index = isSeries ? (seriesIndex === '' ? null : Number(seriesIndex)) : null;
+        let total = isSeries ? (seriesTotal === '' ? null : Number(seriesTotal)) : null;
+
+        if (isSeries) {
+            if (index === null || total === null) {
+                alert("Debe completar Pieza N° y Total Edición para una obra seriada.");
+                return;
+            }
+            if (index > total) {
+                 alert("El índice de la pieza no puede ser mayor que el total de la serie.");
+                return;
+            }
+        }
+        if (title.trim() === '') {
+             alert("El título de la obra es obligatorio.");
+             return;
+        }
+
+        onAdd({
+            title: title.trim(),
+            certificationDate: certificationDate,
+            type: 'PT', // Simplificado por defecto
+            seriesIndex: index, 
+            seriesTotal: total,
+        });
+
+        // Limpiar formulario
+        setTitle('');
+        setSeriesIndex('');
+        setSeriesTotal('');
+        setIsSeries(false);
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="p-6 bg-white rounded-xl shadow-lg border border-stone-100 mb-8">
+            <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mb-6">
+                <Plus size={24} className="text-gold-500" /> Añadir Nueva Obra al Catálogo
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                
+                <div className="col-span-1 md:col-span-2">
+                    <label className="block text-xs font-medium text-slate-500 mb-1">Título de la Obra</label>
+                    <input 
+                        type="text" 
+                        value={title} 
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="Ej: La Ciudad Secreta"
+                        className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
+                        required
+                    />
+                </div>
+                
+                <div>
+                    <label className="block text-xs font-medium text-slate-500 mb-1">Fecha de Certificación</label>
+                    <input 
+                        type="date" 
+                        value={certificationDate} 
+                        onChange={(e) => setCertificationDate(e.target.value)}
+                        className="p-2 border rounded text-sm w-full text-center focus:ring-gold-500 focus:border-gold-500"
+                        max={new Date().toISOString().substring(0, 10)}
+                        required
+                    />
+                </div>
+                
+                {/* Control de Serie */}
+                <div className="flex flex-col gap-2">
+                    <label className="flex items-center text-xs font-medium text-slate-500 cursor-pointer">
+                        <input 
+                            type="checkbox"
+                            checked={isSeries}
+                            onChange={(e) => setIsSeries(e.target.checked)}
+                            className="mr-2 rounded text-gold-500 focus:ring-gold-500"
+                        />
+                        ¿Obra Seriada?
+                    </label>
+                    {isSeries && (
+                        <div className="flex gap-2">
+                            <input 
+                                type="number" 
+                                value={seriesIndex} 
+                                onChange={(e) => setSeriesIndex(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
+                                placeholder="N°"
+                                className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
+                                min="1"
+                                required={isSeries}
+                            />
+                            <input 
+                                type="number" 
+                                value={seriesTotal} 
+                                onChange={(e) => setSeriesTotal(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
+                                placeholder="Total"
+                                className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
+                                min="1"
+                                required={isSeries}
+                            />
+                        </div>
+                    )}
+                </div>
+                
+                <button 
+                    type="submit"
+                    className="bg-slate-700 text-white py-3 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors flex items-center justify-center gap-1 shadow-md"
+                    disabled={!title.trim()}
+                >
+                    <Plus size={16} /> AÑADIR AL MURO
+                </button>
+            </div>
+        </form>
+    );
+};
+
+
+// ---------------------------------------------------------
+// ⚙️ COMPONENTE PRINCIPAL DEL DASHBOARD (CONTENEDOR)
+// ---------------------------------------------------------
+export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
+    
+    // 🛑 DATA CENTRAL: Obras (Inicialmente vacío)
+    const [artworks, setArtworks] = useState<Artwork[]>([]);
+    
+    // 🛑 DATA CENTRAL: Configuración de documentos
+    const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
+    
+    const [showSettingsPanel, setShowSettingsPanel] = useState(false);
+
+    // Handler para añadir obra desde el formulario
+    const handleAddArtwork = (newArtworkData: Omit<Artwork, 'id' | 'code' | 'status'>) => {
+        const newId = Math.max(0, ...artworks.map(a => a.id)) + 1;
+        const newArtwork: Artwork = {
+            id: newId,
+            ...newArtworkData,
+            code: null,
+            status: 'PENDIENTE'
+        };
+        setArtworks(prevArtworks => [newArtwork, ...prevArtworks]); // Añadir al principio
+    };
+    
+    // Handler para generar código
     const handleGenerateCode = (id: number) => {
         setArtworks(prevArtworks => prevArtworks.map(artwork => {
             if (artwork.id === id && artwork.status === 'PENDIENTE') {
@@ -456,331 +546,87 @@ const WorkManagementTable: React.FC<WorkManagementTableProps> = ({ artworks, set
         }));
     };
     
-    // Handler para añadir una nueva obra
-    const handleAddArtwork = (e: React.FormEvent) => {
-        e.preventDefault();
-        
-        let index = newSeriesIndex === '' ? null : Number(newSeriesIndex);
-        let total = newSeriesTotal === '' ? null : Number(newSeriesTotal);
-
-        if (index !== null && total === null || index === null && total !== null) {
-            alert("Si introduces un número de pieza, debes introducir el total de la edición.");
-            return;
-        }
-        if (index !== null && total !== null && index > total) {
-             alert("El índice de la pieza no puede ser mayor que el total de la serie.");
-            return;
-        }
-        if (newTitle.trim() === '') {
-             alert("El título de la obra es obligatorio.");
-             return;
-        }
-
-        const newId = Math.max(0, ...artworks.map(a => a.id)) + 1;
-        const newArtwork: Artwork = {
-            id: newId,
-            title: newTitle.trim(),
-            certificationDate: newCertificationDate,
-            type: 'PT', // Fijo por simplicidad
-            seriesIndex: index, 
-            seriesTotal: total,
-            code: null,
-            status: 'PENDIENTE'
-        };
-
-        setArtworks(prevArtworks => [...prevArtworks, newArtwork]);
-        // Limpiar formulario
-        setNewTitle('');
-        setNewSeriesIndex('');
-        setNewSeriesTotal('');
-    };
-    
-    // Handler para eliminar una obra
+    // Handler para eliminar obra
     const handleDeleteArtwork = (id: number) => {
-        if (window.confirm("¿Seguro que quieres eliminar esta obra de la lista de gestión?")) {
+        if (window.confirm("¿Seguro que quieres eliminar esta obra de la lista de gestión? Esta acción es irreversible.")) {
             setArtworks(prevArtworks => prevArtworks.filter(artwork => artwork.id !== id));
         }
     };
     
-    // Handler para Exportar a CSV (Mantenido)
-    const handleExportCSV = () => { 
-        const headers = ["ID", "Título", "Fecha Certificación", "Tipo Obra", "Serie Pieza N°", "Serie Total", "CÓDIGO FINAL", "Estado"];
-        const csvRows = artworks.map(artwork => [
-            artwork.id, `"${artwork.title.replace(/"/g, '""')}"`, artwork.certificationDate, typeOptions[artwork.type],
-            artwork.seriesIndex !== null ? artwork.seriesIndex : '', artwork.seriesTotal !== null ? artwork.seriesTotal : '',
-            artwork.code || '', artwork.status
-        ].join(','));
-        const csvString = [headers.join(','), ...csvRows].join('\n');
-        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.setAttribute('href', url);
-        link.setAttribute('download', `MA_Obras_${new Date().getFullYear()}.csv`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
+    // Obras ordenadas: Generadas primero, luego pendientes.
+    const sortedArtworks = useMemo(() => {
+        const generated = artworks.filter(a => a.status === 'GENERADO');
+        const pending = artworks.filter(a => a.status === 'PENDIENTE');
+        return [...generated, ...pending];
+    }, [artworks]);
 
-
-    return (
-        <div className="bg-white p-6 rounded-xl shadow-lg border border-stone-100 transition-shadow">
-            <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-6">
-                <Code size={24} className="text-gold-500" /> CUADRO 1: Gestión de Obras y Generación de Código
-            </h3>
-            
-            {/* Formulario para Añadir Obra */}
-            <form onSubmit={handleAddArtwork} className="flex flex-wrap items-end gap-3 p-4 mb-6 border-b border-gold-100">
-                {/* ... (Controles del formulario) ... */}
-                <div className="flex-1 min-w-[200px]">
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Título de la Obra</label>
-                    <input 
-                        type="text" 
-                        value={newTitle} 
-                        onChange={(e) => setNewTitle(e.target.value)}
-                        placeholder="Ej: El Viaje a Ítaca"
-                        className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Fecha de Certificación</label>
-                    <input 
-                        type="date" 
-                        value={newCertificationDate} 
-                        onChange={(e) => setNewCertificationDate(e.target.value)}
-                        className="p-2 border rounded text-sm w-40 text-center focus:ring-gold-500 focus:border-gold-500"
-                        max={new Date().toISOString().substring(0, 10)}
-                        required
-                    />
-                </div>
-                 <div>
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Pieza N° (Serie)</label>
-                    <input 
-                        type="number" 
-                        value={newSeriesIndex} 
-                        onChange={(e) => setNewSeriesIndex(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
-                        className="p-2 border rounded text-sm w-16 text-center focus:ring-gold-500 focus:border-gold-500"
-                        min="1"
-                    />
-                </div>
-                <div>
-                    <label className="block text-xs font-medium text-slate-500 mb-1">Total Edición (Serie)</label>
-                    <input 
-                        type="number" 
-                        value={newSeriesTotal} 
-                        onChange={(e) => setNewSeriesTotal(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
-                        className="p-2 border rounded text-sm w-16 text-center focus:ring-gold-500 focus:border-gold-500"
-                        min="1"
-                    />
-                </div>
-                
-                <button 
-                    type="submit"
-                    className="bg-slate-700 text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors flex items-center gap-1"
-                    disabled={!newTitle.trim()}
-                >
-                    <Plus size={16} /> Añadir Obra
-                </button>
-                
-                <button 
-                    type="button" 
-                    onClick={handleExportCSV}
-                    className="bg-blue-600 text-white py-2 px-4 rounded-lg font-bold text-sm hover:bg-blue-700 transition-colors flex items-center gap-1"
-                >
-                    <Download size={16} /> Exportar CSV
-                </button>
-                
-            </form>
-            
-            {/* Tabla de Obras */}
-            <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-stone-200">
-                    <thead className="bg-stone-50">
-                        <tr>
-                            <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Título</th>
-                            <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Certificación / Edición</th>
-                            <th className="px-4 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">CÓDIGO DE AUTENTICIDAD</th>
-                            <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider">Acciones</th>
-                            <th className="px-4 py-2 text-center text-xs font-medium text-slate-500 uppercase tracking-wider"></th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-stone-100">
-                        {artworks.length === 0 && (
-                            <tr>
-                                <td colSpan={5} className="px-4 py-8 text-center text-slate-500 italic">
-                                    No hay obras en la lista. ¡Añada su primera obra arriba!
-                                </td>
-                            </tr>
-                        )}
-                        {artworks.map(artwork => (
-                            <tr key={artwork.id}>
-                                <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-slate-800">
-                                    {artwork.title}
-                                </td>
-                                <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">
-                                    {artwork.certificationDate.substring(0, 4)} / {artwork.seriesIndex !== null ? `Pieza ${artwork.seriesIndex} de ${artwork.seriesTotal}` : 'Obra Única'}
-                                </td>
-                                <td className="px-4 py-3 whitespace-nowrap text-sm font-mono text-slate-900">
-                                    {artwork.code || <span className="text-red-500 italic">PENDIENTE</span>}
-                                </td>
-                                
-                                <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium flex justify-center items-center gap-2">
-                                    {artwork.status === 'PENDIENTE' ? (
-                                        <button
-                                            onClick={() => handleGenerateCode(artwork.id)}
-                                            className="text-gold-600 hover:text-gold-900 flex items-center gap-1 p-1 rounded hover:bg-gold-50 transition"
-                                            title="Generar Código Único"
-                                        >
-                                            <Code size={16} /> Asignar Código
-                                        </button>
-                                    ) : (
-                                        <button
-                                            // Navega al Laboratorio
-                                            onClick={() => onNavigateTo('print')}
-                                            className="text-red-600 hover:text-red-900 flex items-center gap-1 p-1 rounded hover:bg-red-50 transition"
-                                            title="Ir al LABORATORIO DE DOCUMENTOS"
-                                        >
-                                            <FileText size={16} /> Crear Doc.
-                                        </button>
-                                    )}
-                                </td>
-                                <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium flex justify-center items-center gap-2">
-                                    <button
-                                        onClick={() => handleDeleteArtwork(artwork.id)}
-                                        className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 transition"
-                                        title="Eliminar Obra"
-                                    >
-                                        <Trash2 size={16} />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-
-            <div className="mt-6 p-4 bg-slate-50 border-t border-stone-200 rounded-b-lg">
-                <p className="text-xs font-medium text-slate-600">
-                    <CheckCircle size={14} className="inline mr-1 text-green-500"/>
-                    Fórmula de Codificación: MA-[AÑO COMPLETO]-[AÑO CORTO + MES][ÍNDICE SERIE][TOTAL SERIE]
-                </p>
-            </div>
-        </div>
-    );
-};
-
-
-// ---------------------------------------------------------
-// ⚙️ COMPONENTE PRINCIPAL DEL DASHBOARD (CONTENEDOR)
-// ---------------------------------------------------------
-export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
-    
-    // 🛑 DATA CENTRAL: Obras
-    const [artworks, setArtworks] = useState<Artwork[]>([]);
-    
-    // 🛑 DATA CENTRAL: Configuración de documentos (Nuevo)
-    const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
-    
-    // Estado para la navegación entre paneles: 'management', 'print' (Laboratorio) o 'settings' (Plantillas)
-    const [activeTool, setActiveTool] = useState<'management' | 'print' | 'settings'>('management'); 
-    
-    // Filtramos si hay obras codificadas para el botón de navegación
-    const hasCodedArtworks = artworks.some(a => a.code);
 
     return (
         <div className="min-h-screen bg-slate-50 p-8 font-sans">
         
-        <div className="max-w-6xl mx-auto">
-            
-            {/* CABECERA Y LOGOUT */}
-            <div className="flex justify-between items-center mb-10 border-b pb-4">
-                <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-                    <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO Privado
-                </h1>
-                <button 
-                    onClick={onLogout} 
-                    className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-500 transition-colors py-2 px-3 border border-stone-200 rounded-lg hover:border-red-500"
-                >
-                    <LogOut size={16} /> Cerrar Sesión
-                </button>
-            </div>
-
-            {/* LISTADO DE HERRAMIENTAS DE NAVEGACIÓN (TRES CUADROS) */}
-            <div className="flex flex-wrap gap-4 mb-8 border-b pb-4">
-                <button 
-                    onClick={() => setActiveTool('management')}
-                    className={`py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 ${
-                        activeTool === 'management' ? 'bg-gold-500 text-white' : 'bg-white text-slate-700 hover:bg-stone-100 border'
-                    }`}
-                >
-                    <Code size={18} /> CUADRO 1: Gestión y Codificación
-                </button>
-                <button 
-                    onClick={() => setActiveTool('print')}
-                    disabled={!hasCodedArtworks} 
-                    className={`py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 ${
-                        activeTool === 'print' ? 'bg-gold-500 text-white' : 
-                        hasCodedArtworks ? 'bg-white text-slate-700 hover:bg-stone-100 border' : 
-                        'bg-stone-100 text-slate-400 border cursor-not-allowed'
-                    }`}
-                    title={!hasCodedArtworks ? "Necesita al menos una obra con código generado" : "Ir al Laboratorio de Documentos"}
-                >
-                    <Printer size={18} /> CUADRO 2: Laboratorio de Documentos
-                </button>
-                <button 
-                    onClick={() => setActiveTool('settings')}
-                    className={`py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2 ${
-                        activeTool === 'settings' ? 'bg-gold-500 text-white' : 'bg-white text-slate-700 hover:bg-stone-100 border'
-                    }`}
-                >
-                    <Settings size={18} /> CUADRO 3: Centro de Plantillas
-                </button>
-            </div>
-
-            {/* VISTA DE HERRAMIENTA ACTIVA */}
-            <div className="mt-6">
+            <div className="max-w-6xl mx-auto">
                 
-                {/* 1. Gestión de Obras */}
-                {activeTool === 'management' && (
-                    <WorkManagementTable 
-                        artworks={artworks} 
-                        setArtworks={setArtworks} 
-                        onNavigateTo={setActiveTool}
-                    />
-                )}
-                
-                {/* 2. Laboratorio de Documentos */}
-                {activeTool === 'print' && hasCodedArtworks && (
-                    <DocumentLaboratory 
-                        artworks={artworks} 
-                        settings={documentSettings}
-                    />
-                )}
-                
-                {/* 3. Centro de Configuración */}
-                {activeTool === 'settings' && (
-                    <ContentSettings 
-                        settings={documentSettings} 
-                        setSettings={setDocumentSettings} 
-                    />
-                )}
-                
-                {/* Mensaje de Laboratorio vacío (solo si la herramienta activa es 'print' y no hay datos) */}
-                {activeTool === 'print' && !hasCodedArtworks && (
-                    <div className="bg-white p-8 rounded-xl shadow-lg border border-stone-100 transition-shadow text-center">
-                        <h3 className="text-xl font-bold text-slate-800 flex items-center justify-center gap-2 mb-4">
-                            <FileText size={24} className="text-gold-500" /> CUADRO 2: LABORATORIO DE DOCUMENTOS
-                        </h3>
-                        <p className="text-slate-600 mt-4">
-                            No hay obras codificadas disponibles. Por favor, vuelva a **Gestión y Codificación** para asignar códigos.
-                        </p>
+                {/* CABECERA Y LOGOUT */}
+                <div className="flex justify-between items-center mb-10 border-b pb-4">
+                    <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
+                        <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO Privado
+                    </h1>
+                    <div className="flex gap-4">
+                        <button 
+                            onClick={() => setShowSettingsPanel(true)} 
+                            className="flex items-center gap-2 text-sm text-slate-500 hover:text-blue-500 transition-colors py-2 px-3 border border-stone-200 rounded-lg hover:border-blue-500"
+                        >
+                            <Settings size={16} /> Ajustes de Marca
+                        </button>
+                        <button 
+                            onClick={onLogout} 
+                            className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-500 transition-colors py-2 px-3 border border-stone-200 rounded-lg hover:border-red-500"
+                        >
+                            <LogOut size={16} /> Cerrar Sesión
+                        </button>
                     </div>
-                )}
-                
-            </div>
+                </div>
 
-        </div>
+                {/* FORMULARIO DE AÑADIR OBRA */}
+                <AddWorkForm onAdd={handleAddArtwork} />
+
+                {/* MURO DE OBRAS */}
+                <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mb-6">
+                    <Code size={24} className="text-gold-500" /> Muro de Workstations ({artworks.length} Obras)
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {artworks.length === 0 ? (
+                        <div className="md:col-span-3 p-12 bg-white rounded-xl shadow-lg border border-stone-100 text-center">
+                            <p className="text-xl text-slate-500 font-semibold flex items-center justify-center gap-2">
+                                <MinusCircle size={24} /> Aún no hay obras en el catálogo.
+                            </p>
+                            <p className="text-slate-400 mt-2">Use el formulario de arriba para añadir su primera pieza y comenzar el proceso de codificación.</p>
+                        </div>
+                    ) : (
+                        sortedArtworks.map(artwork => (
+                            <ArtworkWorkstation
+                                key={artwork.id}
+                                artwork={artwork}
+                                settings={documentSettings}
+                                onGenerateCode={handleGenerateCode}
+                                onDelete={handleDeleteArtwork}
+                            />
+                        ))
+                    )}
+                </div>
+
+            </div>
+            
+            {/* PANEL DE AJUSTES FLOTANTE */}
+            {showSettingsPanel && (
+                <SettingsPanel 
+                    settings={documentSettings} 
+                    setSettings={setDocumentSettings} 
+                    onClose={() => setShowSettingsPanel(false)} 
+                />
+            )}
+            
         </div>
     );
 };
