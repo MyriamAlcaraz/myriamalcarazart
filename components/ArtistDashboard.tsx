@@ -408,6 +408,7 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
  * 2. Posición de texto (bajarlo).
  * 3. Logo más grande.
  * 4. Saludo de cierre a la izquierda.
+ * 5. ⚠️ CORREGIDO: Simetría en el marco (T/B/L/R).
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -430,17 +431,21 @@ const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => 
         <head>
             <title>Carta Personalizada - ${artwork.title}</title>
             <style>
-                /* 🛑 AUMENTADO EL MARGEN DEL BODY, Y AJUSTADO EL TAMAÑO */
+                /* 🛑 MANTENEMOS MARGIN: 20MM en BODY para el espacio entre el borde del papel y el marco dorado */
                 body { font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: 13pt; margin: 20mm; color: #111; line-height: 1.8; }
                 
-                /* 🛑 NUEVO: CONTENEDOR CON MARCO DORADO PARA LA CARTA */
+                /* 🛑 CONTENEDOR CON MARCO DORADO PARA LA CARTA */
                 .letter-container { 
                     border: 1px solid #000; 
                     outline: 3px solid #d4af37; /* Marco grueso dorado */
                     outline-offset: 5px; /* Espacio entre bordes */
-                    padding: 50px 70px; /* Padding interno y lateral */
-                    margin-top: 30mm; /* AÑADIDO: Para bajar todo el texto */
-                    margin-bottom: 20mm;
+                    
+                    /* 🛑 CORREGIDO: Se aplica un padding interno uniforme 
+                       - 30mm vertical (para bajar el texto simétricamente)
+                       - 70px horizontal (para el espacio lateral)
+                       - margin: 0 auto; para centrado horizontal. */
+                    padding: 30mm 70px; 
+                    margin: 0 auto; 
                 }
 
                 .top-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; }
