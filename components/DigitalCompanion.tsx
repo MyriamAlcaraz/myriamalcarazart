@@ -72,7 +72,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                     </div>
                 )}
                 
-                {/* 🛑 LÍNEA CORREGIDA FINAL: Pixelado en Demo (!showCertificateAccess = true) / Limpio en Estudio (!showCertificateAccess = false) */}
+                {/* 🛑 LÍNEA FINAL: Pixelado en Demo / Limpio en Estudio */}
                 <Certificate artwork={artwork} isPixelatedDemo={!showCertificateAccess} /> 
             </div>
             
