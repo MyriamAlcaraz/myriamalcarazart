@@ -75,7 +75,8 @@ const App: React.FC = () => {
 
   // 🛑 NUEVA FUNCIÓN CLAVE: Abre el Certificado Demo (llamado desde DigitalCompanion.tsx)
   const handleOpenCertificateDemo = () => {
-      setSelectedCompanionId('CERTIFICATE_DEMO');
+      // 1. Cierra el Companion y 2. Abre el Certificado
+      setSelectedCompanionId('CERTIFICATE_DEMO'); 
   }
 
   // 🛑 NUEVO COMPONENTE CLAVE: Renderiza el Certificado Demo en un Iframe para simular el PDF
@@ -193,12 +194,12 @@ const App: React.FC = () => {
           </div>
       )}
 
-      {/* 🛑 RENDERIZADO CONDICIONAL CLAVE 🛑 */}
+      {/* 🛑 RENDERIZADO CONDICIONAL CRÍTICO 🛑 */}
       
       {/* 3. CERTIFICADO DIGITAL (DEMO) */}
       {selectedCompanionId === 'CERTIFICATE_DEMO' && renderCertificateDemo()}
 
-      {/* 4. COMPAÑERO DIGITAL (LUPA/INFO) */}
+      {/* 4. COMPAÑERO DIGITAL (LUPA/INFO) - SOLO si el ID NO es el de la demo */}
       {selectedCompanionId && selectedCompanionId !== 'CERTIFICATE_DEMO' && (
         <DigitalCompanion 
           artworkId={selectedCompanionId} 
