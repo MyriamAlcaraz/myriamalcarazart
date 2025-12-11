@@ -1,97 +1,128 @@
-// ARCHIVO: ./components/Certificate.tsx - CÓDIGO FINAL ESTABLE Y CLEAN (LISTO PARA IMPRIMIR)
+// ARCHIVO: src/components/Certificate.tsx
 
 import React from 'react';
-import { Artwork } from '../constants'; 
-import { format } from 'date-fns';
+import { ARTIST_INFO } from '../constants';
+import { Artwork } from '../types';
 
+// 🛑 MODIFICAR INTERFAZ DE PROPS
 interface CertificateProps {
-  artwork: Artwork;
-  isPixelatedDemo: boolean;
+    artwork: Artwork;
+    isPixelatedDemo?: boolean; // Nuevo prop opcional para el pixelado
 }
 
-export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDemo }) => {
-  const currentDate = format(new Date(), 'dd/MM/yyyy');
-  const displayYear = artwork.year && artwork.year.toString().trim() !== '' 
-                      ? artwork.year 
-                      : '2025'; 
+// 🛑 USAR LA NUEVA INTERFAZ Y EL PROP
+export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDemo = false }) => {
+	// Inicializa la fecha en formato día, mes y año largo
+	const currentDate = new Date().toLocaleDateString('es-ES', {	
+		day: '2-digit',	
+		month: 'long',	
+		year: 'numeric'	
+	});
+	
+	// ID de certificado simulado para la demo
+    const certificateId = isPixelatedDemo ? 'DEMO-PIXELADO' : `MA-AOC-${artwork.id.slice(-4).toUpperCase()}-${artwork.year}`;
 
-  // Clases CSS que aplican el efecto borroso si es modo demo
-  const blurClass = isPixelatedDemo ? 'filter blur-sm pointer-events-none opacity-50' : '';
+	// Clase CSS condicional para pixelar
+	const pixelationClass = isPixelatedDemo ? 'filter blur-sm pointer-events-none' : '';
 
-  return (
-    <div className={`p-4 md:p-10 w-[210mm] h-[297mm] bg-white text-slate-800 shadow-xl ${blurClass} print:shadow-none print:p-0 print:m-0`}>
-      <div className="border border-gold-600 p-6 h-full flex flex-col justify-between">
-        
-        {/* ENCABEZADO Y TÍTULO */}
-        <header className="text-center mb-8">
-          <h1 className="font-serif text-5xl font-bold text-gold-600 mb-2">Myriam Alcaraz</h1>
-          <h2 className="text-lg uppercase tracking-widest font-semibold text-slate-700">CERTIFICADO DE AUTENTICIDAD</h2>
-          <p className="mt-4 text-sm max-w-lg mx-auto border-t border-b py-2 border-slate-200">
-            Por la presente se certifica que la obra descrita es una creación original y auténtica de la artista.
-          </p>
-        </header>
+	return (
+		<div className="bg-white w-[210mm] min-h-[297mm] p-[20mm] mx-auto shadow-2xl relative text-slate-900 font-sans print:shadow-none print:w-full print:h-full">
+			{/* Marco Exterior */}
+			<div className="border-2 border-gold-500 h-full p-[15mm] relative flex flex-col justify-between">
+				<div className="absolute inset-2 border border-gold-500 opacity-60 pointer-events-none"></div>
 
-        {/* DETALLES DE LA OBRA */}
-        <section className="flex-grow flex items-start justify-center">
-            <div className="w-full max-w-2xl">
-                <div className="grid grid-cols-2 gap-x-12 gap-y-4 text-left">
-                    
-                    <DetailRow label="Título de la Obra" value={artwork.title} />
-                    <DetailRow label="ID de Referencia" value={artwork.id} />
-                    
-                    <DetailRow label="Año de Creación" value={displayYear} />
-                    <DetailRow label="Técnica / Medio" value={artwork.technique} />
-                    
-                    <DetailRow label="Dimensiones" value={artwork.dimensions} />
-                    <DetailRow label="Categoría" value="Pintura Figurativa Contemporánea" />
+				{/* --- 1. Encabezado y Titular (RE-DISEÑADO para Nombre Dorado) --- */}
+				<header className="text-center mb-12">
+					{/* Logo */}
+					<img src="/logo-myriam.png" alt="Logo Myriam Alcaraz" className="h-16 mx-auto mb-4" />
+					
+					{/* Nombre Dorado Grande 🛑 MODIFICACIÓN: Nombre Dorado y en Serif Grande */}
+					<h1 className="font-serif text-5xl font-extrabold text-gold-600 mb-2 tracking-tighter">{ARTIST_INFO.name.toUpperCase()}</h1>
+					
+					{/* Tagline */}
+					<h2 className="text-xs uppercase tracking-[0.5em] text-slate-900 mb-8">{ARTIST_INFO.tagline}</h2>
+					
+					{/* Título del Documento */}
+					<p className="font-serif text-2xl font-bold text-slate-800 border-t border-b border-gold-500 py-3 mx-auto w-fit px-8">CERTIFICADO DE AUTENTICIDAD</p>
+				</header>
 
-                </div>
-            </div>
-        </section>
+				<main className="flex-grow">
+					
+					{/* 🛑 Bloque de ID de Registro (PIXELADO) */}
+					<div className={`text-center py-2 mb-8 bg-stone-100/50 rounded-lg ${pixelationClass}`}>
+						<p className="text-xs uppercase tracking-widest text-slate-500 font-semibold mb-1">ID de Registro Único</p>
+						<p className="font-mono text-xl font-bold text-slate-800">{certificateId}</p>
+					</div>
 
-        {/* PIE DE PÁGINA Y FIRMAS */}
-        <footer className="mt-8 pt-6 border-t border-slate-200">
-          <p className="text-center text-sm mb-6 italic">
-            Este documento certifica que la obra ha sido inspeccionada y aprobada personalmente por la artista.
-          </p>
+					{/* --- 2. Bloque de Obra Certificada --- */}
+					<h2 className="text-2xl font-serif font-bold text-gold-600 mb-6 border-b border-gold-500 pb-2">Obra Certificada</h2>
+					
+					{/* 🛑 DATOS DE LA OBRA (PIXELADO) */}
+					<div className={`grid grid-cols-2 gap-x-12 gap-y-6 text-sm mb-12 ${pixelationClass}`}>
+						
+						{/* Columna Izquierda: Datos Técnicos */}
+						<div className="space-y-4">
+							<div className="border-b border-stone-200 pb-1">
+								<span className="font-semibold block text-slate-700">Título:</span>
+								<span className="font-serif italic text-lg">{artwork.title}</span>
+							</div>
+							<div className="border-b border-stone-200 pb-1">
+								<span className="font-semibold block text-slate-700">Artista:</span>
+								<span className="font-serif italic text-lg">{ARTIST_INFO.name}</span>
+							</div>
+							<div className="border-b border-stone-200 pb-1">
+								<span className="font-semibold block text-slate-700">Año de Creación:</span>
+								<span className="font-serif italic text-lg">{artwork.year}</span>
+							</div>
+							<div className="border-b border-stone-200 pb-1">
+								<span className="font-semibold block text-slate-700">Técnica:</span>
+								<span className="font-serif italic text-lg">{artwork.technique}</span>
+							</div>
+							<div className="border-b border-stone-200 pb-1">
+								<span className="font-semibold block text-slate-700">Dimensiones:</span>
+								<span className="font-serif italic text-lg">{artwork.dimensions}</span>
+							</div>
+						</div>
 
-          <div className="flex justify-center items-end text-center max-w-xl mx-auto">
-            
-            {/* CAJA DE LA FIRMA (Espacio para firma física) */}
-            <div className="w-1/2 mx-8">
-                <div className="h-12 flex justify-center items-center mb-1">
-                    {/* Espacio en blanco para la firma en persona */}
-                </div>
-                {/* Línea para firmar */}
-                <div className="border-t border-slate-600 pt-1 text-sm font-semibold">Firma de la Artista</div>
-            </div>
+						{/* Columna Derecha: Imagen */}
+						<div className="space-y-4">
+							<div className="bg-stone-50 p-3 shadow-inner">
+								<img src={artwork.image} alt={`Obra: ${artwork.title}`} className="w-full h-auto object-contain max-h-56 mx-auto" />
+								<p className="text-xs text-center text-slate-500 italic mt-2">Fotografía de Referencia</p>
+							</div>
+							{/* 🛑 MODIFICACIÓN: Bloque de Precio ELIMINADO */}
+						</div>
+					</div>
 
-            {/* CAJA DE LA FECHA */}
-            <div className="w-1/2 mx-8">
-                <div className="h-12 flex justify-center items-center mb-1">
-                    <span className="text-lg font-bold">{currentDate}</span>
-                </div>
-                <div className="border-t border-slate-600 pt-1 text-sm font-semibold">Fecha de Emisión</div>
-            </div>
+					{/* --- 3. Declaración y Sello Seco --- */}
+					<p className="text-slate-500 italic text-sm mb-12">
+						Este documento certifica que la obra ha sido inspeccionada y aprobada personalmente por la artista.<br/>
+						Todos los derechos de autor y reproducción están reservados.
+					</p>
+					
 
-          </div>
-          
-          <div className="text-center mt-6 text-xs text-slate-500 border-t border-slate-100 pt-4">
-            <span className="mx-2">https://myriamalcaraz.wordpress.com</span> | 
-            <span className="mx-2">@myriamalcaraz.artist</span> | 
-            <span className="mx-2">myriamhotmail@hotmail.com</span>
-          </div>
+				</main>
+				
+				{/* --- 4. Bloque de Autenticación y Firma --- */}
+				<footer className="flex justify-between px-16 items-end">
+					
+					{/* Bloque de Fecha */}
+					<div className="text-center w-40">
+						<div className="h-16 mb-2 flex items-end justify-center pb-2 text-slate-600 font-serif">{currentDate}</div>
+						<div className="border-b border-slate-900/20 w-full"></div>
+						<p className="font-serif text-xs font-bold uppercase tracking-wider text-slate-700">Fecha de Emisión</p>
+					</div>
 
-        </footer>
-      </div>
-    </div>
-  );
+					{/* Bloque de Firma 🛑 (PIXELADO EN DEMO) */}
+					<div className="text-center w-60 relative">
+						<div className={`h-24 mb-1 border-b-2 border-slate-900/10 ${pixelationClass}`}>
+							{/* Imagen de la firma */}
+							<img src="/obras/FIRMA.png" alt="Firma de Myriam Alcaraz" className="max-h-full w-auto mx-auto object-contain" />
+						</div>
+						<p className="font-serif text-sm font-bold uppercase tracking-wider text-slate-700">Myriam Alcaraz</p>
+					</div>
+				</footer>
+			</div>
+		</div>
+	);
 };
-
-// Componente auxiliar para los detalles
-const DetailRow: React.FC<{ label: string; value: string }> = ({ label, value }) => (
-    <div className="flex justify-between items-center border-b border-dashed border-slate-300 pb-1">
-        <span className="text-sm font-semibold text-slate-600 uppercase tracking-wider">{label}:</span>
-        <span className="text-base font-medium text-slate-800">{value}</span>
-    </div>
-);
