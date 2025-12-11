@@ -1,7 +1,7 @@
 // ARCHIVO: ./components/DigitalCompanion.tsx - CÓDIGO FINAL CORREGIDO Y LIMPIO
 
 import React, { useState, useRef } from 'react';
-// 🛑 MODIFICADO: Se elimina Printer, se usa en App.tsx. Se eliminan AlertTriangle, Certificate
+// 🛑 MODIFICADO: Se eliminan imports innecesarios. Se usa Shield, ZoomIn, X, Mail
 import { Shield, Image as ImageIcon, ZoomIn, X, Mail } from 'lucide-react'; 
 import { ARTWORKS, ARTIST_INFO } from '../constants';
 
@@ -9,7 +9,7 @@ interface DigitalCompanionProps {
   artworkId: string | null;
   onClose: () => void;
   showCertificateAccess: boolean; // TRUE solo en MODO ESTUDIO
-  // 🛑 NUEVO PROP CLAVE: Función para activar el Certificado Demo en App.tsx
+  // 🛑 NUEVO PROP CLAVE: Función que enviará la orden a App.tsx
   onOpenCertificateDemo: () => void; 
 }
 
@@ -22,7 +22,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
 }) => {
   const artwork = ARTWORKS.find(a => a.id === artworkId) || ARTWORKS[0];
   
-  // 🛑 ELIMINADO: El estado showCertificate ya no se necesita, el modal está en App.tsx
+  // 🛑 ESTADO ELIMINADO: Ya NO se usa, el control es de App.tsx
   // const [showCertificate, setShowCertificate] = useState(false); 
   
   const [showZoom, setShowZoom] = useState(false);
@@ -40,11 +40,9 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     let x = e.clientX - left; 
     let y = e.clientY - top;
 
-    // Calcular el porcentaje para el fondo (imagen ampliada)
     const xPercent = (x / width) * 100;
     const yPercent = (y / height) * 100;
 
-    // Mover el fondo en la dirección opuesta
     setZoomStyle({
       backgroundPosition: `${xPercent}% ${yPercent}%`,
     });
@@ -56,7 +54,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
       {/* Panel Principal */}
       <div className="bg-white rounded-l-xl sm:rounded-xl shadow-2xl h-full sm:h-auto max-h-full sm:max-h-[90vh] w-full max-w-4xl relative overflow-hidden flex flex-col sm:flex-row animate-slide-in-right">
         
-        {/* Columna de Imagen */}
+        {/* Columna de Imagen (Zoom Lupa) */}
         <div className="sm:w-1/2 relative bg-stone-100 flex items-center justify-center p-6 border-r border-stone-200">
           
           <button 
@@ -79,7 +77,6 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
               className="w-full h-full object-contain"
             />
             
-            {/* Lupa (Zoom) */}
             {showZoom && (
               <div 
                 className="absolute inset-0 border-4 border-gold-500/80 cursor-zoom-in opacity-100 transition-opacity duration-300"
@@ -91,15 +88,6 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
               >
                  <ZoomIn size={24} className="absolute bottom-2 right-2 text-white drop-shadow-lg"/>
               </div>
-            )}
-            
-            {/* Overlay para móvil/touch */}
-            {!showZoom && (
-                <div className="absolute inset-0 bg-black/20 flex items-center justify-center pointer-events-none opacity-0 sm:opacity-100 transition-opacity">
-                    <span className="bg-white/90 text-slate-700 text-sm px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
-                        <ZoomIn size={16} /> Pasa el ratón para hacer zoom
-                    </span>
-                </div>
             )}
           </div>
         </div>
@@ -122,12 +110,12 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
             
             {/* 1. Botón de Certificado (DEMO) */}
             <button
-                // 🛑 CORRECCIÓN CLAVE: Llama al prop de App.tsx para abrir el modal
+                // 🛑 LLAMADA CLAVE: Llama al prop de App.tsx, que dispara el cambio de estado
                 onClick={onOpenCertificateDemo}
                 className={`w-full flex items-center justify-center gap-2 text-white p-3 rounded font-bold transition-colors shadow-md ${
                     showCertificateAccess 
-                        ? 'bg-slate-800 hover:bg-gold-600' // Botón de acceso artista
-                        : 'bg-slate-500 hover:bg-slate-600' // Botón de acceso público
+                        ? 'bg-slate-800 hover:bg-gold-600' // MODO ARTISTA
+                        : 'bg-slate-500 hover:bg-slate-600' // MODO PÚBLICO
                 }`}
             >
                 <Shield size={18} /> Ver Certificado de Autenticidad (Demo)
