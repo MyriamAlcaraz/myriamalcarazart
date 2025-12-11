@@ -1,3 +1,5 @@
+// ARCHIVO: ./components/DigitalCompanion.tsx - CÓDIGO FINAL ESTABLE Y CORREGIDO
+
 import React, { useState, useRef } from 'react';
 import { Shield, Image as ImageIcon, ZoomIn, Printer, X, AlertTriangle, Mail } from 'lucide-react'; 
 import { ARTWORKS, ARTIST_INFO } from '../constants';
@@ -72,6 +74,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                 )}
                 {/* FIN DE LA MODIFICACIÓN */}
                 
+                {/* 🛑 LÍNEA CORREGIDA: Usa la lógica de showCertificateAccess (true=demo, false=original) */}
                 <Certificate artwork={artwork} isPixelatedDemo={!showCertificateAccess} /> 
             </div>
             
