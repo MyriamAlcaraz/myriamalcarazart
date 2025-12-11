@@ -1,4 +1,4 @@
-// ARCHIVO: ./components/PublicSite.tsx - CÓDIGO FINAL CORREGIDO Y LIMPIO (Versión 3)
+// ARCHIVO: ./components/PublicSite.tsx - CÓDIGO FINAL CORREGIDO Y LIMPIO (Versión 4: Corrección de Layout y Tabs)
 
 import React, { useState } from 'react';
 import { ARTIST_INFO, ARTWORKS, PRICING_TABLE } from '../constants';
@@ -285,7 +285,8 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
             <h2 className="font-serif text-4xl font-bold text-slate-900 mb-8 text-center">
               {ARTIST_INFO.tagline}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* 🛑 CORRECCIÓN LAYOUT: Cambiado a 4 columnas en pantallas grandes (lg:grid-cols-4) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {ARTWORKS.map(artwork => (
                 <div key={artwork.id} className="bg-white rounded-xl shadow-lg overflow-hidden transition-all hover:shadow-xl hover:scale-[1.01] group">
                   <div className="relative h-72 overflow-hidden">
