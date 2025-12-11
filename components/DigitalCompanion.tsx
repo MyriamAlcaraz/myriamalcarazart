@@ -1,9 +1,9 @@
-// ARCHIVO: ./components/DigitalCompanion.tsx - CÓDIGO FINAL ESTABLE Y CORREGIDO
+// ARCHIVO: ./components/DigitalCompanion.tsx - CÓDIGO FINAL 100% LIMPIO
 
 import React, { useState, useRef } from 'react';
 import { Shield, Image as ImageIcon, ZoomIn, Printer, X, AlertTriangle, Mail } from 'lucide-react'; 
 import { ARTWORKS, ARTIST_INFO } from '../constants';
-import { Certificate } from './Certificate';
+import { Certificate } from './Certificate'; // Importa el componente del certificado bonito
 
 interface DigitalCompanionProps {
   artworkId: string | null;
@@ -65,16 +65,14 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
             </button>
             <div className="transform scale-[0.6] md:scale-90 origin-top">
                 
-                {/* 🛑 MODIFICACIÓN CLAVE: El mensaje solo se muestra si SÍ tenemos acceso al certificado (Modo Taller) */}
                 {showCertificateAccess && (
                     <div className="bg-amber-50 border-l-4 border-amber-500 text-amber-900 p-4 mb-4" role="alert">
                         <p className="font-bold flex items-center gap-2"><AlertTriangle size={16}/> NOTA DE IMPRESIÓN</p>
                         <p className="text-sm">Recuerda usar el botón **Imprimir Original** en la parte inferior para generar el PDF listo.</p>
                     </div>
                 )}
-                {/* FIN DE LA MODIFICACIÓN */}
                 
-                {/* 🛑 LÍNEA CORREGIDA: Usa la lógica de showCertificateAccess (true=demo, false=original) */}
+                {/* 🛑 AHORA SOLO LLAMAMOS AL CERTIFICADO BONITO (Certificate.tsx) */}
                 <Certificate artwork={artwork} isPixelatedDemo={!showCertificateAccess} /> 
             </div>
             
