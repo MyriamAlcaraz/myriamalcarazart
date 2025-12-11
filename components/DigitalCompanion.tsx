@@ -1,4 +1,4 @@
-// ARCHIVO: ./components/DigitalCompanion.tsx - CÓDIGO FINAL 100% LIMPIO
+// ARCHIVO: ./components/DigitalCompanion.tsx - CÓDIGO FINAL DE PRUEBA (SIN PIXELADO)
 
 import React, { useState, useRef } from 'react';
 import { Shield, Image as ImageIcon, ZoomIn, Printer, X, AlertTriangle, Mail } from 'lucide-react'; 
@@ -72,8 +72,8 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                     </div>
                 )}
                 
-                {/* 🛑 AHORA SOLO LLAMAMOS AL CERTIFICADO BONITO (Certificate.tsx) */}
-                <Certificate artwork={artwork} isPixelatedDemo={!showCertificateAccess} /> 
+                {/* 🛑 AHORA LO FORZAMOS A BONITO Y LIMPIO (isPixelatedDemo={false}) */}
+                <Certificate artwork={artwork} isPixelatedDemo={false} /> 
             </div>
             
             {/* BOTÓN DE IMPRESIÓN (Solo visible si es MODO ESTUDIO) */}
