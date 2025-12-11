@@ -232,6 +232,8 @@ export const getCertificateDemoHtmlContent = (
 };
 
 // =======================================================
+// 3. COMPONENTE PRINCIPAL PUBLIC SITE
+// =======================================================
 
 export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin }) => {
   const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices'>('portfolio');
@@ -332,7 +334,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                 <h3 className="font-serif text-2xl font-bold text-gold-700 mb-4 border-b pb-2">Reconocimientos</h3>
                 <div className="grid md:grid-cols-2 gap-8">
                   <div>
-                    <h4 className="font-semibold text-slate-800 text-lg mb-3 flex items-center gap-2">
+                    <h4 className="font-semibold text-slate-800 text-lg mb-3 flex items-center gap-2}>
                         <ShieldCheck size={20} className="text-gold-500" /> Principales Exposiciones
                     </h4>
                     <AccoladeList items={ARTIST_INFO.accolades.exposiciones} />

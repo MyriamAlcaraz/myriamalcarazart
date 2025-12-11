@@ -1,11 +1,11 @@
 // ARCHIVO: ./App.tsx - CÓDIGO FINAL Y COMPLETO
 
 import React, { useState, useEffect, useCallback } from 'react';
-// 🛑 MODIFICADO: Importar getCertificateDemoHtmlContent
+// 🛑 CRÍTICO: Importar getCertificateDemoHtmlContent
 import { PublicSite, getCertificateDemoHtmlContent } from './components/PublicSite'; 
 import { ArtistDashboard } from './components/ArtistDashboard';
 import { DigitalCompanion } from './components/DigitalCompanion';
-// 🛑 MODIFICADO: Importar Printer
+// 🛑 CRÍTICO: Importar Printer
 import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield, Printer } from 'lucide-react'; 
 
 // --- CONFIGURACIÓN DE SEGURIDAD (PASSWORD) ---
