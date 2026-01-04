@@ -183,7 +183,16 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 				<div className={`flex justify-between px-8 mb-4 ${pixelationClass}`}>
 					{/* Fecha a la IZQUIERDA */}
 					<div className="text-center" style={{ width: '160px' }}>
-						<div style={{ height: '50px' }}></div>
+						<div 
+							className="pb-1"
+							style={{ 
+								fontFamily: "'Cinzel', serif",
+								fontSize: '8pt',
+								letterSpacing: '1px'
+							}}
+						>
+							{currentDate}
+						</div>
 						<div style={{ borderTop: '1px solid #333', marginBottom: '4px' }}></div>
 						<div 
 							style={{ 
@@ -193,12 +202,12 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 								color: '#555'
 							}}
 						>
-							Fecha: {currentDate}
+							Fecha
 						</div>
 					</div>
 					{/* Firma a la DERECHA (para sello seco) */}
 					<div className="text-center" style={{ width: '160px' }}>
-						<div style={{ height: '50px' }}></div>
+						<div style={{ height: '20px' }}></div>
 						<div style={{ borderTop: '1px solid #333', marginBottom: '4px' }}></div>
 						<div 
 							style={{ 
