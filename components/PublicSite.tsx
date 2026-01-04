@@ -252,20 +252,21 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
       </main>
 
       {/* Footer 🛑 MODIFICADO: Añadido el botón de acceso al Estudio */}
-      <footer className="bg-white text-slate-500 py-16 text-center border-t border-slate-100">
+      <footer className="bg-white text-slate-500 py-16 text-center border-t border-slate-100 relative">
         <div className="max-w-4xl mx-auto px-6">
           <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
-          
-          {/* 🛑 BOTÓN DE ACCESO AL ESTUDIO (Solo visible en la vista pública) */}
-          <button 
-              onClick={onOpenStudioLogin} 
-              className="mt-4 mb-8 text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-gold-600 transition-colors flex items-center gap-1 mx-auto"
-          >
-              <Lock size={12} /> Acceder al Estudio
-          </button>
 
           <p className="text-[10px] opacity-40 uppercase tracking-wide">© 2025 Myriam Alcaraz. Todos los derechos reservados.</p>
         </div>
+        
+        {/* 🔒 ACCESO SECRETO AL ESTUDIO - Candadito invisible en esquina inferior derecha */}
+        <button 
+            onClick={onOpenStudioLogin} 
+            className="absolute bottom-3 right-3 p-2 opacity-0 hover:opacity-20 transition-opacity duration-300 cursor-default"
+            title=""
+        >
+            <Lock size={14} className="text-slate-300" />
+        </button>
       </footer>
     </div>
   );
