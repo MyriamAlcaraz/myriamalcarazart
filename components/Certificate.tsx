@@ -21,7 +21,7 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 
 	return (
 		<div 
-			className="w-[210mm] min-h-[297mm] p-[25mm] mx-auto shadow-2xl relative text-slate-800 print:shadow-none print:w-full print:h-full"
+			className="w-[210mm] h-[297mm] p-[20mm] mx-auto shadow-2xl relative text-slate-800 print:shadow-none print:w-full print:h-full overflow-hidden"
 			style={{ 
 				backgroundColor: '#fffdf8',
 				fontFamily: "'Montserrat', sans-serif"
@@ -29,7 +29,7 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 		>
 			{/* Marco Exterior Dorado */}
 			<div 
-				className="h-full p-[20mm] relative flex flex-col justify-between"
+				className="h-full p-[15mm] relative flex flex-col"
 				style={{ border: '2px solid #c5a059' }}
 			>
 				{/* Marco Interior Decorativo */}
@@ -46,20 +46,20 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 				></div>
 
 				{/* 1. ENCABEZADO CON LOGO */}
-				<header className="text-center mb-6">
+				<header className="text-center mb-4">
 					<img 
 						src="/logo-myriam.png" 
 						alt="Logo Myriam Alcaraz" 
-						className="mx-auto mb-2"
-						style={{ maxWidth: '200px', height: 'auto' }}
+						className="mx-auto"
+						style={{ maxWidth: '160px', height: 'auto' }}
 					/>
 					<p 
-						className="tracking-widest mt-2"
+						className="tracking-widest mt-1"
 						style={{ 
 							fontFamily: "'Cinzel', serif",
-							fontSize: '11pt',
+							fontSize: '9pt',
 							color: '#c5a059',
-							letterSpacing: '3px'
+							letterSpacing: '2px'
 						}}
 					>
 						Arte con alma y sofisticación
@@ -67,31 +67,29 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 				</header>
 
 				{/* 2. TÍTULO DEL CERTIFICADO */}
-				<h1 
-					className="text-center mx-auto mb-10"
-					style={{ 
-						fontFamily: "'Cinzel', serif",
-						fontSize: '28pt',
-						letterSpacing: '6px',
-						fontWeight: 400,
-						color: '#1a1a1a',
-						borderBottom: '2px solid #c5a059',
-						paddingBottom: '12px',
-						display: 'inline-block',
-						position: 'relative',
-						left: '50%',
-						transform: 'translateX(-50%)'
-					}}
-				>
-					Certificado de Autenticidad
-				</h1>
+				<div className="text-center mb-6">
+					<h1 
+						className="inline-block"
+						style={{ 
+							fontFamily: "'Cinzel', serif",
+							fontSize: '22pt',
+							letterSpacing: '4px',
+							fontWeight: 400,
+							color: '#1a1a1a',
+							borderBottom: '2px solid #c5a059',
+							paddingBottom: '8px'
+						}}
+					>
+						Certificado de Autenticidad
+					</h1>
+				</div>
 
 				{/* 3. TEXTO INTRODUCTORIO */}
 				<div 
-					className="text-center mb-12"
+					className="text-center mb-6"
 					style={{ 
-						fontSize: '12pt',
-						lineHeight: '1.9',
+						fontSize: '10pt',
+						lineHeight: '1.7',
 						fontWeight: 300,
 						color: '#333'
 					}}
@@ -101,12 +99,12 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 						es una creación original y auténtica de la artista:
 					</p>
 					<span 
-						className="block mt-5 mb-2"
+						className="block mt-3 mb-1"
 						style={{ 
 							fontFamily: "'Cinzel', serif",
-							fontSize: '20pt',
+							fontSize: '16pt',
 							fontWeight: 700,
-							letterSpacing: '3px',
+							letterSpacing: '2px',
 							color: '#c5a059'
 						}}
 					>
@@ -115,210 +113,131 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 					<span 
 						className="block uppercase"
 						style={{ 
-							fontSize: '11pt',
-							letterSpacing: '4px',
+							fontSize: '9pt',
+							letterSpacing: '3px',
 							color: '#555'
 						}}
 					>
 						Pintura Figurativa Contemporánea
 					</span>
-					<p className="mt-4" style={{ fontSize: '9pt', color: '#555' }}>
-						Todos los derechos de autor y reproducción están reservados por la artista.
-					</p>
 				</div>
 
-				{/* 4. SECCIÓN DE DETALLES DE LA OBRA (PIXELADO EN DEMO) */}
-				<div 
-					className={`mx-auto w-[90%] mb-10 ${pixelationClass}`}
-					style={{ fontFamily: "'Playfair Display', serif" }}
-				>
-					{/* Título de la Obra */}
-					<div className="flex mb-5 items-baseline">
-						<span 
-							className="flex-shrink-0"
-							style={{ 
-								fontWeight: 600, 
-								fontSize: '12pt', 
-								width: '200px',
-								color: '#444'
-							}}
-						>
-							Título de la Obra:
-						</span>
-						<span 
-							className="flex-grow italic pl-2"
-							style={{ 
-								borderBottom: '1px dotted #999',
-								fontSize: '12pt',
-								color: '#000'
-							}}
-						>
-							{artwork.title}
-						</span>
-					</div>
-
-					{/* Año de Creación */}
-					<div className="flex mb-5 items-baseline">
-						<span 
-							className="flex-shrink-0"
-							style={{ 
-								fontWeight: 600, 
-								fontSize: '12pt', 
-								width: '200px',
-								color: '#444'
-							}}
-						>
-							Año de Creación:
-						</span>
-						<span 
-							className="flex-grow italic pl-2"
-							style={{ 
-								borderBottom: '1px dotted #999',
-								fontSize: '12pt',
-								color: '#000'
-							}}
-						>
-							{artwork.year}
-						</span>
-					</div>
-
-					{/* Dimensiones */}
-					<div className="flex mb-5 items-baseline">
-						<span 
-							className="flex-shrink-0"
-							style={{ 
-								fontWeight: 600, 
-								fontSize: '12pt', 
-								width: '200px',
-								color: '#444'
-							}}
-						>
-							Dimensiones:
-						</span>
-						<span 
-							className="flex-grow italic pl-2"
-							style={{ 
-								borderBottom: '1px dotted #999',
-								fontSize: '12pt',
-								color: '#000'
-							}}
-						>
-							{artwork.dimensions}
-						</span>
-					</div>
-
-					{/* Técnica */}
-					<div className="flex mb-5 items-baseline">
-						<span 
-							className="flex-shrink-0"
-							style={{ 
-								fontWeight: 600, 
-								fontSize: '12pt', 
-								width: '200px',
-								color: '#444'
-							}}
-						>
-							Técnica / Medio:
-						</span>
-						<span 
-							className="flex-grow italic pl-2"
-							style={{ 
-								borderBottom: '1px dotted #999',
-								fontSize: '12pt',
-								color: '#000'
-							}}
-						>
-							{artwork.technique}
-						</span>
-					</div>
-
-					{/* ID de Referencia */}
-					<div className="flex mb-5 items-baseline">
-						<span 
-							className="flex-shrink-0"
-							style={{ 
-								fontWeight: 600, 
-								fontSize: '12pt', 
-								width: '200px',
-								color: '#444'
-							}}
-						>
-							ID de Referencia:
-						</span>
-						<span 
-							className="flex-grow italic pl-2"
-							style={{ 
-								borderBottom: '1px dotted #999',
-								fontSize: '12pt',
-								color: '#000'
-							}}
-						>
-							{certificateId}
-						</span>
-					</div>
-				</div>
-
-				{/* 5. SECCIÓN DE PIE: NOTA Y FIRMAS */}
-				<footer className="mt-auto">
-					{/* Nota de Certificación */}
-					<p 
-						className="text-center italic mb-12"
-						style={{ fontSize: '10pt', color: '#555' }}
-					>
-						Este documento certifica que la obra ha sido inspeccionada<br/>
-						y aprobada personalmente por la artista.
-					</p>
-
-					{/* Bloque de Firmas (PIXELADO EN DEMO) */}
-					<div className={`flex justify-between px-16 mb-12 ${pixelationClass}`}>
-						{/* Firma de la Artista */}
-						<div className="text-center" style={{ width: '220px' }}>
-							<div 
-								className="pt-3"
-								style={{ 
-									borderTop: '1px solid #333',
-									marginTop: '60px',
-									fontFamily: "'Cinzel', serif",
-									fontSize: '11pt',
-									letterSpacing: '2px'
-								}}
-							>
-								Firma de la Artista
-							</div>
-						</div>
-
-						{/* Fecha */}
-						<div className="text-center" style={{ width: '220px' }}>
-							<div 
-								className="pt-3"
-								style={{ 
-									borderTop: '1px solid #333',
-									marginTop: '60px',
-									fontFamily: "'Cinzel', serif",
-									fontSize: '11pt',
-									letterSpacing: '2px'
-								}}
-							>
-								Fecha: {currentDate}
-							</div>
-						</div>
-					</div>
-
-					{/* Información de Contacto */}
+				{/* 4. IMAGEN DE LA OBRA (PIXELADO EN DEMO) */}
+				<div className={`text-center mb-6 ${pixelationClass}`}>
 					<div 
-						className="text-center uppercase pt-5"
+						className="mx-auto p-2 inline-block"
 						style={{ 
-							fontSize: '9pt',
-							letterSpacing: '3px',
-							color: '#777',
-							borderTop: '1px solid #ddd'
+							backgroundColor: '#f5f5f0',
+							boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)'
 						}}
 					>
-						<span className="mx-3">myriamalcaraz.com</span>
-						<span className="mx-3">{ARTIST_INFO.email}</span>
-						<span className="mx-3">@myriamalcaraz.artist</span>
+						<img 
+							src={artwork.image} 
+							alt={`Obra: ${artwork.title}`} 
+							className="mx-auto"
+							style={{ maxHeight: '140px', width: 'auto', objectFit: 'contain' }}
+						/>
 					</div>
-				</footer>
+					<p style={{ fontSize: '8pt', color: '#777', marginTop: '4px', fontStyle: 'italic' }}>
+						Fotografía de referencia
+					</p>
+				</div>
+
+				{/* 5. SECCIÓN DE DETALLES DE LA OBRA (PIXELADO EN DEMO) */}
+				<div 
+					className={`mx-auto w-[85%] mb-6 ${pixelationClass}`}
+					style={{ fontFamily: "'Playfair Display', serif" }}
+				>
+					{[
+						{ label: 'Título de la Obra:', value: artwork.title },
+						{ label: 'Año de Creación:', value: artwork.year },
+						{ label: 'Dimensiones:', value: artwork.dimensions },
+						{ label: 'Técnica / Medio:', value: artwork.technique },
+						{ label: 'ID de Referencia:', value: certificateId }
+					].map((item, index) => (
+						<div key={index} className="flex mb-3 items-baseline">
+							<span 
+								className="flex-shrink-0"
+								style={{ 
+									fontWeight: 600, 
+									fontSize: '10pt', 
+									width: '160px',
+									color: '#444'
+								}}
+							>
+								{item.label}
+							</span>
+							<span 
+								className="flex-grow italic pl-2"
+								style={{ 
+									borderBottom: '1px dotted #999',
+									fontSize: '10pt',
+									color: '#000'
+								}}
+							>
+								{item.value}
+							</span>
+						</div>
+					))}
+				</div>
+
+				{/* 6. NOTA DE CERTIFICACIÓN */}
+				<p 
+					className="text-center italic mb-6"
+					style={{ fontSize: '9pt', color: '#555' }}
+				>
+					Este documento certifica que la obra ha sido inspeccionada y aprobada personalmente por la artista.<br/>
+					Todos los derechos de autor y reproducción están reservados.
+				</p>
+
+				{/* 7. BLOQUE DE FIRMAS (PIXELADO EN DEMO) */}
+				<div className={`flex justify-between px-10 mb-4 ${pixelationClass}`}>
+					<div className="text-center" style={{ width: '180px' }}>
+						<div style={{ height: '40px' }}></div>
+						<div 
+							className="pt-2"
+							style={{ 
+								borderTop: '1px solid #333',
+								fontFamily: "'Cinzel', serif",
+								fontSize: '9pt',
+								letterSpacing: '1px'
+							}}
+						>
+							Firma de la Artista
+						</div>
+					</div>
+					<div className="text-center" style={{ width: '180px' }}>
+						<div style={{ height: '40px' }}></div>
+						<div 
+							className="pt-2"
+							style={{ 
+								borderTop: '1px solid #333',
+								fontFamily: "'Cinzel', serif",
+								fontSize: '9pt',
+								letterSpacing: '1px'
+							}}
+						>
+							Fecha: {currentDate}
+						</div>
+					</div>
+				</div>
+
+				{/* 8. INFORMACIÓN DE CONTACTO */}
+				<div 
+					className="text-center uppercase pt-3 mt-auto"
+					style={{ 
+						fontSize: '8pt',
+						letterSpacing: '2px',
+						color: '#777',
+						borderTop: '1px solid #ddd'
+					}}
+				>
+					<span className="mx-2">myriamalcaraz.com</span>
+					<span className="mx-2">•</span>
+					<span className="mx-2">{ARTIST_INFO.email}</span>
+					<span className="mx-2">•</span>
+					<span className="mx-2">@myriamalcaraz.artist</span>
+				</div>
 			</div>
 		</div>
 	);
