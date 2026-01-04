@@ -97,9 +97,9 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
             {/* Columna 1: Bio */}
             <div className="md:col-span-1">
               <h2 className="font-serif text-4xl font-bold text-slate-900 mb-6">Biografía</h2>
-              <p className="text-lg font-serif italic text-slate-600 mb-6 border-l-2 border-gold-500 pl-4">{ARTIST_INFO.bioShort}</p>
+              <p className="text-lg text-slate-700 leading-relaxed mb-6">{ARTIST_INFO.bioShort}</p>
               <h3 className="text-xl font-semibold mb-3">Declaración del Artista</h3>
-              <p className="text-slate-700 leading-relaxed mb-8">{ARTIST_INFO.statement}</p>
+              <p className="text-slate-600 leading-relaxed mb-8 font-serif italic border-l-2 border-gold-500 pl-4">"{ARTIST_INFO.statement}"</p>
               
               {/* Contacto Rápido */}
               <div className="space-y-3">
