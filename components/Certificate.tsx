@@ -183,29 +183,38 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 				<div className={`flex justify-between px-8 mb-4 ${pixelationClass}`}>
 					{/* Fecha a la IZQUIERDA */}
 					<div className="text-center" style={{ width: '160px' }}>
-						<div style={{ height: '35px' }}></div>
 						<div 
-							className="pt-2"
+							className="pb-1"
 							style={{ 
-								borderTop: '1px solid #333',
 								fontFamily: "'Cinzel', serif",
 								fontSize: '8pt',
 								letterSpacing: '1px'
 							}}
 						>
-							Fecha: {currentDate}
+							{currentDate}
+						</div>
+						<div style={{ borderTop: '1px solid #333', marginBottom: '4px' }}></div>
+						<div 
+							style={{ 
+								fontFamily: "'Cinzel', serif",
+								fontSize: '8pt',
+								letterSpacing: '1px',
+								color: '#555'
+							}}
+						>
+							Fecha
 						</div>
 					</div>
 					{/* Firma a la DERECHA (para sello seco) */}
 					<div className="text-center" style={{ width: '160px' }}>
-						<div style={{ height: '35px' }}></div>
+						<div style={{ height: '20px' }}></div>
+						<div style={{ borderTop: '1px solid #333', marginBottom: '4px' }}></div>
 						<div 
-							className="pt-2"
 							style={{ 
-								borderTop: '1px solid #333',
 								fontFamily: "'Cinzel', serif",
 								fontSize: '8pt',
-								letterSpacing: '1px'
+								letterSpacing: '1px',
+								color: '#555'
 							}}
 						>
 							Firma de la Artista
