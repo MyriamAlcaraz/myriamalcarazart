@@ -187,7 +187,7 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 				</p>
 
 				{/* 7. FECHA (izq) Y FIRMA (der) - PIXELADO EN DEMO */}
-				<div className={`flex justify-between items-start px-8 mb-4 ${pixelationClass}`}>
+				<div className={`flex justify-between items-start px-8 mb-1 ${pixelationClass}`}>
 					{/* Fecha a la IZQUIERDA */}
 					<div className="text-left" style={{ width: '45%' }}>
 						<p 
@@ -204,7 +204,7 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 					{/* Firma a la DERECHA */}
 					<div className="text-right" style={{ width: '45%' }}>
 						{/* Espacio para sello y firma con bolígrafo */}
-						<div style={{ height: '40px' }}></div>
+						<div style={{ height: '70px' }}></div>
 						{/* Línea para firmar encima */}
 						<div style={{ borderTop: '1px solid #333', marginBottom: '5px' }}></div>
 						{/* Nombre */}
