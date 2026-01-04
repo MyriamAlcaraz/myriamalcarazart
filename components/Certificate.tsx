@@ -183,11 +183,11 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 				<div className={`flex justify-between px-8 mb-4 ${pixelationClass}`}>
 					{/* Fecha a la IZQUIERDA */}
 					<div className="text-center" style={{ width: '160px' }}>
-						{/* Espacio para escribir encima de la línea */}
+						{/* Espacio vacío */}
 						<div style={{ height: '45px' }}></div>
 						{/* Línea */}
 						<div style={{ borderTop: '1px solid #333' }}></div>
-						{/* Texto debajo de la línea */}
+						{/* Fecha debajo de la línea */}
 						<div 
 							style={{ 
 								fontFamily: "'Cinzel', serif",
@@ -202,11 +202,11 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 					</div>
 					{/* Firma a la DERECHA (para sello seco) */}
 					<div className="text-center" style={{ width: '160px' }}>
-						{/* Espacio para firmar/sellar encima de la línea */}
+						{/* Espacio para sello y firma con bolígrafo */}
 						<div style={{ height: '45px' }}></div>
 						{/* Línea */}
 						<div style={{ borderTop: '1px solid #333' }}></div>
-						{/* Texto debajo de la línea */}
+						{/* Nombre debajo de la línea */}
 						<div 
 							style={{ 
 								fontFamily: "'Cinzel', serif",
@@ -216,7 +216,7 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 								marginTop: '4px'
 							}}
 						>
-							Firma de la Artista
+							Myriam Alcaraz
 						</div>
 					</div>
 				</div>
