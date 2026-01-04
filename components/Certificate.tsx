@@ -16,7 +16,14 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 		year: 'numeric'	
 	});
 	
-	const certificateId = isPixelatedDemo ? 'MA-XXXX-XX' : `MA-${artwork.year}-${artwork.id.slice(-2).toUpperCase()}`;
+	// Generar ID: MA-AÑO-[2 letras del título][edición]
+	// Ejemplo: "Autorretrato" → MA-2026-AU1/1
+	const titleInitials = artwork.title
+		.split(' ')[0] // Primera palabra del título
+		.substring(0, 2) // Primeras 2 letras
+		.toUpperCase();
+	const edition = '1/1'; // Obra única por defecto
+	const certificateId = isPixelatedDemo ? 'MA-XXXX-XX1/1' : `MA-${artwork.year}-${titleInitials}${edition}`;
 	const pixelationClass = isPixelatedDemo ? 'filter blur-sm pointer-events-none select-none' : '';
 
 	return (
