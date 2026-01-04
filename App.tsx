@@ -20,6 +20,9 @@ const App: React.FC = () => {
   const [view, setView] = useState<'public' | 'artist'>('public');
   const [selectedCompanionId, setSelectedCompanionId] = useState<string | null>(null);
   
+  // 🛑 ESTADO: Pestaña activa en PublicSite (para mostrar candado solo en 'prices')
+  const [activePublicTab, setActivePublicTab] = useState<'portfolio' | 'bio' | 'prices'>('portfolio');
+  
   // Hooks para el formulario de login (reutilizados para ambos candados)
   const [passwordInput, setPasswordInput] = useState("");
   const [error, setError] = useState(false);
@@ -174,8 +177,8 @@ const App: React.FC = () => {
       {view === 'public' ? (
         <PublicSite 
             onOpenCompanion={(id) => setSelectedCompanionId(id)} 
-            // 💡 Asegúrate de que PublicSite usa esta prop:
             onOpenStudioLogin={() => setShowStudioLoginModal(true)}
+            onTabChange={(tab) => setActivePublicTab(tab)}
         />
       ) : (
         // 💡 Asegúrate de que ArtistDashboard espera esta prop:
@@ -183,30 +186,32 @@ const App: React.FC = () => {
       )}
 
       {/* 🛡️ SISTEMA DE NAVEGACIÓN PRIVADO (Solo el botón ESTUDIO/PREVIEW) */}
-      {/* Solo visible en modo ESTUDIO, o invisible en modo público */}
-      <div className="fixed bottom-4 right-4 z-[9999]">
-        
-        {/* 🛑 Botón de ESTUDIO/Vista Previa */}
-        <button 
-          onClick={() => {
-            if (view === 'public') {
-              setShowStudioLoginModal(true);
-            } else {
-              setView('public'); 
-            }
-          }}
-          className={`p-2 rounded-full transition-all ${
-            view === 'public' 
-              ? 'opacity-0 hover:opacity-10 bg-transparent' 
-              : 'bg-slate-900/50 backdrop-blur shadow-xl hover:scale-110 text-white/70 hover:text-gold-500'
-          }`}
-          style={view === 'public' ? { background: 'none', boxShadow: 'none' } : {}}
-          title={view === 'public' ? "" : "Volver a Vista Previa"} 
-        >
-          {view === 'public' ? <Lock size={14} className="text-gray-300" /> : <Eye size={16} />} 
-        </button>
-        
-      </div>
+      {/* En modo público: solo visible en pestaña 'prices', completamente invisible en otras */}
+      {(view === 'artist' || activePublicTab === 'prices') && (
+        <div className="fixed bottom-4 right-4 z-[9999]">
+          
+          {/* 🛑 Botón de ESTUDIO/Vista Previa */}
+          <button 
+            onClick={() => {
+              if (view === 'public') {
+                setShowStudioLoginModal(true);
+              } else {
+                setView('public'); 
+              }
+            }}
+            className={`p-2 rounded-full transition-all ${
+              view === 'public' 
+                ? 'opacity-0 hover:opacity-10 bg-transparent' 
+                : 'bg-slate-900/50 backdrop-blur shadow-xl hover:scale-110 text-white/70 hover:text-gold-500'
+            }`}
+            style={view === 'public' ? { background: 'none', boxShadow: 'none' } : {}}
+            title={view === 'public' ? "" : "Volver a Vista Previa"} 
+          >
+            {view === 'public' ? <Lock size={14} className="text-gray-300" /> : <Eye size={16} />} 
+          </button>
+          
+        </div>
+      )}
 
       {/* 🛑 MODAL DEL SEGUNDO CANDADO (ACCESO A ESTUDIO) */}
       {showStudioLoginModal && (

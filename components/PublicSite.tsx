@@ -4,7 +4,8 @@ import { Mail, Instagram, ExternalLink, Eye, ChevronRight, Image as ImageIcon, B
 
 interface PublicSiteProps {
   onOpenCompanion: (id: string) => void;
-  onOpenStudioLogin: () => void; 
+  onOpenStudioLogin: () => void;
+  onTabChange?: (tab: 'portfolio' | 'bio' | 'prices') => void;
 }
 
 // =======================================================
@@ -19,8 +20,13 @@ const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
 );
 
 // 🛑 AÑADIDO: onOpenStudioLogin en las props
-export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin }) => {
+export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin, onTabChange }) => {
   const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices'>('portfolio');
+
+  const handleTabChange = (tab: 'portfolio' | 'bio' | 'prices') => {
+    setActiveTab(tab);
+    onTabChange?.(tab);
+  };
 
   return (
     <div className="min-h-screen bg-stone-50 font-sans text-slate-800">
@@ -37,19 +43,19 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
           {/* Main Tabs */}
           <div className="flex gap-1 md:gap-4 text-sm font-semibold">
             <button
-              onClick={() => setActiveTab('portfolio')}
+              onClick={() => handleTabChange('portfolio')}
               className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'portfolio' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
             >
               PORTFOLIO
             </button>
             <button
-              onClick={() => setActiveTab('bio')}
+              onClick={() => handleTabChange('bio')}
               className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'bio' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
             >
               TRAYECTORIA & BIO
             </button>
             <button
-              onClick={() => setActiveTab('prices')}
+              onClick={() => handleTabChange('prices')}
               className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'prices' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
             >
               ENCARGOS & PRECIOS
@@ -187,7 +193,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   Explora mi galería de obras disponibles en el **PORTFOLIO**. Cada pieza que ves es una creación única, pintada al óleo sobre lienzo o tabla, lista para dar un toque de elegancia y profundidad a tu colección.
                 </p>
                 <button
-                  onClick={() => setActiveTab('portfolio')}
+                  onClick={() => handleTabChange('portfolio')}
                   className="mt-4 bg-slate-800 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors"
                 >
                   Explorar Portafolio
