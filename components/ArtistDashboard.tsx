@@ -112,19 +112,25 @@ const NEW_WORK_PLACEHOLDER: Artwork = {
 const generateSmartCode = (artworkToCode: Artwork): string => {
     const dateParts = artworkToCode.certificationDate.split('-'); 
     const year = dateParts[0];
-    const yearShort = year.substring(2);
-    const month = dateParts[1];
-    const dateCode = `${yearShort}${month}`;
 
-    // Si es serie limitada, usa el formato Index/Total al final
+    // Obtener las 2 primeras letras de la primera palabra del título
+    const titleInitials = artworkToCode.title
+        .split(' ')[0] // Primera palabra del título
+        .substring(0, 2) // Primeras 2 letras
+        .toUpperCase();
+
+    // Si es serie limitada, usa el formato Index/Total
     if (artworkToCode.seriesIndex !== null && artworkToCode.seriesTotal !== null && !artworkToCode.isOpenSeries) {
-        const indexFmtd = String(artworkToCode.seriesIndex).padStart(2, '0');
-        const totalFmtd = String(artworkToCode.seriesTotal).padStart(2, '0');
-        return `MA-${year}-${dateCode}-${indexFmtd}/${totalFmtd}`; 
+        return `MA-${year}-${titleInitials}${artworkToCode.seriesIndex}/${artworkToCode.seriesTotal}`; 
     }
     
-    // Si es única o serie abierta, usa el ID de obra
-    return `MA-${year}-${dateCode}-${String(artworkToCode.id).padStart(2, '0')}`;
+    // Si es Giclée (serie abierta), añadir GI
+    if (artworkToCode.isOpenSeries) {
+        return `MA-${year}-${titleInitials}GI1/1`;
+    }
+    
+    // Si es obra única: MA-AÑO-XX1/1
+    return `MA-${year}-${titleInitials}1/1`;
 };
 
 
