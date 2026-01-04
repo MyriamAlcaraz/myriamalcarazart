@@ -187,44 +187,47 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 				</p>
 
 				{/* 7. FECHA (izq) Y FIRMA (der) - PIXELADO EN DEMO */}
-				<div className={`flex justify-between px-8 mb-4 ${pixelationClass}`}>
+				<div className={`flex justify-between items-start px-8 mb-4 ${pixelationClass}`}>
 					{/* Fecha a la IZQUIERDA */}
-					<div className="text-center" style={{ width: '160px' }}>
-						{/* Espacio vacío */}
-						<div style={{ height: '45px' }}></div>
-						{/* Línea */}
-						<div style={{ borderTop: '1px solid #333' }}></div>
-						{/* Fecha debajo de la línea */}
-						<div 
+					<div className="text-left" style={{ width: '45%' }}>
+						<p 
 							style={{ 
-								fontFamily: "'Cinzel', serif",
-								fontSize: '8pt',
-								letterSpacing: '1px',
-								color: '#555',
-								marginTop: '4px'
+								fontSize: '9pt',
+								color: '#333',
+								margin: 0
 							}}
 						>
-							Fecha: {currentDate}
-						</div>
+							FECHA: {currentDate}
+						</p>
 					</div>
-					{/* Firma a la DERECHA (para sello seco) */}
-					<div className="text-center" style={{ width: '160px' }}>
+					
+					{/* Firma a la DERECHA */}
+					<div className="text-right" style={{ width: '45%' }}>
 						{/* Espacio para sello y firma con bolígrafo */}
-						<div style={{ height: '45px' }}></div>
-						{/* Línea */}
-						<div style={{ borderTop: '1px solid #333' }}></div>
-						{/* Nombre debajo de la línea */}
-						<div 
+						<div style={{ height: '40px' }}></div>
+						{/* Línea para firmar encima */}
+						<div style={{ borderTop: '1px solid #333', marginBottom: '5px' }}></div>
+						{/* Nombre */}
+						<p 
 							style={{ 
-								fontFamily: "'Cinzel', serif",
-								fontSize: '8pt',
-								letterSpacing: '1px',
-								color: '#555',
-								marginTop: '4px'
+								fontSize: '10pt',
+								fontWeight: 'bold',
+								color: '#000',
+								margin: '0 0 2px 0'
 							}}
 						>
 							Myriam Alcaraz
-						</div>
+						</p>
+						{/* Título */}
+						<p 
+							style={{ 
+								fontSize: '8pt',
+								color: '#333',
+								margin: 0
+							}}
+						>
+							Pintura Figurativa Contemporánea
+						</p>
 					</div>
 				</div>
 
