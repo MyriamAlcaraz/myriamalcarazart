@@ -183,23 +183,27 @@ const App: React.FC = () => {
       )}
 
       {/* 🛡️ SISTEMA DE NAVEGACIÓN PRIVADO (Solo el botón ESTUDIO/PREVIEW) */}
-      <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 items-end">
+      {/* Solo visible en modo ESTUDIO, o invisible en modo público */}
+      <div className="fixed bottom-4 right-4 z-[9999]">
         
         {/* 🛑 Botón de ESTUDIO/Vista Previa */}
         <button 
           onClick={() => {
-            // Si está en vista pública, activa el segundo candado (el modal)
             if (view === 'public') {
               setShowStudioLoginModal(true);
             } else {
-              // Si está en ESTUDIO, vuelve directamente a la vista pública
               setView('public'); 
             }
           }}
-          className="bg-slate-900/50 backdrop-blur p-2 rounded-full shadow-xl transition-all hover:scale-110 text-white/70 hover:text-gold-500"
-          title={view === 'public' ? "Entrar en ESTUDIO" : "Volver a Vista Previa"} 
+          className={`p-2 rounded-full transition-all ${
+            view === 'public' 
+              ? 'opacity-0 hover:opacity-10 bg-transparent' 
+              : 'bg-slate-900/50 backdrop-blur shadow-xl hover:scale-110 text-white/70 hover:text-gold-500'
+          }`}
+          style={view === 'public' ? { background: 'none', boxShadow: 'none' } : {}}
+          title={view === 'public' ? "" : "Volver a Vista Previa"} 
         >
-          {view === 'public' ? <Lock size={16} /> : <Eye size={16} />} 
+          {view === 'public' ? <Lock size={14} className="text-gray-300" /> : <Eye size={16} />} 
         </button>
         
       </div>
