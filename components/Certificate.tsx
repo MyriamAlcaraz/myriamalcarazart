@@ -183,38 +183,37 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 				<div className={`flex justify-between px-8 mb-4 ${pixelationClass}`}>
 					{/* Fecha a la IZQUIERDA */}
 					<div className="text-center" style={{ width: '160px' }}>
-						<div 
-							className="pb-1"
-							style={{ 
-								fontFamily: "'Cinzel', serif",
-								fontSize: '8pt',
-								letterSpacing: '1px'
-							}}
-						>
-							{currentDate}
-						</div>
-						<div style={{ borderTop: '1px solid #333', marginBottom: '4px' }}></div>
+						{/* Espacio para escribir encima de la línea */}
+						<div style={{ height: '45px' }}></div>
+						{/* Línea */}
+						<div style={{ borderTop: '1px solid #333' }}></div>
+						{/* Texto debajo de la línea */}
 						<div 
 							style={{ 
 								fontFamily: "'Cinzel', serif",
 								fontSize: '8pt',
 								letterSpacing: '1px',
-								color: '#555'
+								color: '#555',
+								marginTop: '4px'
 							}}
 						>
-							Fecha
+							Fecha: {currentDate}
 						</div>
 					</div>
 					{/* Firma a la DERECHA (para sello seco) */}
 					<div className="text-center" style={{ width: '160px' }}>
-						<div style={{ height: '20px' }}></div>
-						<div style={{ borderTop: '1px solid #333', marginBottom: '4px' }}></div>
+						{/* Espacio para firmar/sellar encima de la línea */}
+						<div style={{ height: '45px' }}></div>
+						{/* Línea */}
+						<div style={{ borderTop: '1px solid #333' }}></div>
+						{/* Texto debajo de la línea */}
 						<div 
 							style={{ 
 								fontFamily: "'Cinzel', serif",
 								fontSize: '8pt',
 								letterSpacing: '1px',
-								color: '#555'
+								color: '#555',
+								marginTop: '4px'
 							}}
 						>
 							Firma de la Artista
