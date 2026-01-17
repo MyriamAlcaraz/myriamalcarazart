@@ -5,7 +5,7 @@ import { Mail, Instagram, ExternalLink, Eye, ChevronRight, Image as ImageIcon, B
 interface PublicSiteProps {
   onOpenCompanion: (id: string) => void;
   onOpenStudioLogin: () => void;
-  onTabChange?: (tab: 'portfolio' | 'bio' | 'prices') => void;
+  onTabChange?: (tab: 'portfolio' | 'bio' | 'prices' | 'app') => void;
 }
 
 // =======================================================
@@ -21,9 +21,9 @@ const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
 
 // 🛑 AÑADIDO: onOpenStudioLogin en las props
 export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin, onTabChange }) => {
-  const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices'>('portfolio');
+  const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices' | 'app'>('portfolio');
 
-  const handleTabChange = (tab: 'portfolio' | 'bio' | 'prices') => {
+  const handleTabChange = (tab: 'portfolio' | 'bio' | 'prices' | 'app') => {
     setActiveTab(tab);
     onTabChange?.(tab);
   };
@@ -52,13 +52,19 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
               onClick={() => handleTabChange('bio')}
               className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'bio' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
             >
-              TRAYECTORIA & BIO
+              BIOGRAFÍA
             </button>
             <button
               onClick={() => handleTabChange('prices')}
               className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'prices' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
             >
-              ENCARGOS & PRECIOS
+              ENCARGOS Y PRECIOS
+            </button>
+            <button
+              onClick={() => handleTabChange('app')}
+              className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'app' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
+            >
+              APLICACIÓN COLOR
             </button>
           </div>
         </div>
@@ -165,25 +171,25 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
         )}
 
         {/* ========================================= */}
-        {/* COLECCIONISMO & PRECIOS TAB (REDESIGN) */}
+        {/* ENCARGOS Y PRECIOS TAB */}
         {/* ========================================= */}
         {activeTab === 'prices' && (
           <div className="space-y-12">
             
-            {/* Introducción de Lujo */}
+            {/* Introducción de Ventas */}
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="font-serif text-5xl font-bold text-slate-900 mb-4">El Arte de Coleccionar</h2>
+              <h2 className="font-serif text-5xl font-bold text-slate-900 mb-4">Encargos y Precios</h2>
               <p className="text-xl font-serif italic text-slate-600 border-b border-gold-500 pb-4">
-                "Arte con alma y sofisticación para tu espacio."
+                "Arte con alma y herramientas digitales para tu creatividad."
               </p>
               <p className="text-slate-700 leading-relaxed mt-6">
-                Llevar una pieza de arte a tu hogar o espacio de trabajo es una decisión íntima y transformadora. 
-                Para adaptarme a tu visión, proceso y presupuesto, ofrezco tres caminos exclusivos para que inicies o amplíes tu colección.
+                Ofrezco obras originales, encargos personalizados y herramientas digitales exclusivas. 
+                Cada opción está diseñada para adaptarse a tu visión, proceso y presupuesto.
               </p>
             </div>
 
-            {/* Opciones de Coleccionismo (Grid de 3 Columnas) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Opciones de Ventas (Grid de 2x2 para dar más espacio a cada opción) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
               
               {/* Opción 1: Obra Original Única */}
               <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 flex flex-col items-center text-center">
@@ -230,12 +236,159 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   Solicitar Consulta
                 </a>
               </div>
+
+              {/* Opción 4: Herramienta Color Digital - Analizador Técnico GL */}
+              <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-6 shadow-xl border-t-4 border-gold-500 flex flex-col items-center text-center text-white relative overflow-hidden">
+                {/* Efecto de sofisticación tecnológica */}
+                <div className="absolute inset-0 bg-gradient-to-t from-gold-500/10 to-transparent opacity-50"></div>
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-gold-500 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                  <h3 className="font-serif text-2xl font-bold text-white mb-3">4. Herramienta Color Digital</h3>
+                  <p className="text-slate-200 mb-4 text-sm leading-relaxed flex-grow">
+                    Mi herramienta digital exclusiva para artistas. <span className="text-gold-400 font-semibold">Análisis técnico avanzado</span> de composición, color y forma. Desarrollada con inteligencia artificial para perfeccionar tu proceso creativo.
+                  </p>
+                  <div className="space-y-2 mb-4">
+                    <p className="text-xs text-slate-300">✓ Análisis de composición</p>
+                    <p className="text-xs text-slate-300">✓ Estudio cromático avanzado</p>
+                    <p className="text-xs text-slate-300">✓ Certificado de autenticidad digital</p>
+                  </div>
+                  <button
+                    onClick={() => onOpenCompanion('ANALYZER_DEMO')}
+                    className="mt-4 bg-gold-500 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                  >
+                    <Eye size={16}/> Ver Demo Exclusiva
+                  </button>
+                  <p className="text-xs text-slate-400 mt-3 italic">Próximamente disponible para coleccionistas</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================= */}
+        {/* APLICACIÓN COLOR TAB - SECCIÓN EXCLUSIVA */}
+        {/* ========================================= */}
+        {activeTab === 'app' && (
+          <div className="space-y-16">
+            
+            {/* Header Hero Section */}
+            <div className="text-center space-y-8">
+              <div className="max-w-4xl mx-auto">
+                <div className="w-24 h-24 bg-gold-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
+                  <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <h1 className="font-serif text-5xl md:text-6xl font-bold text-slate-900 mb-4">
+                  Analizador Técnico GL
+                </h1>
+                <p className="text-2xl font-serif text-gold-600 italic mb-6">
+                  Herramienta Digital Exclusiva para Artistas
+                </p>
+                <p className="text-lg text-slate-700 leading-relaxed max-w-3xl mx-auto">
+                  Revoluciona tu proceso creativo con análisis técnico avanzado mediante inteligencia artificial. 
+                  Composición, cromatismo y certificado de autenticidad digital en una herramienta profesional.
+                </p>
+              </div>
+            </div>
+
+            {/* Características Principales */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              <div className="text-center p-8 bg-white rounded-2xl shadow-xl border-t-4 border-gold-500">
+                <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                  </svg>
+                </div>
+                <h3 className="font-serif text-xl font-bold text-slate-900 mb-3">Análisis de Composición</h3>
+                <p className="text-slate-600">
+                  Estructura, equilibrio, flujo visual y regla de oro. Evaluación profesional de la composición artística.
+                </p>
+              </div>
+
+              <div className="text-center p-8 bg-white rounded-2xl shadow-xl border-t-4 border-gold-500">
+                <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                  </svg>
+                </div>
+                <h3 className="font-serif text-xl font-bold text-slate-900 mb-3">Estudio Cromático</h3>
+                <p className="text-slate-600">
+                  Análisis de paleta, armonías, contraste y teoría del color. Recomendaciones de mejora cromática.
+                </p>
+              </div>
+
+              <div className="text-center p-8 bg-white rounded-2xl shadow-xl border-t-4 border-gold-500">
+                <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="font-serif text-xl font-bold text-slate-900 mb-3">Certificado Digital</h3>
+                <p className="text-slate-600">
+                  Genera certificado de autenticidad digital con análisis técnico. Ideal para valorización y venta.
+                </p>
+              </div>
+            </div>
+
+            {/* Demo Interactiva */}
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-12 rounded-3xl text-white text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-gold-500/10 to-transparent"></div>
+                <div className="relative z-10">
+                  <h2 className="font-serif text-3xl font-bold mb-6">Demo Interactiva</h2>
+                  <p className="text-xl mb-8 text-slate-200">
+                    Experimenta el poder del análisis técnico en tiempo real
+                  </p>
+                  
+                  <div className="bg-slate-800/50 p-8 rounded-2xl border-2 border-dashed border-gold-500 mb-8">
+                    <div className="space-y-6">
+                      <div className="w-32 h-32 bg-gold-500/20 rounded-full mx-auto flex items-center justify-center">
+                        <svg className="w-16 h-16 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-semibold">Sube tu obra para analizar</h3>
+                      <p className="text-slate-300">
+                        Arrastra una imagen o haz clic para seleccionar
+                      </p>
+                      <button
+                        onClick={() => onOpenCompanion('ANALYZER_DEMO')}
+                        className="bg-gold-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-gold-600 transition-colors inline-flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                      >
+                        <Eye size={18}/> Probar Demo Exclusiva
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Llamada a la Action Final */}
+            <div className="text-center bg-gradient-to-r from-gold-500 to-gold-600 p-12 rounded-3xl text-white">
+              <h2 className="font-serif text-3xl font-bold mb-4">Próximamente Disponible</h2>
+              <p className="text-xl mb-8 max-w-2xl mx-auto">
+                Sé el primero en acceder a esta herramienta revolucionaria que transformará tu proceso artístico
+              </p>
+              <a 
+                href={`mailto:${ARTIST_INFO.email}?subject=Interés en Analizador Técnico GL&body=Hola Myriam, estoy interesado en el Analizador Técnico GL. Por favor, avísenme cuando esté disponible.`}
+                className="bg-white text-slate-900 px-8 py-4 rounded-full font-semibold hover:bg-slate-100 transition-colors inline-flex items-center gap-2 text-lg shadow-xl"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Solicitar Acceso Prioritario
+              </a>
             </div>
           </div>
         )}
 
         {/* Cierre - CTA Final (Solo para Portfolio y Bio) 🛑 BLOQUE CORREGIDO */}
-        {activeTab !== 'prices' && (
+        {activeTab !== 'prices' && activeTab !== 'app' && (
           <div className="mt-16 bg-slate-800 p-12 text-center">
             <div className="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="text-left">

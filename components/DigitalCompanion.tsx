@@ -16,7 +16,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     showCertificateAccess, 
     initialMode = 'lupa' 
 }) => {
-  const artwork = ARTWORKS.find(a => a.id === artworkId) || ARTWORKS[0];
+  const artwork = artworkId === 'ANALYZER_DEMO' ? null : ARTWORKS.find(a => a.id === artworkId) || ARTWORKS[0];
   
   const [showCertificate, setShowCertificate] = useState(initialMode === 'certificate');
   
@@ -24,12 +24,12 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
   const [zoomStyle, setZoomStyle] = useState({});
   const imgContainerRef = useRef<HTMLDivElement>(null);
 
-  const displayYear = artwork.year && artwork.year.toString().trim() !== '' 
+  const displayYear = artwork && artwork.year && artwork.year.toString().trim() !== '' 
                       ? artwork.year 
                       : '2025'; 
   
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!imgContainerRef.current) return;
+    if (!imgContainerRef.current || !artwork) return;
     const { left, top, width, height } = imgContainerRef.current.getBoundingClientRect();
     
     let x = e.clientX - left; 
@@ -50,6 +50,104 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
       left: x + 20,
     });
   };
+
+  // Si es el demo del Analizador Técnico
+  if (artworkId === 'ANALYZER_DEMO') {
+    return (
+      <div className="fixed inset-0 z-[110] bg-gradient-to-br from-slate-900 to-slate-800 p-4 md:p-12 overflow-y-auto flex justify-center items-center">
+        <button 
+          onClick={onClose} 
+          className="fixed top-6 right-6 z-[120] bg-white text-slate-900 p-3 rounded-full hover:bg-red-500 hover:text-white shadow-xl"
+        >
+          <X size={24} />
+        </button>
+        
+        <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          {/* Header del Analizador */}
+          <div className="bg-gradient-to-r from-slate-900 to-slate-800 p-8 text-white text-center rounded-t-2xl">
+            <div className="w-20 h-20 bg-gold-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+            <h2 className="font-serif text-3xl font-bold mb-2">Analizador Técnico GL</h2>
+            <p className="text-gold-400 italic">Herramienta Digital Exclusiva para Artistas</p>
+          </div>
+          
+          {/* Contenido del Demo */}
+          <div className="p-8 space-y-8">
+            <div className="text-center">
+              <h3 className="font-serif text-2xl font-bold text-slate-900 mb-4">Análisis Avanzado de Obra</h3>
+              <p className="text-slate-600 mb-6">
+                Sube una imagen de tu obra y recibe un análisis técnico completo con inteligencia artificial
+              </p>
+            </div>
+            
+            {/* Demo Interactivo */}
+            <div className="bg-slate-50 p-6 rounded-xl border-2 border-dashed border-gold-500 text-center">
+              <div className="space-y-4">
+                <div className="w-32 h-32 bg-gold-100 rounded-full mx-auto flex items-center justify-center">
+                  <ImageIcon size={48} className="text-gold-600" />
+                </div>
+                <h4 className="font-semibold text-slate-800">Demo Interactiva</h4>
+                <p className="text-sm text-slate-600">
+                  Arrastra una imagen aquí para ver cómo funciona el análisis
+                </p>
+                <button className="bg-gold-500 text-white px-6 py-2 rounded-lg hover:bg-gold-600 transition-colors">
+                  Probar con Imagen de Ejemplo
+                </button>
+              </div>
+            </div>
+            
+            {/* Características */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center p-4">
+                <div className="w-12 h-12 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                  </svg>
+                </div>
+                <h5 className="font-semibold text-slate-800 mb-2">Composición</h5>
+                <p className="text-sm text-slate-600">Análisis de estructura, equilibrio y flujo visual</p>
+              </div>
+              
+              <div className="text-center p-4">
+                <div className="w-12 h-12 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                  </svg>
+                </div>
+                <h5 className="font-semibold text-slate-800 mb-2">Cromatismo</h5>
+                <p className="text-sm text-slate-600">Estudio de paleta, armonía y contraste cromático</p>
+              </div>
+              
+              <div className="text-center p-4">
+                <div className="w-12 h-12 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <svg className="w-6 h-6 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h5 className="font-semibold text-slate-800 mb-2">Certificado</h5>
+                <p className="text-sm text-slate-600">Genera certificado de autenticidad digital</p>
+              </div>
+            </div>
+            
+            {/* Llamada a la acción */}
+            <div className="bg-gradient-to-r from-gold-500 to-gold-600 p-6 rounded-xl text-white text-center">
+              <h4 className="font-serif text-xl font-bold mb-2">Próximamente Disponible</h4>
+              <p className="mb-4">Sé el primero en acceder a esta herramienta revolucionaria</p>
+              <a 
+                href={`mailto:${ARTIST_INFO.email}?subject=Interés en Analizador Técnico GL&body=Hola Myriam, estoy interesado en el Analizador Técnico GL. Por favor, avísenme cuando esté disponible.`}
+                className="bg-white text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-100 transition-colors inline-flex items-center gap-2"
+              >
+                <Mail size={18} /> Solicitar Acceso Prioritario
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Si se está mostrando el certificado, renderiza solo el certificado
   if (showCertificate) {
