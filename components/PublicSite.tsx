@@ -290,8 +290,9 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   Herramienta Digital Exclusiva para Artistas
                 </p>
                 <p className="text-lg text-slate-700 leading-relaxed max-w-3xl mx-auto">
-                  Revoluciona tu proceso creativo con análisis técnico avanzado mediante inteligencia artificial. 
-                  Composición, cromatismo y certificado de autenticidad digital en una herramienta profesional.
+                  Esta es la aplicación que he creado y utilizo personalmente para analizar los colores de los modelos que voy a pintar. 
+                  Ahora comparto mi herramienta profesional contigo: análisis técnico avanzado mediante inteligencia artificial 
+                  para perfeccionar tu proceso creativo con composición, cromatismo y certificado de autenticidad digital.
                 </p>
               </div>
             </div>
@@ -335,14 +336,17 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
               </div>
             </div>
 
-            {/* Demo Interactiva */}
+            {/* Demo Interactiva - Limitada a 1 uso por usuario */}
             <div className="max-w-4xl mx-auto">
               <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-12 rounded-3xl text-white text-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-gold-500/10 to-transparent"></div>
                 <div className="relative z-10">
-                  <h2 className="font-serif text-3xl font-bold mb-6">Demo Interactiva</h2>
-                  <p className="text-xl mb-8 text-slate-200">
-                    Experimenta el poder del análisis técnico en tiempo real
+                  <h2 className="font-serif text-3xl font-bold mb-4">Demo Exclusiva</h2>
+                  <p className="text-xl mb-4 text-slate-200">
+                    Experimenta el poder del análisis técnico con tu propia obra
+                  </p>
+                  <p className="text-sm text-slate-300 mb-8 italic">
+                    *Demo limitada a un análisis por usuario como cortesía profesional
                   </p>
                   
                   <div className="bg-slate-800/50 p-8 rounded-2xl border-2 border-dashed border-gold-500 mb-8">
@@ -354,16 +358,135 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                       </div>
                       <h3 className="text-xl font-semibold">Sube tu obra para analizar</h3>
                       <p className="text-slate-300">
-                        Arrastra una imagen o haz clic para seleccionar
+                        Arrastra una imagen o haz clic para seleccionar tu obra
                       </p>
                       <button
                         onClick={() => onOpenCompanion('ANALYZER_DEMO')}
                         className="bg-gold-500 text-white px-8 py-3 rounded-full font-semibold hover:bg-gold-600 transition-colors inline-flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
                       >
-                        <Eye size={18}/> Probar Demo Exclusiva
+                        <Eye size={18}/> Probar Demo Gratuita
                       </button>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Sección de Compra - Adquisición Profesional */}
+            <div className="max-w-5xl mx-auto">
+              <div className="bg-white rounded-3xl shadow-2xl p-12 border-t-4 border-gold-500">
+                <div className="text-center mb-12">
+                  <div className="w-20 h-20 bg-gold-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                    </svg>
+                  </div>
+                  <h2 className="font-serif text-4xl font-bold text-slate-900 mb-4">
+                    Adquiere la Versión Completa
+                  </h2>
+                  <p className="text-xl text-slate-600 mb-6">
+                    Acceso ilimitado y descarga profesional del Analizador Técnico del Color
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                  {/* Características de la Versión Completa */}
+                  <div className="space-y-6">
+                    <h3 className="font-serif text-2xl font-bold text-slate-900 mb-4">Características Completas</h3>
+                    
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-gold-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-slate-900">Análisis Ilimitado</h4>
+                        <p className="text-sm text-slate-600">Sin restricciones en el número de obras</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-gold-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-slate-900">Descarga Profesional</h4>
+                        <p className="text-sm text-slate-600">Versión completa para instalar en tu sistema</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-gold-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-slate-900">Certificados Digitales</h4>
+                        <p className="text-sm text-slate-600">Generación ilimitada de certificados de autenticidad</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <div className="w-6 h-6 bg-gold-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-slate-900">Actualizaciones Vitalicias</h4>
+                        <p className="text-sm text-slate-600">Mejoras continuas y nuevas funcionalidades</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sistema de Adquisición */}
+                  <div className="bg-gradient-to-br from-slate-50 to-slate-100 p-8 rounded-2xl">
+                    <h3 className="font-serif text-2xl font-bold text-slate-900 mb-6">Adquisición Inmediata</h3>
+                    
+                    <div className="space-y-4 mb-6">
+                      <div className="bg-white p-4 rounded-lg border border-slate-200">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-slate-600">Versión Profesional</span>
+                          <span className="text-2xl font-bold text-slate-900">€29.99</span>
+                        </div>
+                        <p className="text-sm text-slate-500">Pago único - Acceso permanente</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <button className="w-full bg-gold-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-gold-600 transition-colors flex items-center justify-center gap-2 shadow-lg">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        </svg>
+                        Comprar con Tarjeta Bancaria
+                      </button>
+                      
+                      <p className="text-xs text-slate-500 text-center">
+                        Procesamiento seguro via Gumroad • Descarga inmediata
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Testimonio Profesional */}
+                <div className="bg-slate-50 p-8 rounded-2xl text-center">
+                  <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-8 h-8 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                  </div>
+                  <h4 className="font-serif text-xl font-semibold text-slate-900 mb-3">Mi Herramienta Personal, Ahora Para Ti</h4>
+                  <p className="text-slate-600 italic">
+                    "El Analizador Técnico del Color nació de mi necesidad como artista de analizar con precisión 
+                    los colores de los modelos que pinto. Es la herramienta que uso diariamente en mi estudio, 
+                    desarrollada con años de experiencia y perfeccionada con tecnología de vanguardia. 
+                    Ahora la comparto contigo para que también transformes tu proceso creativo."
+                  </p>
+                  <p className="text-sm text-slate-500 mt-4">— Myriam Alcaraz</p>
                 </div>
               </div>
             </div>
