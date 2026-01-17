@@ -237,7 +237,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                 </a>
               </div>
 
-              {/* Opción 4: Herramienta Color Digital - Analizador Técnico GL */}
+              {/* Opción 4: Analizador Técnico del Color - Herramienta Digital Exclusiva */}
               <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-6 shadow-xl border-t-4 border-gold-500 flex flex-col items-center text-center text-white relative overflow-hidden">
                 {/* Efecto de sofisticación tecnológica */}
                 <div className="absolute inset-0 bg-gradient-to-t from-gold-500/10 to-transparent opacity-50"></div>
@@ -247,7 +247,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                   </div>
-                  <h3 className="font-serif text-2xl font-bold text-white mb-3">4. Herramienta Color Digital</h3>
+                  <h3 className="font-serif text-2xl font-bold text-white mb-3">4. Analizador Técnico del Color</h3>
                   <p className="text-slate-200 mb-4 text-sm leading-relaxed flex-grow">
                     Mi herramienta digital exclusiva para artistas. <span className="text-gold-400 font-semibold">Análisis técnico avanzado</span> de composición, color y forma. Desarrollada con inteligencia artificial para perfeccionar tu proceso creativo.
                   </p>
@@ -284,7 +284,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   </svg>
                 </div>
                 <h1 className="font-serif text-5xl md:text-6xl font-bold text-slate-900 mb-4">
-                  Analizador Técnico GL
+                  Analizador Técnico del Color
                 </h1>
                 <p className="text-2xl font-serif text-gold-600 italic mb-6">
                   Herramienta Digital Exclusiva para Artistas
@@ -375,7 +375,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                 Sé el primero en acceder a esta herramienta revolucionaria que transformará tu proceso artístico
               </p>
               <a 
-                href={`mailto:${ARTIST_INFO.email}?subject=Interés en Analizador Técnico GL&body=Hola Myriam, estoy interesado en el Analizador Técnico GL. Por favor, avísenme cuando esté disponible.`}
+                href={`mailto:${ARTIST_INFO.email}?subject=Interés en Analizador Técnico del Color&body=Hola Myriam, estoy interesado en el Analizador Técnico del Color. Por favor, avísenme cuando esté disponible.`}
                 className="bg-white text-slate-900 px-8 py-4 rounded-full font-semibold hover:bg-slate-100 transition-colors inline-flex items-center gap-2 text-lg shadow-xl"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

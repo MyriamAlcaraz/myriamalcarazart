@@ -70,7 +70,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
-            <h2 className="font-serif text-3xl font-bold mb-2">Analizador Técnico GL</h2>
+            <h2 className="font-serif text-3xl font-bold mb-2">Analizador Técnico del Color</h2>
             <p className="text-gold-400 italic">Herramienta Digital Exclusiva para Artistas</p>
           </div>
           
@@ -137,7 +137,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
               <h4 className="font-serif text-xl font-bold mb-2">Próximamente Disponible</h4>
               <p className="mb-4">Sé el primero en acceder a esta herramienta revolucionaria</p>
               <a 
-                href={`mailto:${ARTIST_INFO.email}?subject=Interés en Analizador Técnico GL&body=Hola Myriam, estoy interesado en el Analizador Técnico GL. Por favor, avísenme cuando esté disponible.`}
+                href={`mailto:${ARTIST_INFO.email}?subject=Interés en Analizador Técnico del Color&body=Hola Myriam, estoy interesado en el Analizador Técnico del Color. Por favor, avísenme cuando esté disponible.`}
                 className="bg-white text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-100 transition-colors inline-flex items-center gap-2"
               >
                 <Mail size={18} /> Solicitar Acceso Prioritario
