@@ -342,20 +342,6 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <div className="relative group overflow-hidden rounded-xl shadow-lg">
                       <img 
-                        src="/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.29.08.png" 
-                        alt="Vista Principal del Analizador"
-                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110 cursor-pointer"
-                        onClick={() => window.open('/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.29.08.png', '_blank')}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <p className="absolute bottom-3 left-3 text-white text-sm font-semibold">
-                          Vista Principal - Análisis Completo
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="relative group overflow-hidden rounded-xl shadow-lg">
-                      <img 
                         src="/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.31.07.png" 
                         alt="Análisis de Colores Detallado"
                         className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110 cursor-pointer"
@@ -364,20 +350,6 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <p className="absolute bottom-3 left-3 text-white text-sm font-semibold">
                           Análisis Detallado de Pigmentos
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="relative group overflow-hidden rounded-xl shadow-lg">
-                      <img 
-                        src="/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.29.37.png" 
-                        alt="Zoom y Navegación"
-                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110 cursor-pointer"
-                        onClick={() => window.open('/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.29.37.png', '_blank')}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <p className="absolute bottom-3 left-3 text-white text-sm font-semibold">
-                          Zoom Avanzado y Navegación
                         </p>
                       </div>
                     </div>
