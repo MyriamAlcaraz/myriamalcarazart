@@ -290,9 +290,9 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   Herramienta Digital Exclusiva para Artistas
                 </p>
                 <p className="text-lg text-slate-700 leading-relaxed max-w-3xl mx-auto">
-                  Esta es la aplicación que he creado y utilizo personalmente para analizar los colores de los modelos que voy a pintar. 
-                  Ahora comparto mi herramienta profesional contigo: análisis técnico avanzado mediante inteligencia artificial 
-                  para perfeccionar tu proceso creativo con composición, cromatismo y certificado de autenticidad digital.
+                  Mi herramienta personal que uso diariamente en mi estudio para analizar los colores de los modelos que voy a pintar. 
+                  Ahora comparto contigo esta aplicación profesional con análisis técnico avanzado mediante inteligencia artificial 
+                  para perfeccionar tu proceso creativo. Incluye las denominaciones exactas de las tres marcas de óleos que utilizo profesionalmente: Old Holland, Williamsburg y Winsor & Newton.
                 </p>
               </div>
             </div>
@@ -382,10 +382,10 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                     </svg>
                   </div>
                   <h2 className="font-serif text-4xl font-bold text-slate-900 mb-4">
-                    Adquiere la Versión Completa
+                    Adquiere Mi Herramienta Profesional
                   </h2>
                   <p className="text-xl text-slate-600 mb-6">
-                    Acceso ilimitado y descarga profesional del Analizador Técnico del Color
+                    La misma que uso diariamente en mi estudio. Ahora disponible para ti.
                   </p>
                 </div>
 
@@ -481,10 +481,9 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   </div>
                   <h4 className="font-serif text-xl font-semibold text-slate-900 mb-3">Mi Herramienta Personal, Ahora Para Ti</h4>
                   <p className="text-slate-600 italic">
-                    "El Analizador Técnico del Color nació de mi necesidad como artista de analizar con precisión 
-                    los colores de los modelos que pinto. Es la herramienta que uso diariamente en mi estudio, 
-                    desarrollada con años de experiencia y perfeccionada con tecnología de vanguardia. 
-                    Ahora la comparto contigo para que también transformes tu proceso creativo."
+                    "Mi herramienta personal que uso diariamente en mi estudio para analizar los colores de los modelos que voy a pintar. 
+                    Ahora comparto contigo esta aplicación profesional con análisis técnico avanzado mediante inteligencia artificial 
+                    para perfeccionar tu proceso creativo. Incluye las denominaciones exactas de las tres marcas de óleos que utilizo profesionalmente."
                   </p>
                   <p className="text-sm text-slate-500 mt-4">— Myriam Alcaraz</p>
                 </div>
