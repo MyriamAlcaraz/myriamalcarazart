@@ -93,7 +93,14 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                 <p className="text-sm text-slate-600">
                   Arrastra una imagen aquí para ver cómo funciona el análisis
                 </p>
-                <button className="bg-gold-500 text-white px-6 py-2 rounded-lg hover:bg-gold-600 transition-colors">
+                <button 
+                  onClick={() => {
+                    // Simular carga de imagen de ejemplo
+                    const demoImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0ZGNkI2QiIvPgogIDxyZWN0IHg9IjIwMCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiM0RUNEQzQiLz4KICA8cmVjdCB4PSI0MDAiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjNDVCN0QxIi8+CiAgPHJlY3QgeD0iNjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzk2Q0VCMiIvPgogIDxyZWN0IHk9IjIwMCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNGRUVBQTciLz4KICA8cmVjdCB4PSIyMDAiIHk9IjIwMCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNEREFEMEREIi8+CiAgPHJlY3QgeD0iNDAwIiB5PSIyMDAiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjOThEOEM4Ii8+CiAgPHJlY3QgeD0iNjAwIiB5PSIyMDAiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjdEQzZGIi8+CiAgPHJlY3QgeT0iNDAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0JCOENDRSIvPgogIDxyZWN0IHg9IjIwMCIgeT0iNDAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzg1QzFFMiIvPgogIDxyZWN0IHg9IjQwMCIgeT0iNDAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0Y4QjczOSIvPgogIDxyZWN0IHg9IjYwMCIgeT0iNDAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzUyQjc4OCIvPgo8L3N2Zz4=';
+                    alert('Demo cargada: Imagen con 12 colores diferentes para análisis. En la versión completa, podrías subir tus propias obras y recibir análisis detallados de pigmentos, composición y recetas de mezcla.');
+                  }}
+                  className="bg-gold-500 text-white px-6 py-2 rounded-lg hover:bg-gold-600 transition-colors"
+                >
                   Probar con Imagen de Ejemplo
                 </button>
               </div>
