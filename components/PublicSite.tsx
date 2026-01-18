@@ -322,8 +322,8 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
             <div className="max-w-5xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 
-                {/* Demo Limitada */}
-                <div className="bg-white rounded-3xl shadow-2xl p-10 border-t-4 border-gold-500 text-center">
+                {/* Demo Limitada - Galería Interactiva */}
+                <div className="bg-white rounded-3xl shadow-2xl p-8 border-t-4 border-gold-500">
                   <div className="w-20 h-20 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <svg className="w-10 h-10 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -334,9 +334,69 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                     Try Demo / Prueba Demo
                   </h3>
                   <p className="text-slate-600 mb-6">
-                    Experience the power of technical analysis with one complimentary use.<br/>
-                    Experimenta el poder del análisis técnico con un uso de cortesía.
+                    Experience the power of technical analysis with interactive preview.<br/>
+                    Experimenta el poder del análisis técnico con vista interactiva.
                   </p>
+                  
+                  {/* Galería de Capturas Interactivas */}
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="relative group overflow-hidden rounded-xl shadow-lg">
+                      <img 
+                        src="/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.29.08.png" 
+                        alt="Vista Principal del Analizador"
+                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110 cursor-pointer"
+                        onClick={() => window.open('/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.29.08.png', '_blank')}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p className="absolute bottom-3 left-3 text-white text-sm font-semibold">
+                          Vista Principal - Análisis Completo
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="relative group overflow-hidden rounded-xl shadow-lg">
+                      <img 
+                        src="/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.31.07.png" 
+                        alt="Análisis de Colores Detallado"
+                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110 cursor-pointer"
+                        onClick={() => window.open('/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.31.07.png', '_blank')}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p className="absolute bottom-3 left-3 text-white text-sm font-semibold">
+                          Análisis Detallado de Pigmentos
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="relative group overflow-hidden rounded-xl shadow-lg">
+                      <img 
+                        src="/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.29.37.png" 
+                        alt="Zoom y Navegación"
+                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110 cursor-pointer"
+                        onClick={() => window.open('/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.29.37.png', '_blank')}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p className="absolute bottom-3 left-3 text-white text-sm font-semibold">
+                          Zoom Avanzado y Navegación
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="relative group overflow-hidden rounded-xl shadow-lg">
+                      <img 
+                        src="/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.29.45.png" 
+                        alt="Identificación de Colores"
+                        className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110 cursor-pointer"
+                        onClick={() => window.open('/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.29.45.png', '_blank')}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p className="absolute bottom-3 left-3 text-white text-sm font-semibold">
+                          Identificación Precisa de Colores
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
                   <button
                     onClick={() => onOpenCompanion('ANALYZER_DEMO')}
                     className="w-full bg-gold-500 text-white px-8 py-4 rounded-full font-semibold hover:bg-gold-600 transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105"
