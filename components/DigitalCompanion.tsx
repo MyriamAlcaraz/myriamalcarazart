@@ -355,15 +355,28 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                 <div className="w-32 h-32 bg-gold-100 rounded-full mx-auto flex items-center justify-center">
                   <ImageIcon size={48} className="text-gold-600" />
                 </div>
-                <h4 className="font-semibold text-slate-800">Demo Interactiva</h4>
+                <h4 className="font-semibold text-slate-800">Demo Visual</h4>
                 <p className="text-sm text-slate-600">
-                  Arrastra una imagen aquí para ver cómo funciona el análisis
+                  Descubre cómo funciona el análisis técnico del color
                 </p>
+                
+                {/* Video de demostración */}
+                <div className="relative rounded-lg overflow-hidden bg-black shadow-lg">
+                  <video 
+                    className="w-full h-64 object-cover"
+                    controls
+                    poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgZmlsbD0iIzFmMjkzNyIvPgogIDx0ZXh0IHg9IjQwIiB5PSIyMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iI2ZmZiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkRlbW8gZGVsIEFuYWxpemFkb3IgVMOoY25pY288L3RleHQ+Cjwvc3ZnPg=="
+                  >
+                    <source src="/demo-analizador-color.mp4" type="video/mp4" />
+                    Tu navegador no soporta videos.
+                  </video>
+                </div>
+                
                 <button 
                   onClick={handleDemoClick}
                   className="bg-gold-500 text-white px-6 py-2 rounded-lg hover:bg-gold-600 transition-colors"
                 >
-                  Probar con Imagen de Ejemplo
+                  Probar Versión Interactiva
                 </button>
               </div>
             </div>
