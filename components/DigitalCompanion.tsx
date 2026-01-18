@@ -43,22 +43,22 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
       message.className = 'fixed inset-0 z-[130] bg-black/90 flex justify-center items-center p-4';
       message.innerHTML = `
         <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
-          <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
           </div>
-          <h3 class="font-serif text-xl font-bold text-slate-900 mb-3">Demo Utilizada</h3>
+          <h3 class="font-serif text-xl font-bold text-slate-900 mb-3">Experiencia Completada</h3>
           <p class="text-slate-600 mb-6 leading-relaxed">
-            Su evaluación gratuita del Analizador Técnico del Color ha sido utilizada. 
-            Para acceder al análisis completo y sin limitaciones, adquiera la versión profesional.
+            Su sesión de evaluación del Analizador Técnico ha concluido. 
+            Para continuar utilizando el sistema sin interrupciones, adquiera la versión profesional.
           </p>
           <div class="space-y-3">
             <button onclick="this.closest('.fixed').remove()" class="w-full bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-700 transition-colors">
               Cerrar
             </button>
             <a href="https://496114690192.gumroad.com/l/owesfb" target="_blank" class="block w-full bg-gold-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gold-600 transition-colors">
-              Adquirir Versión Completa
+              Acceder a Versión Completa
             </a>
           </div>
         </div>
@@ -67,54 +67,134 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
       return;
     }
 
-    // Primera vez usando la demo
+    // Primera vez usando la demo - subir su propia foto
     localStorage.setItem('analyzer_demo_used', 'true');
     setDemoUsed(true);
 
     const message = document.createElement('div');
     message.className = 'fixed inset-0 z-[130] bg-black/90 flex justify-center items-center p-4';
     message.innerHTML = `
-      <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 text-center">
-        <div class="w-20 h-20 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
-          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-          </svg>
-        </div>
-        <h3 class="font-serif text-2xl font-bold text-slate-900 mb-4">Análisis Técnico Iniciado</h3>
-        <div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 mb-6">
-          <p class="text-slate-700 leading-relaxed mb-4">
-            <span class="font-semibold text-gold-600">Demo de Evaluación Activada</span><br/>
-            Sistema analizando muestra cromática con 12 pigmentos referenciales.
-          </p>
-          <div class="grid grid-cols-3 gap-2 text-xs text-slate-600">
-            <div class="bg-white p-2 rounded">🔴 Rojo Óxido</div>
-            <div class="bg-white p-2 rounded">🔵 Azul Cobalto</div>
-            <div class="bg-white p-2 rounded">🟡 Amarillo Ocre</div>
-            <div class="bg-white p-2 rounded">🟢 Verde Esmeralda</div>
-            <div class="bg-white p-2 rounded">🟣 Violeta</div>
-            <div class="bg-white p-2 rounded">⚪ Blanco Titanio</div>
+      <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 bg-gradient-to-br from-slate-800 to-slate-900 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
           </div>
+          <h3 class="font-serif text-xl font-bold text-slate-900">Análisis de Obra</h3>
+          <p class="text-slate-600 text-sm mt-2">Suba una imagen para comenzar la evaluación técnica</p>
         </div>
-        <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 text-left">
-          <p class="text-sm text-amber-800">
-            <span class="font-semibold">Versión Profesional Incluye:</span><br/>
-            • Análisis ilimitado de obras personales<br/>
-            • Identificación precisa de pigmentos (PW6, PR101, PY42...)<br/>
-            • Recetas de mezcla con porcentajes exactos<br/>
-            • Referencias cruzadas de 3 marcas premium
+        
+        <div class="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center bg-slate-50">
+          <input type="file" id="demo-upload" accept="image/*" class="hidden">
+          <label for="demo-upload" class="cursor-pointer">
+            <div class="w-20 h-20 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-10 h-10 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+              </svg>
+            </div>
+            <p class="text-slate-700 font-medium mb-2">Seleccione una imagen</p>
+            <p class="text-slate-500 text-xs">Formatos: JPG, PNG, WebP</p>
+          </label>
+        </div>
+        
+        <div class="mt-4 text-center">
+          <p class="text-xs text-slate-500">
+            <span id="demo-timer">05:00</span> restantes para completar el análisis
           </p>
-        </div>
-        <div class="space-y-3">
-          <button onclick="this.closest('.fixed').remove()" class="w-full bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-700 transition-colors">
-            Cerrar Demo
-          </button>
-          <a href="https://496114690192.gumroad.com/l/owesfb" target="_blank" class="block w-full bg-gradient-to-r from-gold-500 to-gold-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-gold-600 hover:to-gold-700 transition-all shadow-lg">
-            Acceder a Versión Completa - €46.99
-          </a>
         </div>
       </div>
     `;
     document.body.appendChild(message);
+
+    // Timer de 5 minutos
+    let timeLeft = 300; // 5 minutos en segundos
+    const timerElement = document.getElementById('demo-timer');
+    
+    const timer = setInterval(() => {
+      timeLeft--;
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        // Cerrar y mostrar enlace de compra
+        message.remove();
+        const purchaseMessage = document.createElement('div');
+        purchaseMessage.className = 'fixed inset-0 z-[130] bg-black/90 flex justify-center items-center p-4';
+        purchaseMessage.innerHTML = `
+          <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
+            <div class="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+              </svg>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-slate-900 mb-3">Tiempo Concluido</h3>
+            <p class="text-slate-600 mb-6">
+              Su sesión de evaluación ha finalizado. Para continuar analizando obras sin limitaciones de tiempo, acceda a la versión completa.
+            </p>
+            <a href="https://496114690192.gumroad.com/l/owesfb" target="_blank" class="block w-full bg-gradient-to-r from-gold-500 to-gold-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-gold-600 hover:to-gold-700 transition-all">
+              Adquirir Versión Profesional - €46.99
+            </a>
+          </div>
+        `;
+        document.body.appendChild(purchaseMessage);
+      }
+    }, 1000);
+
+    // Manejar subida de archivo
+    document.getElementById('demo-upload').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        // Simular procesamiento
+        message.innerHTML = `
+          <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8">
+            <div class="text-center">
+              <div class="w-16 h-16 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-white animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+              </div>
+              <h3 class="font-serif text-xl font-bold text-slate-900 mb-2">Analizando Obra</h3>
+              <p class="text-slate-600 mb-4">Procesando composición cromática y pigmentos...</p>
+              <div class="w-full bg-slate-200 rounded-full h-2 mb-4">
+                <div class="bg-gradient-to-r from-gold-400 to-gold-600 h-2 rounded-full animate-pulse" style="width: 75%"></div>
+              </div>
+              <p class="text-xs text-slate-500">
+                <span id="analysis-timer">05:00</span> restantes
+              </p>
+            </div>
+          </div>
+        `;
+
+        // Simular análisis por 3-4 minutos
+        setTimeout(() => {
+          clearInterval(timer);
+          message.innerHTML = `
+            <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8">
+              <div class="text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-slate-800 to-slate-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <h3 class="font-serif text-xl font-bold text-slate-900 mb-2">Análisis Completo</h3>
+                <div class="bg-slate-50 rounded-lg p-4 mb-4 text-left">
+                  <p class="text-sm text-slate-700 mb-2"><span class="font-semibold">Composición:</span> Estructura equilibrada con flujo diagonal</p>
+                  <p class="text-sm text-slate-700 mb-2"><span class="font-semibold">Paleta:</span> 7 pigmentos principales identificados</p>
+                  <p class="text-sm text-slate-700"><span class="font-semibold">Recomendación:</span> Mezcla base tierra con toques de luz</p>
+                </div>
+                <p class="text-slate-600 mb-4">Para obtener el análisis completo con recetas exactas y referencias de marcas...</p>
+                <a href="https://496114690192.gumroad.com/l/owesfb" target="_blank" class="block w-full bg-gradient-to-r from-gold-500 to-gold-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-gold-600 hover:to-gold-700 transition-all">
+                  Ver Análisis Completo - €46.99
+                </a>
+              </div>
+            </div>
+          `;
+        }, 180000); // 3 minutos
+      }
+    });
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
