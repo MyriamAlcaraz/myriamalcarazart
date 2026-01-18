@@ -252,9 +252,9 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                     Mi herramienta digital exclusiva para artistas. <span className="text-gold-400 font-semibold">Análisis técnico avanzado</span> de composición, color y forma. Desarrollada con inteligencia artificial para perfeccionar tu proceso creativo.
                   </p>
                   <div className="space-y-2 mb-4">
-                    <p className="text-xs text-slate-300">✓ Análisis de composición</p>
-                    <p className="text-xs text-slate-300">✓ Estudio cromático avanzado</p>
-                    <p className="text-xs text-slate-300">✓ Certificado de autenticidad digital</p>
+                    <p className="text-xs text-slate-300">✓ Análisis técnico avanzado</p>
+                    <p className="text-xs text-slate-300">✓ Identificación de pigmentos profesionales</p>
+                    <p className="text-xs text-slate-300">✓ Recetas de mezcla precisas</p>
                   </div>
                   <button
                     onClick={() => onOpenCompanion('ANALYZER_DEMO')}
