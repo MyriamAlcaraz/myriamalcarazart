@@ -102,7 +102,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
       document.body.appendChild(adminMessage);
 
       // Abrir la aplicación directamente sin restricciones
-      const appWindow = window.open('/analizador-color.html', 'admin-demo', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+      const appWindow = window.open('http://localhost:5173/analizador-color.html', 'admin-demo', 'width=1200,height=800,scrollbars=yes,resizable=yes');
       return;
     }
 
@@ -157,7 +157,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
       infoMessage.remove();
       
       // Abrir la aplicación real en una nueva ventana
-      const appWindow = window.open('/analizador-color.html', 'demo', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+      const appWindow = window.open('http://localhost:5173/analizador-color.html', 'demo', 'width=1200,height=800,scrollbars=yes,resizable=yes');
       
       // Crear mensaje de espera (sin timer todavía)
       const waitMessage = document.createElement('div');
