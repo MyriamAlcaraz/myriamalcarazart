@@ -360,16 +360,21 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                   Descubre cómo funciona el análisis técnico del color
                 </p>
                 
-                {/* Video de demostración */}
-                <div className="relative rounded-lg overflow-hidden bg-black shadow-lg">
-                  <video 
-                    className="w-full h-64 object-cover"
-                    controls
-                    poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgZmlsbD0iIzFmMjkzNyIvPgogIDx0ZXh0IHg9IjQwIiB5PSIyMjUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iI2ZmZiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkRlbW8gZGVsIEFuYWxpemFkb3IgVMOoY25pY288L3RleHQ+Cjwvc3ZnPg=="
-                  >
-                    <source src="/demo-analizador-color.mp4" type="video/mp4" />
-                    Tu navegador no soporta videos.
-                  </video>
+                {/* Video de demostración corregido */}
+                <div className="relative rounded-lg overflow-hidden bg-black shadow-lg max-w-md mx-auto">
+                  <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
+                    <div className="text-center p-6">
+                      <div className="w-16 h-16 bg-gold-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <p className="text-white font-medium mb-2">Demo del Analizador</p>
+                      <p className="text-slate-300 text-sm">Video de demostración</p>
+                      <p className="text-slate-400 text-xs mt-2">Próximamente disponible</p>
+                    </div>
+                  </div>
                 </div>
                 
                 <button 
