@@ -318,89 +318,36 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
               </div>
             </div>
 
-            {/* Sección de Acciones - Demo y Compra */}
-            <div className="max-w-5xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                {/* Demo Limitada - Galería Interactiva */}
-                <div className="bg-white rounded-3xl shadow-2xl p-8 border-t-4 border-gold-500">
-                  <div className="w-20 h-20 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg className="w-10 h-10 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  </div>
-                  <h3 className="font-serif text-2xl font-bold text-slate-900 mb-4">
-                    Try Demo / Prueba Demo
-                  </h3>
-                  <p className="text-slate-600 mb-6">
-                    Experience the power of technical analysis with interactive preview.<br/>
-                    Experimenta el poder del análisis técnico con vista interactiva.
-                  </p>
-                  
-                  {/* Galería de Capturas Interactivas */}
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="relative group overflow-hidden rounded-xl shadow-lg">
-                      <img 
-                        src="/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.31.07.png" 
-                        alt="Análisis de Colores Detallado"
-                        className="w-full h-64 object-contain transition-transform duration-300 group-hover:scale-110 cursor-pointer"
-                        onClick={() => window.open('/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.31.07.png', '_blank')}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <p className="absolute bottom-3 left-3 text-white text-sm font-semibold">
-                          Análisis Detallado de Pigmentos
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="relative group overflow-hidden rounded-xl shadow-lg">
-                      <img 
-                        src="/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.29.45.png" 
-                        alt="Identificación de Colores"
-                        className="w-full h-64 object-contain transition-transform duration-300 group-hover:scale-110 cursor-pointer"
-                        onClick={() => window.open('/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.29.45.png', '_blank')}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <p className="absolute bottom-3 left-3 text-white text-sm font-semibold">
-                          Identificación Precisa de Colores
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  </div>
-
-                {/* Compra Profesional */}
-                <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl shadow-2xl p-10 text-center text-white">
-                  <div className="w-20 h-20 bg-gold-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                    </svg>
-                  </div>
-                  <h3 className="font-serif text-2xl font-bold text-white mb-4">
-                    Buy Now / Comprar Ahora
-                  </h3>
-                  <p className="text-slate-200 mb-6">
-                    Get unlimited access to the complete professional tool.<br/>
-                    Obtén acceso ilimitado a la herramienta profesional completa.
-                  </p>
-                  <div className="mb-6">
-                    <p className="text-3xl font-bold text-gold-400">€46.99</p>
-                    <p className="text-sm text-slate-300">One-time payment / Pago único</p>
-                  </div>
-                  <a 
-                    href="https://496114690192.gumroad.com/l/owesfb"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full bg-gold-500 text-white px-8 py-4 rounded-full font-semibold hover:bg-gold-600 transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 inline-block"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                    </svg>
-                    Buy Now / Comprar Ahora
-                  </a>
+            {/* Sección de Compra - Centrado */}
+            <div className="max-w-3xl mx-auto">
+              <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl shadow-2xl p-12 text-center text-white">
+                <div className="w-24 h-24 bg-gold-500 rounded-full flex items-center justify-center mx-auto mb-8">
+                  <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                  </svg>
                 </div>
+                <h3 className="font-serif text-3xl font-bold text-white mb-6">
+                  Buy Now / Comprar Ahora
+                </h3>
+                <p className="text-slate-200 mb-8 text-lg">
+                  Get unlimited access to the complete professional tool.<br/>
+                  Obtén acceso ilimitado a la herramienta profesional completa.
+                </p>
+                <div className="mb-8">
+                  <p className="text-4xl font-bold text-gold-400">€46.99</p>
+                  <p className="text-sm text-slate-300">One-time payment / Pago único</p>
+                </div>
+                <a 
+                  href="https://496114690192.gumroad.com/l/owesfb"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-gold-500 text-white px-10 py-5 rounded-full font-semibold hover:bg-gold-600 transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 inline-block text-lg"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                  </svg>
+                  Buy Now / Comprar Ahora
+                </a>
               </div>
             </div>
 
