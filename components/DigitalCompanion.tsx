@@ -67,6 +67,45 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
       return;
     }
 
+    // Verificar si es administrador (para pruebas)
+    const isAdmin = localStorage.getItem('is_admin') === 'true';
+    if (isAdmin) {
+      // Modo administrador - permite múltiples pruebas
+      const adminMessage = document.createElement('div');
+      adminMessage.className = 'fixed inset-0 z-[130] bg-black/90 flex justify-center items-center p-4';
+      adminMessage.innerHTML = `
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl max-w-md w-full p-8 text-center text-white">
+          <div class="w-16 h-16 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3 class="font-serif text-xl font-bold mb-3">Modo Administrador</h3>
+          <p class="text-slate-300 mb-6 leading-relaxed">
+            Acceso de prueba ilimitado para verificar el funcionamiento del sistema.
+          </p>
+          <div class="bg-slate-700 rounded-lg p-4 mb-6 text-left">
+            <p class="text-sm text-slate-300 mb-2">✅ Demo sin restricciones</p>
+            <p class="text-sm text-slate-300 mb-2">✅ Múltiples pruebas permitidas</p>
+            <p class="text-slate-300">✅ Timer desactivado</p>
+          </div>
+          <div class="space-y-3">
+            <button onclick="this.closest('.fixed').remove()" class="w-full bg-gradient-to-r from-gold-500 to-gold-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-gold-600 hover:to-gold-700 transition-all">
+              Abrir Aplicación
+            </button>
+            <button onclick="localStorage.removeItem('is_admin'); this.closest('.fixed').remove()" class="w-full bg-slate-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-600 transition-colors">
+              Salir Modo Admin
+            </button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(adminMessage);
+
+      // Abrir la aplicación directamente sin restricciones
+      const appWindow = window.open('/analizador-color.html', 'admin-demo', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+      return;
+    }
+
     // Primera vez - marcar como usado inmediatamente para evitar trampas
     localStorage.setItem('analyzer_demo_used', 'true');
     setDemoUsed(true);
