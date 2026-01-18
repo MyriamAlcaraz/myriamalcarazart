@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Shield, Image as ImageIcon, ZoomIn, Printer, X, AlertTriangle, Mail } from 'lucide-react'; 
 import { ARTWORKS, ARTIST_INFO } from '../constants';
 import { Certificate } from './Certificate';
@@ -19,15 +19,104 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
   const artwork = artworkId === 'ANALYZER_DEMO' ? null : ARTWORKS.find(a => a.id === artworkId) || ARTWORKS[0];
   
   const [showCertificate, setShowCertificate] = useState(initialMode === 'certificate');
-  
   const [showZoom, setShowZoom] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
+  const [demoUsed, setDemoUsed] = useState(false);
   const imgContainerRef = useRef<HTMLDivElement>(null);
 
   const displayYear = artwork && artwork.year && artwork.year.toString().trim() !== '' 
                       ? artwork.year 
                       : '2025'; 
   
+  // Verificar si el usuario ya usó la demo
+  useEffect(() => {
+    const hasUsedDemo = localStorage.getItem('analyzer_demo_used');
+    if (hasUsedDemo === 'true') {
+      setDemoUsed(true);
+    }
+  }, []);
+
+  const handleDemoClick = () => {
+    if (demoUsed) {
+      // Mensaje elegante para usuarios que ya usaron la demo
+      const message = document.createElement('div');
+      message.className = 'fixed inset-0 z-[130] bg-black/90 flex justify-center items-center p-4';
+      message.innerHTML = `
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
+          <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3 class="font-serif text-xl font-bold text-slate-900 mb-3">Demo Utilizada</h3>
+          <p class="text-slate-600 mb-6 leading-relaxed">
+            Su evaluación gratuita del Analizador Técnico del Color ha sido utilizada. 
+            Para acceder al análisis completo y sin limitaciones, adquiera la versión profesional.
+          </p>
+          <div class="space-y-3">
+            <button onclick="this.closest('.fixed').remove()" class="w-full bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-700 transition-colors">
+              Cerrar
+            </button>
+            <a href="https://496114690192.gumroad.com/l/owesfb" target="_blank" class="block w-full bg-gold-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gold-600 transition-colors">
+              Adquirir Versión Completa
+            </a>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(message);
+      return;
+    }
+
+    // Primera vez usando la demo
+    localStorage.setItem('analyzer_demo_used', 'true');
+    setDemoUsed(true);
+
+    const message = document.createElement('div');
+    message.className = 'fixed inset-0 z-[130] bg-black/90 flex justify-center items-center p-4';
+    message.innerHTML = `
+      <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 text-center">
+        <div class="w-20 h-20 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
+          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+        <h3 class="font-serif text-2xl font-bold text-slate-900 mb-4">Análisis Técnico Iniciado</h3>
+        <div class="bg-gradient-to-r from-slate-50 to-slate-100 rounded-xl p-6 mb-6">
+          <p class="text-slate-700 leading-relaxed mb-4">
+            <span class="font-semibold text-gold-600">Demo de Evaluación Activada</span><br/>
+            Sistema analizando muestra cromática con 12 pigmentos referenciales.
+          </p>
+          <div class="grid grid-cols-3 gap-2 text-xs text-slate-600">
+            <div class="bg-white p-2 rounded">🔴 Rojo Óxido</div>
+            <div class="bg-white p-2 rounded">🔵 Azul Cobalto</div>
+            <div class="bg-white p-2 rounded">🟡 Amarillo Ocre</div>
+            <div class="bg-white p-2 rounded">🟢 Verde Esmeralda</div>
+            <div class="bg-white p-2 rounded">🟣 Violeta</div>
+            <div class="bg-white p-2 rounded">⚪ Blanco Titanio</div>
+          </div>
+        </div>
+        <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 text-left">
+          <p class="text-sm text-amber-800">
+            <span class="font-semibold">Versión Profesional Incluye:</span><br/>
+            • Análisis ilimitado de obras personales<br/>
+            • Identificación precisa de pigmentos (PW6, PR101, PY42...)<br/>
+            • Recetas de mezcla con porcentajes exactos<br/>
+            • Referencias cruzadas de 3 marcas premium
+          </p>
+        </div>
+        <div class="space-y-3">
+          <button onclick="this.closest('.fixed').remove()" class="w-full bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-700 transition-colors">
+            Cerrar Demo
+          </button>
+          <a href="https://496114690192.gumroad.com/l/owesfb" target="_blank" class="block w-full bg-gradient-to-r from-gold-500 to-gold-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-gold-600 hover:to-gold-700 transition-all shadow-lg">
+            Acceder a Versión Completa - €46.99
+          </a>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(message);
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!imgContainerRef.current || !artwork) return;
     const { left, top, width, height } = imgContainerRef.current.getBoundingClientRect();
@@ -94,11 +183,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                   Arrastra una imagen aquí para ver cómo funciona el análisis
                 </p>
                 <button 
-                  onClick={() => {
-                    // Simular carga de imagen de ejemplo
-                    const demoImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0ZGNkI2QiIvPgogIDxyZWN0IHg9IjIwMCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiM0RUNEQzQiLz4KICA8cmVjdCB4PSI0MDAiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjNDVCN0QxIi8+CiAgPHJlY3QgeD0iNjAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzk2Q0VCMiIvPgogIDxyZWN0IHk9IjIwMCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNGRUVBQTciLz4KICA8cmVjdCB4PSIyMDAiIHk9IjIwMCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNEREFEMEREIi8+CiAgPHJlY3QgeD0iNDAwIiB5PSIyMDAiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjOThEOEM4Ii8+CiAgPHJlY3QgeD0iNjAwIiB5PSIyMDAiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjdEQzZGIi8+CiAgPHJlY3QgeT0iNDAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0JCOENDRSIvPgogIDxyZWN0IHg9IjIwMCIgeT0iNDAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzg1QzFFMiIvPgogIDxyZWN0IHg9IjQwMCIgeT0iNDAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0Y4QjczOSIvPgogIDxyZWN0IHg9IjYwMCIgeT0iNDAwIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzUyQjc4OCIvPgo8L3N2Zz4=';
-                    alert('Demo cargada: Imagen con 12 colores diferentes para análisis. En la versión completa, podrías subir tus propias obras y recibir análisis detallados de pigmentos, composición y recetas de mezcla.');
-                  }}
+                  onClick={handleDemoClick}
                   className="bg-gold-500 text-white px-6 py-2 rounded-lg hover:bg-gold-600 transition-colors"
                 >
                   Probar con Imagen de Ejemplo
