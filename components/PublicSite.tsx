@@ -344,7 +344,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                       <img 
                         src="/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.31.07.png" 
                         alt="Análisis de Colores Detallado"
-                        className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-110 cursor-pointer"
+                        className="w-full h-64 object-contain transition-transform duration-300 group-hover:scale-110 cursor-pointer"
                         onClick={() => window.open('/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.31.07.png', '_blank')}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -358,7 +358,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                       <img 
                         src="/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.29.45.png" 
                         alt="Identificación de Colores"
-                        className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-110 cursor-pointer"
+                        className="w-full h-64 object-contain transition-transform duration-300 group-hover:scale-110 cursor-pointer"
                         onClick={() => window.open('/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 13.29.45.png', '_blank')}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -369,14 +369,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                     </div>
                   </div>
                   
-                  <button
-                    onClick={() => onOpenCompanion('ANALYZER_DEMO')}
-                    className="w-full bg-gold-500 text-white px-8 py-4 rounded-full font-semibold hover:bg-gold-600 transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105"
-                  >
-                    <Eye size={20}/>
-                    Try Demo / Probar Demo
-                  </button>
-                </div>
+                  </div>
 
                 {/* Compra Profesional */}
                 <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl shadow-2xl p-10 text-center text-white">
