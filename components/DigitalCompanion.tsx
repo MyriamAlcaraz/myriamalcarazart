@@ -37,92 +37,151 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
   }, []);
 
   const handleDemoClick = () => {
-    // Demo instantánea y simple
-    const demoWindow = window.open('', 'demo', 'width=800,height=600,scrollbars=yes,resizable=yes');
+    // Demo miniatura/preview instantáneo
+    const demoWindow = window.open('', 'demo', 'width=400,height=500,scrollbars=no,resizable=no');
     
     if (demoWindow) {
       demoWindow.document.write(`
         <!DOCTYPE html>
         <html>
         <head>
-          <title>Analizador Técnico del Color - Demo</title>
+          <title>Analizador Técnico - Preview</title>
           <style>
             body { 
               font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
               background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
               margin: 0; 
-              padding: 20px; 
+              padding: 0; 
               color: white;
-              min-height: 100vh;
+              height: 100vh;
               display: flex;
               flex-direction: column;
               align-items: center;
               justify-content: center;
+              overflow: hidden;
             }
-            .container {
+            .preview-container {
               background: white;
-              border-radius: 20px;
-              padding: 40px;
-              box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+              border-radius: 15px;
+              padding: 25px;
+              box-shadow: 0 10px 25px rgba(0,0,0,0.3);
               text-align: center;
-              max-width: 500px;
+              width: 320px;
               color: #333;
+              position: relative;
             }
-            .icon {
-              width: 80px;
-              height: 80px;
+            .preview-header {
               background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+              border-radius: 10px;
+              padding: 15px;
+              margin-bottom: 20px;
+            }
+            .preview-icon {
+              width: 50px;
+              height: 50px;
+              background: white;
               border-radius: 50%;
-              margin: 0 auto 20px;
+              margin: 0 auto 10px;
               display: flex;
               align-items: center;
               justify-content: center;
             }
-            h1 { color: #333; margin-bottom: 20px; font-size: 24px; }
-            p { color: #666; line-height: 1.6; margin-bottom: 30px; }
-            .features {
-              background: #f8f9fa;
-              padding: 20px;
-              border-radius: 10px;
-              margin: 20px 0;
-              text-align: left;
-            }
-            .feature { margin: 10px 0; }
-            .buy-btn {
-              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            .preview-title {
               color: white;
-              border: none;
-              padding: 15px 30px;
-              border-radius: 30px;
               font-size: 16px;
+              font-weight: bold;
+              margin: 0;
+            }
+            .preview-content {
+              background: #f8f9fa;
+              border-radius: 8px;
+              padding: 15px;
+              margin-bottom: 15px;
+            }
+            .feature-item {
+              display: flex;
+              align-items: center;
+              margin: 8px 0;
+              font-size: 12px;
+              color: #555;
+            }
+            .feature-icon {
+              margin-right: 8px;
+              font-size: 14px;
+            }
+            .preview-footer {
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              border-radius: 8px;
+              padding: 12px;
+            }
+            .buy-btn {
+              background: white;
+              color: #667eea;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 20px;
+              font-size: 14px;
               font-weight: bold;
               cursor: pointer;
               text-decoration: none;
               display: inline-block;
-              transition: transform 0.3s ease;
+              transition: all 0.3s ease;
+              width: 100%;
             }
-            .buy-btn:hover { transform: translateY(-2px); }
+            .buy-btn:hover { 
+              transform: scale(1.05);
+              box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            }
+            .mini-label {
+              position: absolute;
+              top: -8px;
+              right: -8px;
+              background: #ff6b6b;
+              color: white;
+              font-size: 10px;
+              font-weight: bold;
+              padding: 4px 8px;
+              border-radius: 10px;
+            }
           </style>
         </head>
         <body>
-          <div class="container">
-            <div class="icon">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-            </div>
-            <h1>Analizador Técnico del Color</h1>
-            <p>Descubre los pigmentos y recetas exactas de tus obras con inteligencia artificial.</p>
+          <div class="preview-container">
+            <div class="mini-label">PREVIEW</div>
             
-            <div class="features">
-              <div class="feature">🎨 <strong>Análisis de Pigmentos:</strong> Identifica PW6, PR101, PY42...</div>
-              <div class="feature">📊 <strong>Recetas de Mezcla:</strong> Porcentajes precisos</div>
-              <div class="feature">🏷️ <strong>Referencias de Marcas:</strong> Winsor & Newton, Old Holland...</div>
+            <div class="preview-header">
+              <div class="preview-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="#667eea">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+              </div>
+              <h3 class="preview-title">Analizador Técnico</h3>
             </div>
             
-            <a href="https://496114690192.gumroad.com/l/owesfb" target="_blank" class="buy-btn">
-              Adquirir Versión Completa - €46.99
-            </a>
+            <div class="preview-content">
+              <div class="feature-item">
+                <span class="feature-icon">🎨</span>
+                <span>Análisis de Pigmentos (PW6, PR101...)</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">📊</span>
+                <span>Recetas de Mezcla Exactas</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">🏷️</span>
+                <span>Referencias de 3 Marcas Premium</span>
+              </div>
+              <div class="feature-item">
+                <span class="feature-icon">⚡</span>
+                <span>Análisis en Segundos</span>
+              </div>
+            </div>
+            
+            <div class="preview-footer">
+              <a href="https://496114690192.gumroad.com/l/owesfb" target="_blank" class="buy-btn">
+                Adquirir Versión Completa
+              </a>
+            </div>
           </div>
         </body>
         </html>
