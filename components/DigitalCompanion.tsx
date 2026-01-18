@@ -37,261 +37,98 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
   }, []);
 
   const handleDemoClick = () => {
-    if (demoUsed) {
-      // Mensaje elegante para usuarios que ya usaron la demo
-      const message = document.createElement('div');
-      message.className = 'fixed inset-0 z-[130] bg-black/90 flex justify-center items-center p-4';
-      message.innerHTML = `
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
-          <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-          </div>
-          <h3 class="font-serif text-xl font-bold text-slate-900 mb-3">Experiencia Completada</h3>
-          <p class="text-slate-600 mb-6 leading-relaxed">
-            Su sesión de evaluación del Analizador Técnico ha concluido. 
-            Para continuar utilizando el sistema sin interrupciones, adquiera la versión profesional.
-          </p>
-          <div class="space-y-3">
-            <button onclick="this.closest('.fixed').remove()" class="w-full bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-700 transition-colors">
-              Cerrar
-            </button>
-            <a href="https://496114690192.gumroad.com/l/owesfb" target="_blank" class="block w-full bg-gold-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gold-600 transition-colors">
-              Acceder a Versión Completa
+    // Demo instantánea y simple
+    const demoWindow = window.open('', 'demo', 'width=800,height=600,scrollbars=yes,resizable=yes');
+    
+    if (demoWindow) {
+      demoWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Analizador Técnico del Color - Demo</title>
+          <style>
+            body { 
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              margin: 0; 
+              padding: 20px; 
+              color: white;
+              min-height: 100vh;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+            }
+            .container {
+              background: white;
+              border-radius: 20px;
+              padding: 40px;
+              box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+              text-align: center;
+              max-width: 500px;
+              color: #333;
+            }
+            .icon {
+              width: 80px;
+              height: 80px;
+              background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+              border-radius: 50%;
+              margin: 0 auto 20px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            h1 { color: #333; margin-bottom: 20px; font-size: 24px; }
+            p { color: #666; line-height: 1.6; margin-bottom: 30px; }
+            .features {
+              background: #f8f9fa;
+              padding: 20px;
+              border-radius: 10px;
+              margin: 20px 0;
+              text-align: left;
+            }
+            .feature { margin: 10px 0; }
+            .buy-btn {
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              color: white;
+              border: none;
+              padding: 15px 30px;
+              border-radius: 30px;
+              font-size: 16px;
+              font-weight: bold;
+              cursor: pointer;
+              text-decoration: none;
+              display: inline-block;
+              transition: transform 0.3s ease;
+            }
+            .buy-btn:hover { transform: translateY(-2px); }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+            </div>
+            <h1>Analizador Técnico del Color</h1>
+            <p>Descubre los pigmentos y recetas exactas de tus obras con inteligencia artificial.</p>
+            
+            <div class="features">
+              <div class="feature">🎨 <strong>Análisis de Pigmentos:</strong> Identifica PW6, PR101, PY42...</div>
+              <div class="feature">📊 <strong>Recetas de Mezcla:</strong> Porcentajes precisos</div>
+              <div class="feature">🏷️ <strong>Referencias de Marcas:</strong> Winsor & Newton, Old Holland...</div>
+            </div>
+            
+            <a href="https://496114690192.gumroad.com/l/owesfb" target="_blank" class="buy-btn">
+              Adquirir Versión Completa - €46.99
             </a>
           </div>
-        </div>
-      `;
-      document.body.appendChild(message);
-      return;
+        </body>
+        </html>
+      `);
+      demoWindow.document.close();
     }
-
-    // Verificar si es administrador (para pruebas)
-    const isAdmin = localStorage.getItem('is_admin') === 'true';
-    if (isAdmin) {
-      // Modo administrador - permite múltiples pruebas
-      const adminMessage = document.createElement('div');
-      adminMessage.className = 'fixed inset-0 z-[130] bg-black/90 flex justify-center items-center p-4';
-      adminMessage.innerHTML = `
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl max-w-md w-full p-8 text-center text-white">
-          <div class="w-16 h-16 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-          </div>
-          <h3 class="font-serif text-xl font-bold mb-3">Modo Administrador</h3>
-          <p class="text-slate-300 mb-6 leading-relaxed">
-            Acceso de prueba ilimitado para verificar el funcionamiento del sistema.
-          </p>
-          <div class="bg-slate-700 rounded-lg p-4 mb-6 text-left">
-            <p class="text-sm text-slate-300 mb-2">✅ Demo sin restricciones</p>
-            <p class="text-sm text-slate-300 mb-2">✅ Múltiples pruebas permitidas</p>
-            <p class="text-slate-300">✅ Timer desactivado</p>
-          </div>
-          <div class="space-y-3">
-            <button onclick="this.closest('.fixed').remove()" class="w-full bg-gradient-to-r from-gold-500 to-gold-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-gold-600 hover:to-gold-700 transition-all">
-              Abrir Aplicación
-            </button>
-            <button onclick="localStorage.removeItem('is_admin'); this.closest('.fixed').remove()" class="w-full bg-slate-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-600 transition-colors">
-              Salir Modo Admin
-            </button>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(adminMessage);
-
-      // Abrir la aplicación directamente sin restricciones
-      const appWindow = window.open('./analizador-color.html', 'admin-demo', 'width=1200,height=800,scrollbars=yes,resizable=yes');
-      return;
-    }
-
-    // Primera vez - marcar como usado inmediatamente para evitar trampas
-    localStorage.setItem('analyzer_demo_used', 'true');
-    setDemoUsed(true);
-
-    // Mensaje informativo antes de abrir
-    const infoMessage = document.createElement('div');
-    infoMessage.className = 'fixed inset-0 z-[130] bg-black/90 flex justify-center items-center p-4';
-    infoMessage.innerHTML = `
-      <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
-        <div class="w-16 h-16 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-        </div>
-        <h3 class="font-serif text-xl font-bold text-slate-900 mb-3">Demo de Evaluación</h3>
-        <p class="text-slate-600 mb-6 leading-relaxed">
-          Tendrá <span class="font-bold text-gold-600">5 minutos</span> para explorar el Analizador Técnico del Color. 
-          Esta es su única oportunidad de evaluación gratuita.
-        </p>
-        <div class="bg-slate-50 rounded-lg p-4 mb-6 text-left">
-          <p class="text-sm text-slate-700 mb-2">✅ Suba sus propias imágenes</p>
-          <p class="text-sm text-slate-700 mb-2">✅ Analice colores y pigmentos</p>
-          <p class="text-sm text-slate-700">✅ Explore todas las funciones</p>
-        </div>
-        <div class="bg-gradient-to-r from-slate-50 to-slate-100 border border-slate-200 rounded-lg p-4 mb-6">
-          <div class="flex items-start gap-3">
-            <div class="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-            </div>
-            <div class="flex-1">
-              <p class="text-sm text-slate-700 font-medium leading-relaxed">
-                <span class="text-amber-600 font-semibold">Nota importante:</span> Esta sesión de evaluación es única e irrepetible. 
-                El cronómetro se iniciará automáticamente al procesar su primera imagen.
-              </p>
-            </div>
-          </div>
-        </div>
-        <button onclick="this.closest('.fixed').remove()" class="w-full bg-gradient-to-r from-gold-500 to-gold-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-gold-600 hover:to-gold-700 transition-all">
-          Comenzar Demo - 5 Minutos
-        </button>
-      </div>
-    `;
-    document.body.appendChild(infoMessage);
-
-    // Esperar a que el usuario haga clic para comenzar
-    setTimeout(() => {
-      infoMessage.remove();
-      
-      // Abrir la aplicación real en una nueva ventana
-      const appWindow = window.open('./analizador-color.html', 'demo', 'width=1200,height=800,scrollbars=yes,resizable=yes');
-      
-      // Crear mensaje de espera (sin timer todavía)
-      const waitMessage = document.createElement('div');
-      waitMessage.className = 'fixed top-4 right-4 z-[140] bg-white rounded-lg shadow-2xl p-4 max-w-sm';
-      waitMessage.innerHTML = `
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center">
-            <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-          </div>
-          <div>
-            <p class="font-semibold text-slate-900">Esperando Imagen</p>
-            <p class="text-sm text-slate-600">Suba una foto para comenzar</p>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(waitMessage);
-
-      // Variable para controlar si el timer ha comenzado
-      let timerStarted = false;
-      let timerInterval = null;
-      let timeLeft = 300; // 5 minutos
-      let windowClosed = false;
-
-      const startTimer = () => {
-        if (timerStarted || windowClosed) return;
-        timerStarted = true;
-
-        // Reemplazar mensaje de espera con timer activo
-        waitMessage.innerHTML = `
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center">
-              <svg class="w-5 h-5 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-            </div>
-            <div>
-              <p class="font-semibold text-slate-900">Sesión Activa</p>
-              <p class="text-sm text-slate-600">Tiempo restante: <span id="demo-timer" class="font-mono text-gold-600">05:00</span></p>
-            </div>
-          </div>
-          <div class="mt-2">
-            <div class="w-full bg-slate-200 rounded-full h-1">
-              <div id="timer-progress" class="bg-gradient-to-r from-gold-400 to-gold-600 h-1 rounded-full transition-all duration-1000" style="width: 100%"></div>
-            </div>
-          </div>
-        `;
-
-        const timerElement = document.getElementById('demo-timer');
-        const progressBar = document.getElementById('timer-progress');
-        
-        timerInterval = setInterval(() => {
-          if (windowClosed) {
-            clearInterval(timerInterval);
-            return;
-          }
-          
-          timeLeft--;
-          const minutes = Math.floor(timeLeft / 60);
-          const seconds = timeLeft % 60;
-          timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-          progressBar.style.width = `${(timeLeft / 300) * 100}%`;
-          
-          if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            waitMessage.remove();
-            
-            // Cerrar la ventana de la aplicación
-            if (appWindow && !appWindow.closed) {
-              appWindow.close();
-            }
-            
-            // Mostrar mensaje de compra
-            const purchaseMessage = document.createElement('div');
-            purchaseMessage.className = 'fixed inset-0 z-[130] bg-black/90 flex justify-center items-center p-4';
-            purchaseMessage.innerHTML = `
-              <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
-                <div class="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg class="w-8 h-8 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
-                  </svg>
-                </div>
-                <h3 class="font-serif text-xl font-bold text-slate-900 mb-3">Demo Concluida</h3>
-                <p class="text-slate-600 mb-6">
-                  Espero que haya disfrutado explorando el Analizador Técnico. 
-                  Para continuar utilizando todas las funciones sin limitaciones, acceda a la versión completa.
-                </p>
-                <a href="https://496114690192.gumroad.com/l/owesfb" target="_blank" class="block w-full bg-gradient-to-r from-gold-500 to-gold-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-gold-600 hover:to-gold-700 transition-all">
-                  Adquirir Versión Profesional - €46.99
-                </a>
-              </div>
-            `;
-            document.body.appendChild(purchaseMessage);
-          }
-        }, 1000);
-      };
-
-      // Simular detección de subida de imagen (monitorear la ventana)
-      const checkImageUpload = setInterval(() => {
-        if (appWindow && !appWindow.closed) {
-          try {
-            // Intentar detectar si se ha subido una imagen
-            // Esto es una simulación - en la app real necesitaríamos comunicación entre ventanas
-            // Por ahora, iniciamos el timer después de 30 segundos simulando que subieron una imagen
-            if (!timerStarted) {
-              setTimeout(() => {
-                if (!timerStarted && appWindow && !appWindow.closed && !windowClosed) {
-                  startTimer();
-                }
-              }, 30000); // 30 segundos para que suban una imagen
-            }
-          } catch (e) {
-            // Error al acceder a la ventana
-          }
-        } else {
-          windowClosed = true;
-          clearInterval(checkImageUpload);
-          clearInterval(timerInterval);
-          waitMessage.remove();
-        }
-      }, 1000);
-
-      // Cerrar todo si se cierra la ventana
-      const checkWindow = setInterval(() => {
-        if (appWindow && appWindow.closed) {
-          windowClosed = true;
-          clearInterval(checkWindow);
-          clearInterval(timerInterval);
-          clearInterval(checkImageUpload);
-          waitMessage.remove();
-        }
-      }, 1000);
-    }, 3000); // 3 segundos para leer el mensaje
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
