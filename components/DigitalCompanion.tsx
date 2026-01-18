@@ -368,48 +368,53 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
               </div>
             </div>
             
-            {/* Características */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-4">
-                <div className="w-12 h-12 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+            {/* Características del Analizador Técnico */}
+            <div className="grid grid-cols-1 gap-6">
+              <div className="text-center p-6 bg-slate-50 rounded-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9 9 0 0012 21a9 9 0 008.354-5.646z"/>
                   </svg>
                 </div>
-                <h5 className="font-semibold text-slate-800 mb-2">Composición</h5>
-                <p className="text-sm text-slate-600">Análisis de estructura, equilibrio y flujo visual</p>
+                <h5 className="font-semibold text-slate-800 mb-2">Análisis de Pigmentos</h5>
+                <p className="text-sm text-slate-600">Identificación precisa de códigos de pigmento y referencias de marcas</p>
               </div>
               
-              <div className="text-center p-4">
-                <div className="w-12 h-12 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+              <div className="text-center p-6 bg-slate-50 rounded-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                   </svg>
                 </div>
-                <h5 className="font-semibold text-slate-800 mb-2">Cromatismo</h5>
-                <p className="text-sm text-slate-600">Estudio de paleta, armonía y contraste cromático</p>
+                <h5 className="font-semibold text-slate-800 mb-2">Recetas de Mezcla</h5>
+                <p className="text-sm text-slate-600">Porcentajes sugeridos para recrear colores identificados</p>
               </div>
               
-              <div className="text-center p-4">
-                <div className="w-12 h-12 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <svg className="w-6 h-6 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <div className="text-center p-6 bg-slate-50 rounded-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
                   </svg>
                 </div>
-                <h5 className="font-semibold text-slate-800 mb-2">Certificado</h5>
-                <p className="text-sm text-slate-600">Genera certificado de autenticidad digital</p>
+                <h5 className="font-semibold text-slate-800 mb-2">Referencias de Marcas</h5>
+                <p className="text-sm text-slate-600">Equivalencias en Winsor & Newton, Old Holland y Williamsburg</p>
               </div>
             </div>
             
             {/* Llamada a la acción */}
             <div className="bg-gradient-to-r from-gold-500 to-gold-600 p-6 rounded-xl text-white text-center">
-              <h4 className="font-serif text-xl font-bold mb-2">Próximamente Disponible</h4>
-              <p className="mb-4">Sé el primero en acceder a esta herramienta revolucionaria</p>
+              <h4 className="font-serif text-xl font-bold mb-2">Disfruta y Explora</h4>
+              <p className="mb-4">Descubre el poder del análisis técnico del color en tu proceso creativo</p>
               <a 
-                href={`mailto:${ARTIST_INFO.email}?subject=Interés en Analizador Técnico del Color&body=Hola Myriam, estoy interesado en el Analizador Técnico del Color. Por favor, avísenme cuando esté disponible.`}
+                href="https://496114690192.gumroad.com/l/owesfb"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-white text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-100 transition-colors inline-flex items-center gap-2"
               >
-                <Mail size={18} /> Solicitar Acceso Prioritario
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+                Adquirir Ahora - €46.99
               </a>
             </div>
           </div>
