@@ -293,50 +293,6 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   Mi herramienta personal que uso diariamente en mi estudio para analizar los colores de los modelos que voy a pintar. 
                   Ahora comparto contigo esta aplicación profesional con análisis técnico avanzado mediante inteligencia artificial 
                   para perfeccionar tu proceso creativo. Incluye las denominaciones exactas de las tres marcas de óleos que utilizo profesionalmente: Old Holland, Williamsburg y Winsor & Newton.
-                </p>
-              </div>
-            </div>
-
-            {/* Características Principales */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              <div className="text-center p-8 bg-white rounded-2xl shadow-xl border-t-4 border-gold-500">
-                <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
-                  </svg>
-                </div>
-                <h3 className="font-serif text-xl font-bold text-slate-900 mb-3">Análisis de Composición</h3>
-                <p className="text-slate-600">
-                  Estructura, equilibrio, flujo visual y regla de oro. Evaluación profesional de la composición artística.
-                </p>
-              </div>
-
-              <div className="text-center p-8 bg-white rounded-2xl shadow-xl border-t-4 border-gold-500">
-                <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                  </svg>
-                </div>
-                <h3 className="font-serif text-xl font-bold text-slate-900 mb-3">Estudio Cromático</h3>
-                <p className="text-slate-600">
-                  Análisis de paleta, armonías, contraste y teoría del color. Recomendaciones de mejora cromática.
-                </p>
-              </div>
-
-              <div className="text-center p-8 bg-white rounded-2xl shadow-xl border-t-4 border-gold-500">
-                <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h3 className="font-serif text-xl font-bold text-slate-900 mb-3">Certificado Digital</h3>
-                <p className="text-slate-600">
-                  Genera certificado de autenticidad digital con análisis técnico. Ideal para valorización y venta.
-                </p>
-              </div>
-            </div>
-
-            {/* Demo Interactiva - Limitada a 1 uso por usuario */}
             <div className="max-w-4xl mx-auto">
               <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-12 rounded-3xl text-white text-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-gold-500/10 to-transparent"></div>
