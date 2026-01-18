@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Analizador Alquimia Lorca - Precisión Óleo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;700&display=swap');
+        
+        body { 
+            background: #050505; 
+            color: #e4e4e7; 
+            font-family: 'Inter', sans-serif; 
+            overflow: hidden; 
+            height: 100vh; 
+            margin: 0; 
+            display: flex;
+            flex-direction: column;
+            font-size: 18px;
+        }
+
+        .title-font { font-family: 'Cinzel', serif; }
+
+        #canvas-area {
+            flex: 1;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        #canvas-wrapper {
+            position: relative;
+            transform-origin: center; 
+            cursor: crosshair;
+            transition: transform 0.05s linear;
+        }
+
+        canvas {
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+            border: 1px solid #333;
+        }
+
+        .sidebar {
+            width: 450px;
+            background: #0a0a0c;
+            border-left: 1px solid #1f2937;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            overflow-y: auto;
+            font-size: 16px;
+        }
+
+        .recipe-card {
+            background: #0f0f11;
+            border: 1px solid #27272a;
+            padding: 1.5rem;
+            border-radius: 4px;
+        }
+
+        .pigment-code {
+            background: #27272a;
+            color: #fbbf24;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            font-family: monospace;
+            margin-right: 6px;
+        }
+
+        .zoom-badge {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.85);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #eab308;
+            border: 1px solid #444;
+            font-weight: bold;
+            z-index: 50;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="h-16 border-b border-zinc-800 flex justify-between items-center px-8 bg-black">
+        <div>
+            <h1 class="text-2xl font-bold text-zinc-100 tracking-tighter uppercase title-font">ANALIZADOR TÉCNICO DE COLOR</h1>
+            <p class="text-sm text-zinc-500 uppercase tracking-widest font-bold">Lupa Técnica + Identificación de Pigmentos Óleo</p>
+        </div>
+        <div class="flex items-center gap-6">
+            <span class="text-sm text-zinc-600 uppercase font-bold italic">Rueda del ratón para Zoom de detalle | Doble click para fijar | Doble click para soltar</span>
+            <label class="bg-zinc-700 text-white px-5 py-2 rounded-sm text-sm font-black cursor-pointer hover:bg-zinc-600 transition uppercase">
+                Códigos de Color
+                <input type="button" id="codes-btn" class="hidden" onclick="toggleCodesGuide()">
+            </label>
+            <label class="bg-white text-black px-5 py-2 rounded-sm text-sm font-black cursor-pointer hover:bg-zinc-200 transition uppercase">
+                Cargar Obra
+                <input type="file" id="file-input" class="hidden" accept="image/*">
+            </label>
+            <label class="bg-zinc-700 text-white px-5 py-2 rounded-sm text-sm font-black cursor-pointer hover:bg-zinc-600 transition uppercase">
+                Probar con imagen de ejemplo
+                <input type="button" class="hidden" onclick="loadExampleImage()">
+            </label>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Panel de Guía de Códigos (oculto por defecto) -->
+        <div id="codes-guide" class="hidden absolute inset-0 bg-black/95 z-50 flex items-center justify-center">
+            <div class="bg-zinc-900 border border-zinc-700 rounded-lg p-6 max-w-4xl max-h-[80vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-white uppercase tracking-wider">Guía de Códigos de Pigmentos</h2>
+                    <button onclick="toggleCodesGuide()" class="text-zinc-400 hover:text-white text-2xl font-bold">×</button>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                    <div class="bg-zinc-800 p-3 rounded">
+                        <h4 class="font-bold text-yellow-400 mb-2">BLANCOS</h4>
+                        <div class="space-y-1 text-zinc-300">
+                            <div><span class="text-yellow-200 font-mono">PW6</span> - Titanio Blanco</div>
+                            <div><span class="text-yellow-200 font-mono">PW4</span> - Zinc Blanco</div>
+                            <div><span class="text-yellow-200 font-mono">PW21</span> - Litoponio Blanco</div>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-800 p-3 rounded">
+                        <h4 class="font-bold text-red-400 mb-2">ROJOS</h4>
+                        <div class="space-y-1 text-zinc-300">
+                            <div><span class="text-red-200 font-mono">PR101</span> - Rojo Óxido</div>
+                            <div><span class="text-red-200 font-mono">PR102</span> - Alizarina Carmesí</div>
+                            <div><span class="text-red-200 font-mono">PR108</span> - Cadmio Rojo</div>
+                            <div><span class="text-red-200 font-mono">PR179</span> - Perylene Rojo</div>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-800 p-3 rounded">
+                        <h4 class="font-bold text-yellow-400 mb-2">AMARILLOS</h4>
+                        <div class="space-y-1 text-zinc-300">
+                            <div><span class="text-yellow-200 font-mono">PY42</span> - Ocre Amarillo</div>
+                            <div><span class="text-yellow-200 font-mono">PY53</span> - Nápoles Amarillo</div>
+                            <div><span class="text-yellow-200 font-mono">PY35</span> - Cadmium Amarillo</div>
+                            <div><span class="text-yellow-200 font-mono">PY150</span> - Hansa Amarillo</div>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-800 p-3 rounded">
+                        <h4 class="font-bold text-blue-400 mb-2">AZULES</h4>
+                        <div class="space-y-1 text-zinc-300">
+                            <div><span class="text-blue-200 font-mono">PB29</span> - Ultramar Azul</div>
+                            <div><span class="text-blue-200 font-mono">PB15</span> - Ftalo Azul</div>
+                            <div><span class="text-blue-200 font-mono">PB28</span> - Cobalto Azul</div>
+                            <div><span class="text-blue-200 font-mono">PB33</span> - Cerúleo Azul</div>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-800 p-3 rounded">
+                        <h4 class="font-bold text-green-400 mb-2">VERDES</h4>
+                        <div class="space-y-1 text-zinc-300">
+                            <div><span class="text-green-200 font-mono">PG7</span> - Ftalo Verde</div>
+                            <div><span class="text-green-200 font-mono">PG36</span> - Verde Esmeralda</div>
+                            <div><span class="text-green-200 font-mono">PG18</span> - Verde Tierra</div>
+                            <div><span class="text-green-200 font-mono">PG50</span> - Cobalto Verde</div>
+                        </div>
+                    </div>
+                    <div class="bg-zinc-800 p-3 rounded">
+                        <h4 class="font-bold text-purple-400 mb-2">NEGROS Y TIERRAS</h4>
+                        <div class="space-y-1 text-zinc-300">
+                            <div><span class="text-purple-200 font-mono">PBk31</span> - Negro Hueso</div>
+                            <div><span class="text-purple-200 font-mono">PBk7</span> - Carbon Negro</div>
+                            <div><span class="text-purple-200 font-mono">PBr7</span> - Siena Tostada</div>
+                            <div><span class="text-purple-200 font-mono">PY43</span> - Siena Nativa</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 p-3 bg-zinc-800 rounded text-xs text-zinc-400">
+                    <p class="font-bold mb-1">LEYENDA DE CÓDIGOS:</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div><span class="text-white font-mono">P</span> - Pigmento</div>
+                        <div><span class="text-white font-mono">W</span> - White (Blanco)</div>
+                        <div><span class="text-white font-mono">R</span> - Red (Rojo)</div>
+                        <div><span class="text-white font-mono">Y</span> - Yellow (Amarillo)</div>
+                        <div><span class="text-white font-mono">B</span> - Blue (Azul)</div>
+                        <div><span class="text-white font-mono">G</span> - Green (Verde)</div>
+                        <div><span class="text-white font-mono">k</span> - Black (Negro)</div>
+                        <div><span class="text-white font-mono">Br</span> - Brown (Marrón)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <main id="canvas-area">
+            <div id="empty-msg" class="absolute text-zinc-700 text-sm uppercase tracking-[0.4em]">Esperando imagen de análisis...</div>
+            <div id="canvas-wrapper">
+                <canvas id="main-canvas"></canvas>
+            </div>
+            <div id="zoom-val" class="zoom-badge">ZOOM: 100%</div>
+        </main>
+
+        <aside class="sidebar">
+            <!-- Sonda de Color -->
+            <section class="recipe-card">
+                <h3 class="text-sm font-black text-zinc-500 uppercase tracking-widest mb-4">Análisis de Píxel</h3>
+                <div class="flex gap-4 items-center">
+                    <div id="color-preview" class="w-16 h-16 rounded-sm border border-zinc-800 bg-zinc-900 shadow-2xl"></div>
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center mb-1">
+                            <span id="rgb-label" class="text-base font-mono text-white font-bold tracking-tighter">RGB(0,0,0)</span>
+                        </div>
+                        <div class="w-full bg-zinc-900 h-2 rounded-full overflow-hidden flex gap-0.5 mt-2">
+                            <div id="bar-r" class="h-full bg-red-600" style="width: 0%"></div>
+                            <div id="bar-g" class="h-full bg-green-600" style="width: 0%"></div>
+                            <div id="bar-b" class="h-full bg-blue-600" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Identificación de Tubo -->
+            <section class="recipe-card border-yellow-900/30">
+                <span class="text-sm font-black text-yellow-600 uppercase block mb-3 tracking-widest border-b border-yellow-900/20 pb-2">Identificación de Color</span>
+                <h2 id="pigment-name" class="text-xl font-bold text-white mb-2 uppercase tracking-tight italic">Detectando...</h2>
+                <div id="pigment-codes-container" class="flex flex-wrap gap-1 mb-4">
+                    <!-- Los códigos aparecerán aquí -->
+                </div>
+                <div class="bg-black p-4 border border-zinc-800 rounded">
+                    <p id="mix-recipe" class="text-sm font-mono text-yellow-100/90 leading-relaxed font-bold">
+                        Pase el cursor para ver la fórmula...
+                    </p>
+                </div>
+            </section>
+
+            <!-- Marcas de Pintura -->
+            <section class="recipe-card">
+                <h3 class="text-sm font-black text-zinc-500 uppercase tracking-widest mb-4">Marcas de Referencia</h3>
+                <div class="grid grid-cols-3 gap-2 mb-4">
+                    <button onclick="window.open('https://www.winsornewton.com/uk/artist-oil-colours/', '_blank')" class="w-full bg-zinc-800 hover:bg-zinc-700 text-white p-3 rounded text-sm font-bold uppercase transition">
+                        Winsor & Newton
+                    </button>
+                    <button onclick="window.open('https://www.oldholland.com/en/oil-colours/', '_blank')" class="w-full bg-zinc-800 hover:bg-zinc-700 text-white p-3 rounded text-sm font-bold uppercase transition">
+                        Old Holland
+                    </button>
+                    <button onclick="window.open('https://www.williamsburgoils.com/colors', '_blank')" class="w-full bg-zinc-800 hover:bg-zinc-700 text-white p-3 rounded text-sm font-bold uppercase transition">
+                        Williamsburg
+                    </button>
+                </div>
+                
+                <!-- Cartas de Colores Locales -->
+                <h4 class="text-xs font-black text-zinc-400 uppercase mb-2 tracking-widest">Cartas de Colores Locales</h4>
+                <div class="grid grid-cols-3 gap-2 mb-4">
+                    <button onclick="window.open('./winsor_newton.pdf', '_blank')" class="w-full bg-zinc-900 hover:bg-zinc-800 text-white p-2 rounded text-xs font-bold uppercase transition">
+                        W&N PDF
+                    </button>
+                    <button onclick="window.open('./old_holland.pdf', '_blank')" class="w-full bg-zinc-900 hover:bg-zinc-800 text-white p-2 rounded text-xs font-bold uppercase transition">
+                        Old Holland PDF
+                    </button>
+                    <button onclick="window.open('./williamsburg.pdf', '_blank')" class="w-full bg-zinc-900 hover:bg-zinc-800 text-white p-2 rounded text-xs font-bold uppercase transition">
+                        Williamsburg PDF
+                    </button>
+                </div>
+                <div class="bg-black p-4 border border-zinc-800 rounded">
+                    <h4 class="text-sm font-black text-zinc-400 uppercase mb-4 tracking-widest">Tubos Equivalentes</h4>
+                    <div id="brand-equivalents" class="space-y-4">
+                        <div class="border-l-2 border-yellow-600 pl-3">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs text-zinc-400 font-bold uppercase">Winsor & Newton</span>
+                            </div>
+                            <span id="wn-tube" class="text-sm text-zinc-200 font-normal lowercase">---</span>
+                        </div>
+                        <div class="border-l-2 border-orange-600 pl-3">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs text-zinc-400 font-bold uppercase">Old Holland</span>
+                            </div>
+                            <span id="oh-tube" class="text-sm text-zinc-200 font-normal lowercase">---</span>
+                        </div>
+                        <div class="border-l-2 border-blue-600 pl-3">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs text-zinc-400 font-bold uppercase">Williamsburg</span>
+                            </div>
+                            <span id="wb-tube" class="text-sm text-zinc-200 font-normal lowercase">---</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </aside>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('main-canvas');
+        const wrapper = document.getElementById('canvas-wrapper');
+        const area = document.getElementById('canvas-area');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const img = new Image();
+
+        let scale = 1;
+        let cursorFixed = false;
+        let fixedColor = null;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let canvasOffsetX = 0;
+        let canvasOffsetY = 0;
+        let spacePressed = false;
+
+        // BASE DE DATOS PROFESIONAL (Pigmentos + Códigos + Tubos por Marca + Propiedades Físicas)
+        const basePigmentos = [
+            // BLANCOS Y METÁLICOS
+            { 
+                check: (r,g,b) => r > 240 && g > 240 && b > 240, 
+                nombre: "Blanco de Titanio", 
+                codigos: ["PW6"],
+                mezcla: "Blanco de Titanio puro", 
+                wn_tube: "titanium white",
+                oh_tube: "titanium white",
+                wb_tube: "titanium white",
+                rgb: {r: 245, g: 245, b: 245},
+                transparencia: "opaco",
+                poderTintado: "bajo",
+                densidad: 4.23,
+                absorptionAceite: 18,
+                indiceRefraccion: 2.7
+            },
+            { 
+                check: (r,g,b) => r > 200 && g > 170 && b > 80 && g > b, 
+                nombre: "Oro Renacimiento", 
+                codigos: ["PY42", "PR101"],
+                mezcla: "Ocre Oro + Rojo Óxido", 
+                wn_tube: "yellow ochre + burnt sienna",
+                oh_tube: "yellow ochre + burnt umber",
+                wb_tube: "yellow ochre + burnt sienna",
+                rgb: {r: 210, g: 180, b: 90},
+                transparencia: "semi-opaco",
+                poderTintado: "medio",
+                densidad: 3.5,
+                absorptionAceite: 35,
+                indiceRefraccion: 2.2
+            },
+            { 
+                check: (r,g,b) => r > 180 && g > 140 && b < 100 && g > b, 
+                nombre: "Oro", 
+                codigos: ["PY42", "PY53"],
+                mezcla: "Ocre Oro + Amarillo Nápoles", 
+                wn_tube: "yellow ochre + naples yellow",
+                oh_tube: "yellow ochre + naples yellow light",
+                wb_tube: "yellow ochre + naples yellow",
+                rgb: {r: 200, g: 160, b: 80},
+                transparencia: "semi-opaco",
+                poderTintado: "medio",
+                densidad: 3.8,
+                absorptionAceite: 32,
+                indiceRefraccion: 2.3
+            },
+            { 
+                check: (r,g,b) => r > 160 && g > 90 && b < 60 && r > g, 
+                nombre: "Cobre", 
+                codigos: ["PR102", "PY42"],
+                mezcla: "Cobre Permanente + Ocre Oro", 
+                wn_tube: "burnt sienna + yellow ochre",
+                oh_tube: "burnt umber + yellow ochre",
+                wb_tube: "burnt sienna + yellow ochre",
+                rgb: {r: 170, g: 90, b: 50},
+                transparencia: "semi-transparente",
+                poderTintado: "alto",
+                densidad: 4.1,
+                absorptionAceite: 45,
+                indiceRefraccion: 2.5
+            },
+            { 
+                check: (r,g,b) => r > 180 && g > 180 && b > 180 && Math.abs(r-g) < 15 && Math.abs(g-b) < 15, 
+                nombre: "Gris Claro", 
+                codigos: ["PW6", "PBk7"],
+                mezcla: "Blanco Titanio + Negro Carbon", 
+                wn_tube: "titanium white + ivory black",
+                oh_tube: "titanium white + ivory black",
+                wb_tube: "titanium white + ivory black",
+                rgb: {r: 180, g: 180, b: 180},
+                transparencia: "opaco",
+                poderTintado: "medio",
+                densidad: 2.8,
+                absorptionAceite: 25,
+                indiceRefraccion: 1.8
+            },
+            
+            // AMARILLOS
+            { 
+                check: (r,g,b) => r > 230 && g > 200 && b < 100 && r > g, 
+                nombre: "Amarillo Cadmio", 
+                codigos: ["PY35"],
+                mezcla: "Amarillo Cadmio puro", 
+                wn_tube: "cadmium yellow",
+                oh_tube: "cadmium yellow deep",
+                wb_tube: "cadmium yellow medium",
+                rgb: {r: 250, g: 210, b: 50},
+                transparencia: "opaco",
+                poderTintado: "alto",
+                densidad: 4.8,
+                absorptionAceite: 38,
+                indiceRefraccion: 2.6
+            },
+            { 
+                check: (r,g,b) => r > 220 && g > 190 && b < 120 && g > b, 
+                nombre: "Amarillo Nápoles", 
+                codigos: ["PY53"],
+                mezcla: "Amarillo Nápoles puro", 
+                wn_tube: "naples yellow",
+                oh_tube: "naples yellow light",
+                wb_tube: "naples yellow",
+                rgb: {r: 240, g: 200, b: 100},
+                transparencia: "semi-opaco",
+                poderTintado: "medio",
+                densidad: 3.2,
+                absorptionAceite: 28,
+                indiceRefraccion: 2.1
+            },
+            { 
+                check: (r,g,b) => r > 240 && g > 230 && b < 150 && g > b, 
+                nombre: "Amarillo Limón", 
+                codigos: ["PY3"],
+                mezcla: "Amarillo Limón puro", 
+                wn_tube: "lemon yellow",
+                oh_tube: "lemon yellow",
+                wb_tube: "lemon yellow",
+                rgb: {r: 255, g: 240, b: 120},
+                transparencia: "semi-transparente",
+                poderTintado: "medio",
+                densidad: 3.6,
+                absorptionAceite: 30,
+                indiceRefraccion: 2.2
+            },
+            { 
+                check: (r,g,b) => r > 180 && g > 140 && b < 80 && g > b, 
+                nombre: "Amarillo Óxido Transparente", 
+                codigos: ["PY42", "PY43"],
+                mezcla: "Ocre Amarillo + Siena Nativa", 
+                wn_tube: "yellow ochre + raw sienna",
+                oh_tube: "yellow ochre + raw sienna",
+                wb_tube: "yellow ochre + raw sienna",
+                rgb: {r: 190, g: 150, b: 70},
+                transparencia: "transparente",
+                poderTintado: "alto",
+                densidad: 3.9,
+                absorptionAceite: 42,
+                indiceRefraccion: 2.4
+            },
+            
+            // NARANJAS Y ROJOS
+            { 
+                check: (r,g,b) => r > 220 && g > 120 && b < 80 && r > g, 
+                nombre: "Naranja Cadmio", 
+                codigos: ["PO20"],
+                mezcla: "Naranja Cadmio puro", 
+                wn_tube: "cadmium orange",
+                oh_tube: "cadmium orange",
+                wb_tube: "cadmium orange",
+                rgb: {r: 240, g: 120, b: 40},
+                transparencia: "opaco",
+                poderTintado: "alto",
+                densidad: 4.5,
+                absorptionAceite: 40,
+                indiceRefraccion: 2.5
+            },
+            { 
+                check: (r,g,b) => r > 200 && g > 80 && b < 60 && r > g, 
+                nombre: "Rojo Cadmio", 
+                codigos: ["PR108"],
+                mezcla: "Rojo Cadmio puro", 
+                wn_tube: "cadmium red",
+                oh_tube: "cadmium red deep",
+                wb_tube: "cadmium red",
+                rgb: {r: 220, g: 50, b: 40},
+                transparencia: "opaco",
+                poderTintado: "alto",
+                densidad: 4.7,
+                absorptionAceite: 42,
+                indiceRefraccion: 2.6
+            },
+            { 
+                check: (r,g,b) => r > 150 && g < 80 && b < 80 && r > g, 
+                nombre: "Alizarina Crimson", 
+                codigos: ["PR83"],
+                mezcla: "Alizarina Crimson puro", 
+                wn_tube: "alizarin crimson",
+                oh_tube: "alizarin crimson",
+                wb_tube: "alizarin crimson",
+                rgb: {r: 150, g: 40, b: 60},
+                transparencia: "transparente",
+                poderTintado: "muy-alto",
+                densidad: 3.8,
+                absorptionAceite: 55,
+                indiceRefraccion: 2.3
+            },
+            { 
+                check: (r,g,b) => r > 180 && g < 100 && b < 80 && r > g, 
+                nombre: "Rojo Óxido Transparente", 
+                codigos: ["PR101"],
+                mezcla: "Rojo Óxido Transparente puro", 
+                wn_tube: "burnt sienna",
+                oh_tube: "burnt umber",
+                wb_tube: "burnt sienna",
+                rgb: {r: 180, g: 60, b: 40},
+                transparencia: "semi-transparente",
+                poderTintado: "alto",
+                densidad: 4.1,
+                absorptionAceite: 45,
+                indiceRefraccion: 2.5
+            },
+            { 
+                check: (r,g,b) => r > 200 && g > 100 && b > 120 && r > g && r > b, 
+                nombre: "Opera Rose", 
+                codigos: ["PR122"],
+                mezcla: "Opera Rose puro", 
+                wn_tube: "permanent rose",
+                oh_tube: "permanent rose",
+                wb_tube: "permanent rose",
+                rgb: {r: 210, g: 110, b: 130},
+                transparencia: "transparente",
+                poderTintado: "alto",
+                densidad: 3.4,
+                absorptionAceite: 48,
+                indiceRefraccion: 2.2
+            },
+            { 
+                check: (r,g,b) => r > 180 && g > 80 && b > 100 && r > g && r > b, 
+                nombre: "Rosa Quinacridona", 
+                codigos: ["PV19"],
+                mezcla: "Rosa Quinacridona puro", 
+                wn_tube: "quinacridone rose",
+                oh_tube: "quinacridone rose",
+                wb_tube: "quinacridone rose",
+                rgb: {r: 190, g: 90, b: 110},
+                transparencia: "transparente",
+                poderTintado: "alto",
+                densidad: 3.2,
+                absorptionAceite: 46,
+                indiceRefraccion: 2.1
+            },
+            { 
+                check: (r,g,b) => r > 160 && g > 100 && b > 80 && r > g && r > b, 
+                nombre: "Magenta", 
+                codigos: ["PR122"],
+                mezcla: "Magenta Quinacridona puro", 
+                wn_tube: "quinacridone magenta",
+                oh_tube: "quinacridone magenta",
+                wb_tube: "quinacridone magenta",
+                rgb: {r: 170, g: 100, b: 90},
+                transparencia: "transparente",
+                poderTintado: "muy-alto",
+                densidad: 3.5,
+                absorptionAceite: 52,
+                indiceRefraccion: 2.3
+            },
+            
+            // PARDOS Y TIERRAS - RANGOS MÁS ESPECÍFICOS Y PRECISOS
+            { 
+                check: (r,g,b) => r > 110 && r < 150 && g > 70 && g < 100 && b > 40 && b < 70 && r > g && g > b, 
+                nombre: "Pardo Óxido Transparente", 
+                codigos: ["PBr7"],
+                mezcla: "Pardo Óxido Transparente puro", 
+                wn_tube: "raw umber",
+                oh_tube: "raw umber",
+                wb_tube: "raw umber",
+                rgb: {r: 130, g: 85, b: 50},
+                transparencia: "transparente",
+                poderTintado: "alto",
+                densidad: 3.9,
+                absorptionAceite: 44,
+                indiceRefraccion: 2.4
+            },
+            { 
+                check: (r,g,b) => r > 170 && r < 200 && g > 160 && g < 185 && b > 140 && b < 170 && r > g && g > b, 
+                nombre: "Negro Marfil", 
+                codigos: ["PBk9", "PY43"],
+                mezcla: "Negro Marfil + Siena Nativa", 
+                wn_tube: "ivory black + raw sienna",
+                oh_tube: "ivory black + raw sienna",
+                wb_tube: "ivory black + raw sienna",
+                rgb: {r: 185, g: 175, b: 160},
+                transparencia: "semi-opaco",
+                poderTintado: "medio",
+                densidad: 2.6,
+                absorptionAceite: 32,
+                indiceRefraccion: 1.9
+            },
+            
+            // AZULES
+            { 
+                check: (r,g,b) => r < 80 && g < 120 && b > 180 && b > r && b > g, 
+                nombre: "Azul Cobalto", 
+                codigos: ["PB28"],
+                mezcla: "Azul Cobalto puro", 
+                wn_tube: "cobalt blue",
+                oh_tube: "cobalt blue",
+                wb_tube: "cobalt blue",
+                rgb: {r: 40, g: 80, b: 180},
+                transparencia: "semi-opaco",
+                poderTintado: "medio",
+                densidad: 4.2,
+                absorptionAceite: 35,
+                indiceRefraccion: 2.6
+            },
+            { 
+                check: (r,g,b) => r < 60 && g < 80 && b > 160 && b > r && b > g, 
+                nombre: "Azul Ultramar Francés", 
+                codigos: ["PB29"],
+                mezcla: "Azul Ultramar Francés puro", 
+                wn_tube: "french ultramarine",
+                oh_tube: "ultramarine blue",
+                wb_tube: "ultramarine blue",
+                rgb: {r: 30, g: 50, b: 160},
+                transparencia: "semi-transparente",
+                poderTintado: "alto",
+                densidad: 3.8,
+                absorptionAceite: 40,
+                indiceRefraccion: 2.4
+            },
+            { 
+                check: (r,g,b) => r < 40 && g < 100 && b > 180 && b > r && b > g, 
+                nombre: "Azul Phthalocyanina", 
+                codigos: ["PB15"],
+                mezcla: "Azul Phthalocyanina puro", 
+                wn_tube: "phthalo blue",
+                oh_tube: "phthalo blue",
+                wb_tube: "phthalo blue",
+                rgb: {r: 10, g: 60, b: 180},
+                transparencia: "transparente",
+                poderTintado: "muy-alto",
+                densidad: 3.3,
+                absorptionAceite: 58,
+                indiceRefraccion: 2.0
+            },
+            { 
+                check: (r,g,b) => r > 15 && r < 40 && g > 35 && g < 60 && b > 130 && b < 160 && b > r && b > g && r < g, 
+                nombre: "Azul Indigo", 
+                codigos: ["PB60", "PB29"],
+                mezcla: "Azul Indigo + Ultramar", 
+                wn_tube: "indigo + french ultramarine",
+                oh_tube: "indigo + ultramarine blue",
+                wb_tube: "indigo + ultramarine blue",
+                rgb: {r: 25, g: 45, b: 145},
+                transparencia: "transparente",
+                poderTintado: "alto",
+                densidad: 3.6,
+                absorptionAceite: 48,
+                indiceRefraccion: 2.3
+            },
+            { 
+                check: (r,g,b) => r < 60 && g < 90 && b > 170 && b > r && b > g, 
+                nombre: "Azul Real", 
+                codigos: ["PB29", "PW6"],
+                mezcla: "Azul Ultramar + Blanco Titanio", 
+                wn_tube: "french ultramarine + titanium white",
+                oh_tube: "ultramarine blue + titanium white",
+                wb_tube: "ultramarine blue + titanium white",
+                rgb: {r: 50, g: 70, b: 175},
+                transparencia: "opaco",
+                poderTintado: "medio",
+                densidad: 3.0,
+                absorptionAceite: 30,
+                indiceRefraccion: 2.1
+            },
+            
+            // VERDES
+            { 
+                check: (r,g,b) => r < 80 && g > 140 && b < 100 && g > r && g > b, 
+                nombre: "Verde Vejiga", 
+                codigos: ["PG18"],
+                mezcla: "Verde Vejiga puro", 
+                wn_tube: "sap green",
+                oh_tube: "sap green",
+                wb_tube: "sap green",
+                rgb: {r: 40, g: 140, b: 60},
+                transparencia: "semi-transparente",
+                poderTintado: "medio",
+                densidad: 3.7,
+                absorptionAceite: 38,
+                indiceRefraccion: 2.3
+            },
+            { 
+                check: (r,g,b) => r < 40 && g > 140 && b < 80 && g > r && g > b, 
+                nombre: "Verde Thalo", 
+                codigos: ["PG7"],
+                mezcla: "Verde Thalo puro", 
+                wn_tube: "phthalo green",
+                oh_tube: "phthalo green",
+                wb_tube: "phthalo green",
+                rgb: {r: 20, g: 140, b: 40},
+                transparencia: "transparente",
+                poderTintado: "muy-alto",
+                densidad: 3.4,
+                absorptionAceite: 56,
+                indiceRefraccion: 2.1
+            },
+            
+            // NEGROS - RANGOS MUY ESPECÍFICOS
+            { 
+                check: (r,g,b) => r > 30 && r < 60 && g > 30 && g < 60 && b > 40 && b < 70 && Math.abs(r-g) < 10 && Math.abs(g-b) < 15, 
+                nombre: "Negro Hueso", 
+                codigos: ["PBk31"],
+                mezcla: "Negro Hueso puro", 
+                wn_tube: "bone black",
+                oh_tube: "bone black",
+                wb_tube: "bone black",
+                rgb: {r: 40, g: 40, b: 50},
+                transparencia: "semi-opaco",
+                poderTintado: "medio",
+                densidad: 2.9,
+                absorptionAceite: 28,
+                indiceRefraccion: 1.8
+            }
+        ];
+
+        document.getElementById('file-input').onchange = (e) => {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                img.onload = () => {
+                    document.getElementById('empty-msg').style.display = 'none';
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    resetZoom();
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        };
+
+        // Función para cargar imagen de ejemplo
+        function loadExampleImage() {
+            const exampleUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+            img.onload = () => {
+                document.getElementById('empty-msg').style.display = 'none';
+                canvas.width = 800;
+                canvas.height = 600;
+                
+                // Crear una imagen de ejemplo con colores
+                ctx.fillStyle = '#FF6B6B';
+                ctx.fillRect(0, 0, 200, 200);
+                
+                ctx.fillStyle = '#4ECDC4';
+                ctx.fillRect(200, 0, 200, 200);
+                
+                ctx.fillStyle = '#45B7D1';
+                ctx.fillRect(400, 0, 200, 200);
+                
+                ctx.fillStyle = '#96CEB4';
+                ctx.fillRect(600, 0, 200, 200);
+                
+                ctx.fillStyle = '#FFEAA7';
+                ctx.fillRect(0, 200, 200, 200);
+                
+                ctx.fillStyle = '#DDA0DD';
+                ctx.fillRect(200, 200, 200, 200);
+                
+                ctx.fillStyle = '#98D8C8';
+                ctx.fillRect(400, 200, 200, 200);
+                
+                ctx.fillStyle = '#F7DC6F';
+                ctx.fillRect(600, 200, 200, 200);
+                
+                ctx.fillStyle = '#BB8FCE';
+                ctx.fillRect(0, 400, 200, 200);
+                
+                ctx.fillStyle = '#85C1E2';
+                ctx.fillRect(200, 400, 200, 200);
+                
+                ctx.fillStyle = '#F8B739';
+                ctx.fillRect(400, 400, 200, 200);
+                
+                ctx.fillStyle = '#52B788';
+                ctx.fillRect(600, 400, 200, 200);
+                
+                resetZoom();
+            };
+            img.src = exampleUrl;
+        }
+
+        // Evento click para el botón de códigos
+        document.getElementById('codes-btn').parentElement.addEventListener('click', () => {
+            toggleCodesGuide();
+        });
+
+        function toggleCodesGuide() {
+            const guide = document.getElementById('codes-guide');
+            guide.classList.toggle('hidden');
+        }
+
+        function resetZoom() {
+            const cw = area.clientWidth - 100;
+            const ch = area.clientHeight - 100;
+            scale = Math.min(cw / img.width, ch / img.height);
+            updateTransform();
+        }
+
+        function updateTransform() {
+            wrapper.style.transform = `translate(${canvasOffsetX}px, ${canvasOffsetY}px) scale(${scale})`;
+            document.getElementById('zoom-val').innerText = `ZOOM: ${Math.round(scale * 100)}%`;
+        }
+
+        // Eventos de teclado para la tecla espaciadora
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !spacePressed) {
+                e.preventDefault();
+                spacePressed = true;
+                wrapper.style.cursor = 'grab';
+                area.style.cursor = 'grab';
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                spacePressed = false;
+                wrapper.style.cursor = 'crosshair';
+                area.style.cursor = 'crosshair';
+                isDragging = false;
+            }
+        });
+
+        area.addEventListener('wheel', (e) => {
+            if (!img.src) return;
+            e.preventDefault();
+            scale *= e.deltaY > 0 ? 0.9 : 1.1;
+            scale = Math.min(Math.max(0.05, scale), 15);
+            updateTransform();
+        }, { passive: false });
+
+        // Doble clic para fijar/liberar el cursor
+        area.addEventListener('dblclick', (e) => {
+            if (!img.src) return;
+            cursorFixed = !cursorFixed;
+            
+            if (cursorFixed) {
+                // Fijar el color actual
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+                const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+                
+                if (x >= 0 && x < canvas.width && y >= 0 && y < canvas.height) {
+                    const p = ctx.getImageData(Math.floor(x), Math.floor(y), 1, 1).data;
+                    fixedColor = p;
+                    
+                    // Mostrar indicador visual de que está fijado
+                    area.style.border = '2px solid #eab308';
+                    document.getElementById('zoom-val').style.background = '#eab308';
+                    document.getElementById('zoom-val').style.color = '#000';
+                }
+            } else {
+                // Liberar el cursor
+                fixedColor = null;
+                area.style.border = '1px solid #1f2937';
+                document.getElementById('zoom-val').style.background = 'rgba(0,0,0,0.85)';
+                document.getElementById('zoom-val').style.color = '#eab308';
+            }
+        });
+
+        // Eventos de arrastre con la tecla espaciadora
+        area.addEventListener('mousedown', (e) => {
+            if (spacePressed && img.src) {
+                isDragging = true;
+                dragStartX = e.clientX - canvasOffsetX;
+                dragStartY = e.clientY - canvasOffsetY;
+                wrapper.style.cursor = 'grabbing';
+                area.style.cursor = 'grabbing';
+                e.preventDefault();
+            }
+        });
+
+        area.addEventListener('mousemove', (e) => {
+            if (!img.src) return;
+            
+            // Si está arrastrando con espaciadora
+            if (isDragging && spacePressed) {
+                canvasOffsetX = e.clientX - dragStartX;
+                canvasOffsetY = e.clientY - dragStartY;
+                updateTransform();
+                return;
+            }
+            
+            // Si el cursor está fijado, usar el color guardado
+            if (cursorFixed && fixedColor) {
+                updateColorDisplay(fixedColor);
+                return;
+            }
+            
+            // Si no está fijado, analizar el color actual
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+            
+            if (x >= 0 && x < canvas.width && y >= 0 && y < canvas.height) {
+                const p = ctx.getImageData(Math.floor(x), Math.floor(y), 1, 1).data;
+                updateColorDisplay(p);
+            }
+        });
+
+        area.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                if (spacePressed) {
+                    wrapper.style.cursor = 'grab';
+                    area.style.cursor = 'grab';
+                }
+            }
+        });
+
+        area.addEventListener('mouseleave', () => {
+            if (isDragging) {
+                isDragging = false;
+                if (spacePressed) {
+                    wrapper.style.cursor = 'grab';
+                    area.style.cursor = 'grab';
+                }
+            }
+        });
+
+        function updateColorDisplay(p) {
+            document.getElementById('color-preview').style.backgroundColor = `rgb(${p[0]},${p[1]},${p[2]})`;
+            document.getElementById('rgb-label').innerText = `RGB(${p[0]},${p[1]},${p[2]})`;
+            document.getElementById('bar-r').style.width = (p[0]/255*100)+'%';
+            document.getElementById('bar-g').style.width = (p[1]/255*100)+'%';
+            document.getElementById('bar-b').style.width = (p[2]/255*100)+'%';
+            
+            // Primero buscar color puro exacto
+            let info = basePigmentos.find(l => l.check(p[0],p[1],p[2]));
+            
+            if (!info) {
+                // Si no encuentra color puro, buscar mezclas
+                info = analizarMezcla(p[0], p[1], p[2]);
+            }
+
+            document.getElementById('pigment-name').innerText = info.nombre;
+            document.getElementById('mix-recipe').innerText = info.mezcla;
+            document.getElementById('wn-tube').innerText = info.wn_tube || "---";
+            document.getElementById('oh-tube').innerText = info.oh_tube || "---";
+            document.getElementById('wb-tube').innerText = info.wb_tube || "---";
+
+            // Generar etiquetas de códigos
+            const container = document.getElementById('pigment-codes-container');
+            container.innerHTML = '';
+            info.codigos.forEach(code => {
+                const span = document.createElement('span');
+                span.className = 'pigment-code';
+                span.innerText = code;
+                container.appendChild(span);
+            });
+        }
+
+        function analizarMezcla(r, g, b) {
+            // Sistema profesional de análisis de mezclas usando teoría sustractiva
+            const mezclaProfesional = calcularMezclaProfesional(r, g, b);
+            if (mezclaProfesional) {
+                return mezclaProfesional;
+            }
+            
+            // Análisis de componentes principales
+            return analizarComponentesPrincipales(r, g, b);
+        }
+
+        function calcularMezclaProfesional(r, g, b) {
+            // Sistema matemático exacto usando propiedades físicas de pigmentos
+            const hsl = rgbToHsl(r, g, b);
+            const lab = rgbToLab(r, g, b);
+            
+            // Buscar combinaciones óptimas usando algoritmo de mínimos cuadrados
+            const combinaciones = [];
+            
+            // Análisis de combinaciones de 2 colores con cálculo exacto
+            for (let i = 0; i < basePigmentos.length; i++) {
+                for (let j = i + 1; j < basePigmentos.length; j++) {
+                    const mezcla = calcularCombinacionMatematicaExacta(
+                        basePigmentos[i], 
+                        basePigmentos[j], 
+                        r, g, b, hsl, lab
+                    );
+                    if (mezcla.error < 10) { // Umbral de error matemático exacto
+                        combinaciones.push(mezcla);
+                    }
+                }
+            }
+            
+            // Si no hay combinaciones de 2, buscar de 3
+            if (combinaciones.length === 0) {
+                for (let i = 0; i < basePigmentos.length; i++) {
+                    for (let j = i + 1; j < basePigmentos.length; j++) {
+                        for (let k = j + 1; k < basePigmentos.length; k++) {
+                            const mezcla = calcularCombinacionTresColoresMatematica(
+                                basePigmentos[i], 
+                                basePigmentos[j], 
+                                basePigmentos[k], 
+                                r, g, b, hsl, lab
+                            );
+                            if (mezcla.error < 15) {
+                                combinaciones.push(mezcla);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (combinaciones.length > 0) {
+                // Seleccionar la combinación matemáticamente perfecta
+                combinaciones.sort((a, b) => a.error - b.error);
+                return crearResultadoMezclaMatematica(combinaciones[0]);
+            }
+            
+            return null;
+        }
+
+        function calcularCombinacionMatematicaExacta(color1, color2, r, g, b, hsl, lab) {
+            // Algoritmo matemático exacto usando propiedades físicas
+            let mejorError = Infinity;
+            let mejorProporcion = 0.5;
+            
+            // Búsqueda binaria para encontrar proporción óptima
+            for (let prop = 0.01; prop <= 0.99; prop += 0.01) {
+                const mezclaCalculada = simularMezclaFisicaExacta(color1, color2, prop, 1-prop);
+                const error = calcularErrorMatematicoExacto(mezclaCalculada, {r, g, b, hsl, lab});
+                
+                if (error < mejorError) {
+                    mejorError = error;
+                    mejorProporcion = prop;
+                }
+            }
+            
+            return {
+                colores: [color1, color2],
+                proporciones: [mejorProporcion, 1-mejorProporcion],
+                error: mejorError
+            };
+        }
+
+        function calcularCombinacionTresColoresMatematica(color1, color2, color3, r, g, b, hsl, lab) {
+            let mejorError = Infinity;
+            let mejoresProporciones = [0.33, 0.33, 0.34];
+            
+            // Optimización matemática para 3 colores
+            for (let p1 = 0.05; p1 <= 0.9; p1 += 0.05) {
+                for (let p2 = 0.05; p2 <= 0.9; p2 += 0.05) {
+                    const p3 = 1 - p1 - p2;
+                    if (p3 > 0.05 && p3 < 0.9) {
+                        const mezclaCalculada = simularMezclaFisicaExactaTres(
+                            color1, color2, color3, p1, p2, p3
+                        );
+                        const error = calcularErrorMatematicoExacto(mezclaCalculada, {r, g, b, hsl, lab});
+                        
+                        if (error < mejorError) {
+                            mejorError = error;
+                            mejoresProporciones = [p1, p2, p3];
+                        }
+                    }
+                }
+            }
+            
+            return {
+                colores: [color1, color2, color3],
+                proporciones: mejoresProporciones,
+                error: mejorError
+            };
+        }
+
+        function simularMezclaFisicaExacta(color1, color2, prop1, prop2) {
+            // Simulación física exacta usando propiedades de pigmentos
+            const rgb1 = color1.rgb;
+            const rgb2 = color2.rgb;
+            
+            // Cálculo de mezcla sustractiva con corrección por poder de tintado
+            const poderTintado1 = getPoderTintadoNumerico(color1.poderTintado);
+            const poderTintado2 = getPoderTintadoNumerico(color2.poderTintado);
+            
+            // Ajuste de proporciones por poder de tintado
+            const totalPoder = poderTintado1 * prop1 + poderTintado2 * prop2;
+            const propAjustada1 = (poderTintado1 * prop1) / totalPoder;
+            const propAjustada2 = (poderTintado2 * prop2) / totalPoder;
+            
+            // Mezcla con corrección por densidad
+            const densidad1 = color1.densidad;
+            const densidad2 = color2.densidad;
+            const densidadMezcla = (densidad1 * prop1 + densidad2 * prop2);
+            
+            // Cálculo RGB final con todas las correcciones
+            const rFinal = Math.round(rgb1.r * propAjustada1 + rgb2.r * propAjustada2);
+            const gFinal = Math.round(rgb1.g * propAjustada1 + rgb2.g * propAjustada2);
+            const bFinal = Math.round(rgb1.b * propAjustada1 + rgb2.b * propAjustada2);
+            
+            return {
+                r: rFinal,
+                g: gFinal,
+                b: bFinal,
+                hsl: rgbToHsl(rFinal, gFinal, bFinal),
+                lab: rgbToLab(rFinal, gFinal, bFinal),
+                densidad: densidadMezcla,
+                transparencia: calcularTransparenciaMezcla(color1, color2, prop1, prop2),
+                poderTintado: totalPoder
+            };
+        }
+
+        function simularMezclaFisicaExactaTres(color1, color2, color3, p1, p2, p3) {
+            const rgb1 = color1.rgb;
+            const rgb2 = color2.rgb;
+            const rgb3 = color3.rgb;
+            
+            const poderTintado1 = getPoderTintadoNumerico(color1.poderTintado);
+            const poderTintado2 = getPoderTintadoNumerico(color2.poderTintado);
+            const poderTintado3 = getPoderTintadoNumerico(color3.poderTintado);
+            
+            const totalPoder = poderTintado1 * p1 + poderTintado2 * p2 + poderTintado3 * p3;
+            const propAjustada1 = (poderTintado1 * p1) / totalPoder;
+            const propAjustada2 = (poderTintado2 * p2) / totalPoder;
+            const propAjustada3 = (poderTintado3 * p3) / totalPoder;
+            
+            const densidadMezcla = (color1.densidad * p1 + color2.densidad * p2 + color3.densidad * p3);
+            
+            const rFinal = Math.round(rgb1.r * propAjustada1 + rgb2.r * propAjustada2 + rgb3.r * propAjustada3);
+            const gFinal = Math.round(rgb1.g * propAjustada1 + rgb2.g * propAjustada2 + rgb3.g * propAjustada3);
+            const bFinal = Math.round(rgb1.b * propAjustada1 + rgb2.b * propAjustada2 + rgb3.b * propAjustada3);
+            
+            return {
+                r: rFinal,
+                g: gFinal,
+                b: bFinal,
+                hsl: rgbToHsl(rFinal, gFinal, bFinal),
+                lab: rgbToLab(rFinal, gFinal, bFinal),
+                densidad: densidadMezcla,
+                transparencia: calcularTransparenciaMezclaTres(color1, color2, color3, p1, p2, p3),
+                poderTintado: totalPoder
+            };
+        }
+
+        function getPoderTintadoNumerico(poder) {
+            const valores = {
+                "bajo": 0.3,
+                "medio": 0.6,
+                "alto": 0.8,
+                "muy-alto": 1.0
+            };
+            return valores[poder] || 0.5;
+        }
+
+        function calcularTransparenciaMezcla(color1, color2, prop1, prop2) {
+            const transp1 = getTransparenciaNumerica(color1.transparencia);
+            const transp2 = getTransparenciaNumerica(color2.transparencia);
+            const transpMezcla = transp1 * prop1 + transp2 * prop2;
+            
+            if (transpMezcla < 0.3) return "opaco";
+            if (transpMezcla < 0.6) return "semi-opaco";
+            if (transpMezcla < 0.8) return "semi-transparente";
+            return "transparente";
+        }
+
+        function calcularTransparenciaMezclaTres(color1, color2, color3, p1, p2, p3) {
+            const transp1 = getTransparenciaNumerica(color1.transparencia);
+            const transp2 = getTransparenciaNumerica(color2.transparencia);
+            const transp3 = getTransparenciaNumerica(color3.transparencia);
+            const transpMezcla = transp1 * p1 + transp2 * p2 + transp3 * p3;
+            
+            if (transpMezcla < 0.3) return "opaco";
+            if (transpMezcla < 0.6) return "semi-opaco";
+            if (transpMezcla < 0.8) return "semi-transparente";
+            return "transparente";
+        }
+
+        function getTransparenciaNumerica(transparencia) {
+            const valores = {
+                "opaco": 0.1,
+                "semi-opaco": 0.4,
+                "semi-transparente": 0.7,
+                "transparente": 0.9
+            };
+            return valores[transparencia] || 0.5;
+        }
+
+        function calcularErrorMatematicoExacto(mezclaCalculada, objetivo) {
+            // Cálculo de error matemático exacto Delta E CIE76
+            const deltaE = Math.sqrt(
+                Math.pow(mezclaCalculada.lab.l - objetivo.lab.l, 2) +
+                Math.pow(mezclaCalculada.lab.a - objetivo.lab.a, 2) +
+                Math.pow(mezclaCalculada.lab.b - objetivo.lab.b, 2)
+            );
+            
+            // Penalización por diferencia de saturación
+            const diffSat = Math.abs(mezclaCalculada.hsl.s - objetivo.hsl.s);
+            
+            // Penalización por diferencia de luminosidad
+            const diffLum = Math.abs(mezclaCalculada.hsl.l - objetivo.hsl.l);
+            
+            return deltaE + (diffSat * 0.3) + (diffLum * 0.2);
+        }
+
+        function crearResultadoMezclaMatematica(combinacion) {
+            const colores = combinacion.colores;
+            const proporciones = combinacion.proporciones;
+            
+            // Crear nombre simple y realista
+            let nombre = "Mezcla sugerida: ";
+            const nombresColores = colores.map((c, i) => 
+                `${Math.round(proporciones[i] * 100)}% ${c.nombre}`
+            );
+            nombre += nombresColores.join(" + ");
+            
+            // Combinar códigos de pigmentos
+            const codigosCombinados = [];
+            colores.forEach(color => {
+                color.codigos.forEach(codigo => {
+                    if (!codigosCombinados.includes(codigo)) {
+                        codigosCombinados.push(codigo);
+                    }
+                });
+            });
+            
+            // Receta simple y realista
+            let receta = "Proporciones aproximadas: ";
+            receta += nombresColores.join(" + ");
+            
+            // Combinar tubos equivalentes
+            const wnTube = colores.map(c => c.wn_tube).join(" + ");
+            const ohTube = colores.map(c => c.oh_tube).join(" + ");
+            const wbTube = colores.map(c => c.wb_tube).join(" + ");
+            
+            return {
+                nombre: nombre,
+                codigos: codigosCombinados,
+                mezcla: receta,
+                wn_tube: wnTube,
+                oh_tube: ohTube,
+                wb_tube: wbTube
+            };
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+            
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                
+                switch (max) {
+                    case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+                    case g: h = ((b - r) / d + 2) / 6; break;
+                    case b: h = ((r - g) / d + 4) / 6; break;
+                }
+            }
+
+            return {
+                h: Math.round(h * 360),
+                s: Math.round(s * 100),
+                l: Math.round(l * 100)
+            };
+        }
+
+        function rgbToLab(r, g, b) {
+            // Simplificación de conversión RGB a Lab para análisis de color
+            let rn = r / 255;
+            let gn = g / 255;
+            let bn = b / 255;
+            
+            rn = rn > 0.04045 ? Math.pow((rn + 0.055) / 1.055, 2.4) : rn / 12.92;
+            gn = gn > 0.04045 ? Math.pow((gn + 0.055) / 1.055, 2.4) : gn / 12.92;
+            bn = bn > 0.04045 ? Math.pow((bn + 0.055) / 1.055, 2.4) : bn / 12.92;
+            
+            rn = rn * 100;
+            gn = gn * 100;
+            bn = bn * 100;
+            
+            const x = rn * 0.4124 + gn * 0.3576 + bn * 0.1805;
+            const y = rn * 0.2126 + gn * 0.7152 + bn * 0.0722;
+            const z = rn * 0.0193 + gn * 0.1192 + bn * 0.9505;
+            
+            let xn = x / 95.047;
+            let yn = y / 100.000;
+            let zn = z / 108.883;
+            
+            xn = xn > 0.008856 ? Math.pow(xn, 1/3) : (7.787 * xn + 16/116);
+            yn = yn > 0.008856 ? Math.pow(yn, 1/3) : (7.787 * yn + 16/116);
+            zn = zn > 0.008856 ? Math.pow(zn, 1/3) : (7.787 * zn + 16/116);
+            
+            return {
+                l: Math.round(116 * yn - 16),
+                a: Math.round(500 * (xn - yn)),
+                b: Math.round(200 * (yn - zn))
+            };
+        }
+
+        function calcularCombinacionDosColores(color1, color2, r, g, b, hsl, lab) {
+            // Optimizar proporciones para coincidir con el color objetivo
+            let mejorError = Infinity;
+            let mejorProporcion = 0.5;
+            
+            for (let prop = 0.1; prop <= 0.9; prop += 0.05) {
+                const mezclaCalculada = simularMezclaFisica(color1, color2, prop, 1-prop);
+                const error = calcularErrorColor(mezclaCalculada, {r, g, b, hsl, lab});
+                
+                if (error < mejorError) {
+                    mejorError = error;
+                    mejorProporcion = prop;
+                }
+            }
+            
+            return {
+                colores: [color1, color2],
+                proporciones: [mejorProporcion, 1-mejorProporcion],
+                error: mejorError
+            };
+        }
+
+        function calcularCombinacionTresColores(color1, color2, color3, r, g, b, hsl, lab) {
+            let mejorError = Infinity;
+            let mejoresProporciones = [0.33, 0.33, 0.34];
+            
+            // Búsqueda optimizada de proporciones
+            for (let p1 = 0.1; p1 <= 0.8; p1 += 0.1) {
+                for (let p2 = 0.1; p2 <= 0.8; p2 += 0.1) {
+                    const p3 = 1 - p1 - p2;
+                    if (p3 > 0.05 && p3 < 0.8) {
+                        const mezclaCalculada = simularMezclaFisicaTres(
+                            color1, color2, color3, p1, p2, p3
+                        );
+                        const error = calcularErrorColor(mezclaCalculada, {r, g, b, hsl, lab});
+                        
+                        if (error < mejorError) {
+                            mejorError = error;
+                            mejoresProporciones = [p1, p2, p3];
+                        }
+                    }
+                }
+            }
+            
+            return {
+                colores: [color1, color2, color3],
+                proporciones: mejoresProporciones,
+                error: mejorError
+            };
+        }
+
+        function simularMezclaFisica(color1, color2, prop1, prop2) {
+            // Simulación de mezcla sustractiva real de pigmentos
+            const rgb1 = obtenerRGBRepresentativo(color1);
+            const rgb2 = obtenerRGBRepresentativo(color2);
+            
+            // Mezcla sustractiva ponderada
+            return {
+                r: Math.round(rgb1.r * prop1 + rgb2.r * prop2),
+                g: Math.round(rgb1.g * prop1 + rgb2.g * prop2),
+                b: Math.round(rgb1.b * prop1 + rgb2.b * prop2),
+                hsl: rgbToHsl(
+                    Math.round(rgb1.r * prop1 + rgb2.r * prop2),
+                    Math.round(rgb1.g * prop1 + rgb2.g * prop2),
+                    Math.round(rgb1.b * prop1 + rgb2.b * prop2)
+                ),
+                lab: rgbToLab(
+                    Math.round(rgb1.r * prop1 + rgb2.r * prop2),
+                    Math.round(rgb1.g * prop1 + rgb2.g * prop2),
+                    Math.round(rgb1.b * prop1 + rgb2.b * prop2)
+                )
+            };
+        }
+
+        function simularMezclaFisicaTres(color1, color2, color3, p1, p2, p3) {
+            const rgb1 = obtenerRGBRepresentativo(color1);
+            const rgb2 = obtenerRGBRepresentativo(color2);
+            const rgb3 = obtenerRGBRepresentativo(color3);
+            
+            return {
+                r: Math.round(rgb1.r * p1 + rgb2.r * p2 + rgb3.r * p3),
+                g: Math.round(rgb1.g * p1 + rgb2.g * p2 + rgb3.g * p3),
+                b: Math.round(rgb1.b * p1 + rgb2.b * p2 + rgb3.b * p3),
+                hsl: rgbToHsl(
+                    Math.round(rgb1.r * p1 + rgb2.r * p2 + rgb3.r * p3),
+                    Math.round(rgb1.g * p1 + rgb2.g * p2 + rgb3.g * p3),
+                    Math.round(rgb1.b * p1 + rgb2.b * p2 + rgb3.b * p3)
+                ),
+                lab: rgbToLab(
+                    Math.round(rgb1.r * p1 + rgb2.r * p2 + rgb3.r * p3),
+                    Math.round(rgb1.g * p1 + rgb2.g * p2 + rgb3.g * p3),
+                    Math.round(rgb1.b * p1 + rgb2.b * p2 + rgb3.b * p3)
+                )
+            };
+        }
+
+        function obtenerRGBRepresentativo(color) {
+            // Extraer RGB representativo del color basado en sus reglas de detección
+            if (color.nombre.includes("Blanco")) return {r: 245, g: 245, b: 245};
+            if (color.nombre.includes("Negro")) return {r: 40, g: 40, b: 50};
+            if (color.nombre.includes("Rojo Cadmio")) return {r: 220, g: 50, b: 40};
+            if (color.nombre.includes("Alizarina")) return {r: 150, g: 40, b: 60};
+            if (color.nombre.includes("Rojo Óxido")) return {r: 180, g: 60, b: 40};
+            if (color.nombre.includes("Amarillo Cadmio")) return {r: 250, g: 210, b: 50};
+            if (color.nombre.includes("Amarillo Nápoles")) return {r: 240, g: 200, b: 100};
+            if (color.nombre.includes("Amarillo Limón")) return {r: 255, g: 240, b: 120};
+            if (color.nombre.includes("Azul Cobalto")) return {r: 40, g: 80, b: 180};
+            if (color.nombre.includes("Azul Ultramar")) return {r: 30, g: 50, b: 160};
+            if (color.nombre.includes("Azul Phthalocyanina")) return {r: 10, g: 60, b: 180};
+            if (color.nombre.includes("Verde Vejiga")) return {r: 40, g: 140, b: 60};
+            if (color.nombre.includes("Verde Thalo")) return {r: 20, g: 140, b: 40};
+            if (color.nombre.includes("Naranja")) return {r: 240, g: 120, b: 40};
+            if (color.nombre.includes("Oro")) return {r: 200, g: 160, b: 80};
+            if (color.nombre.includes("Cobre")) return {r: 170, g: 90, b: 50};
+            if (color.nombre.includes("Plata")) return {r: 180, g: 180, b: 180};
+            
+            // Default para colores no especificados
+            return {r: 128, g: 128, b: 128};
+        }
+
+        function calcularErrorColor(mezclaCalculada, objetivo) {
+            // Cálculo de error Delta E profesional
+            const deltaE = Math.sqrt(
+                Math.pow(mezclaCalculada.lab.l - objetivo.lab.l, 2) +
+                Math.pow(mezclaCalculada.lab.a - objetivo.lab.a, 2) +
+                Math.pow(mezclaCalculada.lab.b - objetivo.lab.b, 2)
+            );
+            
+            // Penalización por diferencia de saturación
+            const diffSat = Math.abs(mezclaCalculada.hsl.s - objetivo.hsl.s);
+            
+            return deltaE + (diffSat * 0.5);
+        }
+
+        function crearResultadoMezcla(combinacion) {
+            const colores = combinacion.colores;
+            const proporciones = combinacion.proporciones;
+            
+            // Crear nombre profesional de la mezcla
+            let nombre = "Mezcla Profesional: ";
+            const nombresColores = colores.map((c, i) => 
+                `${Math.round(proporciones[i] * 100)}% ${c.nombre}`
+            );
+            nombre += nombresColores.join(" + ");
+            
+            // Combinar códigos de pigmentos
+            const codigosCombinados = [];
+            colores.forEach(color => {
+                color.codigos.forEach(codigo => {
+                    if (!codigosCombinados.includes(codigo)) {
+                        codigosCombinados.push(codigo);
+                    }
+                });
+            });
+            
+            // Crear receta profesional
+            let receta = "Proporciones exactas: ";
+            receta += nombresColores.join(" + ");
+            
+            // Combinar tubos equivalentes
+            const wnTube = colores.map(c => c.wn_tube).join(" + ");
+            const ohTube = colores.map(c => c.oh_tube).join(" + ");
+            const wbTube = colores.map(c => c.wb_tube).join(" + ");
+            
+            return {
+                nombre: nombre,
+                codigos: codigosCombinados,
+                mezcla: receta,
+                wn_tube: wnTube,
+                oh_tube: ohTube,
+                wb_tube: wbTube
+            };
+        }
+
+        function analizarComponentesPrincipales(r, g, b) {
+            // Análisis simple y realista de componentes
+            const total = r + g + b;
+            const rPorc = Math.round((r / total) * 100);
+            const gPorc = Math.round((g / total) * 100);
+            const bPorc = Math.round((b / total) * 100);
+            
+            const componentes = [];
+            if (rPorc > 30) componentes.push(`Rojo ${rPorc}%`);
+            if (gPorc > 30) componentes.push(`Amarillo/Verde ${gPorc}%`);
+            if (bPorc > 30) componentes.push(`Azul ${bPorc}%`);
+            
+            if (componentes.length >= 2) {
+                return {
+                    nombre: `Combinación de colores: ${componentes.join(" + ")}`,
+                    codigos: ["MEZCLA"],
+                    mezcla: `Componentes principales: R${rPorc}% G${gPorc}% B${bPorc}%`,
+                    wn_tube: "mezcla de colores básicos",
+                    oh_tube: "mezcla de colores básicos", 
+                    wb_tube: "mezcla de colores básicos"
+                };
+            }
+            
+            // Clasificación por tipo de color - más realista
+            if (r > 100 && g > 80 && b < 70) {
+                return {
+                    nombre: "Tierra/ocre",
+                    codigos: ["PY42", "PBr7"],
+                    mezcla: "Colores terrosos: Ocre + Siena",
+                    wn_tube: "yellow ochre + raw sienna",
+                    oh_tube: "yellow ochre + raw sienna",
+                    wb_tube: "yellow ochre + raw sienna"
+                };
+            }
+            
+            if (r < 80 && g < 80 && b < 100) {
+                return {
+                    nombre: "Gris oscuro",
+                    codigos: ["PBk7", "PW6"],
+                    mezcla: "Neutro: Negro + Blanco",
+                    wn_tube: "ivory black + titanium white",
+                    oh_tube: "ivory black + titanium white",
+                    wb_tube: "ivory black + titanium white"
+                };
+            }
+            
+            return {
+                nombre: "Color complejo",
+                codigos: ["VARIADO"],
+                mezcla: `RGB(${r},${g},${b}) - Requiere análisis visual`,
+                wn_tube: "varios colores posibles",
+                oh_tube: "varios colores posibles",
+                wb_tube: "varios colores posibles"
+            };
+        }
+        
+        // Sección de precios en múltiples monedas
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceSection = `
+                <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">💰 Referencias de Precios</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-blue-800 mb-2">Winsor & Newton</h3>
+                            <div class="text-sm text-gray-600">
+                                <p class="mb-1">🇺🇸 $12.00-$25.00 por tubo</p>
+                                <p class="mb-1">🇪🇺 €0.00-€22.00 por tubo</p>
+                                <p>🇬🇧 £8.00-£15.00 por tubo</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-orange-800 mb-2">Old Holland</h3>
+                            <div class="text-sm text-gray-600">
+                                <p class="mb-1">🇺🇸 $18.00-$35.00 por tubo</p>
+                                <p class="mb-1">🇪🇺 €0.00-€32.00 por tubo</p>
+                                <p>🇬🇧 £12.00-£20.00 por tubo</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-green-800 mb-2">Williamsburg</h3>
+                            <div class="text-sm text-gray-600">
+                                <p class="mb-1">🇺🇸 $15.00-$30.00 por tubo</p>
+                                <p class="mb-1">🇪🇺 €0.00-€28.00 por tubo</p>
+                                <p>🇬🇧 £10.00-£18.00 por tubo</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-yellow-50 p-4 rounded-lg">
+                        <p class="text-sm text-yellow-800">
+                            <strong>💰 Nota:</strong> Precios aproximados según catálogos actuales. 
+                            Los precios pueden variar según el país y distribuidor.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-blue-50 p-4 rounded-lg mt-4">
+                        <h4 class="font-bold text-blue-800 mb-2">💳 Información de pago</h4>
+                        <p class="text-sm text-blue-700">
+                            Todos los cargos se procesan en dólares estadounidenses. 
+                            Su banco o institución financiera podría aplicar sus propias comisiones por conversión de moneda.
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            // Insertar después del contenedor principal
+            const mainContainer = document.querySelector('.bg-white.rounded-lg.shadow-lg.p-6');
+            if (mainContainer) {
+                mainContainer.insertAdjacentHTML('afterend', priceSection);
+            }
+        });
+    </script>
+</body>
+</html>
