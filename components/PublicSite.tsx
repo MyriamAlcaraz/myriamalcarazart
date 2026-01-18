@@ -227,7 +227,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                 <Briefcase size={36} className="text-gold-600 mb-4" />
                 <h3 className="font-serif text-2xl font-bold text-slate-900 mb-3">3. Encargo Personalizado</h3>
                 <p className="text-slate-600 mb-4 text-sm leading-relaxed flex-grow">
-                  Partimos de tus fotografías o ideas más queridas para crear una obra única, **pintada desde cero**. El precio se determina antes de comenzar, tras una consulta personal sobre el formato y la complejidad.
+                  Parto de tus fotografías o ideas más queridas para crear una obra única, **pintada desde cero**. El precio se determina antes de comenzar, tras una consulta personal sobre el formato y la complejidad.
                 </p>
                 <a 
                   href={`mailto:${ARTIST_INFO.email}`} 
