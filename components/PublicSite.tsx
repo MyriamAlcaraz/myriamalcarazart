@@ -72,9 +72,68 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
 
       <main className="max-w-6xl mx-auto px-6 py-12">
         {/* ========================================= */}
-        {/* PORTFOLIO TAB */}
+        {/* MANTENIMIENTO TEMPORAL - PÁGINA BLOQUEADA */}
         {/* ========================================= */}
-        {activeTab === 'portfolio' && (
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
+          <div className="max-w-4xl mx-auto text-center p-8">
+            {/* Candado Grande */}
+            <div className="w-32 h-32 bg-gold-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
+              <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 15v2m0 0l-4 4m5.618-4.618L11 16H9a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 8a2 2 0 012-2v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z" />
+              </svg>
+            </div>
+            
+            {/* Mensaje Principal */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-gold-500/30">
+              <h1 className="font-serif text-4xl font-bold text-slate-900 mb-4">
+                🔒 Tienda en Mantenimiento 🔒
+              </h1>
+              <p className="text-lg text-slate-700 mb-6 leading-relaxed">
+                Estamos actualizando nuestra tienda para ofrecerte una mejor experiencia.
+              </p>
+              <p className="text-slate-600 mb-8">
+                Volveremos pronto con mejoras y novedades.
+              </p>
+              
+              {/* Información de Contacto */}
+              <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                <h2 className="font-serif text-xl font-semibold text-slate-800 mb-4">
+                  ¿Necesitas ayuda urgente?
+                </h2>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <svg className="w-5 h-5 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 011.21 1.21l2.58 2.59a2 2 0 01.21.21.21l-2.59 2.59a2 2 0 01-.21.21L8.11 8.26a2 2 0 00-1.21-1.21l-2.58-2.59a2 2 0 00-.21-.21L3 8z" />
+                    </svg>
+                    <span className="text-slate-700">
+                      <strong>Email:</strong> myriam@hotmail.com
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <svg className="w-5 h-5 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 011.21 1.21l2.59 2.59a2 2 0 01.21.21.21L8.11 8.26a2 2 0 00-1.21-1.21l-2.58-2.59a2 2 0 00-.21-.21L3 5z" />
+                    </svg>
+                    <span className="text-slate-700">
+                      <strong>Teléfono:</strong> [Tu número]
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Mensaje de Seguridad */}
+              <div className="mt-8 p-4 bg-gold-50 rounded-xl border border-gold-200">
+                <p className="text-sm text-slate-600 font-medium">
+                  ⚠️ Por seguridad, todas las transacciones están temporalmente suspendidas.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ========================================= */}
+        {/* CONTENIDO NORMAL (COMENTADO TEMPORALMENTE) */}
+        {/* ========================================= */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {ARTWORKS.map(artwork => (
               <div key={artwork.id} className="group relative overflow-hidden bg-white shadow-lg border border-stone-100">
@@ -253,7 +312,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   </p>
                   
                   <a 
-                    href="https://496114690192.gumroad.com/l/owesfb"
+                    href="https://myriamalcaraz.gumroad.com/l/owesfb"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full bg-gold-500 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
@@ -339,7 +398,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   <p className="text-sm text-slate-300">One-time payment / Pago único</p>
                 </div>
                 <a 
-                  href="https://496114690192.gumroad.com/l/owesfb"
+                  href="https://myriamalcaraz.gumroad.com/l/owesfb"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-gold-500 text-white px-10 py-5 rounded-full font-semibold hover:bg-gold-600 transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 inline-block text-lg"
