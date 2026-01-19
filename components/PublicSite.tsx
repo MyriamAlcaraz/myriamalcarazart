@@ -72,65 +72,6 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
 
       <main className="max-w-6xl mx-auto px-6 py-12">
         {/* ========================================= */}
-        {/* MANTENIMIENTO TEMPORAL - PÁGINA BLOQUEADA */}
-        {/* ========================================= */}
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
-          <div className="max-w-4xl mx-auto text-center p-8">
-            {/* Candado Grande */}
-            <div className="w-32 h-32 bg-gold-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
-              <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 15v2m0 0l-4 4m5.618-4.618L11 16H9a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 8a2 2 0 012-2v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z" />
-              </svg>
-            </div>
-            
-            {/* Mensaje Principal */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-gold-500/30">
-              <h1 className="font-serif text-4xl font-bold text-slate-900 mb-4">
-                🔒 Tienda en Mantenimiento 🔒
-              </h1>
-              <p className="text-lg text-slate-700 mb-6 leading-relaxed">
-                Estamos actualizando nuestra tienda para ofrecerte una mejor experiencia.
-              </p>
-              <p className="text-slate-600 mb-8">
-                Volveremos pronto con mejoras y novedades.
-              </p>
-              
-              {/* Información de Contacto */}
-              <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                <h2 className="font-serif text-xl font-semibold text-slate-800 mb-4">
-                  ¿Necesitas ayuda urgente?
-                </h2>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <svg className="w-5 h-5 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 011.21 1.21l2.58 2.59a2 2 0 01.21.21.21l-2.59 2.59a2 2 0 01-.21.21L8.11 8.26a2 2 0 00-1.21-1.21l-2.58-2.59a2 2 0 00-.21-.21L3 8z" />
-                    </svg>
-                    <span className="text-slate-700">
-                      <strong>Email:</strong> myriam@hotmail.com
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <svg className="w-5 h-5 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 011.21 1.21l2.59 2.59a2 2 0 01.21.21.21L8.11 8.26a2 2 0 00-1.21-1.21l-2.58-2.59a2 2 0 00-.21-.21L3 5z" />
-                    </svg>
-                    <span className="text-slate-700">
-                      <strong>Teléfono:</strong> [Tu número]
-                    </span>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Mensaje de Seguridad */}
-              <div className="mt-8 p-4 bg-gold-50 rounded-xl border border-gold-200">
-                <p className="text-sm text-slate-600 font-medium">
-                  ⚠️ Por seguridad, todas las transacciones están temporalmente suspendidas.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* ========================================= */}
         {/* CONTENIDO NORMAL (COMENTADO TEMPORALMENTE) */}
         {/* ========================================= */}
@@ -298,45 +239,114 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
 
               {/* Opción 4: Analizador Técnico del Color - Herramienta Digital Exclusiva */}
               <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-6 shadow-xl border-t-4 border-gold-500 flex flex-col items-center text-center text-white relative overflow-hidden">
-                {/* Efecto de sofisticación tecnológica */}
-                <div className="absolute inset-0 bg-gradient-to-t from-gold-500/10 to-transparent opacity-50"></div>
-                <div className="relative z-10">
-                  <div className="w-16 h-16 bg-gold-500 rounded-full flex items-center justify-center mb-4 mx-auto">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
+                {/* ========================================= */}
+                {/* MANTENIMIENTO TEMPORAL - PÁGINA BLOQUEADA */}
+                {/* ========================================= */}
+                <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
+                  <div className="max-w-4xl mx-auto text-center p-8">
+                    {/* Candado Grande */}
+                    <div className="w-32 h-32 bg-gold-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
+                      <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 15v2m0 0l-4 4m5.618-4.618L11 16H9a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002 2z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 8a2 2 0 012-2v6a2 2 0 01-2 2H5a2 2 0 01-2 2V8a2 2 0 012-2z" />
+                      </svg>
+                    </div>
+                    
+                    {/* Mensaje Principal */}
+                    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-gold-500/30">
+                      <h1 className="font-serif text-4xl font-bold text-slate-900 mb-4">
+                        🔒 TIENDA EN MANTENIMIENTO 🔒
+                      </h1>
+                      <p className="text-lg text-slate-700 mb-6 leading-relaxed">
+                        Estamos actualizando nuestra tienda para ofrecerte una mejor experiencia.
+                      </p>
+                      <p className="text-slate-600 mb-8">
+                        Volveremos pronto con mejoras y novedades.
+                      </p>
+                      
+                      {/* Información de Contacto */}
+                      <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                        <h2 className="font-serif text-xl font-semibold text-slate-800 mb-4">
+                          ¿Necesitas ayuda urgente?
+                        </h2>
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-3">
+                            <svg className="w-5 h-5 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 011.21 1.21l2.58 2.59a2 2 0 01.21.21.21l2.59 2.59a2 2 0 01-.21.21L8.11 8.26a2 2 0 00-1.21-1.21l-2.58-2.59a2 2 0 00-.21-.21L3 8z" />
+                            </svg>
+                            <span className="text-slate-700">
+                              <strong>Email:</strong> myriam@hotmail.com
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <svg className="w-5 h-5 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2v6a2 2 0 01-2 2H5a2 2 0 01-2 2V8a2 2 0 012-2z" />
+                            </svg>
+                            <span className="text-slate-700">
+                              <strong>Teléfono:</strong> [Tu número]
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Mensaje de Seguridad */}
+                      <div className="mt-8 p-4 bg-gold-50 rounded-xl border border-gold-200">
+                        <p className="text-sm text-slate-600 font-medium">
+                          ⚠️ Por seguridad, todas las transacciones están temporalmente suspendidas.
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="font-serif text-2xl font-bold text-white mb-3">4. Analizador Técnico del Color</h3>
-                  <p className="text-slate-200 mb-4 text-sm leading-relaxed flex-grow">
-                    Mi herramienta digital creada con inteligencia artificial que te ayudará con la identificación del color. He integrado mi paleta personal y las marcas que suelo utilizar profesionalmente.
-                  </p>
-                  
-                  <a 
-                    href="https://myriamalcaraz.gumroad.com/l/owesfb?_gl=1*q5x150*_ga*NzgzNzk1ODcwLjE3Njg2ODc1NjM.*_ga_6LJN6D94N6*czE3Njg4MTgyOTUkbzkkZzEkdDE3Njg4MjA5MzkkajYwJGwwJGgw"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full bg-gold-500 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                    </svg>
-                    Buy Now / Comprar Ahora
-                  </a>
-                  <p className="text-xs text-slate-400 mt-3 italic">Ahora disponible para coleccionistas</p>
                 </div>
-              </div>
-            </div>
-          </div>
-        )}
 
-        {/* ========================================= */}
-        {/* APLICACIÓN COLOR TAB - SECCIÓN EXCLUSIVA */}
-        {/* ========================================= */}
-        {activeTab === 'app' && (
-          <div className="space-y-16">
-            
-            {/* Header Hero Section - Bilingüe y Elegante */}
-            <div className="text-center space-y-8">
+                {/* ========================================= */}
+                {/* CONTENIDO NORMAL (COMENTADO TEMPORALMENTE) */}
+                {/* ========================================= */}
+                {activeTab === 'app' && (
+                  <div className="space-y-16">
+                    
+                    {/* Header Hero Section - Bilingüe y Elegante */}
+                    <div className="text-center space-y-8">
+                      <div className="max-w-5xl mx-auto">
+                        <div className="w-24 h-24 bg-gold-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
+                          <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                          </svg>
+                        </div>
+                        
+                        {/* Títulos Bilingües */}
+                        <h1 className="font-serif text-5xl md:text-7xl font-bold text-slate-900 mb-2">
+                          Analizador Técnico del Color
+                        </h1>
+                        <p className="font-serif text-3xl md:text-4xl text-gold-600 italic mb-6">
+                          Technical Color Analyzer
+                        </p>
+                        
+                        {/* Subtítulos Bilingües */}
+                        <p className="text-xl font-serif text-slate-600 italic mb-8">
+                          Herramienta Digital Exclusiva para Artistas
+                        </p>
+                        <p className="text-lg font-serif text-gold-500 italic mb-8">
+                          Exclusive Digital Tool for Artists
+                        </p>
+                        
+                        {/* Descripción Bilingüe */}
+                        <div className="space-y-6 max-w-4xl mx-auto">
+                          <p className="text-lg text-slate-700 leading-relaxed">
+                            La herramienta práctica que utilizo, diseñada por mí. Ahora comparto contigo esta aplicación profesional 
+                            con análisis técnico avanzado mediante inteligencia artificial para perfeccionar tu proceso creativo. 
+                            Incluye las denominaciones exactas de las tres marcas de óleos que utilizo profesionalmente: 
+                            Old Holland, Williamsburg y Winsor & Newton.
+                          </p>
+                          <p className="text-lg text-slate-600 leading-relaxed italic">
+                            The practical tool I use, designed by me. Now I share with you this professional application 
+                            with advanced technical analysis through artificial intelligence to perfect your creative process. 
+                            Includes the exact denominations of the three oil paint brands I use professionally: 
+                            Old Holland, Williamsburg and Winsor & Newton.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
               <div className="max-w-5xl mx-auto">
                 <div className="w-24 h-24 bg-gold-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
                   <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
