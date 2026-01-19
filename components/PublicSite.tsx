@@ -404,7 +404,12 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   Obtén acceso ilimitado a la herramienta profesional completa.
                 </p>
                 <div className="mb-8">
-                  <p className="text-4xl font-bold text-gold-400">€46.99</p>
+                  <div>
+                    <span style={{fontSize: '1.5em', fontWeight: 700, color: 'white'}}>46,99 €</span>
+                    <span style={{fontSize: '0.9em', color: '#d1d5db', marginLeft: '0.5rem'}}> (+ IVA según tu país)</span>
+                    <br />
+                    <span style={{fontSize: '0.85em', color: '#9ca3af', fontStyle: 'italic'}}>Precio final aprox. 57€ en España</span>
+                  </div>
                   <p className="text-sm text-slate-300">One-time payment / Pago único</p>
                 </div>
                 <a 
