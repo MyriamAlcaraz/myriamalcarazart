@@ -251,10 +251,6 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   <p className="text-slate-200 mb-4 text-sm leading-relaxed flex-grow">
                     Mi herramienta digital creada con inteligencia artificial que te ayudará con la identificación del color. He integrado mi paleta personal y las marcas que suelo utilizar profesionalmente.
                   </p>
-                  <div className="space-y-2 mb-4">
-                    <p className="text-xs text-slate-300">✓ Análisis técnico avanzado</p>
-                    <p className="text-xs text-slate-300">✓ Identificación de pigmentos profesionales</p>
-                    <p className="text-xs text-slate-300">✓ Recetas de mezcla precisas</p>
                   </div>
                   
                   {/* Captura de demostración */}
