@@ -256,12 +256,17 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                     <p className="text-xs text-slate-300">✓ Identificación de pigmentos profesionales</p>
                     <p className="text-xs text-slate-300">✓ Recetas de mezcla precisas</p>
                   </div>
-                  <button
-                    onClick={() => onOpenCompanion('ANALYZER_DEMO')}
+                  <a 
+                    href="https://496114690192.gumroad.com/l/owesfb"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="mt-4 bg-gold-500 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
                   >
-                    <Eye size={16}/> Ver Demo Exclusiva
-                  </button>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                    Buy Now / Comprar Ahora
+                  </a>
                   <p className="text-xs text-slate-400 mt-3 italic">Próximamente disponible para coleccionistas</p>
                 </div>
               </div>
