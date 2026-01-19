@@ -286,7 +286,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
             <div className="bg-gradient-to-r from-gold-500 to-gold-600 p-6 rounded-xl text-white text-center">
               <h4 className="font-serif text-xl font-bold mb-2">Disfruta y Explora</h4>
               <p className="mb-4">Descubre el poder del análisis técnico del color en tu proceso creativo</p>
-                <a 
+              <a 
                 href="https://496114690192.gumroad.com/l/owesfb"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -295,12 +295,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                 </svg>
-                <div style={{display: 'inline-block', textAlign: 'left'}}>
-                  <span style={{fontSize: '1.1em', fontWeight: 700, color: '#0f172a'}}>46,99 €</span>
-                  <span style={{fontSize: '0.85em', color: '#334155', marginLeft: '0.4rem'}}> (+ IVA según tu país)</span>
-                  <br />
-                  <span style={{fontSize: '0.8em', color: '#475569', fontStyle: 'italic'}}>Precio final aprox. 57€ en España</span>
-                </div>
+                Adquirir Ahora - €46.99
               </a>
             </div>
           </div>
