@@ -298,6 +298,9 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                     <span className="text-base text-slate-400 italic">Precio final aprox. 57€ en España</span>
                   </div>
                   <p className="text-sm text-slate-300 mt-2">One-time payment / Pago único</p>
+                  <p className="text-xs text-slate-400 mt-2 italic">
+                    *Al pagar, Gumroad mostrará el precio en tu moneda local (ej: US$66) pero el importe será equivalente a 46,99€ + IVA
+                  </p>
                 </div>
                 <a 
                   href="https://myriamalcaraz.gumroad.com/l/owesfb?_gl=1*q5x150*_ga*NzgzNzk1ODcwLjE3Njg2ODc1NjM.*_ga_6LJN6D94N6*czE3Njg4MTgyOTUkbzkkZzEkdDE3Njg4MjA5MzkkajYwJGwwJGgw"
