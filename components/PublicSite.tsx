@@ -410,20 +410,20 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   </svg>
                 </div>
                 <h3 className="font-serif text-3xl font-bold text-white mb-6">
-                  Buy Now / Comprar Ahora
+                  Comprar Ahora
                 </h3>
                 <p className="text-slate-200 mb-8 text-lg">
-                  Get unlimited access to the complete professional tool.<br/>
-                  Obtén acceso ilimitado a la herramienta profesional completa.
+                  Accede a la herramienta profesional completa.<br/>
+                  Pago único y seguro.
                 </p>
                 <div className="mb-8">
                   <div>
                     <span style={{fontSize: '1.5em', fontWeight: 700, color: 'white'}}>46,99 €</span>
-                    <span style={{fontSize: '0.9em', color: '#d1d5db', marginLeft: '0.5rem'}}> (+ IVA según tu país)</span>
+                    <span style={{fontSize: '0.95em', color: '#d1d5db', marginLeft: '0.5rem'}}> (+ IVA según tu país)</span>
                     <br />
-                    <span style={{fontSize: '0.85em', color: '#9ca3af', fontStyle: 'italic'}}>Precio final aprox. 57€ en España</span>
+                    <span style={{fontSize: '0.9em', color: '#cbd5e1', fontStyle: 'italic'}}>Precio final aprox. 57€ en España</span>
                   </div>
-                  <p className="text-sm text-slate-300">One-time payment / Pago único</p>
+                  <p className="text-sm text-slate-300">Pago único / One-time payment</p>
                 </div>
                 <a 
                   href="https://myriamalcaraz.gumroad.com/l/owesfb?_gl=1*q5x150*_ga*NzgzNzk1ODcwLjE3Njg2ODc1NjM.*_ga_6LJN6D94N6*czE3Njg4MTgyOTUkbzkkZzEkdDE3Njg4MjA5MzkkajYwJGwwJGgw"
