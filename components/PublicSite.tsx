@@ -256,6 +256,15 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                     <p className="text-xs text-slate-300">✓ Identificación de pigmentos profesionales</p>
                     <p className="text-xs text-slate-300">✓ Recetas de mezcla precisas</p>
                   </div>
+                  
+                  {/* Captura de demostración */}
+                  <div className="mb-4 rounded-lg overflow-hidden shadow-lg border border-slate-600">
+                    <img 
+                      src="/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 22.54.26.png" 
+                      alt="Demostración del Analizador Técnico del Color"
+                      className="w-full h-32 object-contain bg-slate-900/50"
+                    />
+                  </div>
                   <a 
                     href="https://496114690192.gumroad.com/l/owesfb"
                     target="_blank"
