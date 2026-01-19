@@ -287,6 +287,19 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                             </span>
                           </div>
                         </div>
+
+                        {/* Bloque de precio — Opción 4 (tercera pestaña, punto 4) */}
+                        <div className="mt-6">
+                          <div className="bg-white/5 p-4 rounded-lg border border-white/10 inline-block">
+                            <div>
+                              <span style={{fontSize: '1.25em', fontWeight: 700, color: '#0f172a'}}>46,99 €</span>
+                              <span style={{fontSize: '0.9em', color: '#6b7280', marginLeft: '0.5rem'}}> (+ IVA según tu país)</span>
+                              <br />
+                              <span style={{fontSize: '0.85em', color: '#9ca3af', fontStyle: 'italic'}}>Precio final aprox. 57€ en España</span>
+                            </div>
+                            <p className="text-xs text-slate-400 mt-2">Accede a la compra desde la pestaña 'APLICACIÓN COLOR' o contacta para soporte.</p>
+                          </div>
+                        </div>
                       </div>
                       
                       {/* Mensaje de Seguridad */}
