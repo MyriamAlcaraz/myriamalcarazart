@@ -249,7 +249,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   </div>
                   <h3 className="font-serif text-2xl font-bold text-white mb-3">4. Analizador Técnico del Color</h3>
                   <p className="text-slate-200 mb-4 text-sm leading-relaxed flex-grow">
-                    Mi herramienta digital exclusiva para artistas. <span className="text-gold-400 font-semibold">Análisis técnico avanzado</span> de composición, color y forma. Desarrollada con inteligencia artificial para perfeccionar tu proceso creativo.
+                    Mi herramienta digital creada con inteligencia artificial que te ayudará con la identificación del color. He integrado mi paleta personal y las marcas que suelo utilizar profesionalmente.
                   </p>
                   <div className="space-y-2 mb-4">
                     <p className="text-xs text-slate-300">✓ Análisis técnico avanzado</p>
@@ -260,7 +260,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                     href="https://496114690192.gumroad.com/l/owesfb"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 bg-gold-500 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors flex items-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+                    className="w-full bg-gold-500 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
