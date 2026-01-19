@@ -312,7 +312,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   </p>
                   
                   <a 
-                    href="https://myriamalcaraz.gumroad.com/l/owesfb"
+                    href="https://myriamalcaraz.gumroad.com/l/owesfb?_gl=1*q5x150*_ga*NzgzNzk1ODcwLjE3Njg2ODc1NjM.*_ga_6LJN6D94N6*czE3Njg4MTgyOTUkbzkkZzEkdDE3Njg4MjA5MzkkajYwJGwwJGgw"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full bg-gold-500 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
@@ -398,7 +398,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   <p className="text-sm text-slate-300">One-time payment / Pago único</p>
                 </div>
                 <a 
-                  href="https://myriamalcaraz.gumroad.com/l/owesfb"
+                  href="https://myriamalcaraz.gumroad.com/l/owesfb?_gl=1*q5x150*_ga*NzgzNzk1ODcwLjE3Njg2ODc1NjM.*_ga_6LJN6D94N6*czE3Njg4MTgyOTUkbzkkZzEkdDE3Njg4MjA5MzkkajYwJGwwJGgw"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-gold-500 text-white px-10 py-5 rounded-full font-semibold hover:bg-gold-600 transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 inline-block text-lg"
