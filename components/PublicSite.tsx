@@ -75,6 +75,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
         {/* ========================================= */}
         {/* CONTENIDO NORMAL (COMENTADO TEMPORALMENTE) */}
         {/* ========================================= */}
+          {activeTab === 'portfolio' && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {ARTWORKS.map(artwork => (
               <div key={artwork.id} className="group relative overflow-hidden bg-white shadow-lg border border-stone-100">
@@ -99,7 +100,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
             ))}
           </div>
         )}
-
+        
         {/* ========================================= */}
         {/* BIO & TRAYECTORIA TAB */}
         {/* ========================================= */}
