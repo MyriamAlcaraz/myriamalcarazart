@@ -251,16 +251,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   <p className="text-slate-200 mb-4 text-sm leading-relaxed flex-grow">
                     Mi herramienta digital creada con inteligencia artificial que te ayudará con la identificación del color. He integrado mi paleta personal y las marcas que suelo utilizar profesionalmente.
                   </p>
-                  </div>
                   
-                  {/* Captura de demostración */}
-                  <div className="mb-4 rounded-lg overflow-hidden shadow-lg border border-slate-600">
-                    <img 
-                      src="/DEMOS APLICACIÓN/Captura de pantalla 2026-01-18 a las 22.54.26.png" 
-                      alt="Demostración del Analizador Técnico del Color"
-                      className="w-full h-32 object-contain bg-slate-900/50"
-                    />
-                  </div>
                   <a 
                     href="https://496114690192.gumroad.com/l/owesfb"
                     target="_blank"
