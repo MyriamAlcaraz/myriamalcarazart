@@ -75,7 +75,6 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
         {/* ========================================= */}
         {/* CONTENIDO NORMAL (COMENTADO TEMPORALMENTE) */}
         {/* ========================================= */}
-          {activeTab === 'portfolio' && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {ARTWORKS.map(artwork => (
               <div key={artwork.id} className="group relative overflow-hidden bg-white shadow-lg border border-stone-100">
@@ -100,7 +99,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
             ))}
           </div>
         )}
-        
+
         {/* ========================================= */}
         {/* BIO & TRAYECTORIA TAB */}
         {/* ========================================= */}
@@ -288,19 +287,6 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                             </span>
                           </div>
                         </div>
-
-                        {/* Bloque de precio — Opción 4 (tercera pestaña, punto 4) */}
-                        <div className="mt-6">
-                          <div className="bg-white/5 p-4 rounded-lg border border-white/10 inline-block">
-                            <div>
-                              <span style={{fontSize: '1.25em', fontWeight: 700, color: '#0f172a'}}>46,99 €</span>
-                              <span style={{fontSize: '0.9em', color: '#6b7280', marginLeft: '0.5rem'}}> (+ IVA según tu país)</span>
-                              <br />
-                              <span style={{fontSize: '0.85em', color: '#9ca3af', fontStyle: 'italic'}}>Precio final aprox. 57€ en España</span>
-                            </div>
-                            <p className="text-xs text-slate-400 mt-2">Accede a la compra desde la pestaña 'APLICACIÓN COLOR' o contacta para soporte.</p>
-                          </div>
-                        </div>
                       </div>
                       
                       {/* Mensaje de Seguridad */}
@@ -418,8 +404,13 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   Obtén acceso ilimitado a la herramienta profesional completa.
                 </p>
                 <div className="mb-8">
-                  <p className="text-4xl font-bold text-gold-400">€46.99</p>
-                  <p className="text-sm text-slate-300">One-time payment / Pago único</p>
+                  <div>
+                    <span className="text-4xl font-bold text-gold-400">46,99 €</span>
+                    <span className="text-lg text-slate-300 ml-2">(+ IVA según tu país)</span>
+                    <br>
+                    <span className="text-base text-slate-400 italic">Precio final aprox. 57€ en España</span>
+                  </div>
+                  <p className="text-sm text-slate-300 mt-2">One-time payment / Pago único</p>
                 </div>
                 <a 
                   href="https://myriamalcaraz.gumroad.com/l/owesfb?_gl=1*q5x150*_ga*NzgzNzk1ODcwLjE3Njg2ODc1NjM.*_ga_6LJN6D94N6*czE3Njg4MTgyOTUkbzkkZzEkdDE3Njg4MjA5MzkkajYwJGwwJGgw"
