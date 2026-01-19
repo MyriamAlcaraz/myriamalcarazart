@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PublicSite } from './components/PublicSite'; 
+import PublicSite from './components/PublicSite'; 
 import { ArtistDashboard } from './components/ArtistDashboard';
 import { DigitalCompanion } from './components/DigitalCompanion';
 import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield } from 'lucide-react'; 
