@@ -295,11 +295,11 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                     <span className="text-4xl font-bold text-gold-400">46,99 €</span>
                     <span className="text-lg text-slate-300 ml-2">(+ IVA según tu país)</span>
                     <br />
-                    <span className="text-base text-slate-400 italic">Precio final aprox. 57€ en España</span>
+                    <span className="text-base text-slate-400 italic">Cargo final en tu cuenta: aprox. 57€ (España)</span>
                   </div>
                   <p className="text-sm text-slate-300 mt-2">One-time payment / Pago único</p>
                   <p className="text-xs text-slate-400 mt-2 italic">
-                    *Al acceder al pago, verás el importe en dólares (ej: US$66). Este es el equivalente exacto a 46,99€ + IVA, sin costos adicionales.
+                    *Verás US$66 en el pago, pero tu banco te cobrará el equivalente exacto en tu moneda local
                   </p>
                 </div>
                 <a 
