@@ -407,7 +407,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                   <div>
                     <span className="text-4xl font-bold text-gold-400">46,99 €</span>
                     <span className="text-lg text-slate-300 ml-2">(+ IVA según tu país)</span>
-                    <br>
+                    <br />
                     <span className="text-base text-slate-400 italic">Precio final aprox. 57€ en España</span>
                   </div>
                   <p className="text-sm text-slate-300 mt-2">One-time payment / Pago único</p>
