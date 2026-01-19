@@ -299,7 +299,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                   </div>
                   <p className="text-sm text-slate-300 mt-2">One-time payment / Pago único</p>
                   <p className="text-xs text-slate-400 mt-2 italic">
-                    *Verás US$66 en el pago, pero tu banco te cobrará el equivalente exacto en tu moneda local
+                    *Verás US$66 porque Gumroad opera en dólares. La conversión a tu moneda la realizará tu banco sin costes adicionales (46,99€ + IVA = aprox. 57€ según conversión actual)
                   </p>
                 </div>
                 <a 
