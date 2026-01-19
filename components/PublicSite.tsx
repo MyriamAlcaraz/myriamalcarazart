@@ -299,7 +299,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                   </div>
                   <p className="text-sm text-slate-300 mt-2">One-time payment / Pago único</p>
                   <p className="text-xs text-slate-400 mt-2 italic">
-                    *Nuestro procesador de pagos muestra automáticamente el importe en tu moneda local para tu comodidad. El equivalente exacto será siempre 46,99€ + IVA aplicable en tu país.
+                    *Al acceder al pago, verás el importe en dólares (ej: US$66). Este es el equivalente exacto a 46,99€ + IVA, sin costos adicionales.
                   </p>
                 </div>
                 <a 
