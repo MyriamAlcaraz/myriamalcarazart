@@ -298,6 +298,9 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                     <span className="text-base text-slate-400 italic">Precio final aprox. 57€ en España</span>
                   </div>
                   <p className="text-sm text-slate-300 mt-2">One-time payment / Pago único</p>
+                  <p className="text-xs text-slate-400 mt-2 italic">
+                    *Nuestro procesador de pagos muestra automáticamente el importe en tu moneda local para tu comodidad. El equivalente exacto será siempre 46,99€ + IVA aplicable en tu país.
+                  </p>
                 </div>
                 <a 
                   href="https://myriamalcaraz.gumroad.com/l/owesfb"
