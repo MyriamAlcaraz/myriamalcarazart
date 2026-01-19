@@ -263,7 +263,7 @@ export const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenS
                     </svg>
                     Buy Now / Comprar Ahora
                   </a>
-                  <p className="text-xs text-slate-400 mt-3 italic">Próximamente disponible para coleccionistas</p>
+                  <p className="text-xs text-slate-400 mt-3 italic">Ahora disponible para coleccionistas</p>
                 </div>
               </div>
             </div>
