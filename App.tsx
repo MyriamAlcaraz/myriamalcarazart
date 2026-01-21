@@ -9,7 +9,7 @@ const PASSWORD = "arte2026";
 
 const App: React.FC = () => {
   // --- ESTADO Y HOOKS ---
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // 🔓 ABIERTO: Acceso público sin contraseña
   const [showLoginModal, setShowLoginModal] = useState(false); 
   
   // 🛑 ESTADO: Para el segundo candado (acceso a ESTUDIO)
