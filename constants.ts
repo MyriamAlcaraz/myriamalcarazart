@@ -241,7 +241,37 @@ export const ARTWORKS: Artwork[] = [
     price: 1500, 
     image: '/obras/OBRA_20.jpg', 
     description: 'Coreografía del deseo.', 
+    status: 'available' },
+  { 
+    id: '21', 
+    title: 'Abruma y belleza', 
+    dimensions: '100x73 cm', 
+    technique: 'Óleo sobre tela', 
+    price: 3000, 
+    image: '/obras/OBRA_21.jpg', 
+    description: 'Retrato atmosférico donde la figura emerge entre brumas oscuras y doradas.', 
     status: 'available' 
+  },
+  { 
+    id: '22', 
+    title: 'Joven con vela en la bruma', 
+    dimensions: '100x73 cm', 
+    technique: 'Óleo sobre tela', 
+    price: 3000, 
+    image: '/obras/OBRA_22.jpg', 
+    description: 'Estudio de luz cálida y fría en atmósfera envolvente.', 
+    status: 'available' 
+  },
+  { 
+    id: '23', 
+    title: 'Sara en Retiro', 
+    dimensions: '100x80 cm', 
+    technique: 'Óleo sobre papel encolado en tabla', 
+    price: 3000, 
+    image: '/obras/OBRA_23.jpg', 
+    description: 'Retrato en el Parque del Retiro de Madrid.', 
+    status: 'available' 
+   
   }
 ];
 
