@@ -36,6 +36,39 @@ export const ARTIST_INFO = {
 };
 
 export const ARTWORKS: Artwork[] = [
+  { 
+    id: '21', 
+    title: 'Abruma y belleza', 
+    dimensions: '100x73 cm', 
+    technique: 'Óleo sobre tela', 
+    price: 3000, 
+    image: '/obras/OBRA_21.jpg', 
+    description: 'Retrato atmosférico donde la figura emerge entre brumas oscuras y doradas.', 
+    status: 'available', 
+    year: '2026' 
+  },
+  { 
+    id: '22', 
+    title: 'Joven con vela en la bruma', 
+    dimensions: '100x73 cm', 
+    technique: 'Óleo sobre tela', 
+    price: 3000, 
+    image: '/obras/OBRA_22.jpg', 
+    description: 'Estudio de luz cálida y fría en atmósfera envolvente.', 
+    status: 'available', 
+    year: '2026' 
+  },
+  { 
+    id: '23', 
+    title: 'Sara en Retiro', 
+    dimensions: '100x80 cm', 
+    technique: 'Óleo sobre papel encolado en tabla', 
+    price: 3000, 
+    image: '/obras/OBRA_23.jpg', 
+    description: 'Retrato en el Parque del Retiro de Madrid.', 
+    status: 'available', 
+    year: '2026' 
+  },
   // --- OBRAS DESTACADAS ---
   { 
     id: '4', 
