@@ -44,7 +44,7 @@ export const ARTWORKS: Artwork[] = [
     technique: 'Óleo en tela', 
     price: 3000, 
     image: '/obras/OBRA_04.jpg', 
-    description: '92 Salón de Otoño de la Asociación Española de Pintores y Escultores. Obra seleccionada para la exposición en la Casa de Vacas del Parque del Retiro - Madrid, del 30 de octubre al 23 de noviembre de 2025, y que forma parte del catálogo de la misma. Podemos encontrarla en la Guía de arte y artistas Leonardo 2025.', 
+    description: '92 Salón de Otoño de la Asociación Española de Pintores y Escultores. Obra seleccionada para la exposición en la Casa de Vacas del Parque del Retiro - Madrid, del 30 de octubre al 23 de noviembre de 2025, y que forma parte del catálogo de la misma. Podemos encontrarla en la Guía de Arte y Artistas Leonardo 2025. Exposición: Febrero 2026, Museo Cromática de Toledo.', 
     status: 'available' 
   },
   { 
@@ -89,7 +89,7 @@ export const ARTWORKS: Artwork[] = [
     technique: 'Óleo sobre tela', 
     price: 3000, 
     image: '/obras/OBRA_05.jpg', 
-    description: 'Podemos encontrarla en la Guía de arte y artistas Leonardo 2025.', 
+    description: 'Podemos encontrarla en la Guía de Arte y Artistas Leonardo 2025. Exposición: Febrero 2026, Museo Cromática de Toledo.', 
     status: 'available' 
   },
   { 
