@@ -60,7 +60,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               onClick={() => handleTabChange('app')}
               className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'app' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
             >
-              APLICACIÓN COLOR
+              ESTUDIO DIGITAL
             </button>
           </div>
         </div>
@@ -232,11 +232,19 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
         )}
 
         {/* ========================================= */}
-        {/* APLICACIÓN COLOR TAB */}
+        {/* ESTUDIO DIGITAL TAB */}
         {/* ========================================= */}
         {activeTab === 'app' && (
           <div className="space-y-16">
             
+            {/* Introducción Personal */}
+            <div className="max-w-4xl mx-auto text-center">
+              <p className="text-xl text-slate-700 leading-relaxed font-serif italic border-l-4 border-gold-500 pl-6 text-left">
+                "Durante mi práctica artística he desarrollado herramientas digitales que me ayudan en el estudio.
+                Aplicaciones nacidas de necesidades reales frente al lienzo, que ahora comparto con otros artistas."
+              </p>
+            </div>
+
             {/* Header Hero Section - Bilingüe y Elegante */}
             <div className="text-center space-y-8">
               <div className="max-w-5xl mx-auto">
@@ -298,12 +306,9 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                     <span className="text-base text-slate-400 italic">Cargo final en tu cuenta: aprox. 57€ (España)</span>
                   </div>
                   <p className="text-sm text-slate-300 mt-2">One-time payment / Pago único</p>
-                  <p className="text-xs text-slate-400 mt-2 italic">
-                    *Verás US$66 porque Gumroad opera en dólares. La conversión a tu moneda la realizará tu banco sin costes adicionales (46,99€ + IVA = aprox. 57€ según conversión actual)
-                  </p>
                 </div>
-                <a 
-                  href="https://myriamalcaraz.gumroad.com/l/owesfb"
+                <a
+                  href="https://payhip.com/ARTEFIGURATIVO"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-gold-500 text-white px-10 py-5 rounded-full font-semibold hover:bg-gold-600 transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 inline-block text-lg"

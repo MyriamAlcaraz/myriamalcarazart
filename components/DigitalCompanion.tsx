@@ -178,7 +178,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
             </div>
             
             <div class="preview-footer">
-              <a href="https://496114690192.gumroad.com/l/owesfb" target="_blank" class="buy-btn">
+              <a href="https://payhip.com/ARTEFIGURATIVO" target="_blank" class="buy-btn">
                 Adquirir Versión Completa
               </a>
             </div>
@@ -287,7 +287,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
               <h4 className="font-serif text-xl font-bold mb-2">Disfruta y Explora</h4>
               <p className="mb-4">Descubre el poder del análisis técnico del color en tu proceso creativo</p>
               <a 
-                href="https://496114690192.gumroad.com/l/owesfb"
+                href="https://payhip.com/ARTEFIGURATIVO"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-white text-slate-900 px-8 py-3 rounded-full font-semibold hover:bg-slate-100 transition-colors inline-flex items-center gap-2"
