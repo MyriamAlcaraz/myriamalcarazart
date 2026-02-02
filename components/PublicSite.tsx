@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { ARTIST_INFO, ARTWORKS } from '../constants';
 import { Eye, Lock } from 'lucide-react';
+import GicleeTab from './GicleeTab';
 
 interface PublicSiteProps {
   onOpenCompanion: (id: string) => void;
   onOpenStudioLogin: () => void;
-  onTabChange?: (tab: 'portfolio' | 'bio' | 'prices' | 'app') => void;
+  onTabChange?: (tab: 'portfolio' | 'bio' | 'prices' | 'app' | 'giclee') => void;
   onOpenGiclee?: () => void;
 }
 
@@ -18,9 +19,9 @@ const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
 );
 
 const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin, onTabChange, onOpenGiclee }) => {
-  const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices' | 'app'>('portfolio');
+  const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices' | 'app' | 'giclee'>('portfolio');
 
-  const handleTabChange = (tab: 'portfolio' | 'bio' | 'prices' | 'app') => {
+  const handleTabChange = (tab: 'portfolio' | 'bio' | 'prices' | 'app' | 'giclee') => {
     setActiveTab(tab);
     onTabChange?.(tab);
   };
@@ -56,6 +57,12 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'prices' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
             >
               ENCARGOS & PRECIOS
+            </button>
+            <button
+              onClick={() => handleTabChange('giclee')}
+              className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'giclee' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
+            >
+              GICLÉE
             </button>
             <button
               onClick={() => handleTabChange('app')}
@@ -347,8 +354,13 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
           </div>
         )}
 
+        {/* ========================================= */}
+        {/* GICLÉE TAB */}
+        {/* ========================================= */}
+        {activeTab === 'giclee' && <GicleeTab />}
+
         {/* Cierre - CTA Final (Solo para Portfolio y Bio) */}
-        {activeTab !== 'prices' && activeTab !== 'app' && (
+        {activeTab !== 'prices' && activeTab !== 'app' && activeTab !== 'giclee' && (
           <div className="mt-16 bg-slate-800 p-12 text-center">
             <div className="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="text-left">
