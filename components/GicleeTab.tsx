@@ -1,16 +1,23 @@
 import React, { useState, useMemo } from 'react';
 import { Check, Shield, Award, Crown } from 'lucide-react';
+import { ARTWORKS } from '../constants';
 
-// Obras de ejemplo con sus medidas originales
-const ARTWORKS_EXAMPLE = [
-  { id: 'sara', title: 'Sara bajo la farola', width: 92, height: 60 },
-  { id: 'laura', title: 'Laura en el Crepúsculo', width: 100, height: 81 },
-  { id: 'autorretrato', title: 'Autorretrato en siglo XIX', width: 100, height: 81 }
-];
+// Función para extraer dimensiones del string "92x60 cm"
+const parseDimensions = (dimensions: string) => {
+  const match = dimensions.match(/(\d+)x(\d+)/);
+  if (match) {
+    return {
+      width: parseInt(match[1]),
+      height: parseInt(match[2])
+    };
+  }
+  // Valores por defecto si no puede parsear
+  return { width: 100, height: 81 };
+};
 
 const GicleeTab: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [selectedArtwork, setSelectedArtwork] = useState(ARTWORKS_EXAMPLE[0]);
+  const [selectedArtwork, setSelectedArtwork] = useState<any>(null);
 
   // Cálculo automático de medidas proporcionales
   const sizes = useMemo(() => [
@@ -48,9 +55,19 @@ const GicleeTab: React.FC = () => {
 
   // Calcular medidas para cada formato
   const sizesWithDimensions = useMemo(() => {
+    if (!selectedArtwork) {
+      // Si no hay obra seleccionada, mostrar solo el nombre base
+      return sizes.map(size => ({
+        ...size,
+        dimensions: '',
+        displayName: size.name
+      }));
+    }
+    
+    const originalDims = parseDimensions(selectedArtwork.dimensions);
     return sizes.map(size => {
-      const scaledWidth = Math.round(selectedArtwork.width * size.scale);
-      const scaledHeight = Math.round(selectedArtwork.height * size.scale);
+      const scaledWidth = Math.round(originalDims.width * size.scale);
+      const scaledHeight = Math.round(originalDims.height * size.scale);
       return {
         ...size,
         dimensions: `${scaledWidth}x${scaledHeight} cm`,
@@ -82,16 +99,22 @@ const GicleeTab: React.FC = () => {
           <h2 className="text-3xl font-serif text-slate-800 mb-6 text-center">Selecciona una Obra</h2>
           <div className="max-w-md mx-auto">
             <select 
-              value={selectedArtwork.id}
+              value={selectedArtwork?.id || ''}
               onChange={(e) => {
-                const artwork = ARTWORKS_EXAMPLE.find(a => a.id === e.target.value);
-                if (artwork) setSelectedArtwork(artwork);
+                const artwork = ARTWORKS.find(a => a.id === e.target.value);
+                if (artwork) {
+                  setSelectedArtwork(artwork);
+                  setSelectedSize(null); // Resetear selección de tamaño al cambiar obra
+                }
               }}
               className="w-full p-4 border-2 border-stone-200 rounded-lg text-lg font-medium focus:border-gold-500 focus:outline-none bg-white cursor-pointer"
             >
-              {ARTWORKS_EXAMPLE.map(artwork => (
+              <option value="" disabled>
+                — Selecciona una Obra para ver Formatos —
+              </option>
+              {ARTWORKS.map(artwork => (
                 <option key={artwork.id} value={artwork.id}>
-                  {artwork.title} (Original: {artwork.width}x{artwork.height} cm)
+                  {artwork.title} (Original: {artwork.dimensions})
                 </option>
               ))}
             </select>
@@ -143,23 +166,33 @@ const GicleeTab: React.FC = () => {
             {sizesWithDimensions.map((size) => (
               <div
                 key={size.id}
-                onClick={() => setSelectedSize(size.id)}
-                className={`bg-white p-6 rounded-lg border-2 cursor-pointer transition-all ${
-                  selectedSize === size.id 
-                    ? 'border-gold-500 shadow-lg' 
-                    : 'border-stone-100 hover:border-stone-300'
+                onClick={() => selectedArtwork && setSelectedSize(size.id)}
+                className={`bg-white p-6 rounded-lg border-2 transition-all ${
+                  !selectedArtwork 
+                    ? 'border-stone-100 opacity-50 cursor-not-allowed'
+                    : selectedSize === size.id 
+                      ? 'border-gold-500 shadow-lg cursor-pointer' 
+                      : 'border-stone-100 hover:border-stone-300 cursor-pointer'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                      selectedSize === size.id ? 'border-gold-500 bg-gold-500' : 'border-stone-300'
+                      !selectedArtwork 
+                        ? 'border-stone-200 bg-stone-50'
+                        : selectedSize === size.id 
+                          ? 'border-gold-500 bg-gold-500' 
+                          : 'border-stone-300'
                     }`}>
-                      {selectedSize === size.id && <Check size={16} className="text-white" />}
+                      {selectedSize === size.id && selectedArtwork && <Check size={16} className="text-white" />}
                     </div>
-                    <h3 className="font-semibold text-slate-800">{size.displayName}</h3>
+                    <h3 className={`font-semibold ${!selectedArtwork ? 'text-stone-400' : 'text-slate-800'}`}>
+                      {size.displayName}
+                    </h3>
                   </div>
-                  <div className="text-2xl font-bold text-gold-500">{size.price}</div>
+                  <div className={`text-2xl font-bold ${!selectedArtwork ? 'text-stone-400' : 'text-gold-500'}`}>
+                    {size.price}
+                  </div>
                 </div>
               </div>
             ))}
