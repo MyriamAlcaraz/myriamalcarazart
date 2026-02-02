@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PublicSite from './components/PublicSite'; 
 import { ArtistDashboard } from './components/ArtistDashboard';
 import { DigitalCompanion } from './components/DigitalCompanion';
+import GicleeExclusivo from './components/GicleeExclusivo';
 import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield } from 'lucide-react'; 
 
 // --- CONFIGURACIÓN DE SEGURIDAD (PASSWORD) ---
@@ -17,11 +18,12 @@ const App: React.FC = () => {
 
   // 'public' = Web en modo "Vista Previa" o "En Construcción"
   // 'artist' = ESTUDIO
-  const [view, setView] = useState<'public' | 'artist'>('public');
+  // 'giclee' = Página Giclée Exclusivo (oculta)
+  const [view, setView] = useState<'public' | 'artist' | 'giclee'>('public');
   const [selectedCompanionId, setSelectedCompanionId] = useState<string | null>(null);
   
   // 🛑 ESTADO: Pestaña activa en PublicSite (para mostrar candado solo en 'prices')
-  const [activePublicTab, setActivePublicTab] = useState<'portfolio' | 'bio' | 'prices'>('portfolio');
+  const [activePublicTab, setActivePublicTab] = useState<'portfolio' | 'bio' | 'prices' | 'app'>('portfolio');
   
   // Hooks para el formulario de login (reutilizados para ambos candados)
   const [passwordInput, setPasswordInput] = useState("");
@@ -173,13 +175,16 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen animate-fade-in relative">
       
-      {/* VISTA PRINCIPAL (Alterna entre PublicSite y ArtistDashboard) */}
+      {/* VISTA PRINCIPAL (Alterna entre PublicSite, ArtistDashboard y GicleeExclusivo) */}
       {view === 'public' ? (
         <PublicSite 
             onOpenCompanion={(id) => setSelectedCompanionId(id)} 
             onOpenStudioLogin={() => setShowStudioLoginModal(true)}
             onTabChange={(tab) => setActivePublicTab(tab)}
+            onOpenGiclee={() => setView('giclee')}
         />
+      ) : view === 'giclee' ? (
+        <GicleeExclusivo onBack={() => setView('public')} />
       ) : (
         // 💡 Asegúrate de que ArtistDashboard espera esta prop:
         <ArtistDashboard onLogout={handleLogout} />

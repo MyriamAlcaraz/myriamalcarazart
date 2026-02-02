@@ -6,6 +6,7 @@ interface PublicSiteProps {
   onOpenCompanion: (id: string) => void;
   onOpenStudioLogin: () => void;
   onTabChange?: (tab: 'portfolio' | 'bio' | 'prices' | 'app') => void;
+  onOpenGiclee?: () => void;
 }
 
 const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
@@ -16,7 +17,7 @@ const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
     </ul>
 );
 
-const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin, onTabChange }) => {
+const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin, onTabChange, onOpenGiclee }) => {
   const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices' | 'app'>('portfolio');
 
   const handleTabChange = (tab: 'portfolio' | 'bio' | 'prices' | 'app') => {
@@ -212,6 +213,14 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                 >
                   <Eye size={16}/> Ver Demo Certificado
                 </button>
+                {onOpenGiclee && (
+                  <button
+                    onClick={onOpenGiclee}
+                    className="mt-2 text-xs text-stone-400 hover:text-stone-600 transition-colors underline"
+                  >
+                    Coleccionista: Ver ediciones exclusivas
+                  </button>
+                )}
               </div>
 
               {/* Opción 3: Encargo Personalizado */}
