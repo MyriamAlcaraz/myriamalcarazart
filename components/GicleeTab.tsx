@@ -19,48 +19,54 @@ const GicleeTab: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedArtwork, setSelectedArtwork] = useState<any>(null);
 
-  // Cálculo automático de medidas proporcionales
+  // Cálculo automático de medidas proporcionales con información de tirada
   const sizes = useMemo(() => [
     { 
       id: 'xs', 
       name: 'Formato Colección', 
       price: '120€',
-      scale: 0.20
+      scale: 0.20,
+      tirada: 150
     },
     { 
       id: 'small', 
       name: 'Formato Galería', 
       price: '180€',
-      scale: 0.35
+      scale: 0.35,
+      tirada: 75
     },
     { 
       id: 'medium', 
       name: 'Formato Intermedio', 
       price: '450€',
-      scale: 0.50
+      scale: 0.50,
+      tirada: 50
     },
     { 
       id: 'large', 
       name: 'Formato Prestigio', 
       price: '650€',
-      scale: 0.70
+      scale: 0.70,
+      tirada: 25
     },
     { 
       id: 'special', 
       name: 'Fiel al Óleo Original', 
       price: '950€',
-      scale: 1.00
+      scale: 1.00,
+      tirada: 10
     }
   ], []);
 
-  // Calcular medidas para cada formato
+  // Calcular medidas para cada formato con información de tirada
   const sizesWithDimensions = useMemo(() => {
     if (!selectedArtwork) {
       // Si no hay obra seleccionada, mostrar solo el nombre base
       return sizes.map(size => ({
         ...size,
         dimensions: '',
-        displayName: size.name
+        displayName: size.name,
+        tiradaText: ''
       }));
     }
     
@@ -71,7 +77,8 @@ const GicleeTab: React.FC = () => {
       return {
         ...size,
         dimensions: `${scaledWidth}x${scaledHeight} cm`,
-        displayName: `${size.name} (${scaledWidth}x${scaledHeight} cm)`
+        displayName: `${size.name} (${scaledWidth}x${scaledHeight} cm)`,
+        tiradaText: `Edición limitada de ${size.tirada} ejemplares`
       };
     });
   }, [sizes, selectedArtwork]);
@@ -175,34 +182,44 @@ const GicleeTab: React.FC = () => {
                       : 'border-stone-100 hover:border-stone-300 cursor-pointer'
                 }`}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                      !selectedArtwork 
-                        ? 'border-stone-200 bg-stone-50'
-                        : selectedSize === size.id 
-                          ? 'border-gold-500 bg-gold-500' 
-                          : 'border-stone-300'
-                    }`}>
-                      {selectedSize === size.id && selectedArtwork && <Check size={16} className="text-white" />}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                        !selectedArtwork 
+                          ? 'border-stone-200 bg-stone-50'
+                          : selectedSize === size.id 
+                            ? 'border-gold-500 bg-gold-500' 
+                            : 'border-stone-300'
+                      }`}>
+                        {selectedSize === size.id && selectedArtwork && <Check size={16} className="text-white" />}
+                      </div>
+                      <h3 className={`font-semibold ${!selectedArtwork ? 'text-stone-400' : 'text-slate-800'}`}>
+                        {size.displayName}
+                      </h3>
                     </div>
-                    <h3 className={`font-semibold ${!selectedArtwork ? 'text-stone-400' : 'text-slate-800'}`}>
-                      {size.displayName}
-                    </h3>
+                    <div className={`text-2xl font-bold ${!selectedArtwork ? 'text-stone-400' : 'text-gold-500'}`}>
+                      {size.price}
+                    </div>
                   </div>
-                  <div className={`text-2xl font-bold ${!selectedArtwork ? 'text-stone-400' : 'text-gold-500'}`}>
-                    {size.price}
-                  </div>
+                  {selectedArtwork && size.tiradaText && (
+                    <p className="text-sm text-stone-600 italic pl-10">
+                      {size.tiradaText}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Nota de Exclusividad */}
-        <section className="bg-stone-100 p-8 rounded-lg text-center">
+        {/* Texto de Exclusividad Destacado */}
+        <section className="bg-stone-100 p-8 rounded-lg text-center border-l-4 border-gold-500">
+          <p className="text-stone-800 text-xl font-semibold mb-2">
+            Ediciones estrictamente limitadas y numeradas
+          </p>
           <p className="text-stone-700 italic text-lg">
-            Series estrictamente limitadas. Una vez agotada la edición, no volverá a producirse.
+            Una vez agotada la serie, no volverá a producirse.
           </p>
         </section>
 

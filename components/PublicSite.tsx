@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ARTIST_INFO, ARTWORKS } from '../constants';
-import { Eye, Lock } from 'lucide-react';
+import { Eye, Lock, Layout } from 'lucide-react';
 
 interface PublicSiteProps {
   onOpenCompanion: (id: string) => void;
@@ -207,10 +207,10 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                   ¿Buscas una opción más accesible o un formato específico? Ofrezco copias de museo Giclée (impresión de altísima fidelidad). Cada reproducción incluye un **Certificado de Autenticidad** original, numerado y firmado.
                 </p>
                 <button
-                  onClick={() => onOpenCompanion('CERTIFICATE_DEMO')} 
+                  onClick={() => onOpenStudioLogin()} 
                   className="mt-4 bg-gold-500 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors flex items-center gap-2"
                 >
-                  <Eye size={16}/> Ver Demo Certificado
+                  <Layout size={16}/> Ver Catálogo Giclée
                 </button>
               </div>
 
