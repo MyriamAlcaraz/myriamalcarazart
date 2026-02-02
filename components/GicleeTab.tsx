@@ -223,6 +223,14 @@ const GicleeTab: React.FC = () => {
           </p>
         </section>
 
+        {/* Doble Garantía de Autenticidad */}
+        <section className="bg-stone-50 p-6 rounded-lg border border-stone-200">
+          <h3 className="text-lg font-semibold text-slate-800 mb-3 text-center">Doble Garantía de Autenticidad</h3>
+          <p className="text-stone-700 text-center leading-relaxed">
+            Cada ejemplar se entrega con el certificado oficial Hahnemühle (registrado en MyArtRegistry) y el Certificado de Autoría firmado por la artista con sello seco en relieve.
+          </p>
+        </section>
+
         {/* Botón de Acción */}
         {selectedSize && selectedArtwork && (
           <div className="text-center">
@@ -240,7 +248,8 @@ Los detalles de la selección son los siguientes:
 • Obra: ${selectedArtwork.title}
 • Formato: ${selectedFormat?.name}
 • Dimensiones: ${selectedFormat?.dimensions} cm
-• Especificaciones: Impresión pigmentada sobre papel Hahnemühle 310g con certificación de autoría y sello seco.
+• Especificaciones: Impresión pigmentada de alta fidelidad sobre papel Hahnemühle 310g.
+• Certificación: Doble aval (Certificado Hahnemühle con registro digital y Certificado de Artista firmado con sello seco).
 • Importe: ${selectedFormat?.price}€
 
 Quedo a la espera de sus instrucciones personales para formalizar la reserva y proceder con los trámites de adquisición y envío.
