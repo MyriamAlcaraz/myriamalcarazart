@@ -207,10 +207,34 @@ const GicleeTab: React.FC = () => {
         </section>
 
         {/* Botón de Acción */}
-        {selectedSize && (
+        {selectedSize && selectedArtwork && (
           <div className="text-center">
-            <button className="bg-gold-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-gold-600 transition-colors text-lg tracking-wider">
-              Solicitar Información
+            <button 
+              onClick={() => {
+                const selectedFormat = sizesWithDimensions.find(s => s.id === selectedSize);
+                const subject = encodeURIComponent(`Solicitud de Adquisición Giclée - ${selectedArtwork.title}`);
+                const body = encodeURIComponent(
+                  `Estimada Myriam,
+
+Deseo realizar una solicitud de adquisición para la siguiente edición Giclée:
+
+📋 DATOS DE LA COMANDA:
+• Obra: ${selectedArtwork.title}
+• Formato: ${selectedFormat?.name}
+• Medidas: ${selectedFormat?.dimensions}
+• Precio: ${selectedFormat?.price}
+
+Estoy listo/a para proceder con la reserva. Por favor, indíqueme los siguientes pasos para formalizar la adquisición.
+
+Gracias,
+[Nombre del Cliente]
+[Teléfono de Contacto]`
+                );
+                window.location.href = `mailto:myriamhotmail@hotmail.com?subject=${subject}&body=${body}`;
+              }}
+              className="bg-gold-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-gold-600 transition-colors text-lg tracking-wider"
+            >
+              SOLICITAR ADQUISICIÓN
             </button>
           </div>
         )}
