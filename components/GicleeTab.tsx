@@ -5,11 +5,11 @@ const GicleeTab: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
   const sizes = [
-    { id: 'xs', name: 'XS (Escritorio)', price: '120€', description: 'Perfecto para tu espacio de trabajo' },
-    { id: 'small', name: 'Pequeño (30x40)', price: '180€', description: 'Ideal para paredes modestas' },
-    { id: 'medium', name: 'Mediano (50x70)', price: '450€', description: 'Presencia elegante en cualquier sala' },
-    { id: 'large', name: 'Grande (Escala superior)', price: '650€', description: 'Punto focal dominante' },
-    { id: 'special', name: 'Especial (Original del Óleo)', price: '950€', description: 'Obra maestra única' }
+    { id: 'xs', name: 'Formato Colección', price: '120€' },
+    { id: 'small', name: 'Formato Galería', price: '180€' },
+    { id: 'medium', name: 'Formato Intermedio', price: '450€' },
+    { id: 'large', name: 'Formato Prestigio', price: '650€' },
+    { id: 'special', name: 'Fiel al Óleo Original', price: '950€' }
   ];
 
   return (
@@ -86,16 +86,18 @@ const GicleeTab: React.FC = () => {
                     }`}>
                       {selectedSize === size.id && <Check size={16} className="text-white" />}
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-slate-800">{size.name}</h3>
-                      <p className="text-sm text-stone-600">{size.description}</p>
-                    </div>
+                    <h3 className="font-semibold text-slate-800">{size.name}</h3>
                   </div>
                   <div className="text-2xl font-bold text-gold-500">{size.price}</div>
                 </div>
               </div>
             ))}
           </div>
+          
+          {/* Nota Técnica sobre Dimensiones */}
+          <p className="text-stone-600 text-sm italic text-center mt-6">
+            Las dimensiones exactas se ajustarán proporcionalmente a la composición de la obra elegida para respetar la intención de la artista.
+          </p>
         </section>
 
         {/* Nota de Exclusividad */}
