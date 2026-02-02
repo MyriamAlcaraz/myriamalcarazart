@@ -212,23 +212,26 @@ const GicleeTab: React.FC = () => {
             <button 
               onClick={() => {
                 const selectedFormat = sizesWithDimensions.find(s => s.id === selectedSize);
-                const subject = encodeURIComponent(`Solicitud de Adquisición Giclée - ${selectedArtwork.title}`);
+                const subject = encodeURIComponent(`Solicitud de adquisición: Edición Giclée - ${selectedArtwork.title}`);
                 const body = encodeURIComponent(
-                  `Estimada Myriam,
+                  `Estimada Myriam Alcaraz,
 
-Deseo realizar una solicitud de adquisición para la siguiente edición Giclée:
+Le escribo interesado/a en la adquisición de una reproducción de alta fidelidad (Giclée) de su obra titulada '${selectedArtwork.title}'.
 
-📋 DATOS DE LA COMANDA:
+Los detalles de la selección son los siguientes:
+
 • Obra: ${selectedArtwork.title}
 • Formato: ${selectedFormat?.name}
-• Medidas: ${selectedFormat?.dimensions}
-• Precio: ${selectedFormat?.price}
+• Dimensiones: ${selectedFormat?.dimensions} cm
+• Especificaciones: Impresión pigmentada sobre papel Hahnemühle 310g con certificación de autoría y sello seco.
+• Importe: ${selectedFormat?.price}€
 
-Estoy listo/a para proceder con la reserva. Por favor, indíqueme los siguientes pasos para formalizar la adquisición.
+Quedo a la espera de sus instrucciones personales para formalizar la reserva y proceder con los trámites de adquisición y envío.
 
-Gracias,
-[Nombre del Cliente]
-[Teléfono de Contacto]`
+Atentamente,
+
+[Escriba aquí su Nombre y Apellidos]
+[Teléfono de contacto]`
                 );
                 window.location.href = `mailto:myriamhotmail@hotmail.com?subject=${subject}&body=${body}`;
               }}
@@ -236,6 +239,9 @@ Gracias,
             >
               SOLICITAR ADQUISICIÓN
             </button>
+            <p className="text-stone-600 text-sm italic text-center mt-4">
+              Tras la solicitud, recibirá un correo personal de la artista con los detalles para el pago (transferencia bancaria) y plazos de entrega.
+            </p>
           </div>
         )}
 
