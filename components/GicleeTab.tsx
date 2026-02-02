@@ -1,16 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Check, Shield, Award, Crown } from 'lucide-react';
+
+// Obras de ejemplo con sus medidas originales
+const ARTWORKS_EXAMPLE = [
+  { id: 'sara', title: 'Sara bajo la farola', width: 92, height: 60 },
+  { id: 'laura', title: 'Laura en el Crepúsculo', width: 100, height: 81 },
+  { id: 'autorretrato', title: 'Autorretrato en siglo XIX', width: 100, height: 81 }
+];
 
 const GicleeTab: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [selectedArtwork, setSelectedArtwork] = useState(ARTWORKS_EXAMPLE[0]);
 
-  const sizes = [
-    { id: 'xs', name: 'Formato Colección', price: '120€' },
-    { id: 'small', name: 'Formato Galería', price: '180€' },
-    { id: 'medium', name: 'Formato Intermedio', price: '450€' },
-    { id: 'large', name: 'Formato Prestigio', price: '650€' },
-    { id: 'special', name: 'Fiel al Óleo Original', price: '950€' }
-  ];
+  // Cálculo automático de medidas proporcionales
+  const sizes = useMemo(() => [
+    { 
+      id: 'xs', 
+      name: 'Formato Colección', 
+      price: '120€',
+      scale: 0.20
+    },
+    { 
+      id: 'small', 
+      name: 'Formato Galería', 
+      price: '180€',
+      scale: 0.35
+    },
+    { 
+      id: 'medium', 
+      name: 'Formato Intermedio', 
+      price: '450€',
+      scale: 0.50
+    },
+    { 
+      id: 'large', 
+      name: 'Formato Prestigio', 
+      price: '650€',
+      scale: 0.70
+    },
+    { 
+      id: 'special', 
+      name: 'Fiel al Óleo Original', 
+      price: '950€',
+      scale: 1.00
+    }
+  ], []);
+
+  // Calcular medidas para cada formato
+  const sizesWithDimensions = useMemo(() => {
+    return sizes.map(size => {
+      const scaledWidth = Math.round(selectedArtwork.width * size.scale);
+      const scaledHeight = Math.round(selectedArtwork.height * size.scale);
+      return {
+        ...size,
+        dimensions: `${scaledWidth}x${scaledHeight} cm`,
+        displayName: `${size.name} (${scaledWidth}x${scaledHeight} cm)`
+      };
+    });
+  }, [sizes, selectedArtwork]);
 
   return (
     <div className="w-full min-h-screen bg-white animate-fade-in z-[60] relative">
@@ -29,6 +76,30 @@ const GicleeTab: React.FC = () => {
             Ediciones limitadas de máxima calidad para coleccionistas exigentes
           </p>
         </div>
+
+        {/* Selector de Obra */}
+        <section>
+          <h2 className="text-3xl font-serif text-slate-800 mb-6 text-center">Selecciona una Obra</h2>
+          <div className="max-w-md mx-auto">
+            <select 
+              value={selectedArtwork.id}
+              onChange={(e) => {
+                const artwork = ARTWORKS_EXAMPLE.find(a => a.id === e.target.value);
+                if (artwork) setSelectedArtwork(artwork);
+              }}
+              className="w-full p-4 border-2 border-stone-200 rounded-lg text-lg font-medium focus:border-gold-500 focus:outline-none bg-white cursor-pointer"
+            >
+              {ARTWORKS_EXAMPLE.map(artwork => (
+                <option key={artwork.id} value={artwork.id}>
+                  {artwork.title} (Original: {artwork.width}x{artwork.height} cm)
+                </option>
+              ))}
+            </select>
+            <p className="text-stone-600 text-sm italic text-center mt-3">
+              Medidas aproximadas basadas en la proporción original de la obra.
+            </p>
+          </div>
+        </section>
 
         {/* Calidad Section */}
         <section>
@@ -69,7 +140,7 @@ const GicleeTab: React.FC = () => {
         <section>
           <h2 className="text-3xl font-serif text-slate-800 mb-8 text-center">Selecciona tu Formato</h2>
           <div className="space-y-4">
-            {sizes.map((size) => (
+            {sizesWithDimensions.map((size) => (
               <div
                 key={size.id}
                 onClick={() => setSelectedSize(size.id)}
@@ -86,18 +157,13 @@ const GicleeTab: React.FC = () => {
                     }`}>
                       {selectedSize === size.id && <Check size={16} className="text-white" />}
                     </div>
-                    <h3 className="font-semibold text-slate-800">{size.name}</h3>
+                    <h3 className="font-semibold text-slate-800">{size.displayName}</h3>
                   </div>
                   <div className="text-2xl font-bold text-gold-500">{size.price}</div>
                 </div>
               </div>
             ))}
           </div>
-          
-          {/* Nota Técnica sobre Dimensiones */}
-          <p className="text-stone-600 text-sm italic text-center mt-6">
-            Las dimensiones exactas se ajustarán proporcionalmente a la composición de la obra elegida para respetar la intención de la artista.
-          </p>
         </section>
 
         {/* Nota de Exclusividad */}
