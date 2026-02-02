@@ -23,7 +23,7 @@ const App: React.FC = () => {
   const [selectedCompanionId, setSelectedCompanionId] = useState<string | null>(null);
   
   // 🛑 ESTADO: Pestaña activa en PublicSite (para mostrar candado solo en 'prices')
-  const [activePublicTab, setActivePublicTab] = useState<'portfolio' | 'bio' | 'prices' | 'app' | 'giclee'>('portfolio');
+  const [activePublicTab, setActivePublicTab] = useState<'portfolio' | 'bio' | 'prices' | 'app'>('portfolio');
   
   // Hooks para el formulario de login (reutilizados para ambos candados)
   const [passwordInput, setPasswordInput] = useState("");
@@ -181,7 +181,6 @@ const App: React.FC = () => {
             onOpenCompanion={(id) => setSelectedCompanionId(id)} 
             onOpenStudioLogin={() => setShowStudioLoginModal(true)}
             onTabChange={(tab) => setActivePublicTab(tab)}
-            onOpenGiclee={() => setView('giclee')}
         />
       ) : view === 'giclee' ? (
         <GicleeExclusivo onBack={() => setView('public')} />
