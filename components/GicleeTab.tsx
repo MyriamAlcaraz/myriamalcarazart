@@ -13,8 +13,8 @@ const GicleeTab: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen animate-fade-in">
-      <div className="max-w-4xl mx-auto space-y-16">
+    <div className="w-full min-h-screen bg-white animate-fade-in z-[60] relative">
+      <div className="max-w-4xl mx-auto px-6 py-12 space-y-16">
         
         {/* Header */}
         <div className="text-center">

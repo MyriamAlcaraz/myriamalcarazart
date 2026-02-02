@@ -1194,17 +1194,15 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
             {/* 🖼️ MODAL DE GICLÉE EXCLUSIVO (Solo en área protegida) */}
             {showGiclee && (
                 <div className="fixed inset-0 bg-black/80 z-50 overflow-y-auto">
-                    <div className="min-h-screen p-4">
+                    <div className="min-h-screen">
                         <button 
                             onClick={() => setShowGiclee(false)}
-                            className="fixed top-6 left-6 flex items-center gap-2 text-white hover:text-gold-400 transition-colors bg-slate-800/50 backdrop-blur-sm px-4 py-2 rounded-lg z-10"
+                            className="fixed top-6 left-6 flex items-center gap-2 text-white hover:text-gold-400 transition-colors bg-slate-800/50 backdrop-blur-sm px-4 py-2 rounded-lg z-[70]"
                         >
                             <ArrowLeft size={20} />
                             <span className="text-sm font-semibold">VOLVER AL ESTUDIO</span>
                         </button>
-                        <div className="max-w-6xl mx-auto pt-20">
-                            <GicleeTab />
-                        </div>
+                        <GicleeTab />
                     </div>
                 </div>
             )}
