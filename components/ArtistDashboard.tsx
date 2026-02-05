@@ -1019,9 +1019,9 @@ const SalesReportModal: React.FC<{ artworks: Artwork[], onClose: () => void }> =
     // DATOS MAESTROS DE GICLÉE (Costes Base Raúl & PVP Actualizados)
     const GICLEE_DATA = [
         { id: 'standard', name: 'Estándar (40cm)', pvp: 180, cost: 27, limit: 100 },
-        { id: 'intermediate', name: 'Intermedio (50cm)', pvp: 290, cost: 56, limit: 75 },
+        { id: 'intermediate', name: 'Intermedio (50cm)', pvp: 280, cost: 56, limit: 75 },
         { id: 'medium', name: 'Mediano (70cm)', pvp: 450, cost: 104, limit: 50 },
-        { id: 'large', name: 'Grande (90cm)', pvp: 650, cost: 130, limit: 25 }, // Est. cost
+        { id: 'large', name: 'Grande (90cm)', pvp: 680, cost: 130, limit: 25 }, // Est. cost
         { id: 'collection', name: 'Colección (100cm)', pvp: 950, cost: 200, limit: 10 }
     ];
 

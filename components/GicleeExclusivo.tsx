@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Check, Shield, Award } from 'lucide-react';
+import { ArrowLeft, Check, Shield, Award, Crown } from 'lucide-react';
 
 interface GicleeExclusivoProps {
   onBack: () => void;
@@ -9,32 +9,35 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
   const sizes = [
-    { id: 'xs', name: 'XS (Escritorio)', price: '120€', description: 'Perfecto para tu espacio de trabajo' },
-    { id: 'small', name: 'Pequeño (30x40)', price: '180€', description: 'Ideal para paredes modestas' },
-    { id: 'medium', name: 'Mediano (50x70)', price: '450€', description: 'Presencia elegante en cualquier sala' },
-    { id: 'large', name: 'Grande (Escala superior)', price: '650€', description: 'Punto focal dominante' },
-    { id: 'special', name: 'Especial (Original del Óleo)', price: '950€', description: 'Obra maestra única' }
+    { id: 'standard', name: 'Formato Estándar', label: 'Lado mayor aprox. 40 cm', price: '180€' },
+    { id: 'intermediate', name: 'Formato Intermedio', label: 'Lado mayor aprox. 50 cm', price: '280€' },
+    { id: 'medium', name: 'Formato Mediano', label: 'Lado mayor aprox. 70 cm', price: '450€' },
+    { id: 'large', name: 'Formato Grande', label: 'Lado mayor aprox. 90 cm', price: '680€' },
+    { id: 'collection', name: 'Formato Colección', label: 'Lado mayor aprox. 100 cm', price: '950€' }
   ];
 
   return (
     <div className="min-h-screen bg-stone-50 animate-fade-in">
       <div className="max-w-4xl mx-auto px-6 py-12">
 
-        {/* Header */}
-        <div className="mb-12">
+        {/* Header - Centrado y con Corona */}
+        <div className="mb-12 text-center relative">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-stone-600 hover:text-gold-500 transition-colors mb-8"
+            className="absolute left-0 top-2 flex items-center gap-2 text-stone-600 hover:text-gold-500 transition-colors"
           >
             <ArrowLeft size={20} />
-            <span className="text-sm tracking-wider uppercase">Volver</span>
+            <span className="text-sm tracking-wider uppercase hidden md:inline">Volver</span>
           </button>
 
-          <h1 className="text-4xl md:text-5xl font-serif text-slate-800 mb-4">
+          <div className="flex justify-center mb-6">
+            <Crown className="text-gold-500" size={48} />
+          </div>
+          <h1 className="text-5xl md:text-6xl font-serif text-slate-800 mb-6">
             Giclée Exclusivo
           </h1>
-          <div className="w-24 h-1 bg-gold-500 mb-8"></div>
-          <p className="text-xl text-stone-600 font-light leading-relaxed">
+          <div className="w-32 h-1 bg-gold-500 mx-auto mb-8"></div>
+          <p className="text-xl text-stone-600 font-light leading-relaxed max-w-2xl mx-auto">
             Ediciones limitadas de máxima calidad para coleccionistas exigentes
           </p>
         </div>
@@ -81,8 +84,8 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
                 key={size.id}
                 onClick={() => setSelectedSize(size.id)}
                 className={`bg-white p-6 rounded-lg border-2 cursor-pointer transition-all ${selectedSize === size.id
-                    ? 'border-gold-500 shadow-lg'
-                    : 'border-stone-100 hover:border-stone-300'
+                  ? 'border-gold-500 shadow-lg'
+                  : 'border-stone-100 hover:border-stone-300'
                   }`}
               >
                 <div className="flex items-center justify-between">
@@ -93,13 +96,16 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-slate-800">{size.name}</h3>
-                      <p className="text-sm text-stone-600">{size.description}</p>
+                      <p className="text-sm text-stone-600">{size.label}</p>
                     </div>
                   </div>
                   <div className="text-2xl font-bold text-gold-500">{size.price}</div>
                 </div>
               </div>
             ))}
+            <p className="text-stone-500 text-xs italic text-center mt-6 max-w-lg mx-auto leading-relaxed font-serif">
+              * Las dimensiones finales pueden variar ligeramente para respetar la proporción y composición original de la obra, garantizando así la integridad artística de la reproducción.
+            </p>
           </div>
         </section>
 

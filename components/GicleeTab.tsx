@@ -33,7 +33,7 @@ const GicleeTab: React.FC = () => {
       id: 'intermediate',
       name: 'Formato Intermedio',
       label: 'Lado mayor aprox. 50 cm',
-      price: '290€',
+      price: '280€',
       scale: 0.50,
       tirada: 75
     },
@@ -49,7 +49,7 @@ const GicleeTab: React.FC = () => {
       id: 'large',
       name: 'Formato Grande',
       label: 'Lado mayor aprox. 90 cm',
-      price: '650€',
+      price: '680€',
       scale: 0.90,
       tirada: 25
     },
