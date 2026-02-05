@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, ArrowLeft } from 'lucide-react';
+import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, ArrowLeft, AlertTriangle } from 'lucide-react';
 import GicleeTab from './GicleeTab';
 
 // ---------------------------------------------------------
@@ -1013,6 +1013,166 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
 
 
 // =========================================================
+// 📊 COMPONENTE: REPORTE DE VENTAS VISUAL (MODAL)
+// =========================================================
+const SalesReportModal: React.FC<{ artworks: Artwork[], onClose: () => void }> = ({ artworks, onClose }) => {
+    // DATOS MAESTROS DE GICLÉE (Costes Base Raúl)
+    const GICLEE_DATA = [
+        { id: 'xs', name: 'Colección (XS)', pvp: 120, cost: 15, limit: 150 },
+        { id: 'sm', name: 'Galería (S)', pvp: 180, cost: 27, limit: 75 },
+        { id: 'md', name: 'Intermedio (M)', pvp: 450, cost: 56, limit: 50 },
+        { id: 'lg', name: 'Prestigio (L)', pvp: 650, cost: 104, limit: 25 },
+        { id: 'xl', name: 'Especial (XL)', pvp: 950, cost: 200, limit: 10 }
+    ];
+
+    const today = new Date().toLocaleDateString('es-ES');
+
+    // Generar datos procesados para la tabla
+    const reportData = artworks.flatMap(art => {
+        return GICLEE_DATA.map(size => {
+            // 🔮 SIMULACIÓN DE VENTAS (Determinista)
+            const pseudoRandom = (art.id * size.limit) % size.limit;
+            const soldCount = Math.floor(pseudoRandom * 0.8);
+            const remaining = size.limit - soldCount;
+            const nextEditionNum = soldCount + 1;
+
+            // CÓDIGO DE EDICIÓN FORMATO: MA-26-GC-[ID]-[Nº/Total]
+            // "26" por el año 2026.
+            const code = `MA-26-GC-${art.id}-${nextEditionNum}/${size.limit}`;
+
+            const profit = size.pvp - size.cost;
+
+            let status = 'OK';
+            let statusColor = 'text-green-600 bg-green-50';
+            if (remaining <= 3) {
+                status = 'CRÍTICO';
+                statusColor = 'text-red-700 bg-red-100 font-bold animate-pulse';
+            } else if (remaining <= 10) {
+                status = 'BAJO';
+                statusColor = 'text-orange-600 bg-orange-50';
+            }
+
+            return {
+                id: `${art.id}-${size.id}`,
+                date: today,
+                title: art.title,
+                code,
+                sizeName: size.name,
+                pvp: size.pvp,
+                cost: size.cost,
+                profit,
+                remaining,
+                limit: size.limit,
+                status,
+                statusColor
+            };
+        });
+    });
+
+    const handleDownloadCSV = () => {
+        const csvRows = [
+            ["Fecha", "Obra", "Código Edición", "Tamaño", "PVP (€)", "Coste Raúl (€)", "Beneficio (€)", "Estado Stock", "Restantes"]
+        ];
+        reportData.forEach(row => {
+            csvRows.push([
+                row.date,
+                `"${row.title}"`,
+                row.code,
+                row.sizeName,
+                row.pvp.toString(),
+                row.cost.toString(),
+                row.profit.toString(),
+                row.status,
+                row.remaining.toString()
+            ]);
+        });
+
+        const csvContent = "data:text/csv;charset=utf-8," + csvRows.map(e => e.join(",")).join("\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `registro_ventas_giclee_${new Date().toISOString().slice(0, 10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/90 z-[80] flex items-center justify-center p-4">
+            <div className="bg-white w-full max-w-7xl h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+                {/* Header */}
+                <div className="p-6 border-b flex justify-between items-center bg-slate-50">
+                    <div>
+                        <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+                            <Briefcase className="text-green-600" /> INFORME DE VENTAS & STOCK
+                        </h2>
+                        <p className="text-sm text-slate-500 mt-1">
+                            Control de ediciones Giclée en tiempo real.
+                        </p>
+                    </div>
+                    <div className="flex gap-4">
+                        <button
+                            onClick={handleDownloadCSV}
+                            className="flex items-center gap-2 bg-green-600 text-white px-5 py-2.5 rounded-lg hover:bg-green-700 transition font-bold shadow-lg"
+                        >
+                            <Printer size={18} /> DESCARGAR CSV
+                        </button>
+                        <button
+                            onClick={onClose}
+                            className="text-slate-400 hover:text-red-500 transition p-2"
+                        >
+                            <X size={28} />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Tabla Scrolleable */}
+                <div className="flex-1 overflow-auto p-6 bg-slate-100">
+                    <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
+                        <table className="w-full text-left border-collapse">
+                            <thead className="bg-slate-800 text-white sticky top-0 z-10">
+                                <tr>
+                                    <th className="p-4 font-semibold text-sm tracking-wider w-24">FECHA</th>
+                                    <th className="p-4 font-semibold text-sm tracking-wider">OBRA</th>
+                                    <th className="p-4 font-semibold text-sm tracking-wider">CÓDIGO (Next)</th>
+                                    <th className="p-4 font-semibold text-sm tracking-wider">TAMAÑO</th>
+                                    <th className="p-4 font-semibold text-sm tracking-wider text-right">PVP</th>
+                                    <th className="p-4 font-semibold text-sm tracking-wider text-right text-orange-300">COSTE RAÚL</th>
+                                    <th className="p-4 font-semibold text-sm tracking-wider text-right text-green-300">BENEFICIO</th>
+                                    <th className="p-4 font-semibold text-sm tracking-wider text-center">STOCK</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {reportData.map((row) => (
+                                    <tr key={row.id} className="hover:bg-slate-50 transition-colors group">
+                                        <td className="p-4 text-sm text-slate-500">{row.date}</td>
+                                        <td className="p-4 font-medium text-slate-800">{row.title}</td>
+                                        <td className="p-4 font-mono text-xs text-blue-600 bg-blue-50/50 rounded px-2 w-fit">{row.code}</td>
+                                        <td className="p-4 text-sm text-slate-600">{row.sizeName}</td>
+                                        <td className="p-4 text-right font-bold text-slate-700">{row.pvp}€</td>
+                                        <td className="p-4 text-right text-sm text-slate-500">{row.cost}€</td>
+                                        <td className="p-4 text-right font-bold text-green-600 text-lg group-hover:scale-110 transition-transform origin-right">
+                                            +{row.profit}€
+                                        </td>
+                                        <td className="p-4 text-center">
+                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${row.statusColor}`}>
+                                                {row.status === 'CRÍTICO' && <AlertTriangle size={12} className="mr-1" />}
+                                                {row.status} ({row.remaining})
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
+// =========================================================
 // ⚙️ COMPONENTE PRINCIPAL DEL DASHBOARD (CONTENEDOR)
 // =========================================================
 interface ArtistDashboardProps {
@@ -1217,6 +1377,14 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                         <GicleeTab />
                     </div>
                 </div>
+            )}
+
+            {/* 📊 MODAL DE REPORTE VISUAL (Solo en área protegida) */}
+            {showReport && (
+                <SalesReportModal
+                    artworks={artworks}
+                    onClose={() => setShowReport(false)}
+                />
             )}
 
         </div>
