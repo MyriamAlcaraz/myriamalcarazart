@@ -114,19 +114,21 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
               <button
                 onClick={() => {
                   const selectedFormat = sizes.find(s => s.id === selectedSize);
-                  const subject = encodeURIComponent(`Interés en reproducción Giclée de alta fidelidad - ${selectedFormat?.name}`);
+                  const subject = encodeURIComponent(`Interés en la adquisición de Giclée: [Título de la Obra]`);
                   const body = encodeURIComponent(
                     `Estimada Myriam Alcaraz,
-\nLe escribo con gran interés en adquirir una reproducción Giclée de alta fidelidad de su obra.
-\nLos detalles de mi elección son:
-\n• Obra: [Indique aquí el Título de la Obra]
-• Formato: ${selectedFormat?.name} (${selectedFormat?.label})
+\nLe escribo interesado/a en la adquisición de una reproducción de alta fidelidad (Giclée) de su obra titulada [Título de la Obra].
+\nLos detalles de la selección son los siguientes:
+\n• Obra: [Título de la Obra]
+• Formato: ${selectedFormat?.name}
+• Dimensiones: ${selectedFormat?.label}
+• Especificaciones: Impresión pigmentada de alta fidelidad sobre papel Hahnemühle William Turner 310g.
+• Certificación: Doble aval (Certificado Hahnemühle con registro digital y Certificado de Artista firmado con sello seco).
 • Importe: ${selectedFormat?.price}
-• Especificaciones: Impresión pigmentada Museum Quality sobre papel Hahnemühle William Turner 310g.
-\nQuedo a la espera de su confirmación y detalles para proceder con el pago y envío.
+\nQuedo a la espera de sus instrucciones personales para formalizar la reserva y proceder con los trámites de adquisición y envío.
 \nAtentamente,
-\n[Su Nombre y Apellidos]
-[Teléfono]`
+\n[Nombre y Apellidos]
+[Teléfono de contacto]`
                   );
                   window.location.href = `mailto:myriamhotmail@hotmail.com?subject=${subject}&body=${body}`;
                 }}
