@@ -37,8 +37,8 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
             Giclée Exclusivo
           </h1>
           <div className="w-32 h-1 bg-gold-500 mx-auto mb-8"></div>
-          <p className="text-xl text-stone-600 font-light leading-relaxed max-w-2xl mx-auto">
-            Ediciones limitadas de máxima calidad para coleccionistas exigentes
+          <p className="text-lg md:text-xl text-stone-600 font-light tracking-widest leading-relaxed max-w-3xl mx-auto">
+            Reproducciones Giclée de alta fidelidad — Ediciones limitadas en calidad museo
           </p>
         </div>
 
