@@ -1,51 +1,51 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, ArrowLeft } from 'lucide-react';
-import GicleeTab from './GicleeTab'; 
+import GicleeTab from './GicleeTab';
 
 // ---------------------------------------------------------
 // 🎨 DEFINICIÓN DE TIPOS Y CONSTANTES
 // ---------------------------------------------------------
 interface Artwork {
-  id: number;
-  title: string;
-  certificationDate: string; // Formato YYYY-MM-DD
-  type: 'PT' | 'SC' | 'DI' | 'OT';
-  seriesIndex: number | null;
-  seriesTotal: number | null;
-  code: string | null;
-  status: 'PENDIENTE' | 'GENERADO';
-  image: string; // URL o ruta de la imagen
-  dimensions: string; 
-  technique: string; 
-  originalIndex: number; // 🛑 NUEVO: Para mantener el orden de constants.ts
-  isOpenSeries: boolean; // 🛑 NUEVO: Si es una serie sin límite fijo (ej. Giclée abierta)
+    id: number;
+    title: string;
+    certificationDate: string; // Formato YYYY-MM-DD
+    type: 'PT' | 'SC' | 'DI' | 'OT';
+    seriesIndex: number | null;
+    seriesTotal: number | null;
+    code: string | null;
+    status: 'PENDIENTE' | 'GENERADO';
+    image: string; // URL o ruta de la imagen
+    dimensions: string;
+    technique: string;
+    originalIndex: number; // 🛑 NUEVO: Para mantener el orden de constants.ts
+    isOpenSeries: boolean; // 🛑 NUEVO: Si es una serie sin límite fijo (ej. Giclée abierta)
 }
 
 interface DocumentSettings {
-  artistName: string;
-  artistTitle: string;
-  cycleName: string; 
-  city: string;
-  letterOpening: string;
-  // 🛑 MODIFICADO: Nueva frase de cierre, más profesional
-  letterClosing: string; 
-  // 🛑 AÑADIDOS: Datos de contacto centralizados
-  website: string;
-  email: string;
-  instagram: string;
+    artistName: string;
+    artistTitle: string;
+    cycleName: string;
+    city: string;
+    letterOpening: string;
+    // 🛑 MODIFICADO: Nueva frase de cierre, más profesional
+    letterClosing: string;
+    // 🛑 AÑADIDOS: Datos de contacto centralizados
+    website: string;
+    email: string;
+    instagram: string;
 }
 
 // 🛑 DATOS DE CONFIGURACIÓN INICIAL (Extraídos de constants.ts y borrador)
 const initialSettings: DocumentSettings = {
-    artistName: "Myriam Alcaraz", 
-    artistTitle: "Pintura Figurativa Contemporánea", 
-    cycleName: "Serie Sin Título (A Definir)", 
-    city: "Madrid", 
+    artistName: "Myriam Alcaraz",
+    artistTitle: "Pintura Figurativa Contemporánea",
+    cycleName: "Serie Sin Título (A Definir)",
+    city: "Madrid",
     letterOpening: "Estimado Coleccionista,",
     // 🛑 NUEVO TEXTO DE CIERRE
     letterClosing: "Con mis mejores deseos, le extiendo mi más sincero agradecimiento por su confianza en mi trabajo y quedo a su disposición para cualquier consulta.",
     // 🛑 DATOS DE CONTACTO CORREGIDOS Y CENTRALIZADOS
-    website: "https://myriamalcaraz.com", 
+    website: "https://myriamalcaraz.com",
     email: "myriamhotmail@hotmail.com",
     instagram: "@myriamalcaraz.artist",
 };
@@ -80,38 +80,38 @@ const REAL_ARTWORKS: Artwork[] = ARTWORKS_FOR_INITIALIZATION.map((art, index) =>
     certificationDate: '2025-12-10', // Fecha inicial de ejemplo
     type: 'PT', // Pintura por defecto
     seriesIndex: null, // Obra única por defecto
-    seriesTotal: null, 
-    code: null, 
-    status: 'PENDIENTE', 
-    image: art.image, 
-    dimensions: art.dimensions, 
-    technique: art.technique, 
+    seriesTotal: null,
+    code: null,
+    status: 'PENDIENTE',
+    image: art.image,
+    dimensions: art.dimensions,
+    technique: art.technique,
     originalIndex: index, // Mantiene el orden de constants.ts
     isOpenSeries: false, // 🛑 NUEVO: Por defecto no es serie abierta
 }));
 
 // 🛑 FIX: Constante para representar una obra nueva (ID 0)
 const NEW_WORK_PLACEHOLDER: Artwork = {
-    id: 0, 
+    id: 0,
     title: '',
     certificationDate: new Date().toISOString().substring(0, 10),
-    type: 'PT', 
-    seriesIndex: null, 
-    seriesTotal: null, 
-    code: null, 
-    status: 'PENDIENTE', 
-    image: '/obras/placeholder-work.jpg', 
-    dimensions: '', 
-    technique: '', 
-    originalIndex: -1, 
-    isOpenSeries: false, 
+    type: 'PT',
+    seriesIndex: null,
+    seriesTotal: null,
+    code: null,
+    status: 'PENDIENTE',
+    image: '/obras/placeholder-work.jpg',
+    dimensions: '',
+    technique: '',
+    originalIndex: -1,
+    isOpenSeries: false,
 };
 
 // ---------------------------------------------------------
 // 🚀 FUNCIÓN CENTRAL: CODIFICACIÓN INTELIGENTE
 // ---------------------------------------------------------
 const generateSmartCode = (artworkToCode: Artwork): string => {
-    const dateParts = artworkToCode.certificationDate.split('-'); 
+    const dateParts = artworkToCode.certificationDate.split('-');
     const year = dateParts[0];
 
     // Obtener las 2 primeras letras de la primera palabra del título
@@ -122,14 +122,14 @@ const generateSmartCode = (artworkToCode: Artwork): string => {
 
     // Si es serie limitada, usa el formato Index/Total
     if (artworkToCode.seriesIndex !== null && artworkToCode.seriesTotal !== null && !artworkToCode.isOpenSeries) {
-        return `MA-${year}-${titleInitials}${artworkToCode.seriesIndex}/${artworkToCode.seriesTotal}`; 
+        return `MA-${year}-${titleInitials}${artworkToCode.seriesIndex}/${artworkToCode.seriesTotal}`;
     }
-    
+
     // Si es Giclée (serie abierta), añadir GI
     if (artworkToCode.isOpenSeries) {
         return `MA-${year}-${titleInitials}GI1/1`;
     }
-    
+
     // Si es obra única: MA-AÑO-XX1/1
     return `MA-${year}-${titleInitials}1/1`;
 };
@@ -145,7 +145,7 @@ const getSeriesText = (artwork: Artwork) => {
     if (artwork.seriesIndex !== null && artwork.seriesTotal !== null && !artwork.isOpenSeries) {
         return `Edición Limitada ${artwork.seriesIndex}/${artwork.seriesTotal}`;
     }
-    if (artwork.isOpenSeries) { 
+    if (artwork.isOpenSeries) {
         return `Edición Seriada Abierta (Giclée)`;
     }
     return `Obra Única Original`;
@@ -158,14 +158,14 @@ const getSeriesText = (artwork: Artwork) => {
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
     const creationMonthAndYear = new Date(artwork.certificationDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
-    
+
     // 🛑 Parámetros de Estilo del Marco V11
-    const GOLD_COLOR = "#b8860b"; 
-    const OUTLINE_WIDTH = "4px"; 
-    const OUTLINE_OFFSET = "5px"; 
-    
+    const GOLD_COLOR = "#b8860b";
+    const OUTLINE_WIDTH = "12px";
+    const OUTLINE_OFFSET = "12px";
+
     // 🛑 FIX EXTREMO V15: Se reduce el margen superior de 20mm a 10mm.
-    const MARGIN_SAFETY_CSS = "10mm auto 0 auto"; 
+    const MARGIN_SAFETY_CSS = "10mm auto 0 auto";
 
     // Diseño de Iconos y Estilos del Footer
     const contactFooterHtml = `
@@ -441,15 +441,15 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
  */
 const getLetterHtml = (artwork: Artwork, settings: DocumentSettings): string => {
     const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-    
+
     const seriesText = getSeriesText(artwork);
-    
+
     // 🛑 FIX EXTREMO DE MARCO V11
-    const GOLD_COLOR = "#b8860b"; 
-    const OUTLINE_WIDTH = "4px"; 
-    const OUTLINE_OFFSET = "5px"; 
+    const GOLD_COLOR = "#b8860b";
+    const OUTLINE_WIDTH = "12px";
+    const OUTLINE_OFFSET = "12px";
     // 🛑 FIX V15: Margen simétrico de 15mm arriba y abajo
-    const MARGIN_SAFETY = "15mm"; 
+    const MARGIN_SAFETY = "15mm";
 
     // Referencia de la carta para reflejar la edición abierta
     let seriesReference = '';
@@ -578,7 +578,7 @@ const handlePrintDocument = (content: string, title: string) => {
         printWindow.document.close();
         setTimeout(() => {
             printWindow.print();
-        }, 500); 
+        }, 500);
     } else {
         alert("Por favor, permite las ventanas emergentes para generar el documento.");
     }
@@ -599,25 +599,25 @@ interface ArtworkWorkstationProps {
 }
 
 const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settings, onGenerateCode, onDelete, onDuplicate, onEdit }) => {
-    
+
     const certificateContent = useMemo(() => artwork.code ? getCertificateHtml(artwork, settings) : '', [artwork, settings]);
     const letterContent = useMemo(() => artwork.code ? getLetterHtml(artwork, settings) : '', [artwork, settings]);
 
     return (
         // Estilo de Galería
         <div className="relative bg-white rounded-xl shadow-lg group overflow-hidden transition-all hover:shadow-2xl hover:scale-[1.01]">
-            
+
             {/* Imagen y Tools (Overlay) */}
             <div className="relative aspect-[4/3] bg-stone-100 cursor-pointer">
-                <img 
-                    src={artwork.image || '/obras/placeholder-work.jpg'} 
-                    alt={artwork.title} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:opacity-50" 
+                <img
+                    src={artwork.image || '/obras/placeholder-work.jpg'}
+                    alt={artwork.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:opacity-50"
                 />
-                
+
                 {/* Overlay con los botones de Certificado/Carta (Aparece al hacer hover/click) */}
                 <div className={`absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity p-4 ${!artwork.code && 'opacity-100 bg-red-800/80'}`}>
-                    
+
                     {/* ACCIÓN PRINCIPAL (GENERAR CÓDIGO) */}
                     {!artwork.code ? (
                         // Se muestra para obras PENDIENTES (manual o nuevas)
@@ -636,14 +636,14 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
                         // ACCIONES DE DOCUMENTACIÓN (CERTIFICADO Y CARTA) - Esto se verá si ya tienen código.
                         <>
                             <p className="text-white text-xs font-semibold uppercase tracking-wider mb-2">Documentos Listos</p>
-                            
+
                             <button
                                 onClick={() => handlePrintDocument(certificateContent, `Certificado ${artwork.code}`)}
                                 className="bg-blue-600 text-white py-3 px-6 rounded-lg font-bold text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 w-full shadow-lg"
                             >
                                 <Printer size={16} /> IMPRIMIR CERTIFICADO
                             </button>
-                            
+
                             <button
                                 onClick={() => handlePrintDocument(letterContent, `Carta ${artwork.code}`)}
                                 className="bg-blue-600/80 text-white py-3 px-6 rounded-lg font-bold text-sm hover:bg-blue-700/80 transition-colors flex items-center justify-center gap-2 w-full shadow-lg"
@@ -664,7 +664,7 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
                 <div className="flex gap-1.5">
                     {/* Botón para abrir el formulario y EDITAR datos (Acceso al formulario de gestión) */}
                     <button
-                        onClick={() => onEdit(artwork)} 
+                        onClick={() => onEdit(artwork)}
                         className="text-slate-500 hover:text-orange-500 p-1 rounded transition"
                         title="Editar Datos de Obra"
                     >
@@ -708,30 +708,30 @@ interface ArtworkFormProps {
 }
 
 const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToManage, onCancel }) => {
-    
+
     // Estado interno del formulario
     // isEditing será true solo si el ID es > 0. (id: 0 es NEW, id: -1 es DUPLICATING)
-    const isEditing = artworkToManage ? artworkToManage.id > 0 : false; 
-    const isDuplicating = artworkToManage ? artworkToManage.id === -1 : false; 
+    const isEditing = artworkToManage ? artworkToManage.id > 0 : false;
+    const isDuplicating = artworkToManage ? artworkToManage.id === -1 : false;
     const isAddingNew = artworkToManage ? artworkToManage.id === 0 : false;
 
     const [title, setTitle] = useState('');
     const [certificationDate, setCertificationDate] = useState(new Date().toISOString().substring(0, 10));
-    
-    const [isSeries, setIsSeries] = useState(false); 
-    const [isOpenSeries, setIsOpenSeries] = useState(false); 
+
+    const [isSeries, setIsSeries] = useState(false);
+    const [isOpenSeries, setIsOpenSeries] = useState(false);
     const [seriesIndex, setSeriesIndex] = useState<number | ''>('');
     const [seriesTotal, setSeriesTotal] = useState<number | ''>('');
-    
-    const [imagePath, setImagePath] = useState(''); 
+
+    const [imagePath, setImagePath] = useState('');
     const [dimensions, setDimensions] = useState('');
     const [technique, setTechnique] = useState('');
-    const [manualCode, setManualCode] = useState<string>(''); 
-    
+    const [manualCode, setManualCode] = useState<string>('');
+
     // Hook para PRE-RELLENAR el formulario (al añadir, duplicar o editar)
     useEffect(() => {
         if (artworkToManage) {
-            
+
             // Si es nueva obra (id: 0), cargamos los valores por defecto del placeholder
             if (isAddingNew) {
                 setTitle('');
@@ -746,65 +746,65 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                 setManualCode('');
                 return;
             }
-            
+
             // Lógica de carga para Edición (id > 0) o Duplicación (id = -1)
             setTitle(artworkToManage.title);
-            setCertificationDate(isDuplicating ? new Date().toISOString().substring(0, 10) : artworkToManage.certificationDate); 
-            
-            setIsOpenSeries(artworkToManage.isOpenSeries); 
-            
+            setCertificationDate(isDuplicating ? new Date().toISOString().substring(0, 10) : artworkToManage.certificationDate);
+
+            setIsOpenSeries(artworkToManage.isOpenSeries);
+
             const isLimitedSeries = artworkToManage.seriesIndex !== null && artworkToManage.seriesTotal !== null && !artworkToManage.isOpenSeries;
-            setIsSeries(isLimitedSeries); 
+            setIsSeries(isLimitedSeries);
 
             // Si se duplica, sugiere el siguiente índice, si no, usa el valor actual
             const initialIndex = isLimitedSeries && isDuplicating ? artworkToManage.seriesIndex! + 1 : artworkToManage.seriesIndex ?? '';
             setSeriesIndex(initialIndex);
-            
+
             setSeriesTotal(artworkToManage.seriesTotal ?? '');
 
             setImagePath(artworkToManage.image);
             setDimensions(artworkToManage.dimensions);
             setTechnique(artworkToManage.technique);
             setManualCode(artworkToManage.code ?? '');
-        } 
-    }, [artworkToManage, isDuplicating, isAddingNew]); 
+        }
+    }, [artworkToManage, isDuplicating, isAddingNew]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         let index = null;
         let total = null;
 
         if (isSeries && !isOpenSeries) { // Solo si es serie limitada
             index = seriesIndex === '' ? null : Number(seriesIndex);
             total = seriesTotal === '' ? null : Number(seriesTotal);
-            
+
             if (index === null || total === null || index > total) {
                 alert("Revise los campos de la edición seriada limitada (N° Pieza y Total Edición).");
                 return;
             }
-        } 
-        
-        if (title.trim() === '' || dimensions.trim() === '' || technique.trim() === '') {
-             alert("El título, las dimensiones y la técnica de la obra son obligatorios.");
-             return;
         }
-        
+
+        if (title.trim() === '' || dimensions.trim() === '' || technique.trim() === '') {
+            alert("El título, las dimensiones y la técnica de la obra son obligatorios.");
+            return;
+        }
+
         const finalCode = manualCode.trim() || null;
         const finalStatus: 'PENDIENTE' | 'GENERADO' = finalCode ? 'GENERADO' : 'PENDIENTE';
 
         const newArtworkData: Omit<Artwork, 'id' | 'originalIndex'> = {
             title: title.trim(),
             certificationDate: certificationDate,
-            type: 'PT', 
+            type: 'PT',
             seriesIndex: index, // Será null si no es serie limitada
             seriesTotal: total, // Será null si no es serie limitada
             image: imagePath || NEW_WORK_PLACEHOLDER.image, // Usa la imagen placeholder si está vacío
-            dimensions: dimensions.trim(), 
-            technique: technique.trim(), 
+            dimensions: dimensions.trim(),
+            technique: technique.trim(),
             code: finalCode,
             status: finalStatus,
-            isOpenSeries: isOpenSeries, 
+            isOpenSeries: isOpenSeries,
         };
 
         // Si id es 0 (nueva) o -1 (duplicado), se pasa null a onSave para crear una nueva
@@ -819,10 +819,10 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
     return (
         <div className="fixed inset-0 bg-black/70 z-50 flex items-start justify-center p-8">
             <form onSubmit={handleSubmit} className="w-full max-w-4xl bg-white p-8 rounded-xl shadow-2xl mt-10 relative">
-                
-                <button 
-                    type="button" 
-                    onClick={onCancel} 
+
+                <button
+                    type="button"
+                    onClick={onCancel}
                     className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
                     title="Cerrar Formulario"
                 >
@@ -832,28 +832,28 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                 <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mb-6 border-b pb-3">
                     {isEditing ? <Edit size={24} className="text-orange-500" /> : <Plus size={24} className="text-gold-500" />} {headerText}
                 </h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
-                    
+
                     {/* Título */}
                     <div className="col-span-1 md:col-span-3">
                         <label className="block text-xs font-medium text-slate-500 mb-1">Título de la Obra</label>
-                        <input 
-                            type="text" 
-                            value={title} 
+                        <input
+                            type="text"
+                            value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder="Ej: La Ciudad Secreta"
                             className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
                             required
                         />
                     </div>
-                    
+
                     {/* Fecha */}
                     <div className="col-span-1 md:col-span-3">
                         <label className="block text-xs font-medium text-slate-500 mb-1">Fecha de Creación/Certificación</label>
-                        <input 
-                            type="date" 
-                            value={certificationDate} 
+                        <input
+                            type="date"
+                            value={certificationDate}
                             onChange={(e) => setCertificationDate(e.target.value)}
                             className="p-2 border rounded text-sm w-full text-center focus:ring-gold-500 focus:border-gold-500"
                             max={new Date().toISOString().substring(0, 10)}
@@ -864,50 +864,50 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                     {/* Dimensiones */}
                     <div className="col-span-1 md:col-span-2">
                         <label className="block text-xs font-medium text-slate-500 mb-1">Medidas (Ej: 100x81 cm)</label>
-                        <input 
-                            type="text" 
-                            value={dimensions} 
+                        <input
+                            type="text"
+                            value={dimensions}
                             onChange={(e) => setDimensions(e.target.value)}
                             placeholder="Ej: 100x81 cm"
                             className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
                             required
                         />
                     </div>
-                    
+
                     {/* Técnica */}
                     <div className="col-span-1 md:col-span-4">
                         <label className="block text-xs font-medium text-slate-500 mb-1">Técnica/Medio</label>
-                        <input 
-                            type="text" 
-                            value={technique} 
+                        <input
+                            type="text"
+                            value={technique}
                             onChange={(e) => setTechnique(e.target.value)}
                             placeholder="Ej: Óleo sobre tela en tabla con bastidor"
                             className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
                             required
                         />
                     </div>
-                     
+
                     {/* Imagen URL */}
                     <div className="col-span-1 md:col-span-3">
                         <label className="block text-xs font-medium text-slate-500 mb-1 flex justify-between items-center">
                             Ruta/URL de Imagen de la Obra (Para Certificado)
                             <span className="text-blue-500 hover:underline cursor-pointer" onClick={() => setImagePath('/obras/demo-obra.jpg')}>Usar Demo</span>
                         </label>
-                        <input 
-                            type="text" 
-                            value={imagePath} 
+                        <input
+                            type="text"
+                            value={imagePath}
                             onChange={(e) => setImagePath(e.target.value)}
                             placeholder="/obras/Sara-Farola.jpg"
                             className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
                         />
                     </div>
-                    
+
                     {/* Código Manual/Giclée (NUEVO) */}
                     <div className="col-span-1 md:col-span-3">
                         <label className="block text-xs font-medium text-slate-500 mb-1">CÓDIGO de Certificado (Opcional/Giclée)</label>
-                        <input 
-                            type="text" 
-                            value={manualCode} 
+                        <input
+                            type="text"
+                            value={manualCode}
                             onChange={(e) => setManualCode(e.target.value)}
                             placeholder="Ej: MA-2025-01/50 (Giclée) o MA-2025-09"
                             className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
@@ -915,19 +915,19 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                         <p className="text-[10px] text-slate-400 mt-1">Si introduce un código aquí, la obra se marcará como **GENERADA**.</p>
                     </div>
 
-                    
+
                     {/* Control de Serie 🛑 MODIFICADO */}
                     <div className="flex flex-col gap-2 col-span-1 md:col-span-6 border-t pt-4 mt-4">
                         <label className="text-xs font-medium text-slate-500 mb-1">Tipo de Edición</label>
-                        
+
                         <div className="flex items-center gap-6">
                             {/* Opción Obra Única (Default) */}
                             <label className="flex items-center text-sm cursor-pointer">
-                                <input 
+                                <input
                                     type="radio"
                                     checked={!isSeries && !isOpenSeries}
                                     onChange={() => {
-                                        setIsSeries(false); 
+                                        setIsSeries(false);
                                         setIsOpenSeries(false);
                                     }}
                                     className="mr-2 rounded-full text-gold-500 focus:ring-gold-500"
@@ -935,10 +935,10 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                                 />
                                 Obra Única Original
                             </label>
-                            
+
                             {/* Opción Edición Limitada (Con índices) */}
                             <label className="flex items-center text-sm cursor-pointer">
-                                <input 
+                                <input
                                     type="radio"
                                     checked={isSeries && !isOpenSeries}
                                     onChange={() => {
@@ -950,17 +950,17 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                                 />
                                 Edición Seriada Limitada
                             </label>
-                            
+
                             {/* Opción Edición Abierta (Giclée) */}
                             <label className="flex items-center text-sm cursor-pointer">
-                                <input 
+                                <input
                                     type="radio"
                                     checked={isOpenSeries}
                                     onChange={() => {
                                         setIsOpenSeries(true);
-                                        setIsSeries(false); 
+                                        setIsSeries(false);
                                         // Cuando es Abierta, no hay índices, así que se fuerzan a null
-                                        setSeriesIndex(''); 
+                                        setSeriesIndex('');
                                         setSeriesTotal('');
                                     }}
                                     className="mr-2 rounded-full text-gold-500 focus:ring-gold-500"
@@ -973,18 +973,18 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                         {/* Inputs de Series Limitadas (Visibles solo si es Edición Limitada) */}
                         {isSeries && !isOpenSeries && (
                             <div className="flex gap-4 max-w-md mt-3 p-3 bg-stone-50 rounded border">
-                                <input 
-                                    type="number" 
-                                    value={seriesIndex} 
+                                <input
+                                    type="number"
+                                    value={seriesIndex}
                                     onChange={(e) => setSeriesIndex(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
                                     placeholder="N° Pieza (Ej: 1)"
                                     className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
                                     min="1"
                                     required
                                 />
-                                <input 
-                                    type="number" 
-                                    value={seriesTotal} 
+                                <input
+                                    type="number"
+                                    value={seriesTotal}
                                     onChange={(e) => setSeriesTotal(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
                                     placeholder="Total Edición (Ej: 50)"
                                     className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
@@ -994,10 +994,10 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                             </div>
                         )}
                     </div>
-                    
+
                     {/* Botón Guardar */}
                     <div className="col-span-6 mt-4">
-                        <button 
+                        <button
                             type="submit"
                             className="w-full bg-slate-700 text-white py-3 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors flex items-center justify-center gap-2 shadow-md"
                             disabled={!title.trim() || !dimensions.trim() || !technique.trim()}
@@ -1019,22 +1019,22 @@ interface ArtistDashboardProps {
     onLogout: () => void;
 }
 export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
-    
+
     // 🛑 Inicialización con los datos REALES del catálogo completo
     const [artworks, setArtworks] = useState<Artwork[]>(REAL_ARTWORKS);
-    
+
     // 🛑 Inicialización con los datos CORREGIDOS
     const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
-    
+
     // 🛑 CAMBIADO: artworkToManage se inicializa en null, pero en el botón se le asigna NEW_WORK_PLACEHOLDER (id: 0)
     const [artworkToManage, setArtworkToManage] = useState<Artwork | null>(null);
-    
+
     // 🖼️ Estado para controlar vista de Giclée
     const [showGiclee, setShowGiclee] = useState(false);
 
     // 🛑 Handler para añadir o editar obra (Acepta ahora code y status)
     const handleSaveArtwork = (artworkData: Omit<Artwork, 'id' | 'originalIndex'>, idToUpdate: number | null) => {
-        
+
         // El status ya viene determinado por el formulario (si hay código manual o no)
         const finalStatus = artworkData.code ? 'GENERADO' : 'PENDIENTE';
 
@@ -1042,8 +1042,8 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
             // EDICIÓN
             setArtworks(prevArtworks => prevArtworks.map(artwork => {
                 if (artwork.id === idToUpdate) {
-                    return { 
-                        ...artwork, 
+                    return {
+                        ...artwork,
                         ...artworkData,
                         status: finalStatus, // Asegura el estado correcto si se puso/quitó el código
                     };
@@ -1059,12 +1059,12 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                 ...artworkData,
                 status: finalStatus,
                 originalIndex: artworks.length, // Se añade al final
-            }; 
-            setArtworks(prevArtworks => [newArtwork, ...prevArtworks]); 
+            };
+            setArtworks(prevArtworks => [newArtwork, ...prevArtworks]);
         }
         setArtworkToManage(null); // Limpiar el estado de gestión
     };
-    
+
     // Handler para duplicar (Prepara el formulario con los datos de la obra original, pero con ID temporal -1 para que se cree como nueva)
     const handleDuplicateArtwork = (artwork: Artwork) => {
         const temporaryDuplicationArtwork: Artwork = {
@@ -1081,20 +1081,20 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     const handleGenerateCode = (id: number) => {
         setArtworks(prevArtworks => prevArtworks.map(artwork => {
             if (artwork.id === id && artwork.status === 'PENDIENTE') {
-                const newCode = generateSmartCode(artwork); 
+                const newCode = generateSmartCode(artwork);
                 return { ...artwork, code: newCode, status: 'GENERADO' };
             }
             return artwork;
         }));
     };
-    
+
     // Handler para eliminar obra
     const handleDeleteArtwork = (id: number) => {
         if (window.confirm("¿Seguro que quieres eliminar esta obra de la lista de gestión? Esta acción es irreversible.")) {
             setArtworks(prevArtworks => prevArtworks.filter(artwork => artwork.id !== id));
         }
     };
-    
+
     // 🛑 Obras ordenadas: Generadas primero, luego pendientes. Dentro de cada grupo, respeta el orden original (constants.ts).
     const sortedArtworks = useMemo(() => {
         // Se hace una copia para evitar mutar el estado original durante la ordenación.
@@ -1102,7 +1102,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
             // 1. Sort by Status (GENERADO: -1 / PENDIENTE: 1)
             if (a.status === 'GENERADO' && b.status === 'PENDIENTE') return -1;
             if (a.status === 'PENDIENTE' && b.status === 'GENERADO') return 1;
-            
+
             // 2. Sort by originalIndex (Mantiene el orden de constants.ts)
             return a.originalIndex - b.originalIndex;
         });
@@ -1111,15 +1111,15 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
 
     return (
         <div className="min-h-screen bg-slate-50 p-8 font-sans">
-        
+
             <div className="max-w-6xl mx-auto">
-                
+
                 {/* CABECERA Y BOTONES GLOBALES (LIMPIOS) */}
                 <div className="flex justify-between items-center mb-10 border-b pb-4">
                     <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
                         <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO
                     </h1>
-                    
+
                     {/* BOTÓN PERMANENTE DE NUEVA OBRA */}
                     <div className="flex gap-4">
                         {/* 🛑 FIX BOTÓN NUEVA OBRA: Usar el placeholder (id: 0) para forzar la apertura del modal */}
@@ -1138,8 +1138,8 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                         >
                             <Layout size={16} /> GICLÉE
                         </button>
-                        <button 
-                            onClick={onLogout} 
+                        <button
+                            onClick={onLogout}
                             className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-500 transition-colors py-3 px-4 border border-stone-200 rounded-lg hover:border-red-500"
                         >
                             <LogOut size={16} /> Salir
@@ -1173,19 +1173,19 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                                 settings={documentSettings}
                                 onGenerateCode={handleGenerateCode}
                                 onDelete={handleDeleteArtwork}
-                                onDuplicate={handleDuplicateArtwork} 
-                                onEdit={setArtworkToManage} 
+                                onDuplicate={handleDuplicateArtwork}
+                                onEdit={setArtworkToManage}
                             />
                         ))
                     )}
                 </div>
 
             </div>
-            
+
             {/* FORMULARIO DE GESTIÓN DE OBRA (Flotante) */}
             {artworkToManage !== null && (
-                <ArtworkManagementForm 
-                    onSave={handleSaveArtwork} 
+                <ArtworkManagementForm
+                    onSave={handleSaveArtwork}
                     artworkToManage={artworkToManage}
                     onCancel={() => setArtworkToManage(null)}
                 />
@@ -1195,7 +1195,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
             {showGiclee && (
                 <div className="fixed inset-0 bg-black/80 z-50 overflow-y-auto">
                     <div className="min-h-screen">
-                        <button 
+                        <button
                             onClick={() => setShowGiclee(false)}
                             className="fixed top-6 left-6 flex items-center gap-2 text-white hover:text-gold-400 transition-colors bg-slate-800/50 backdrop-blur-sm px-4 py-2 rounded-lg z-[70]"
                         >
@@ -1206,7 +1206,7 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                     </div>
                 </div>
             )}
-            
+
         </div>
     );
 };

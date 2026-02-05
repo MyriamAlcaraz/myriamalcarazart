@@ -5,17 +5,17 @@ import { ARTIST_INFO } from '../constants';
 import { Artwork } from '../types';
 
 interface CertificateProps {
-    artwork: Artwork;
-    isPixelatedDemo?: boolean;
+	artwork: Artwork;
+	isPixelatedDemo?: boolean;
 }
 
 export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDemo = false }) => {
-	const currentDate = new Date().toLocaleDateString('es-ES', {	
-		day: '2-digit',	
-		month: '2-digit',	
-		year: 'numeric'	
+	const currentDate = new Date().toLocaleDateString('es-ES', {
+		day: '2-digit',
+		month: '2-digit',
+		year: 'numeric'
 	});
-	
+
 	// Generar ID: MA-AÑO-[2 letras del título][edición]
 	// Ejemplo: "Autorretrato" → MA-2026-AU1/1
 	const titleInitials = artwork.title
@@ -27,25 +27,25 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 	const pixelationClass = isPixelatedDemo ? 'filter blur-sm pointer-events-none select-none' : '';
 
 	return (
-		<div 
+		<div
 			className="w-[210mm] h-[297mm] p-[18mm] mx-auto shadow-2xl relative text-slate-800 print:shadow-none print:w-full print:h-full overflow-hidden"
-			style={{ 
+			style={{
 				backgroundColor: '#fffdf8',
 				fontFamily: "'Montserrat', sans-serif"
 			}}
 		>
 			{/* Marco Exterior Dorado */}
-			<div 
+			<div
 				className="h-full p-[12mm] relative flex flex-col"
-				style={{ border: '2px solid #c5a059' }}
+				style={{ border: '12px solid #c5a059' }}
 			>
 				{/* Marco Interior Decorativo */}
-				<div 
+				<div
 					className="absolute pointer-events-none"
-					style={{ 
-						top: '6px', 
-						left: '6px', 
-						right: '6px', 
+					style={{
+						top: '6px',
+						left: '6px',
+						right: '6px',
 						bottom: '6px',
 						border: '1px solid #c5a059',
 						opacity: 0.6
@@ -54,9 +54,9 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 
 				{/* 1. LOGO PEQUEÑO */}
 				<header className="text-center mb-2">
-					<img 
-						src="/logo-myriam.png" 
-						alt="Logo Myriam Alcaraz" 
+					<img
+						src="/logo-myriam.png"
+						alt="Logo Myriam Alcaraz"
 						className="mx-auto"
 						style={{ maxWidth: '80px', height: 'auto' }}
 					/>
@@ -64,9 +64,9 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 
 				{/* 2. TÍTULO DEL CERTIFICADO */}
 				<div className="text-center mb-4">
-					<h1 
+					<h1
 						className="inline-block"
-						style={{ 
+						style={{
 							fontFamily: "'Cinzel', serif",
 							fontSize: '20pt',
 							letterSpacing: '4px',
@@ -81,9 +81,9 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 				</div>
 
 				{/* 3. TEXTO INTRODUCTORIO - TODO JUNTO */}
-				<div 
+				<div
 					className="text-center mb-4"
-					style={{ 
+					style={{
 						fontSize: '10pt',
 						lineHeight: '1.6',
 						fontWeight: 300,
@@ -94,9 +94,9 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 						Por la presente se certifica que la obra de arte descrita a continuación
 						es una creación original y auténtica de la artista:
 					</p>
-					<span 
+					<span
 						className="inline-block"
-						style={{ 
+						style={{
 							fontFamily: "'Cinzel', serif",
 							fontSize: '14pt',
 							fontWeight: 700,
@@ -106,9 +106,9 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 					>
 						{ARTIST_INFO.name.toUpperCase()}
 					</span>
-					<span 
+					<span
 						className="block uppercase"
-						style={{ 
+						style={{
 							fontSize: '8pt',
 							letterSpacing: '2px',
 							color: '#555'
@@ -120,16 +120,16 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 
 				{/* 4. IMAGEN DE LA OBRA - MÁS GRANDE (PIXELADO EN DEMO) */}
 				<div className={`text-center mb-4 ${pixelationClass}`}>
-					<div 
+					<div
 						className="mx-auto p-2 inline-block"
-						style={{ 
+						style={{
 							backgroundColor: '#f5f5f0',
 							boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)'
 						}}
 					>
-						<img 
-							src={artwork.image} 
-							alt={`Obra: ${artwork.title}`} 
+						<img
+							src={artwork.image}
+							alt={`Obra: ${artwork.title}`}
 							className="mx-auto"
 							style={{ maxHeight: '180px', width: 'auto', objectFit: 'contain' }}
 						/>
@@ -140,7 +140,7 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 				</div>
 
 				{/* 5. DETALLES DE LA OBRA (PIXELADO EN DEMO) */}
-				<div 
+				<div
 					className={`mx-auto w-[90%] mb-4 ${pixelationClass}`}
 					style={{ fontFamily: "'Playfair Display', serif" }}
 				>
@@ -152,20 +152,20 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 						{ label: 'ID Referencia:', value: certificateId }
 					].map((item, index) => (
 						<div key={index} className="flex mb-2 items-baseline">
-							<span 
+							<span
 								className="flex-shrink-0"
-								style={{ 
-									fontWeight: 600, 
-									fontSize: '9pt', 
+								style={{
+									fontWeight: 600,
+									fontSize: '9pt',
 									width: '100px',
 									color: '#444'
 								}}
 							>
 								{item.label}
 							</span>
-							<span 
+							<span
 								className="flex-grow italic pl-2"
-								style={{ 
+								style={{
 									borderBottom: '1px dotted #999',
 									fontSize: '9pt',
 									color: '#000'
@@ -178,11 +178,11 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 				</div>
 
 				{/* 6. NOTA DE CERTIFICACIÓN */}
-				<p 
+				<p
 					className="text-center italic mb-4"
 					style={{ fontSize: '8pt', color: '#555', lineHeight: '1.4' }}
 				>
-					Este documento certifica que la obra ha sido inspeccionada y aprobada personalmente por la artista.<br/>
+					Este documento certifica que la obra ha sido inspeccionada y aprobada personalmente por la artista.<br />
 					Todos los derechos de autor y reproducción están reservados.
 				</p>
 
@@ -190,8 +190,8 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 				<div className={`flex justify-between items-start px-8 mb-1 ${pixelationClass}`}>
 					{/* Fecha a la IZQUIERDA */}
 					<div className="text-left" style={{ width: '45%' }}>
-						<p 
-							style={{ 
+						<p
+							style={{
 								fontSize: '9pt',
 								color: '#333',
 								margin: 0
@@ -200,7 +200,7 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 							FECHA: {currentDate}
 						</p>
 					</div>
-					
+
 					{/* Firma a la DERECHA */}
 					<div className="text-right" style={{ width: '45%' }}>
 						{/* Espacio para sello y firma con bolígrafo */}
@@ -208,8 +208,8 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 						{/* Línea para firmar encima */}
 						<div style={{ borderTop: '1px solid #333', marginBottom: '5px' }}></div>
 						{/* Nombre */}
-						<p 
-							style={{ 
+						<p
+							style={{
 								fontSize: '10pt',
 								fontWeight: 'bold',
 								color: '#000',
@@ -219,8 +219,8 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 							Myriam Alcaraz
 						</p>
 						{/* Título */}
-						<p 
-							style={{ 
+						<p
+							style={{
 								fontSize: '8pt',
 								color: '#333',
 								margin: 0
@@ -232,9 +232,9 @@ export const Certificate: React.FC<CertificateProps> = ({ artwork, isPixelatedDe
 				</div>
 
 				{/* 8. INFORMACIÓN DE CONTACTO - AL FINAL */}
-				<div 
+				<div
 					className="text-center uppercase pt-2 mt-auto"
-					style={{ 
+					style={{
 						fontSize: '7pt',
 						letterSpacing: '1px',
 						color: '#777',
