@@ -136,9 +136,6 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
               >
                 SOLICITAR ADQUISICIÓN
               </button>
-              <p className="text-stone-500 text-sm italic text-center mt-4">
-                Se abrirá su cliente de correo para finalizar la solicitud.
-              </p>
             </div>
           )}
 
