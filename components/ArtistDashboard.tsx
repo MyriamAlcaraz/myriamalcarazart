@@ -1018,11 +1018,11 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
 const SalesReportModal: React.FC<{ artworks: Artwork[], onClose: () => void }> = ({ artworks, onClose }) => {
     // DATOS MAESTROS DE GICLÉE (Costes Base Raúl & PVP Actualizados)
     const GICLEE_DATA = [
-        { id: 'standard', name: 'Estándar (40cm)', pvp: 180, cost: 27, limit: 100 },
-        { id: 'intermediate', name: 'Intermedio (50cm)', pvp: 280, cost: 56, limit: 75 },
-        { id: 'medium', name: 'Mediano (70cm)', pvp: 450, cost: 104, limit: 50 },
-        { id: 'large', name: 'Grande (90cm)', pvp: 680, cost: 130, limit: 25 }, // Est. cost
-        { id: 'collection', name: 'Colección (100cm)', pvp: 950, cost: 200, limit: 10 }
+        { id: 'standard', name: 'Estándar (40cm)', pvp: 180, cost: 27, limit: 30 },
+        { id: 'intermediate', name: 'Intermedio (50cm)', pvp: 280, cost: 56, limit: 25 },
+        { id: 'medium', name: 'Mediano (70cm)', pvp: 450, cost: 104, limit: 15 },
+        { id: 'large', name: 'Grande (90cm)', pvp: 680, cost: 130, limit: 10 }, // Est. cost
+        { id: 'collection', name: 'Colección (100cm)', pvp: 950, cost: 200, limit: 5 }
     ];
 
     const today = new Date().toLocaleDateString('es-ES');

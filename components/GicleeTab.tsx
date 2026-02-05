@@ -24,42 +24,42 @@ const GicleeTab: React.FC = () => {
     {
       id: 'standard',
       name: 'Formato Estándar',
-      label: 'Lado mayor aprox. 40 cm',
+      label: '(40 cm | Ed. Limitada de 30)',
       price: '180€',
       scale: 0.40,
-      tirada: 100
+      tirada: 30
     },
     {
       id: 'intermediate',
       name: 'Formato Intermedio',
-      label: 'Lado mayor aprox. 50 cm',
+      label: '(50 cm | Ed. Limitada de 25)',
       price: '280€',
       scale: 0.50,
-      tirada: 75
+      tirada: 25
     },
     {
       id: 'medium',
       name: 'Formato Mediano',
-      label: 'Lado mayor aprox. 70 cm',
+      label: '(70 cm | Ed. Limitada de 15)',
       price: '450€',
       scale: 0.70,
-      tirada: 50
+      tirada: 15
     },
     {
       id: 'large',
       name: 'Formato Grande',
-      label: 'Lado mayor aprox. 90 cm',
+      label: '(90 cm | Ed. Limitada de 10)',
       price: '680€',
       scale: 0.90,
-      tirada: 25
+      tirada: 10
     },
     {
       id: 'collection',
       name: 'Formato Colección',
-      label: 'Lado mayor aprox. 100 cm',
+      label: '(100 cm | Ed. Limitada de 5)',
       price: '950€',
       scale: 1.00,
-      tirada: 10
+      tirada: 5
     }
   ], []);
 
