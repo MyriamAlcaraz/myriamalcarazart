@@ -77,7 +77,11 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
 
         {/* Selector de Tamaños */}
         <section className="mb-16">
-          <h2 className="text-2xl font-serif text-slate-800 mb-6">Selecciona tu Formato</h2>
+          <h2 className="text-2xl font-serif text-slate-800 mb-2">Elección de Formato</h2>
+          <p className="text-stone-400 text-sm italic font-serif mb-6 leading-relaxed">
+            * Las dimensiones finales pueden variar ligeramente para respetar la proporción y composición original de la obra, garantizando así la integridad artística de la reproducción.
+          </p>
+
           <div className="space-y-4">
             {sizes.map((size) => (
               <div
@@ -103,9 +107,6 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
                 </div>
               </div>
             ))}
-            <p className="text-stone-500 text-xs italic text-center mt-6 max-w-lg mx-auto leading-relaxed font-serif">
-              * Las dimensiones finales pueden variar ligeramente para respetar la proporción y composición original de la obra, garantizando así la integridad artística de la reproducción.
-            </p>
           </div>
 
           {/* Botón de Acción (Solo aparece si hay tamaño seleccionado) */}
