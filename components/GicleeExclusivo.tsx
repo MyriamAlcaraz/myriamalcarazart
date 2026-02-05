@@ -107,6 +107,39 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
               * Las dimensiones finales pueden variar ligeramente para respetar la proporción y composición original de la obra, garantizando así la integridad artística de la reproducción.
             </p>
           </div>
+
+          {/* Botón de Acción (Solo aparece si hay tamaño seleccionado) */}
+          {selectedSize && (
+            <div className="text-center mt-12 animate-fade-in">
+              <button
+                onClick={() => {
+                  const selectedFormat = sizes.find(s => s.id === selectedSize);
+                  const subject = encodeURIComponent(`Interés en reproducción Giclée de alta fidelidad - ${selectedFormat?.name}`);
+                  const body = encodeURIComponent(
+                    `Estimada Myriam Alcaraz,
+\nLe escribo con gran interés en adquirir una reproducción Giclée de alta fidelidad de su obra.
+\nLos detalles de mi elección son:
+\n• Obra: [Indique aquí el Título de la Obra]
+• Formato: ${selectedFormat?.name} (${selectedFormat?.label})
+• Importe: ${selectedFormat?.price}
+• Especificaciones: Impresión pigmentada Museum Quality sobre papel Hahnemühle William Turner 310g.
+\nQuedo a la espera de su confirmación y detalles para proceder con el pago y envío.
+\nAtentamente,
+\n[Su Nombre y Apellidos]
+[Teléfono]`
+                  );
+                  window.location.href = `mailto:myriamhotmail@hotmail.com?subject=${subject}&body=${body}`;
+                }}
+                className="bg-gold-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-gold-600 transition-colors text-lg tracking-wider shadow-xl hover:shadow-2xl transform hover:scale-105 duration-300"
+              >
+                SOLICITAR ADQUISICIÓN
+              </button>
+              <p className="text-stone-500 text-sm italic text-center mt-4">
+                Se abrirá su cliente de correo para finalizar la solicitud.
+              </p>
+            </div>
+          )}
+
         </section>
 
         {/* Nota de Exclusividad */}
