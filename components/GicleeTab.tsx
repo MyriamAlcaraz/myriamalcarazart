@@ -21,37 +21,37 @@ const GicleeTab: React.FC = () => {
 
   // Cálculo automático de medidas proporcionales con información de tirada
   const sizes = useMemo(() => [
-    { 
-      id: 'xs', 
-      name: 'Formato Colección', 
+    {
+      id: 'xs',
+      name: 'Formato Colección',
       price: '120€',
       scale: 0.20,
       tirada: 150
     },
-    { 
-      id: 'small', 
-      name: 'Formato Galería', 
+    {
+      id: 'small',
+      name: 'Formato Galería',
       price: '180€',
       scale: 0.35,
       tirada: 75
     },
-    { 
-      id: 'medium', 
-      name: 'Formato Intermedio', 
+    {
+      id: 'medium',
+      name: 'Formato Intermedio',
       price: '450€',
       scale: 0.50,
       tirada: 50
     },
-    { 
-      id: 'large', 
-      name: 'Formato Prestigio', 
+    {
+      id: 'large',
+      name: 'Formato Prestigio',
       price: '650€',
       scale: 0.70,
       tirada: 25
     },
-    { 
-      id: 'special', 
-      name: 'Fiel al Óleo Original', 
+    {
+      id: 'special',
+      name: 'Fiel al Óleo Original',
       price: '950€',
       scale: 1.00,
       tirada: 10
@@ -69,7 +69,7 @@ const GicleeTab: React.FC = () => {
         tiradaText: ''
       }));
     }
-    
+
     const originalDims = parseDimensions(selectedArtwork.dimensions);
     return sizes.map(size => {
       const scaledWidth = Math.round(originalDims.width * size.scale);
@@ -86,7 +86,7 @@ const GicleeTab: React.FC = () => {
   return (
     <div className="w-full min-h-screen bg-white animate-fade-in z-[60] relative">
       <div className="max-w-4xl mx-auto px-6 py-12 space-y-16">
-        
+
         {/* Header */}
         <div className="text-center">
           <div className="flex justify-center mb-6">
@@ -105,7 +105,7 @@ const GicleeTab: React.FC = () => {
         <section>
           <h2 className="text-3xl font-serif text-slate-800 mb-6 text-center">Selecciona una Obra</h2>
           <div className="max-w-md mx-auto">
-            <select 
+            <select
               value={selectedArtwork?.id || ''}
               onChange={(e) => {
                 const artwork = ARTWORKS.find(a => a.id === e.target.value);
@@ -136,7 +136,7 @@ const GicleeTab: React.FC = () => {
           <h2 className="text-3xl font-serif text-slate-800 mb-6 text-center">La Calidad</h2>
           <div className="bg-white p-8 rounded-lg shadow-sm border border-stone-100">
             <p className="text-stone-700 leading-relaxed text-lg text-center">
-              La Calidad: Hahnemühle William Turner 310g. 100% algodón, textura rugosa que respira la misma alma que el lienzo original. Tintas pigmentadas minerales (duración +100 años).
+              Cada obra se imprime en el prestigioso papel Hahnemühle William Turner de 310g, un papel 100% algodón moldeado en tina. Su superficie tiene una textura mate sutil y genuina que preserva la profundidad y el carácter de mis óleos, aportando una tridimensionalidad y una riqueza cromática que solo los estándares de conservación de museos pueden ofrecer. Una joya eterna para tu colección.
             </p>
           </div>
         </section>
@@ -174,24 +174,22 @@ const GicleeTab: React.FC = () => {
               <div
                 key={size.id}
                 onClick={() => selectedArtwork && setSelectedSize(size.id)}
-                className={`bg-white p-6 rounded-lg border-2 transition-all ${
-                  !selectedArtwork 
+                className={`bg-white p-6 rounded-lg border-2 transition-all ${!selectedArtwork
                     ? 'border-stone-100 opacity-50 cursor-not-allowed'
-                    : selectedSize === size.id 
-                      ? 'border-gold-500 shadow-lg cursor-pointer' 
+                    : selectedSize === size.id
+                      ? 'border-gold-500 shadow-lg cursor-pointer'
                       : 'border-stone-100 hover:border-stone-300 cursor-pointer'
-                }`}
+                  }`}
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                        !selectedArtwork 
+                      <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${!selectedArtwork
                           ? 'border-stone-200 bg-stone-50'
-                          : selectedSize === size.id 
-                            ? 'border-gold-500 bg-gold-500' 
+                          : selectedSize === size.id
+                            ? 'border-gold-500 bg-gold-500'
                             : 'border-stone-300'
-                      }`}>
+                        }`}>
                         {selectedSize === size.id && selectedArtwork && <Check size={16} className="text-white" />}
                       </div>
                       <h3 className={`font-semibold ${!selectedArtwork ? 'text-stone-400' : 'text-slate-800'}`}>
@@ -234,7 +232,7 @@ const GicleeTab: React.FC = () => {
         {/* Botón de Acción */}
         {selectedSize && selectedArtwork && (
           <div className="text-center">
-            <button 
+            <button
               onClick={() => {
                 const selectedFormat = sizesWithDimensions.find(s => s.id === selectedSize);
                 const subject = encodeURIComponent(`Solicitud de adquisición: Edición Giclée - ${selectedArtwork.title}`);

@@ -19,17 +19,17 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
   return (
     <div className="min-h-screen bg-stone-50 animate-fade-in">
       <div className="max-w-4xl mx-auto px-6 py-12">
-        
+
         {/* Header */}
         <div className="mb-12">
-          <button 
+          <button
             onClick={onBack}
             className="flex items-center gap-2 text-stone-600 hover:text-gold-500 transition-colors mb-8"
           >
             <ArrowLeft size={20} />
             <span className="text-sm tracking-wider uppercase">Volver</span>
           </button>
-          
+
           <h1 className="text-4xl md:text-5xl font-serif text-slate-800 mb-4">
             Giclée Exclusivo
           </h1>
@@ -44,8 +44,7 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
           <h2 className="text-2xl font-serif text-slate-800 mb-6">La Calidad</h2>
           <div className="bg-white p-8 rounded-lg shadow-sm border border-stone-100">
             <p className="text-stone-700 leading-relaxed text-lg">
-              Hahnemühle William Turner 310g. 100% algodón, textura rugosa que respira la misma alma que el lienzo original. 
-              Tintas pigmentadas minerales (duración +100 años).
+              Cada obra se imprime en el prestigioso papel Hahnemühle William Turner de 310g, un papel 100% algodón moldeado en tina. Su superficie tiene una textura mate sutil y genuina que preserva la profundidad y el carácter de mis óleos, aportando una tridimensionalidad y una riqueza cromática que solo los estándares de conservación de museos pueden ofrecer. Una joya eterna para tu colección.
             </p>
           </div>
         </section>
@@ -81,17 +80,15 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
               <div
                 key={size.id}
                 onClick={() => setSelectedSize(size.id)}
-                className={`bg-white p-6 rounded-lg border-2 cursor-pointer transition-all ${
-                  selectedSize === size.id 
-                    ? 'border-gold-500 shadow-lg' 
+                className={`bg-white p-6 rounded-lg border-2 cursor-pointer transition-all ${selectedSize === size.id
+                    ? 'border-gold-500 shadow-lg'
                     : 'border-stone-100 hover:border-stone-300'
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                      selectedSize === size.id ? 'border-gold-500 bg-gold-500' : 'border-stone-300'
-                    }`}>
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedSize === size.id ? 'border-gold-500 bg-gold-500' : 'border-stone-300'
+                      }`}>
                       {selectedSize === size.id && <Check size={16} className="text-white" />}
                     </div>
                     <div>
