@@ -22,36 +22,41 @@ const GicleeTab: React.FC = () => {
   // Cálculo automático de medidas proporcionales con información de tirada
   const sizes = useMemo(() => [
     {
-      id: 'xs',
-      name: 'Formato Colección',
-      price: '120€',
-      scale: 0.20,
-      tirada: 150
+      id: 'standard',
+      name: 'Formato Estándar',
+      label: 'Lado mayor aprox. 40 cm',
+      price: '180€',
+      scale: 0.40,
+      tirada: 100
     },
     {
-      id: 'small',
-      name: 'Formato Galería',
-      price: '180€',
-      scale: 0.35,
+      id: 'intermediate',
+      name: 'Formato Intermedio',
+      label: 'Lado mayor aprox. 50 cm',
+      price: '290€',
+      scale: 0.50,
       tirada: 75
     },
     {
       id: 'medium',
-      name: 'Formato Intermedio',
+      name: 'Formato Mediano',
+      label: 'Lado mayor aprox. 70 cm',
       price: '450€',
-      scale: 0.50,
+      scale: 0.70,
       tirada: 50
     },
     {
       id: 'large',
-      name: 'Formato Prestigio',
+      name: 'Formato Grande',
+      label: 'Lado mayor aprox. 90 cm',
       price: '650€',
-      scale: 0.70,
+      scale: 0.90,
       tirada: 25
     },
     {
-      id: 'special',
-      name: 'Fiel al Óleo Original',
+      id: 'collection',
+      name: 'Formato Colección',
+      label: 'Lado mayor aprox. 100 cm',
       price: '950€',
       scale: 1.00,
       tirada: 10
@@ -77,7 +82,7 @@ const GicleeTab: React.FC = () => {
       return {
         ...size,
         dimensions: `${scaledWidth}x${scaledHeight} cm`,
-        displayName: `${size.name} (${scaledWidth}x${scaledHeight} cm)`,
+        displayName: `${size.name} (${size.label})`, // Use the label (e.g. "Lado mayor aprox 40cm") instead of exact px
         tiradaText: `Edición limitada de ${size.tirada} ejemplares`
       };
     });
@@ -125,8 +130,8 @@ const GicleeTab: React.FC = () => {
                 </option>
               ))}
             </select>
-            <p className="text-stone-600 text-sm italic text-center mt-3">
-              Medidas aproximadas basadas en la proporción original de la obra.
+            <p className="text-stone-500 text-xs italic text-center mt-3 max-w-lg mx-auto leading-relaxed font-serif">
+              * Las dimensiones finales pueden variar ligeramente para respetar la proporción y composición original de la obra, garantizando así la integridad artística de la reproducción.
             </p>
           </div>
         </section>
@@ -175,20 +180,20 @@ const GicleeTab: React.FC = () => {
                 key={size.id}
                 onClick={() => selectedArtwork && setSelectedSize(size.id)}
                 className={`bg-white p-6 rounded-lg border-2 transition-all ${!selectedArtwork
-                    ? 'border-stone-100 opacity-50 cursor-not-allowed'
-                    : selectedSize === size.id
-                      ? 'border-gold-500 shadow-lg cursor-pointer'
-                      : 'border-stone-100 hover:border-stone-300 cursor-pointer'
+                  ? 'border-stone-100 opacity-50 cursor-not-allowed'
+                  : selectedSize === size.id
+                    ? 'border-gold-500 shadow-lg cursor-pointer'
+                    : 'border-stone-100 hover:border-stone-300 cursor-pointer'
                   }`}
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${!selectedArtwork
-                          ? 'border-stone-200 bg-stone-50'
-                          : selectedSize === size.id
-                            ? 'border-gold-500 bg-gold-500'
-                            : 'border-stone-300'
+                        ? 'border-stone-200 bg-stone-50'
+                        : selectedSize === size.id
+                          ? 'border-gold-500 bg-gold-500'
+                          : 'border-stone-300'
                         }`}>
                         {selectedSize === size.id && selectedArtwork && <Check size={16} className="text-white" />}
                       </div>

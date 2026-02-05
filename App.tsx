@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import PublicSite from './components/PublicSite'; 
+import PublicSite from './components/PublicSite';
 import { ArtistDashboard } from './components/ArtistDashboard';
 import { DigitalCompanion } from './components/DigitalCompanion';
 import GicleeExclusivo from './components/GicleeExclusivo';
-import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield } from 'lucide-react'; 
+import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield } from 'lucide-react';
 
 // --- CONFIGURACIÓN DE SEGURIDAD (PASSWORD) ---
-const PASSWORD = "arte2026"; 
+const PASSWORD = "arte2026";
 
 const App: React.FC = () => {
   // --- ESTADO Y HOOKS ---
   const [isAuthenticated, setIsAuthenticated] = useState(true); // 🔓 ABIERTO: Acceso público sin contraseña
-  const [showLoginModal, setShowLoginModal] = useState(false); 
-  
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
   // 🛑 ESTADO: Para el segundo candado (acceso a ESTUDIO)
   const [showStudioLoginModal, setShowStudioLoginModal] = useState(false);
 
@@ -21,10 +21,10 @@ const App: React.FC = () => {
   // 'giclee' = Página Giclée Exclusivo (oculta)
   const [view, setView] = useState<'public' | 'artist' | 'giclee'>('public');
   const [selectedCompanionId, setSelectedCompanionId] = useState<string | null>(null);
-  
+
   // 🛑 ESTADO: Pestaña activa en PublicSite (para mostrar candado solo en 'prices')
   const [activePublicTab, setActivePublicTab] = useState<'portfolio' | 'bio' | 'prices' | 'app'>('portfolio');
-  
+
   // Hooks para el formulario de login (reutilizados para ambos candados)
   const [passwordInput, setPasswordInput] = useState("");
   const [error, setError] = useState(false);
@@ -33,11 +33,11 @@ const App: React.FC = () => {
   useEffect(() => {
     const savedAuth = localStorage.getItem('myriam_auth');
     if (savedAuth === 'true') {
-        setIsAuthenticated(true);
-        setView('public'); 
+      setIsAuthenticated(true);
+      setView('public');
     }
   }, []);
-  
+
   // 🛑 ELIMINAMOS EL useEffect que causaba el conflicto de timing.
   // ---------------------------------------------------------
 
@@ -48,12 +48,12 @@ const App: React.FC = () => {
       setIsAuthenticated(true);
       localStorage.setItem('myriam_auth', 'true');
       setError(false);
-      setShowLoginModal(false); 
-      setView('public'); 
+      setShowLoginModal(false);
+      setView('public');
       setPasswordInput(""); // Limpiar para el siguiente uso
     } else {
       setError(true);
-      setPasswordInput(""); 
+      setPasswordInput("");
     }
   };
 
@@ -61,15 +61,15 @@ const App: React.FC = () => {
   const handleStudioLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (passwordInput === PASSWORD) {
-        // Primero, cerramos el modal.
-        setShowStudioLoginModal(false);
-        // Segundo, cambiamos la vista. El modal ya no interfiere.
-        setView('artist'); 
-        setError(false);
-        setPasswordInput(""); // Limpiar la clave
+      // Primero, cerramos el modal.
+      setShowStudioLoginModal(false);
+      // Segundo, cambiamos la vista. El modal ya no interfiere.
+      setView('artist');
+      setError(false);
+      setPasswordInput(""); // Limpiar la clave
     } else {
-        setError(true);
-        setPasswordInput("");
+      setError(true);
+      setPasswordInput("");
     }
   };
 
@@ -77,7 +77,7 @@ const App: React.FC = () => {
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('myriam_auth');
-    setView('public'); 
+    setView('public');
   };
 
 
@@ -87,13 +87,13 @@ const App: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-stone-50 flex flex-col items-center justify-center p-6 relative font-serif">
-        
+
         {/* Contenido Público: Logo y Mensaje de Construcción */}
         <div className="text-center animate-fade-in max-w-lg">
-          <img 
-            src="/logo-myriam.png" 
-            alt="Myriam Alcaraz" 
-            className="h-24 md:h-32 w-auto mx-auto mb-8 object-contain opacity-90" 
+          <img
+            src="/logo-myriam.png"
+            alt="Myriam Alcaraz"
+            className="h-24 md:h-32 w-auto mx-auto mb-8 object-contain opacity-90"
           />
           <h1 className="text-2xl md:text-4xl text-slate-800 tracking-widest uppercase mb-4">
             Sitio Web en Construcción
@@ -106,7 +106,7 @@ const App: React.FC = () => {
         </div>
 
         {/* 🔒 BOTÓN DE ACCESO PRIVADO (Candado discreto) */}
-        <button 
+        <button
           onClick={() => setShowLoginModal(true)}
           className="absolute bottom-6 right-6 text-stone-300 hover:text-gold-500 transition-colors p-2"
           title="Acceso Privado"
@@ -118,8 +118,8 @@ const App: React.FC = () => {
         {showLoginModal && (
           <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
             <div className="bg-white p-8 rounded-xl shadow-2xl max-w-sm w-full relative animate-scale-in">
-              
-              <button 
+
+              <button
                 onClick={() => setShowLoginModal(false)}
                 className="absolute top-4 right-4 text-slate-400 hover:text-slate-800"
                 aria-label="Cerrar"
@@ -137,15 +137,14 @@ const App: React.FC = () => {
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
-                    placeholder="Introduce tu clave privada" 
+                    placeholder="Introduce tu clave privada"
                     value={passwordInput}
                     onChange={(e) => {
                       setPasswordInput(e.target.value);
                       if (error) setError(false);
                     }}
-                    className={`w-full p-3 pr-12 text-center border-2 rounded-lg outline-none transition-all focus:border-gold-500 ${
-                      error ? 'border-red-500 bg-red-50' : 'border-stone-200'
-                    }`}
+                    className={`w-full p-3 pr-12 text-center border-2 rounded-lg outline-none transition-all focus:border-gold-500 ${error ? 'border-red-500 bg-red-50' : 'border-stone-200'
+                      }`}
                     autoFocus
                   />
                   <button
@@ -159,7 +158,7 @@ const App: React.FC = () => {
                 </div>
                 {error && <p className="text-xs text-red-500 text-center font-bold">Clave incorrecta</p>}
                 <button type="submit" className="bg-gold-500 text-white py-3 rounded-lg font-bold hover:bg-gold-600 transition-colors text-sm tracking-wider flex items-center justify-center gap-2">
-                    ACCEDER A LA PREVIEW <ArrowRight size={18} />
+                  ACCEDER A LA PREVIEW <ArrowRight size={18} />
                 </button>
               </form>
             </div>
@@ -174,13 +173,14 @@ const App: React.FC = () => {
   // ---------------------------------------------------------
   return (
     <div className="min-h-screen animate-fade-in relative">
-      
+
       {/* VISTA PRINCIPAL (Alterna entre PublicSite, ArtistDashboard y GicleeExclusivo) */}
       {view === 'public' ? (
-        <PublicSite 
-            onOpenCompanion={(id) => setSelectedCompanionId(id)} 
-            onOpenStudioLogin={() => setShowStudioLoginModal(true)}
-            onTabChange={(tab) => setActivePublicTab(tab)}
+        <PublicSite
+          onOpenCompanion={(id) => setSelectedCompanionId(id)}
+          onOpenStudioLogin={() => setShowStudioLoginModal(true)}
+          onOpenGiclee={() => setView('giclee')}
+          onTabChange={(tab) => setActivePublicTab(tab)}
         />
       ) : view === 'giclee' ? (
         <GicleeExclusivo onBack={() => setView('public')} />
@@ -193,94 +193,92 @@ const App: React.FC = () => {
       {/* En modo público: solo visible en pestaña 'prices', completamente invisible en otras */}
       {(view === 'artist' || activePublicTab === 'prices') && (
         <div className="fixed bottom-4 right-4 z-[9999]">
-          
+
           {/* 🛑 Botón de ESTUDIO/Vista Previa */}
-          <button 
+          <button
             onClick={() => {
               if (view === 'public') {
                 setShowStudioLoginModal(true);
               } else {
-                setView('public'); 
+                setView('public');
               }
             }}
-            className={`p-2 rounded-full transition-all ${
-              view === 'public' 
-                ? 'opacity-0 hover:opacity-10 bg-transparent' 
+            className={`p-2 rounded-full transition-all ${view === 'public'
+                ? 'opacity-0 hover:opacity-10 bg-transparent'
                 : 'bg-slate-900/50 backdrop-blur shadow-xl hover:scale-110 text-white/70 hover:text-gold-500'
-            }`}
+              }`}
             style={view === 'public' ? { background: 'none', boxShadow: 'none' } : {}}
-            title={view === 'public' ? "" : "Volver a Vista Previa"} 
+            title={view === 'public' ? "" : "Volver a Vista Previa"}
           >
-            {view === 'public' ? <Lock size={14} className="text-gray-300" /> : <Eye size={16} />} 
+            {view === 'public' ? <Lock size={14} className="text-gray-300" /> : <Eye size={16} />}
           </button>
-          
+
         </div>
       )}
 
       {/* 🛑 MODAL DEL SEGUNDO CANDADO (ACCESO A ESTUDIO) */}
       {showStudioLoginModal && (
-          <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white p-8 rounded-xl shadow-2xl max-w-sm w-full relative animate-scale-in">
-              
-              <button 
-                onClick={() => {
-                    setShowStudioLoginModal(false);
-                    setError(false);
-                    setPasswordInput(""); // Limpiar input
-                }}
-                className="absolute top-4 right-4 text-slate-400 hover:text-slate-800"
-                aria-label="Cerrar"
-              >
-                <X size={20} />
-              </button>
+        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-8 rounded-xl shadow-2xl max-w-sm w-full relative animate-scale-in">
 
-              <div className="text-center mb-6">
-                <Shield size={32} className="text-gold-500 mx-auto mb-2" />
-                <h2 className="text-xl font-bold text-slate-800">Acceso a ESTUDIO</h2>
-                <p className="text-sm text-slate-500">Introduce la clave para acceder a la gestión.</p>
-              </div>
+            <button
+              onClick={() => {
+                setShowStudioLoginModal(false);
+                setError(false);
+                setPasswordInput(""); // Limpiar input
+              }}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-800"
+              aria-label="Cerrar"
+            >
+              <X size={20} />
+            </button>
 
-              {/* Utiliza el handler handleStudioLogin (CORREGIDO) */}
-              <form onSubmit={handleStudioLogin} className="flex flex-col gap-4"> 
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Introduce tu clave privada" 
-                    value={passwordInput}
-                    onChange={(e) => {
-                      setPasswordInput(e.target.value);
-                      if (error) setError(false);
-                    }}
-                    className={`w-full p-3 pr-12 text-center border-2 rounded-lg outline-none transition-all focus:border-gold-500 ${
-                      error ? 'border-red-500 bg-red-50' : 'border-stone-200'
-                    }`}
-                    autoFocus
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(prev => !prev)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gold-500"
-                    aria-label={showPassword ? "Ocultar clave" : "Mostrar clave"}
-                  >
-                    {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
-                  </button>
-                </div>
-                {error && <p className="text-xs text-red-500 text-center font-bold">Clave incorrecta</p>}
-                <button type="submit" className="bg-gold-500 text-white py-3 rounded-lg font-bold hover:bg-gold-600 transition-colors text-sm tracking-wider flex items-center justify-center gap-2">
-                    ACCEDER AL ESTUDIO <ArrowRight size={18} />
-                </button>
-              </form>
+            <div className="text-center mb-6">
+              <Shield size={32} className="text-gold-500 mx-auto mb-2" />
+              <h2 className="text-xl font-bold text-slate-800">Acceso a ESTUDIO</h2>
+              <p className="text-sm text-slate-500">Introduce la clave para acceder a la gestión.</p>
             </div>
+
+            {/* Utiliza el handler handleStudioLogin (CORREGIDO) */}
+            <form onSubmit={handleStudioLogin} className="flex flex-col gap-4">
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Introduce tu clave privada"
+                  value={passwordInput}
+                  onChange={(e) => {
+                    setPasswordInput(e.target.value);
+                    if (error) setError(false);
+                  }}
+                  className={`w-full p-3 pr-12 text-center border-2 rounded-lg outline-none transition-all focus:border-gold-500 ${error ? 'border-red-500 bg-red-50' : 'border-stone-200'
+                    }`}
+                  autoFocus
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(prev => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gold-500"
+                  aria-label={showPassword ? "Ocultar clave" : "Mostrar clave"}
+                >
+                  {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                </button>
+              </div>
+              {error && <p className="text-xs text-red-500 text-center font-bold">Clave incorrecta</p>}
+              <button type="submit" className="bg-gold-500 text-white py-3 rounded-lg font-bold hover:bg-gold-600 transition-colors text-sm tracking-wider flex items-center justify-center gap-2">
+                ACCEDER AL ESTUDIO <ArrowRight size={18} />
+              </button>
+            </form>
           </div>
+        </div>
       )}
 
       {/* COMPAÑERO DIGITAL */}
       {selectedCompanionId && (
-        <DigitalCompanion 
-          artworkId={selectedCompanionId} 
-          onClose={() => setSelectedCompanionId(null)} 
+        <DigitalCompanion
+          artworkId={selectedCompanionId}
+          onClose={() => setSelectedCompanionId(null)}
           // Mantenemos la lógica para el siguiente paso (certificados)
-          showCertificateAccess={view === 'artist'} 
+          showCertificateAccess={view === 'artist'}
         />
       )}
     </div>
