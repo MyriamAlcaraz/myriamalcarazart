@@ -1138,6 +1138,52 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                         >
                             <Layout size={16} /> GICLÉE
                         </button>
+
+                        {/* 📊 BOTÓN REPORTE HACIENDA (SECRET) */}
+                        <button
+                            onClick={() => {
+                                const GICLEE_DATA = [
+                                    { id: 'xs', name: 'Colección (XS)', pvp: 120, cost: 15 }, // Est.
+                                    { id: 'sm', name: 'Galería (S)', pvp: 180, cost: 27 }, // Base Raúl
+                                    { id: 'md', name: 'Intermedio (M)', pvp: 450, cost: 56 }, // Base Raúl
+                                    { id: 'lg', name: 'Prestigio (L)', pvp: 650, cost: 104 }, // Base Raúl
+                                    { id: 'xl', name: 'Especial (XL)', pvp: 950, cost: 200 } // Est.
+                                ];
+
+                                const today = new Date().toLocaleDateString('es-ES');
+                                const csvRows = [
+                                    ["Fecha", "Obra", "Tamaño", "PVP (€)", "Coste Raúl (€)", "Ganancia (€)"]
+                                ];
+
+                                // Generamos una fila por cada obra y tamaño para tener la proyección completa
+                                artworks.forEach(art => {
+                                    GICLEE_DATA.forEach(size => {
+                                        const profit = size.pvp - size.cost;
+                                        csvRows.push([
+                                            today,
+                                            `"${art.title}"`,
+                                            size.name,
+                                            size.pvp.toString(),
+                                            size.cost.toString(),
+                                            profit.toString()
+                                        ]);
+                                    });
+                                });
+
+                                const csvContent = "data:text/csv;charset=utf-8," + csvRows.map(e => e.join(",")).join("\n");
+                                const encodedUri = encodeURI(csvContent);
+                                const link = document.createElement("a");
+                                link.setAttribute("href", encodedUri);
+                                link.setAttribute("download", `registro_hacienda_${new Date().toISOString().slice(0, 10)}.csv`);
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                            }}
+                            className="flex items-center gap-2 text-sm font-bold text-slate-600 bg-green-100 hover:bg-green-200 transition-colors py-3 px-4 rounded-lg shadow-md border border-green-200"
+                            title="Descargar Excel de Ventas/Márgenes (Uso Interno)"
+                        >
+                            <Briefcase size={16} /> REPORTE
+                        </button>
                         <button
                             onClick={onLogout}
                             className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-500 transition-colors py-3 px-4 border border-stone-200 rounded-lg hover:border-red-500"
