@@ -9,11 +9,11 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
   const sizes = [
-    { id: 'standard', name: 'Formato Estándar', label: '(40 cm | Ed. Limitada de 30)', price: '180€' },
-    { id: 'intermediate', name: 'Formato Intermedio', label: '(50 cm | Ed. Limitada de 25)', price: '280€' },
-    { id: 'medium', name: 'Formato Mediano', label: '(70 cm | Ed. Limitada de 15)', price: '450€' },
-    { id: 'large', name: 'Formato Grande', label: '(90 cm | Ed. Limitada de 10)', price: '680€' },
-    { id: 'collection', name: 'Formato Colección', label: '(100 cm | Ed. Limitada de 5)', price: '950€' }
+    { id: 'standard', name: 'Formato Estándar', label: '(Lado mayor aprox. 40 cm | Ed. Limitada de 30)', price: '180€' },
+    { id: 'intermediate', name: 'Formato Intermedio', label: '(Lado mayor aprox. 50 cm | Ed. Limitada de 25)', price: '280€' },
+    { id: 'medium', name: 'Formato Mediano', label: '(Lado mayor aprox. 70 cm | Ed. Limitada de 15)', price: '450€' },
+    { id: 'large', name: 'Formato Grande', label: '(Lado mayor aprox. 90 cm | Ed. Limitada de 10)', price: '680€' },
+    { id: 'collection', name: 'Formato Colección', label: '(Lado mayor aprox. 100 cm | Ed. Limitada de 5)', price: '950€' }
   ];
 
   return (
