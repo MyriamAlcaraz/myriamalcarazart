@@ -624,7 +624,11 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
 // 🎨 COMPONENTE PRINCIPAL: ARTIST DASHBOARD
 // =========================================================
 
-const ArtistDashboard: React.FC = () => {
+interface ArtistDashboardProps {
+    onLogout?: () => void;
+}
+
+const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
     const [artworks, setArtworks] = useState<Artwork[]>(REAL_ARTWORKS);
     const [settings] = useState<DocumentSettings>(initialSettings);
 
@@ -682,4 +686,5 @@ const ArtistDashboard: React.FC = () => {
     );
 };
 
+export { ArtistDashboard };
 export default ArtistDashboard;

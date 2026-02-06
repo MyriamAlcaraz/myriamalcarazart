@@ -1,6 +1,9 @@
 import { Artwork, PriceRow } from './types';
 // NOTA: Se ha eliminado la importación de SocialPost y WorkflowItem ya que no se usan aquí
 
+// Contraseña para acceso al estudio
+export const PASSWORD = "arte2026";
+
 export const ARTIST_INFO = {
   name: "Myriam Alcaraz",
   tagline: "ARTE CON ALMA Y SOFISTICACIÓN", 
