@@ -1,16 +1,17 @@
-// ARCHIVO: src/components/AIStudio.tsx (EL QUE TIENE VIDA)
+// ARCHIVO: components/AIStudio.tsx - Asistente IA Compacto y Colapsable
 
 import React, { useState } from 'react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import {
-  Video, Sparkles, Loader2, MonitorPlay, FileCheck, AlertTriangle, FileInput
+  Sparkles, Loader2, AlertTriangle, X, Bot, Cpu
 } from 'lucide-react';
 import { ARTWORKS } from '../constants';
 
-// Cargamos la clave que guardamos en .env.local
-const API_KEY_MASTER = import.meta.env.VITE_GEMINI_API_KEY;
+// API Keys desde variables de entorno
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const CLAUDE_API_KEY = import.meta.env.VITE_CLAUDE_API_KEY;
 
-type Tab = 'assistant' | 'visual';
+type AIProvider = 'gemini' | 'claude';
 
 const urlToBase64 = async (url: string): Promise<string> => {
   const response = await fetch(url);
@@ -27,105 +28,240 @@ const urlToBase64 = async (url: string): Promise<string> => {
 };
 
 export const AIStudio: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<Tab>('assistant');
+  const [isExpanded, setIsExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
   const [respuestaIA, setRespuestaIA] = useState<string | null>(null);
   const [artworkId, setArtworkId] = useState<string | null>(null);
+  const [provider, setProvider] = useState<AIProvider>('gemini');
 
-  const ejecutarIA = async () => {
-    if (!API_KEY_MASTER) {
-      setError("Falta la API Key. Asegúrate de haber ejecutado el comando del .env.local");
-      return;
+  const ejecutarGemini = async () => {
+    if (!GEMINI_API_KEY) {
+      throw new Error("Falta VITE_GEMINI_API_KEY en .env.local");
     }
 
+    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+    // Modelo actualizado: gemini-1.5-flash-latest (más estable)
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+
+    let result;
+    if (artworkId) {
+      const artwork = ARTWORKS.find(a => a.id === artworkId);
+      if (artwork) {
+        const base64Image = await urlToBase64(artwork.image);
+        result = await model.generateContent([
+          prompt || "Describe esta obra de arte y sugiere un pie de foto para Instagram.",
+          { inlineData: { data: base64Image, mimeType: "image/jpeg" } }
+        ]);
+      }
+    } else {
+      result = await model.generateContent(prompt || "Dame una frase inspiradora sobre el arte contemporáneo.");
+    }
+
+    const response = await result?.response;
+    return response?.text() || "Gemini no ha devuelto texto.";
+  };
+
+  const ejecutarClaude = async () => {
+    if (!CLAUDE_API_KEY) {
+      throw new Error("Falta VITE_CLAUDE_API_KEY en .env.local");
+    }
+
+    // Contexto de la obra seleccionada
+    let contextoObra = "";
+    if (artworkId) {
+      const artwork = ARTWORKS.find(a => a.id === artworkId);
+      if (artwork) {
+        contextoObra = `\n\nContexto de la obra seleccionada:\n- Título: "${artwork.title}"\n- Técnica: ${artwork.technique}\n- Dimensiones: ${artwork.dimensions}\n- Descripción: ${artwork.description || 'No disponible'}`;
+      }
+    }
+
+    const mensajeCompleto = (prompt || "Dame una frase inspiradora sobre el arte contemporáneo.") + contextoObra;
+
+    // Llamada a Claude API vía proxy o directamente
+    const response = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1024,
+        messages: [
+          {
+            role: "user",
+            content: mensajeCompleto
+          }
+        ],
+        system: "Eres un asistente experto en arte contemporáneo y pintura figurativa. Ayudas a la artista Myriam Alcaraz con análisis de sus obras, textos para redes sociales, y consultas sobre técnica artística. Responde siempre en español, de forma profesional pero cercana."
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || `Error ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.content?.[0]?.text || "Claude no ha devuelto texto.";
+  };
+
+  const ejecutarIA = async () => {
     setIsLoading(true);
     setError(null);
+    setRespuestaIA(null);
 
     try {
-      const genAI = new GoogleGenerativeAI(API_KEY_MASTER);
-      // Usamos el modelo Flash que es rápido y gratuito
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-      let result;
-      if (artworkId) {
-        const artwork = ARTWORKS.find(a => a.id === artworkId);
-        if (artwork) {
-          const base64Image = await urlToBase64(artwork.image);
-          result = await model.generateContent([
-            prompt || "Describe esta obra y sugiere un pie de foto para Instagram.",
-            { inlineData: { data: base64Image, mimeType: "image/jpeg" } }
-          ]);
-        }
+      let resultado: string;
+      if (provider === 'gemini') {
+        resultado = await ejecutarGemini();
       } else {
-        result = await model.generateContent(prompt || "Dame una frase inspiradora sobre el arte contemporáneo.");
+        resultado = await ejecutarClaude();
       }
-
-      const response = await result?.response;
-      setRespuestaIA(response?.text() || "Gemini no ha devuelto texto.");
+      setRespuestaIA(resultado);
     } catch (e: any) {
       console.error(e);
-      setError("Error de conexión: " + e.message);
+      setError(e.message || "Error de conexión");
     } finally {
       setIsLoading(false);
     }
   };
 
-  return (
-    <div className="p-6 bg-white rounded-xl shadow-lg border border-slate-100 min-h-[600px] flex flex-col">
-      <h3 className="text-xl font-serif font-bold text-slate-800 mb-6 flex items-center gap-3">
-        <Sparkles size={24} className="text-amber-500" />
-        Estudio Creativo Myriam Alcaraz
-      </h3>
+  // ========================================
+  // VISTA COLAPSADA (Botón flotante pequeño)
+  // ========================================
+  if (!isExpanded) {
+    return (
+      <button
+        onClick={() => setIsExpanded(true)}
+        className="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-4 rounded-full shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center group"
+        title="Abrir Asistente IA"
+      >
+        <Sparkles size={24} className="group-hover:animate-pulse" />
+      </button>
+    );
+  }
 
-      <div className="flex-1">
+  // ========================================
+  // VISTA EXPANDIDA (Panel compacto)
+  // ========================================
+  return (
+    <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-80 max-h-[500px] flex flex-col overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
+
+      {/* Header compacto */}
+      <div className="bg-gradient-to-r from-slate-800 to-slate-900 text-white px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Sparkles size={18} className="text-amber-400" />
+          <span className="font-semibold text-sm">Asistente IA</span>
+        </div>
+        <button
+          onClick={() => setIsExpanded(false)}
+          className="text-slate-400 hover:text-white transition-colors p-1"
+          title="Minimizar"
+        >
+          <X size={18} />
+        </button>
+      </div>
+
+      {/* Contenido scrollable */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+
+        {/* Selector de Proveedor IA */}
+        <div className="flex gap-2">
+          <button
+            onClick={() => setProvider('gemini')}
+            className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${
+              provider === 'gemini'
+                ? 'bg-blue-500 text-white shadow-md'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+            }`}
+          >
+            <Cpu size={14} /> Gemini
+          </button>
+          <button
+            onClick={() => setProvider('claude')}
+            className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${
+              provider === 'claude'
+                ? 'bg-orange-500 text-white shadow-md'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+            }`}
+          >
+            <Bot size={14} /> Claude
+          </button>
+        </div>
+
+        {/* Error */}
         {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-lg flex items-center gap-3 mb-4 text-xs">
-            <AlertTriangle size={20} />
-            {error}
+          <div className="bg-red-50 text-red-600 p-2 rounded-lg flex items-start gap-2 text-xs">
+            <AlertTriangle size={14} className="flex-shrink-0 mt-0.5" />
+            <span>{error}</span>
           </div>
         )}
 
-        <div className="mt-4">
-          <label className="block text-xs font-bold text-slate-400 mb-2 uppercase">Selecciona una de tus obras (Opcional)</label>
-          <select
-            value={artworkId || ''}
-            onChange={(e) => setArtworkId(e.target.value)}
-            className="w-full p-2 border border-slate-300 rounded-lg text-slate-700 mb-4 text-sm"
-          >
-            <option value="">-- Solo consulta de texto --</option>
-            {ARTWORKS.map(art => (
-              <option key={art.id} value={art.id}>{art.title}</option>
-            ))}
-          </select>
+        {/* Selector de obra */}
+        <select
+          value={artworkId || ''}
+          onChange={(e) => setArtworkId(e.target.value || null)}
+          className="w-full p-2 border border-slate-200 rounded-lg text-slate-700 text-xs bg-slate-50 focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+        >
+          <option value="">📝 Solo texto (sin obra)</option>
+          {ARTWORKS.map(art => (
+            <option key={art.id} value={art.id}>🖼️ {art.title}</option>
+          ))}
+        </select>
 
-          <textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="Ejemplo: ¿Qué colores destacarías de esta obra para una crítica de arte?"
-            rows={4}
-            className="w-full p-3 border border-slate-300 rounded-lg focus:ring-amber-500 focus:border-amber-500 mb-4 text-sm"
-          />
+        {/* Prompt */}
+        <textarea
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          placeholder="Ej: Sugiere un pie de foto para Instagram..."
+          rows={3}
+          className="w-full p-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-xs resize-none"
+        />
 
-          <button
-            onClick={ejecutarIA}
-            disabled={isLoading}
-            className="w-full bg-slate-900 text-white py-3 rounded-lg font-bold hover:bg-slate-800 transition-colors flex items-center justify-center gap-3 disabled:opacity-50 shadow-md"
-          >
-            {isLoading ? <Loader2 size={20} className="animate-spin" /> : <Sparkles size={20} />}
-            {isLoading ? 'CONECTANDO CON GEMINI...' : 'PEDIR ANÁLISIS A LA IA'}
-          </button>
-
-          {respuestaIA && (
-            <div className="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
-              <h4 className="font-bold text-slate-400 text-[10px] uppercase mb-2 tracking-widest">Resultado del Análisis</h4>
-              <p className="text-slate-700 text-sm whitespace-pre-wrap leading-relaxed">
-                {respuestaIA}
-              </p>
-            </div>
+        {/* Botón ejecutar */}
+        <button
+          onClick={ejecutarIA}
+          disabled={isLoading}
+          className={`w-full py-2.5 rounded-lg font-bold text-xs flex items-center justify-center gap-2 transition-all disabled:opacity-50 shadow-md ${
+            provider === 'gemini'
+              ? 'bg-blue-500 hover:bg-blue-600 text-white'
+              : 'bg-orange-500 hover:bg-orange-600 text-white'
+          }`}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 size={14} className="animate-spin" />
+              Analizando...
+            </>
+          ) : (
+            <>
+              <Sparkles size={14} />
+              Analizar con {provider === 'gemini' ? 'Gemini' : 'Claude'}
+            </>
           )}
-        </div>
+        </button>
+
+        {/* Respuesta */}
+        {respuestaIA && (
+          <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
+            <div className="flex items-center gap-2 mb-2">
+              <div className={`w-2 h-2 rounded-full ${provider === 'gemini' ? 'bg-blue-500' : 'bg-orange-500'}`} />
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                Respuesta de {provider === 'gemini' ? 'Gemini' : 'Claude'}
+              </span>
+            </div>
+            <p className="text-slate-700 text-xs whitespace-pre-wrap leading-relaxed max-h-40 overflow-y-auto">
+              {respuestaIA}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Footer con info */}
+      <div className="px-4 py-2 bg-slate-50 border-t border-slate-100">
+        <p className="text-[10px] text-slate-400 text-center">
+          {provider === 'gemini' ? '🔵 Google AI' : '🟠 Anthropic'} • Myriam Alcaraz Studio
+        </p>
       </div>
     </div>
   );
