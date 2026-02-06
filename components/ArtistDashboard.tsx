@@ -1184,15 +1184,15 @@ interface EditionAdjustModalProps {
 }
 
 const EditionAdjustModal: React.FC<EditionAdjustModalProps> = ({ artworks, onAdjust, onClose, onConfigureSeries }) => {
-    // Solo mostramos obras con edición seriada limitada (con seriesTotal definido)
-    const seriesArtworks = artworks.filter(a =>
-        a.seriesIndex !== null && a.seriesTotal !== null && !a.isOpenSeries
-    );
+    // Obras con edición seriada limitada - ORDENADAS ALFABÉTICAMENTE
+    const seriesArtworks = artworks
+        .filter(a => a.seriesIndex !== null && a.seriesTotal !== null && !a.isOpenSeries)
+        .sort((a, b) => a.title.localeCompare(b.title, 'es'));
 
-    // Obras sin serie configurada (para sugerir convertir)
-    const nonSeriesArtworks = artworks.filter(a =>
-        a.seriesTotal === null && !a.isOpenSeries
-    );
+    // Obras sin serie configurada - ORDENADAS ALFABÉTICAMENTE
+    const nonSeriesArtworks = artworks
+        .filter(a => a.seriesTotal === null && !a.isOpenSeries)
+        .sort((a, b) => a.title.localeCompare(b.title, 'es'));
 
     const [selectedArtworkId, setSelectedArtworkId] = useState<number | null>(
         seriesArtworks.length > 0 ? seriesArtworks[0].id : null
@@ -1239,10 +1239,10 @@ const EditionAdjustModal: React.FC<EditionAdjustModalProps> = ({ artworks, onAdj
 
     return (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-xl w-full overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
 
-                {/* Header */}
-                <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-4 flex items-center justify-between">
+                {/* Header compacto */}
+                <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-5 py-3 flex items-center justify-between flex-shrink-0">
                     <div className="flex items-center gap-3">
                         <Hash size={24} />
                         <div>
@@ -1258,52 +1258,51 @@ const EditionAdjustModal: React.FC<EditionAdjustModalProps> = ({ artworks, onAdj
                     </button>
                 </div>
 
-                {/* Contenido */}
-                <div className="p-6 space-y-5">
+                {/* Contenido scrollable */}
+                <div className="p-5 space-y-4 overflow-y-auto flex-1">
 
                     {seriesArtworks.length === 0 ? (
                         /* Estado vacío - Mensaje amigable con acceso directo */
-                        <div className="text-center py-6">
-                            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Hash size={32} className="text-purple-500" />
+                        <div className="text-center py-4">
+                            <div className="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <Hash size={28} className="text-purple-500" />
                             </div>
                             <h3 className="text-lg font-bold text-slate-700 mb-2">
                                 No tienes obras con edición seriada
                             </h3>
-                            <p className="text-slate-500 text-sm mb-6 max-w-xs mx-auto">
-                                Para usar esta función, primero configura una obra como "Edición Seriada Limitada" (ej. 1/30).
+                            <p className="text-slate-500 text-sm mb-4 max-w-sm mx-auto">
+                                Selecciona una obra para configurarla como "Edición Seriada Limitada" (ej. 1/30).
                             </p>
 
                             {nonSeriesArtworks.length > 0 ? (
                                 <div className="space-y-3">
                                     <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">
-                                        Configura una serie para:
+                                        Selecciona una obra para configurar como serie ({nonSeriesArtworks.length} disponibles):
                                     </p>
-                                    <div className="max-h-48 overflow-y-auto space-y-2">
-                                        {nonSeriesArtworks.slice(0, 5).map(artwork => (
+                                    {/* Lista ampliada - altura para ver 5+ obras */}
+                                    <div className="max-h-80 overflow-y-auto space-y-2 pr-1">
+                                        {nonSeriesArtworks.map(artwork => (
                                             <button
                                                 key={artwork.id}
                                                 onClick={() => handleConfigureClick(artwork)}
-                                                className="w-full flex items-center gap-3 p-3 bg-slate-50 hover:bg-purple-50 border border-slate-200 hover:border-purple-300 rounded-xl transition-all text-left group"
+                                                className="w-full flex items-center gap-4 p-3 bg-slate-50 hover:bg-purple-50 border border-slate-200 hover:border-purple-300 rounded-xl transition-all text-left group"
                                             >
                                                 <img
                                                     src={artwork.image}
                                                     alt={artwork.title}
-                                                    className="w-12 h-12 object-cover rounded-lg"
+                                                    className="w-14 h-14 object-cover rounded-lg shadow-sm"
                                                 />
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="font-medium text-slate-700 truncate">{artwork.title}</p>
-                                                    <p className="text-xs text-slate-400">Obra única → Convertir a serie</p>
+                                                    <p className="font-semibold text-slate-700">{artwork.title}</p>
+                                                    <p className="text-xs text-slate-400 mt-0.5">{artwork.technique} • {artwork.dimensions}</p>
                                                 </div>
-                                                <Settings size={18} className="text-slate-400 group-hover:text-purple-500 transition-colors" />
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded-full">Única</span>
+                                                    <Settings size={18} className="text-slate-400 group-hover:text-purple-500 transition-colors" />
+                                                </div>
                                             </button>
                                         ))}
                                     </div>
-                                    {nonSeriesArtworks.length > 5 && (
-                                        <p className="text-xs text-slate-400">
-                                            ...y {nonSeriesArtworks.length - 5} obras más
-                                        </p>
-                                    )}
                                 </div>
                             ) : (
                                 <button
@@ -1316,42 +1315,64 @@ const EditionAdjustModal: React.FC<EditionAdjustModalProps> = ({ artworks, onAdj
                         </div>
                     ) : (
                         <>
-                            {/* Selector de Obra */}
+                            {/* Selector de Obra - Lista visual */}
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                                    ¿Qué obra quieres ajustar?
+                                    Selecciona la obra a ajustar ({seriesArtworks.length} con serie)
                                 </label>
-                                <select
-                                    value={selectedArtworkId || ''}
-                                    onChange={(e) => setSelectedArtworkId(Number(e.target.value))}
-                                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-slate-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
-                                >
+                                {/* Lista scrollable de obras seriadas */}
+                                <div className="max-h-56 overflow-y-auto border border-slate-200 rounded-xl bg-slate-50 divide-y divide-slate-100">
                                     {seriesArtworks.map(art => (
-                                        <option key={art.id} value={art.id}>
-                                            {art.title} — Edición {art.seriesIndex}/{art.seriesTotal}
-                                        </option>
+                                        <button
+                                            key={art.id}
+                                            onClick={() => setSelectedArtworkId(art.id)}
+                                            className={`w-full flex items-center gap-3 p-3 text-left transition-all ${
+                                                selectedArtworkId === art.id
+                                                    ? 'bg-purple-100 border-l-4 border-purple-500'
+                                                    : 'hover:bg-white border-l-4 border-transparent'
+                                            }`}
+                                        >
+                                            <img
+                                                src={art.image}
+                                                alt={art.title}
+                                                className="w-12 h-12 object-cover rounded-lg shadow-sm"
+                                            />
+                                            <div className="flex-1 min-w-0">
+                                                <p className={`font-medium truncate ${selectedArtworkId === art.id ? 'text-purple-800' : 'text-slate-700'}`}>
+                                                    {art.title}
+                                                </p>
+                                                <p className="text-xs text-slate-400">{art.dimensions}</p>
+                                            </div>
+                                            <span className={`text-sm font-bold px-2 py-1 rounded-full ${
+                                                selectedArtworkId === art.id
+                                                    ? 'bg-purple-600 text-white'
+                                                    : 'bg-slate-200 text-slate-600'
+                                            }`}>
+                                                {art.seriesIndex}/{art.seriesTotal}
+                                            </span>
+                                        </button>
                                     ))}
-                                </select>
+                                </div>
                             </div>
 
-                            {/* Info de la obra seleccionada */}
+                            {/* Info de la obra seleccionada - Compacta */}
                             {selectedArtwork && (
-                                <div className="bg-gradient-to-r from-slate-50 to-purple-50 rounded-xl p-4 border border-purple-100">
-                                    <div className="flex items-center gap-4">
+                                <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-3 border border-purple-200">
+                                    <div className="flex items-center gap-3">
                                         <img
                                             src={selectedArtwork.image}
                                             alt={selectedArtwork.title}
-                                            className="w-20 h-20 object-cover rounded-lg shadow-md"
+                                            className="w-16 h-16 object-cover rounded-lg shadow-md"
                                         />
                                         <div className="flex-1">
-                                            <h4 className="font-bold text-slate-800 text-lg">{selectedArtwork.title}</h4>
-                                            <p className="text-sm text-slate-500">{selectedArtwork.technique}</p>
-                                            <div className="mt-2 flex items-center gap-2 flex-wrap">
-                                                <span className="text-sm bg-purple-600 text-white px-3 py-1 rounded-full font-bold">
-                                                    Próxima: {selectedArtwork.seriesIndex}/{selectedArtwork.seriesTotal}
+                                            <h4 className="font-bold text-slate-800">{selectedArtwork.title}</h4>
+                                            <p className="text-xs text-slate-500">{selectedArtwork.technique}</p>
+                                            <div className="mt-1.5 flex items-center gap-2 flex-wrap">
+                                                <span className="text-xs bg-purple-600 text-white px-2 py-0.5 rounded-full font-bold">
+                                                    Actual: {selectedArtwork.seriesIndex}/{selectedArtwork.seriesTotal}
                                                 </span>
                                                 {selectedArtwork.code && (
-                                                    <span className="text-xs bg-white text-purple-700 px-2 py-1 rounded-full font-mono border border-purple-200">
+                                                    <span className="text-[10px] bg-white text-purple-700 px-2 py-0.5 rounded-full font-mono border border-purple-200">
                                                         {selectedArtwork.code}
                                                     </span>
                                                 )}
