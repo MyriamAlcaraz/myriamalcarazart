@@ -602,15 +602,25 @@ interface ArtworkWorkstationProps {
 
 const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settings, onGenerateCode, onDelete, onDuplicate, onEdit }) => {
 
-    const certificateContent = useMemo(() => artwork.code ? getCertificateHtml(artwork, settings) : '', [artwork, settings]);
-    const letterContent = useMemo(() => artwork.code ? getLetterHtml(artwork, settings) : '', [artwork, settings]);
-
-      {/* 🤖 ASISTENTE DE IA FLOTANTE */}
-      <div className="fixed bottom-6 right-6 z-50 shadow-2xl">
-        <AIStudio />
-      </div>
-    </div>
-  );
+    return (
+        <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm mb-6">
+            <div className="flex flex-col md:flex-row gap-6">
+                <div className="w-full md:w-1/3">
+                    <img src={artwork.image} alt={artwork.title} className="w-full h-48 object-cover rounded-lg shadow-inner" />
+                </div>
+                <div className="w-full md:w-2/3 flex flex-col justify-between">
+                    <div>
+                        <h3 className="text-xl font-serif text-gray-800 italic">{artwork.title}</h3>
+                        <p className="text-sm text-gray-500 mt-1">{artwork.technique} • {artwork.size}</p>
+                    </div>
+                </div>
+            </div>
+            {/* 🤖 ASISTENTE DE IA FLOTANTE SIEMPRE PRESENTE */}
+            <div className="fixed bottom-6 right-6 z-50 shadow-2xl">
+                <AIStudio />
+            </div>
+        </div>
+    );
 };
 
 export default ArtistDashboard;
