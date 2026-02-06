@@ -1392,3 +1392,10 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
         </div>
     );
 };
+const AIContainer = () => (
+  <div className="mt-12 border-t pt-12 pb-20">
+    <AIStudio />
+  </div>
+);
+
+export default ArtistDashboard;
