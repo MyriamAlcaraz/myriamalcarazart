@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, AlertTriangle } from 'lucide-react';
+import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, AlertTriangle, Hash, Save } from 'lucide-react';
 import { AIStudio } from "./AIStudio";
 
 
@@ -1174,6 +1174,191 @@ const SalesReportModal: React.FC<{ artworks: Artwork[], onClose: () => void }> =
 
 
 // =========================================================
+// 🔢 COMPONENTE: MODAL DE AJUSTE MANUAL DE EDICIÓN
+// =========================================================
+interface EditionAdjustModalProps {
+    artworks: Artwork[];
+    onAdjust: (artworkId: number, newSeriesIndex: number) => void;
+    onClose: () => void;
+}
+
+const EditionAdjustModal: React.FC<EditionAdjustModalProps> = ({ artworks, onAdjust, onClose }) => {
+    // Solo mostramos obras con edición seriada (limitada o abierta)
+    const seriesArtworks = artworks.filter(a =>
+        (a.seriesIndex !== null && a.seriesTotal !== null) || a.isOpenSeries
+    );
+
+    const [selectedArtworkId, setSelectedArtworkId] = useState<number | null>(
+        seriesArtworks.length > 0 ? seriesArtworks[0].id : null
+    );
+    const [newIndex, setNewIndex] = useState<number>(1);
+    const [confirmText, setConfirmText] = useState<string | null>(null);
+
+    const selectedArtwork = artworks.find(a => a.id === selectedArtworkId);
+
+    const handleSave = () => {
+        if (!selectedArtworkId || !selectedArtwork) return;
+
+        // Validar que el nuevo índice sea válido
+        if (selectedArtwork.seriesTotal && newIndex > selectedArtwork.seriesTotal) {
+            alert(`El número no puede ser mayor que el total de la edición (${selectedArtwork.seriesTotal})`);
+            return;
+        }
+        if (newIndex < 1) {
+            alert("El número debe ser al menos 1");
+            return;
+        }
+
+        onAdjust(selectedArtworkId, newIndex);
+        setConfirmText(`✅ Edición actualizada a ${newIndex}/${selectedArtwork.seriesTotal || '∞'}`);
+
+        setTimeout(() => {
+            setConfirmText(null);
+        }, 2000);
+    };
+
+    // Actualizar el índice cuando se cambia de obra
+    useEffect(() => {
+        if (selectedArtwork) {
+            setNewIndex(selectedArtwork.seriesIndex || 1);
+        }
+    }, [selectedArtworkId, selectedArtwork]);
+
+    return (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden animate-in zoom-in-95 duration-200">
+
+                {/* Header */}
+                <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-4 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <Hash size={24} />
+                        <div>
+                            <h2 className="text-lg font-bold">Ajuste Manual de Edición</h2>
+                            <p className="text-purple-200 text-xs">Para ventas realizadas fuera de la web</p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={onClose}
+                        className="text-white/70 hover:text-white transition-colors p-1"
+                    >
+                        <X size={20} />
+                    </button>
+                </div>
+
+                {/* Contenido */}
+                <div className="p-6 space-y-5">
+
+                    {seriesArtworks.length === 0 ? (
+                        <div className="text-center py-8">
+                            <Hash size={48} className="text-slate-300 mx-auto mb-4" />
+                            <p className="text-slate-500 font-medium">No hay obras con edición seriada</p>
+                            <p className="text-slate-400 text-sm mt-1">
+                                Primero crea una obra con "Edición Seriada Limitada" o "Abierta"
+                            </p>
+                        </div>
+                    ) : (
+                        <>
+                            {/* Selector de Obra */}
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                                    Selecciona la obra
+                                </label>
+                                <select
+                                    value={selectedArtworkId || ''}
+                                    onChange={(e) => setSelectedArtworkId(Number(e.target.value))}
+                                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-slate-700 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                                >
+                                    {seriesArtworks.map(art => (
+                                        <option key={art.id} value={art.id}>
+                                            {art.title} — {art.seriesIndex || '?'}/{art.seriesTotal || '∞'}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Info de la obra seleccionada */}
+                            {selectedArtwork && (
+                                <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                    <div className="flex items-center gap-4">
+                                        <img
+                                            src={selectedArtwork.image}
+                                            alt={selectedArtwork.title}
+                                            className="w-16 h-16 object-cover rounded-lg shadow"
+                                        />
+                                        <div className="flex-1">
+                                            <h4 className="font-bold text-slate-800">{selectedArtwork.title}</h4>
+                                            <p className="text-sm text-slate-500">{selectedArtwork.technique}</p>
+                                            <div className="mt-1 flex items-center gap-2">
+                                                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-medium">
+                                                    Edición actual: {selectedArtwork.seriesIndex || '?'}/{selectedArtwork.seriesTotal || '∞'}
+                                                </span>
+                                                {selectedArtwork.code && (
+                                                    <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-mono">
+                                                        {selectedArtwork.code}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Input del nuevo índice */}
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                                    Nueva edición disponible (N° de pieza)
+                                </label>
+                                <div className="flex items-center gap-3">
+                                    <input
+                                        type="number"
+                                        min={1}
+                                        max={selectedArtwork?.seriesTotal || 999}
+                                        value={newIndex}
+                                        onChange={(e) => setNewIndex(Number(e.target.value))}
+                                        className="flex-1 p-3 border-2 border-slate-200 rounded-xl text-center text-2xl font-bold text-purple-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                                    />
+                                    <span className="text-2xl text-slate-400">/</span>
+                                    <div className="w-20 p-3 bg-slate-100 rounded-xl text-center text-2xl font-bold text-slate-500">
+                                        {selectedArtwork?.seriesTotal || '∞'}
+                                    </div>
+                                </div>
+                                <p className="text-xs text-slate-400 mt-2">
+                                    💡 Si vendiste las copias 1-4 fuera de la web, introduce "5" para que el próximo certificado sea 5/{selectedArtwork?.seriesTotal || '∞'}
+                                </p>
+                            </div>
+
+                            {/* Mensaje de confirmación */}
+                            {confirmText && (
+                                <div className="bg-green-50 text-green-700 p-3 rounded-xl text-center font-medium animate-in fade-in duration-300">
+                                    {confirmText}
+                                </div>
+                            )}
+
+                            {/* Botones */}
+                            <div className="flex gap-3 pt-2">
+                                <button
+                                    onClick={onClose}
+                                    className="flex-1 py-3 px-4 border-2 border-slate-200 rounded-xl text-slate-600 font-medium hover:bg-slate-50 transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    onClick={handleSave}
+                                    className="flex-1 py-3 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-indigo-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-200"
+                                >
+                                    <Save size={18} /> Guardar Ajuste
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
+// =========================================================
 // ⚙️ COMPONENTE PRINCIPAL DEL DASHBOARD (CONTENEDOR)
 // =========================================================
 interface ArtistDashboardProps {
@@ -1192,6 +1377,26 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
 
     // 📊 Estado para el modal de Reporte de Ventas
     const [showReport, setShowReport] = useState(false);
+
+    // 🔢 Estado para el modal de Ajuste Manual de Edición
+    const [showEditionAdjust, setShowEditionAdjust] = useState(false);
+
+    // 🔢 Handler para ajustar manualmente el índice de edición de una obra
+    const handleAdjustEdition = (artworkId: number, newSeriesIndex: number) => {
+        setArtworks(prevArtworks => prevArtworks.map(artwork => {
+            if (artwork.id === artworkId) {
+                // Regenerar el código con el nuevo índice
+                const updatedArtwork = { ...artwork, seriesIndex: newSeriesIndex };
+                const newCode = generateSmartCode(updatedArtwork);
+                return {
+                    ...updatedArtwork,
+                    code: newCode,
+                    status: 'GENERADO' as const
+                };
+            }
+            return artwork;
+        }));
+    };
 
     // 🛑 Handler para añadir o editar obra (Acepta ahora code y status)
     const handleSaveArtwork = (artworkData: Omit<Artwork, 'id' | 'originalIndex'>, idToUpdate: number | null) => {
@@ -1302,6 +1507,15 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                             <Briefcase size={18} /> INFORME VENTAS
                         </button>
 
+                        {/* 🔢 BOTÓN AJUSTE MANUAL DE EDICIÓN */}
+                        <button
+                            onClick={() => setShowEditionAdjust(true)}
+                            className="flex items-center gap-2 text-sm font-bold text-white bg-purple-600 hover:bg-purple-700 transition-colors py-3 px-4 rounded-lg shadow-md"
+                            title="Ajustar número de edición para ventas externas"
+                        >
+                            <Hash size={16} /> AJUSTE EDICIÓN
+                        </button>
+
                         <button
                             onClick={onLogout}
                             className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-500 transition-colors py-3 px-4 border border-stone-200 rounded-lg hover:border-red-500"
@@ -1360,6 +1574,15 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                 <SalesReportModal
                     artworks={artworks}
                     onClose={() => setShowReport(false)}
+                />
+            )}
+
+            {/* 🔢 MODAL DE AJUSTE MANUAL DE EDICIÓN */}
+            {showEditionAdjust && (
+                <EditionAdjustModal
+                    artworks={artworks}
+                    onAdjust={handleAdjustEdition}
+                    onClose={() => setShowEditionAdjust(false)}
                 />
             )}
 
