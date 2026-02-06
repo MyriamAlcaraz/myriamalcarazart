@@ -1180,49 +1180,62 @@ interface EditionAdjustModalProps {
     artworks: Artwork[];
     onAdjust: (artworkId: number, newSeriesIndex: number) => void;
     onClose: () => void;
+    onConfigureSeries: (artwork: Artwork) => void; // Para abrir el editor de una obra
 }
 
-const EditionAdjustModal: React.FC<EditionAdjustModalProps> = ({ artworks, onAdjust, onClose }) => {
-    // Solo mostramos obras con edición seriada (limitada o abierta)
+const EditionAdjustModal: React.FC<EditionAdjustModalProps> = ({ artworks, onAdjust, onClose, onConfigureSeries }) => {
+    // Solo mostramos obras con edición seriada limitada (con seriesTotal definido)
     const seriesArtworks = artworks.filter(a =>
-        (a.seriesIndex !== null && a.seriesTotal !== null) || a.isOpenSeries
+        a.seriesIndex !== null && a.seriesTotal !== null && !a.isOpenSeries
+    );
+
+    // Obras sin serie configurada (para sugerir convertir)
+    const nonSeriesArtworks = artworks.filter(a =>
+        a.seriesTotal === null && !a.isOpenSeries
     );
 
     const [selectedArtworkId, setSelectedArtworkId] = useState<number | null>(
         seriesArtworks.length > 0 ? seriesArtworks[0].id : null
     );
-    const [newIndex, setNewIndex] = useState<number>(1);
+    const [soldUpTo, setSoldUpTo] = useState<number>(0); // "Ya he vendido hasta la número X"
     const [confirmText, setConfirmText] = useState<string | null>(null);
 
     const selectedArtwork = artworks.find(a => a.id === selectedArtworkId);
 
+    // Calcular el próximo número disponible
+    const nextAvailable = soldUpTo + 1;
+
     const handleSave = () => {
         if (!selectedArtworkId || !selectedArtwork) return;
 
-        // Validar que el nuevo índice sea válido
-        if (selectedArtwork.seriesTotal && newIndex > selectedArtwork.seriesTotal) {
-            alert(`El número no puede ser mayor que el total de la edición (${selectedArtwork.seriesTotal})`);
-            return;
-        }
-        if (newIndex < 1) {
-            alert("El número debe ser al menos 1");
+        // Validar que el próximo disponible sea válido
+        if (selectedArtwork.seriesTotal && nextAvailable > selectedArtwork.seriesTotal) {
+            alert(`¡Cuidado! Solo hay ${selectedArtwork.seriesTotal} copias en esta edición.`);
             return;
         }
 
-        onAdjust(selectedArtworkId, newIndex);
-        setConfirmText(`✅ Edición actualizada a ${newIndex}/${selectedArtwork.seriesTotal || '∞'}`);
+        onAdjust(selectedArtworkId, nextAvailable);
+        setConfirmText(`✅ ¡Listo! La próxima copia será la ${nextAvailable}/${selectedArtwork.seriesTotal}`);
 
         setTimeout(() => {
             setConfirmText(null);
-        }, 2000);
+        }, 3000);
     };
 
-    // Actualizar el índice cuando se cambia de obra
+    // Actualizar cuando se cambia de obra
     useEffect(() => {
-        if (selectedArtwork) {
-            setNewIndex(selectedArtwork.seriesIndex || 1);
+        if (selectedArtwork && selectedArtwork.seriesIndex) {
+            // Si la edición actual es 5, significa que ya vendió hasta la 4
+            setSoldUpTo(Math.max(0, selectedArtwork.seriesIndex - 1));
+        } else {
+            setSoldUpTo(0);
         }
     }, [selectedArtworkId, selectedArtwork]);
+
+    const handleConfigureClick = (artwork: Artwork) => {
+        onClose();
+        onConfigureSeries(artwork);
+    };
 
     return (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -1234,7 +1247,7 @@ const EditionAdjustModal: React.FC<EditionAdjustModalProps> = ({ artworks, onAdj
                         <Hash size={24} />
                         <div>
                             <h2 className="text-lg font-bold">Ajuste Manual de Edición</h2>
-                            <p className="text-purple-200 text-xs">Para ventas realizadas fuera de la web</p>
+                            <p className="text-purple-200 text-xs">Registra ventas realizadas fuera de la web</p>
                         </div>
                     </div>
                     <button
@@ -1249,19 +1262,64 @@ const EditionAdjustModal: React.FC<EditionAdjustModalProps> = ({ artworks, onAdj
                 <div className="p-6 space-y-5">
 
                     {seriesArtworks.length === 0 ? (
-                        <div className="text-center py-8">
-                            <Hash size={48} className="text-slate-300 mx-auto mb-4" />
-                            <p className="text-slate-500 font-medium">No hay obras con edición seriada</p>
-                            <p className="text-slate-400 text-sm mt-1">
-                                Primero crea una obra con "Edición Seriada Limitada" o "Abierta"
+                        /* Estado vacío - Mensaje amigable con acceso directo */
+                        <div className="text-center py-6">
+                            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Hash size={32} className="text-purple-500" />
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-700 mb-2">
+                                No tienes obras con edición seriada
+                            </h3>
+                            <p className="text-slate-500 text-sm mb-6 max-w-xs mx-auto">
+                                Para usar esta función, primero configura una obra como "Edición Seriada Limitada" (ej. 1/30).
                             </p>
+
+                            {nonSeriesArtworks.length > 0 ? (
+                                <div className="space-y-3">
+                                    <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">
+                                        Configura una serie para:
+                                    </p>
+                                    <div className="max-h-48 overflow-y-auto space-y-2">
+                                        {nonSeriesArtworks.slice(0, 5).map(artwork => (
+                                            <button
+                                                key={artwork.id}
+                                                onClick={() => handleConfigureClick(artwork)}
+                                                className="w-full flex items-center gap-3 p-3 bg-slate-50 hover:bg-purple-50 border border-slate-200 hover:border-purple-300 rounded-xl transition-all text-left group"
+                                            >
+                                                <img
+                                                    src={artwork.image}
+                                                    alt={artwork.title}
+                                                    className="w-12 h-12 object-cover rounded-lg"
+                                                />
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-medium text-slate-700 truncate">{artwork.title}</p>
+                                                    <p className="text-xs text-slate-400">Obra única → Convertir a serie</p>
+                                                </div>
+                                                <Settings size={18} className="text-slate-400 group-hover:text-purple-500 transition-colors" />
+                                            </button>
+                                        ))}
+                                    </div>
+                                    {nonSeriesArtworks.length > 5 && (
+                                        <p className="text-xs text-slate-400">
+                                            ...y {nonSeriesArtworks.length - 5} obras más
+                                        </p>
+                                    )}
+                                </div>
+                            ) : (
+                                <button
+                                    onClick={onClose}
+                                    className="px-6 py-3 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition-colors"
+                                >
+                                    Entendido
+                                </button>
+                            )}
                         </div>
                     ) : (
                         <>
                             {/* Selector de Obra */}
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                                    Selecciona la obra
+                                    ¿Qué obra quieres ajustar?
                                 </label>
                                 <select
                                     value={selectedArtworkId || ''}
@@ -1270,7 +1328,7 @@ const EditionAdjustModal: React.FC<EditionAdjustModalProps> = ({ artworks, onAdj
                                 >
                                     {seriesArtworks.map(art => (
                                         <option key={art.id} value={art.id}>
-                                            {art.title} — {art.seriesIndex || '?'}/{art.seriesTotal || '∞'}
+                                            {art.title} — Edición {art.seriesIndex}/{art.seriesTotal}
                                         </option>
                                     ))}
                                 </select>
@@ -1278,22 +1336,22 @@ const EditionAdjustModal: React.FC<EditionAdjustModalProps> = ({ artworks, onAdj
 
                             {/* Info de la obra seleccionada */}
                             {selectedArtwork && (
-                                <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                <div className="bg-gradient-to-r from-slate-50 to-purple-50 rounded-xl p-4 border border-purple-100">
                                     <div className="flex items-center gap-4">
                                         <img
                                             src={selectedArtwork.image}
                                             alt={selectedArtwork.title}
-                                            className="w-16 h-16 object-cover rounded-lg shadow"
+                                            className="w-20 h-20 object-cover rounded-lg shadow-md"
                                         />
                                         <div className="flex-1">
-                                            <h4 className="font-bold text-slate-800">{selectedArtwork.title}</h4>
+                                            <h4 className="font-bold text-slate-800 text-lg">{selectedArtwork.title}</h4>
                                             <p className="text-sm text-slate-500">{selectedArtwork.technique}</p>
-                                            <div className="mt-1 flex items-center gap-2">
-                                                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-medium">
-                                                    Edición actual: {selectedArtwork.seriesIndex || '?'}/{selectedArtwork.seriesTotal || '∞'}
+                                            <div className="mt-2 flex items-center gap-2 flex-wrap">
+                                                <span className="text-sm bg-purple-600 text-white px-3 py-1 rounded-full font-bold">
+                                                    Próxima: {selectedArtwork.seriesIndex}/{selectedArtwork.seriesTotal}
                                                 </span>
                                                 {selectedArtwork.code && (
-                                                    <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-mono">
+                                                    <span className="text-xs bg-white text-purple-700 px-2 py-1 rounded-full font-mono border border-purple-200">
                                                         {selectedArtwork.code}
                                                     </span>
                                                 )}
@@ -1303,33 +1361,39 @@ const EditionAdjustModal: React.FC<EditionAdjustModalProps> = ({ artworks, onAdj
                                 </div>
                             )}
 
-                            {/* Input del nuevo índice */}
-                            <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                                    Nueva edición disponible (N° de pieza)
+                            {/* Input principal - Ventas externas */}
+                            <div className="bg-amber-50 rounded-xl p-4 border border-amber-200">
+                                <label className="block text-sm font-bold text-amber-800 mb-3">
+                                    📦 ¿Cuántas copias vendiste fuera de la web?
                                 </label>
                                 <div className="flex items-center gap-3">
+                                    <span className="text-slate-600 text-sm">Ya vendí hasta la copia nº</span>
                                     <input
                                         type="number"
-                                        min={1}
-                                        max={selectedArtwork?.seriesTotal || 999}
-                                        value={newIndex}
-                                        onChange={(e) => setNewIndex(Number(e.target.value))}
-                                        className="flex-1 p-3 border-2 border-slate-200 rounded-xl text-center text-2xl font-bold text-purple-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all"
+                                        min={0}
+                                        max={(selectedArtwork?.seriesTotal || 1) - 1}
+                                        value={soldUpTo}
+                                        onChange={(e) => setSoldUpTo(Math.max(0, Number(e.target.value)))}
+                                        className="w-20 p-2 border-2 border-amber-300 rounded-lg text-center text-xl font-bold text-amber-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all bg-white"
                                     />
-                                    <span className="text-2xl text-slate-400">/</span>
-                                    <div className="w-20 p-3 bg-slate-100 rounded-xl text-center text-2xl font-bold text-slate-500">
-                                        {selectedArtwork?.seriesTotal || '∞'}
-                                    </div>
+                                    <span className="text-slate-600 text-sm">de {selectedArtwork?.seriesTotal}</span>
                                 </div>
-                                <p className="text-xs text-slate-400 mt-2">
-                                    💡 Si vendiste las copias 1-4 fuera de la web, introduce "5" para que el próximo certificado sea 5/{selectedArtwork?.seriesTotal || '∞'}
-                                </p>
+
+                                {/* Vista previa del resultado */}
+                                <div className="mt-4 p-3 bg-white rounded-lg border border-amber-200">
+                                    <p className="text-xs text-slate-500 mb-1">El próximo certificado será:</p>
+                                    <p className="text-2xl font-bold text-purple-600">
+                                        Copia {nextAvailable} de {selectedArtwork?.seriesTotal}
+                                        <span className="text-sm font-normal text-slate-400 ml-2">
+                                            ({selectedArtwork?.seriesTotal ? selectedArtwork.seriesTotal - nextAvailable + 1 : '?'} restantes)
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
 
                             {/* Mensaje de confirmación */}
                             {confirmText && (
-                                <div className="bg-green-50 text-green-700 p-3 rounded-xl text-center font-medium animate-in fade-in duration-300">
+                                <div className="bg-green-50 text-green-700 p-4 rounded-xl text-center font-medium animate-in fade-in duration-300 border border-green-200">
                                     {confirmText}
                                 </div>
                             )}
@@ -1344,7 +1408,8 @@ const EditionAdjustModal: React.FC<EditionAdjustModalProps> = ({ artworks, onAdj
                                 </button>
                                 <button
                                     onClick={handleSave}
-                                    className="flex-1 py-3 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-indigo-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-200"
+                                    disabled={soldUpTo < 0 || (selectedArtwork?.seriesTotal && nextAvailable > selectedArtwork.seriesTotal)}
+                                    className="flex-1 py-3 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-indigo-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     <Save size={18} /> Guardar Ajuste
                                 </button>
@@ -1583,6 +1648,10 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                     artworks={artworks}
                     onAdjust={handleAdjustEdition}
                     onClose={() => setShowEditionAdjust(false)}
+                    onConfigureSeries={(artwork) => {
+                        setShowEditionAdjust(false);
+                        setArtworkToManage(artwork);
+                    }}
                 />
             )}
 
