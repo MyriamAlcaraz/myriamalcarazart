@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, ArrowLeft, AlertTriangle } from 'lucide-react';
-import GicleeTab from './GicleeTab';
+import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, AlertTriangle } from 'lucide-react';
 import { AIStudio } from "./AIStudio";
 
 
@@ -1191,8 +1190,6 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     // 🛑 CAMBIADO: artworkToManage se inicializa en null, pero en el botón se le asigna NEW_WORK_PLACEHOLDER (id: 0)
     const [artworkToManage, setArtworkToManage] = useState<Artwork | null>(null);
 
-    // 🖼️ Estado para controlar vista de Giclée
-    const [showGiclee, setShowGiclee] = useState(false);
     // 📊 Estado para el modal de Reporte de Ventas
     const [showReport, setShowReport] = useState(false);
 
@@ -1295,14 +1292,6 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                         >
                             <Plus size={16} /> NUEVA OBRA
                         </button>
-                        {/* 🖼️ BOTÓN DE GICLÉE EXCLUSIVO (Solo visible en área protegida) */}
-                        <button
-                            onClick={() => setShowGiclee(true)}
-                            className="flex items-center gap-2 text-sm font-bold text-slate-700 bg-stone-200 hover:bg-stone-300 transition-colors py-3 px-4 rounded-lg shadow-md"
-                            title="Ver catálogo Giclée Exclusivo"
-                        >
-                            <Layout size={16} /> GICLÉE
-                        </button>
 
                         {/* 📊 BOTÓN REPORTE HACIENDA (SECRET) - VISUAL */}
                         <button
@@ -1364,22 +1353,6 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                     artworkToManage={artworkToManage}
                     onCancel={() => setArtworkToManage(null)}
                 />
-            )}
-
-            {/* 🖼️ MODAL DE GICLÉE EXCLUSIVO (Solo en área protegida) */}
-            {showGiclee && (
-                <div className="fixed inset-0 bg-black/80 z-50 overflow-y-auto">
-                    <div className="min-h-screen">
-                        <button
-                            onClick={() => setShowGiclee(false)}
-                            className="fixed top-6 left-6 flex items-center gap-2 text-white hover:text-gold-400 transition-colors bg-slate-800/50 backdrop-blur-sm px-4 py-2 rounded-lg z-[70]"
-                        >
-                            <ArrowLeft size={20} />
-                            <span className="text-sm font-semibold">VOLVER AL ESTUDIO</span>
-                        </button>
-                        <GicleeTab />
-                    </div>
-                </div>
             )}
 
             {/* 📊 MODAL DE REPORTE VISUAL (Solo en área protegida) */}
