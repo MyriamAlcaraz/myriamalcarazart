@@ -611,18 +611,73 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
                 <div className="w-full md:w-2/3 flex flex-col justify-between">
                     <div>
                         <h3 className="text-xl font-serif text-gray-800 italic">{artwork.title}</h3>
-                        <p className="text-sm text-gray-500 mt-1">{artwork.technique} • {artwork.size}</p>
+                        <p className="text-sm text-gray-500 mt-1">{artwork.technique} • {artwork.dimensions}</p>
                     </div>
                 </div>
-            </div>
-            {/* 🤖 ASISTENTE DE IA FLOTANTE SIEMPRE PRESENTE */}
-            <div className="fixed bottom-6 right-6 z-50 shadow-2xl">
-                <AIStudio />
             </div>
         </div>
     );
 };
 
+
+// =========================================================
+// 🎨 COMPONENTE PRINCIPAL: ARTIST DASHBOARD
+// =========================================================
+
+const ArtistDashboard: React.FC = () => {
+    const [artworks, setArtworks] = useState<Artwork[]>(REAL_ARTWORKS);
+    const [settings] = useState<DocumentSettings>(initialSettings);
+
+    const handleGenerateCode = (id: number) => {
+        setArtworks(prev => prev.map(art => {
+            if (art.id === id) {
+                return { ...art, code: generateSmartCode(art), status: 'GENERADO' as const };
+            }
+            return art;
+        }));
+    };
+
+    const handleDelete = (id: number) => {
+        setArtworks(prev => prev.filter(art => art.id !== id));
+    };
+
+    const handleDuplicate = (artwork: Artwork) => {
+        const newId = Math.max(...artworks.map(a => a.id)) + 1;
+        const newArtwork: Artwork = {
+            ...artwork,
+            id: newId,
+            code: null,
+            status: 'PENDIENTE'
+        };
+        setArtworks(prev => [...prev, newArtwork]);
+    };
+
+    const handleEdit = (artwork: Artwork) => {
+        setArtworks(prev => prev.map(art => art.id === artwork.id ? artwork : art));
+    };
+
+    return (
+        <div className="min-h-screen bg-gray-50 p-8">
+            <h1 className="text-3xl font-serif text-gray-800 mb-8">Panel de Artista</h1>
+
+            <div className="grid gap-6">
+                {artworks.map(artwork => (
+                    <ArtworkWorkstation
+                        key={artwork.id}
+                        artwork={artwork}
+                        settings={settings}
+                        onGenerateCode={handleGenerateCode}
+                        onDelete={handleDelete}
+                        onDuplicate={handleDuplicate}
+                        onEdit={handleEdit}
+                    />
+                ))}
+            </div>
+
+            {/* 🤖 ASISTENTE DE IA FLOTANTE */}
+            <div className="fixed bottom-6 right-6 z-50 shadow-2xl">
+                <AIStudio />
+            </div>
         </div>
     );
 };
