@@ -623,4 +623,8 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
     );
 };
 
+        </div>
+    );
+};
+
 export default ArtistDashboard;
