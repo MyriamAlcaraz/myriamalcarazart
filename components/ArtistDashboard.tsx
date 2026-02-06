@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, ArrowLeft, AlertTriangle } from 'lucide-react';
 import GicleeTab from './GicleeTab';
+import { AIStudio } from "./AIStudio";
+
 
 // ---------------------------------------------------------
 // 🎨 DEFINICIÓN DE TIPOS Y CONSTANTES
