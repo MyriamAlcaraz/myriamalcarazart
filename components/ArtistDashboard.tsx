@@ -602,16 +602,570 @@ interface ArtworkWorkstationProps {
 
 const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settings, onGenerateCode, onDelete, onDuplicate, onEdit }) => {
 
+    const certificateContent = useMemo(() => artwork.code ? getCertificateHtml(artwork, settings) : '', [artwork, settings]);
+    const letterContent = useMemo(() => artwork.code ? getLetterHtml(artwork, settings) : '', [artwork, settings]);
+
     return (
-        <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm mb-6">
-            <div className="flex flex-col md:flex-row gap-6">
-                <div className="w-full md:w-1/3">
-                    <img src={artwork.image} alt={artwork.title} className="w-full h-48 object-cover rounded-lg shadow-inner" />
+        // Estilo de Galería
+        <div className="relative bg-white rounded-xl shadow-lg group overflow-hidden transition-all hover:shadow-2xl hover:scale-[1.01]">
+
+            {/* Imagen y Tools (Overlay) */}
+            <div className="relative aspect-[4/3] bg-stone-100 cursor-pointer">
+                <img
+                    src={artwork.image || '/obras/placeholder-work.jpg'}
+                    alt={artwork.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:opacity-50"
+                />
+
+                {/* Overlay con los botones de Certificado/Carta (Aparece al hacer hover/click) */}
+                <div className={`absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity p-4 ${!artwork.code && 'opacity-100 bg-red-800/80'}`}>
+
+                    {/* ACCIÓN PRINCIPAL (GENERAR CÓDIGO) */}
+                    {!artwork.code ? (
+                        // Se muestra para obras PENDIENTES (manual o nuevas)
+                        <>
+                            <p className="text-white text-xs font-semibold uppercase tracking-wider mb-2">Paso Requerido</p>
+                            <button
+                                onClick={() => onGenerateCode(artwork.id)}
+                                className="bg-gold-500 text-white py-3 px-6 rounded-lg font-bold text-sm hover:bg-gold-600 transition-colors flex items-center gap-2 w-full justify-center shadow-lg"
+                                title="Generar Código Único de Trazabilidad para esta obra"
+                            >
+                                <Code size={18} /> GENERAR CÓDIGO INTELIGENTE
+                            </button>
+                            <p className="text-white/80 text-xs mt-1">Si ya tiene un código (ej. Giclée), puede introducirlo con el botón "Editar Datos" abajo.</p>
+                        </>
+                    ) : (
+                        // ACCIONES DE DOCUMENTACIÓN (CERTIFICADO Y CARTA) - Esto se verá si ya tienen código.
+                        <>
+                            <p className="text-white text-xs font-semibold uppercase tracking-wider mb-2">Documentos Listos</p>
+
+                            <button
+                                onClick={() => handlePrintDocument(certificateContent, `Certificado ${artwork.code}`)}
+                                className="bg-blue-600 text-white py-3 px-6 rounded-lg font-bold text-sm hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 w-full shadow-lg"
+                            >
+                                <Printer size={16} /> IMPRIMIR CERTIFICADO
+                            </button>
+
+                            <button
+                                onClick={() => handlePrintDocument(letterContent, `Carta ${artwork.code}`)}
+                                className="bg-blue-600/80 text-white py-3 px-6 rounded-lg font-bold text-sm hover:bg-blue-700/80 transition-colors flex items-center justify-center gap-2 w-full shadow-lg"
+                            >
+                                <FileText size={16} /> IMPRIMIR CARTA
+                            </button>
+                        </>
+                    )}
                 </div>
-                <div className="w-full md:w-2/3 flex flex-col justify-between">
+            </div>
+
+            {/* Título y Acciones Secundarias (Siempre visibles: Editar, Duplicar, Eliminar) */}
+            <div className="p-4 flex justify-between items-center">
+                <div>
+                    <h4 className="text-lg font-bold text-slate-800 leading-tight">{artwork.title}</h4>
+                    <p className="text-xs text-slate-500 mt-1">{getSeriesText(artwork)}</p>
+                </div>
+                <div className="flex gap-1.5">
+                    {/* Botón para abrir el formulario y EDITAR datos (Acceso al formulario de gestión) */}
+                    <button
+                        onClick={() => onEdit(artwork)}
+                        className="text-slate-500 hover:text-orange-500 p-1 rounded transition"
+                        title="Editar Datos de Obra"
+                    >
+                        <Edit size={18} />
+                    </button>
+                    {/* Botón para DUPLICAR (Crea una obra nueva con datos pre-rellenados) */}
+                    <button
+                        onClick={() => onDuplicate(artwork)}
+                        className="text-slate-500 hover:text-blue-500 p-1 rounded transition"
+                        title="Duplicar Obra (para siguiente de la serie o similar)"
+                    >
+                        <Copy size={18} />
+                    </button>
+                    <button
+                        onClick={() => onDelete(artwork.id)}
+                        className="text-red-500 hover:text-red-700 p-1 rounded transition"
+                        title="Eliminar Obra"
+                    >
+                        <Trash2 size={18} />
+                    </button>
+                </div>
+            </div>
+
+            {/* Cinta de Estado (Arriba a la derecha) */}
+            <div className={`absolute top-0 right-0 text-white text-[10px] font-bold px-3 py-1 rounded-bl ${artwork.code ? 'bg-green-600' : 'bg-red-600'}`}>
+                {artwork.code ? `ID: ${artwork.code}` : 'PENDIENTE'}
+            </div>
+        </div>
+    );
+};
+
+
+// =========================================================
+// ➕ COMPONENTE: FORMULARIO DE GESTIÓN (Modal/Panel Flotante)
+// =========================================================
+
+interface ArtworkFormProps {
+    onSave: (artwork: Omit<Artwork, 'id' | 'originalIndex'>, idToUpdate: number | null) => void;
+    artworkToManage: Artwork | null;
+    onCancel: () => void;
+}
+
+const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToManage, onCancel }) => {
+
+    // Estado interno del formulario
+    // isEditing será true solo si el ID es > 0. (id: 0 es NEW, id: -1 es DUPLICATING)
+    const isEditing = artworkToManage ? artworkToManage.id > 0 : false;
+    const isDuplicating = artworkToManage ? artworkToManage.id === -1 : false;
+    const isAddingNew = artworkToManage ? artworkToManage.id === 0 : false;
+
+    const [title, setTitle] = useState('');
+    const [certificationDate, setCertificationDate] = useState(new Date().toISOString().substring(0, 10));
+
+    const [isSeries, setIsSeries] = useState(false);
+    const [isOpenSeries, setIsOpenSeries] = useState(false);
+    const [seriesIndex, setSeriesIndex] = useState<number | ''>('');
+    const [seriesTotal, setSeriesTotal] = useState<number | ''>('');
+
+    const [imagePath, setImagePath] = useState('');
+    const [dimensions, setDimensions] = useState('');
+    const [technique, setTechnique] = useState('');
+    const [manualCode, setManualCode] = useState<string>('');
+
+    // Hook para PRE-RELLENAR el formulario (al añadir, duplicar o editar)
+    useEffect(() => {
+        if (artworkToManage) {
+
+            // Si es nueva obra (id: 0), cargamos los valores por defecto del placeholder
+            if (isAddingNew) {
+                setTitle('');
+                setCertificationDate(new Date().toISOString().substring(0, 10));
+                setSeriesIndex('');
+                setSeriesTotal('');
+                setIsSeries(false);
+                setIsOpenSeries(false);
+                setImagePath(NEW_WORK_PLACEHOLDER.image); // placeholder image
+                setDimensions('');
+                setTechnique('');
+                setManualCode('');
+                return;
+            }
+
+            // Lógica de carga para Edición (id > 0) o Duplicación (id = -1)
+            setTitle(artworkToManage.title);
+            setCertificationDate(isDuplicating ? new Date().toISOString().substring(0, 10) : artworkToManage.certificationDate);
+
+            setIsOpenSeries(artworkToManage.isOpenSeries);
+
+            const isLimitedSeries = artworkToManage.seriesIndex !== null && artworkToManage.seriesTotal !== null && !artworkToManage.isOpenSeries;
+            setIsSeries(isLimitedSeries);
+
+            // Si se duplica, sugiere el siguiente índice, si no, usa el valor actual
+            const initialIndex = isLimitedSeries && isDuplicating ? artworkToManage.seriesIndex! + 1 : artworkToManage.seriesIndex ?? '';
+            setSeriesIndex(initialIndex);
+
+            setSeriesTotal(artworkToManage.seriesTotal ?? '');
+
+            setImagePath(artworkToManage.image);
+            setDimensions(artworkToManage.dimensions);
+            setTechnique(artworkToManage.technique);
+            setManualCode(artworkToManage.code ?? '');
+        }
+    }, [artworkToManage, isDuplicating, isAddingNew]);
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        let index = null;
+        let total = null;
+
+        if (isSeries && !isOpenSeries) { // Solo si es serie limitada
+            index = seriesIndex === '' ? null : Number(seriesIndex);
+            total = seriesTotal === '' ? null : Number(seriesTotal);
+
+            if (index === null || total === null || index > total) {
+                alert("Revise los campos de la edición seriada limitada (N° Pieza y Total Edición).");
+                return;
+            }
+        }
+
+        if (title.trim() === '' || dimensions.trim() === '' || technique.trim() === '') {
+            alert("El título, las dimensiones y la técnica de la obra son obligatorios.");
+            return;
+        }
+
+        const finalCode = manualCode.trim() || null;
+        const finalStatus: 'PENDIENTE' | 'GENERADO' = finalCode ? 'GENERADO' : 'PENDIENTE';
+
+        const newArtworkData: Omit<Artwork, 'id' | 'originalIndex'> = {
+            title: title.trim(),
+            certificationDate: certificationDate,
+            type: 'PT',
+            seriesIndex: index, // Será null si no es serie limitada
+            seriesTotal: total, // Será null si no es serie limitada
+            image: imagePath || NEW_WORK_PLACEHOLDER.image, // Usa la imagen placeholder si está vacío
+            dimensions: dimensions.trim(),
+            technique: technique.trim(),
+            code: finalCode,
+            status: finalStatus,
+            isOpenSeries: isOpenSeries,
+        };
+
+        // Si id es 0 (nueva) o -1 (duplicado), se pasa null a onSave para crear una nueva
+        const idToUpdate = isEditing ? artworkToManage!.id : null;
+
+        onSave(newArtworkData, idToUpdate);
+        onCancel(); // Cerrar formulario al guardar
+    };
+
+    const headerText = isEditing ? 'EDITAR Datos de Obra' : (isDuplicating ? 'DUPLICANDO Obra Seriada' : 'Añadir Nueva Obra al Catálogo');
+
+    return (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-start justify-center p-8">
+            <form onSubmit={handleSubmit} className="w-full max-w-4xl bg-white p-8 rounded-xl shadow-2xl mt-10 relative">
+
+                <button
+                    type="button"
+                    onClick={onCancel}
+                    className="absolute top-4 right-4 text-slate-400 hover:text-red-500 transition-colors"
+                    title="Cerrar Formulario"
+                >
+                    <X size={24} />
+                </button>
+
+                <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mb-6 border-b pb-3">
+                    {isEditing ? <Edit size={24} className="text-orange-500" /> : <Plus size={24} className="text-gold-500" />} {headerText}
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+
+                    {/* Título */}
+                    <div className="col-span-1 md:col-span-3">
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Título de la Obra</label>
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            placeholder="Ej: La Ciudad Secreta"
+                            className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
+                            required
+                        />
+                    </div>
+
+                    {/* Fecha */}
+                    <div className="col-span-1 md:col-span-3">
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Fecha de Creación/Certificación</label>
+                        <input
+                            type="date"
+                            value={certificationDate}
+                            onChange={(e) => setCertificationDate(e.target.value)}
+                            className="p-2 border rounded text-sm w-full text-center focus:ring-gold-500 focus:border-gold-500"
+                            max={new Date().toISOString().substring(0, 10)}
+                            required
+                        />
+                    </div>
+
+                    {/* Dimensiones */}
+                    <div className="col-span-1 md:col-span-2">
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Medidas (Ej: 100x81 cm)</label>
+                        <input
+                            type="text"
+                            value={dimensions}
+                            onChange={(e) => setDimensions(e.target.value)}
+                            placeholder="Ej: 100x81 cm"
+                            className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
+                            required
+                        />
+                    </div>
+
+                    {/* Técnica */}
+                    <div className="col-span-1 md:col-span-4">
+                        <label className="block text-xs font-medium text-slate-500 mb-1">Técnica/Medio</label>
+                        <input
+                            type="text"
+                            value={technique}
+                            onChange={(e) => setTechnique(e.target.value)}
+                            placeholder="Ej: Óleo sobre tela en tabla con bastidor"
+                            className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
+                            required
+                        />
+                    </div>
+
+                    {/* Imagen URL */}
+                    <div className="col-span-1 md:col-span-3">
+                        <label className="block text-xs font-medium text-slate-500 mb-1 flex justify-between items-center">
+                            Ruta/URL de Imagen de la Obra (Para Certificado)
+                            <span className="text-blue-500 hover:underline cursor-pointer" onClick={() => setImagePath('/obras/demo-obra.jpg')}>Usar Demo</span>
+                        </label>
+                        <input
+                            type="text"
+                            value={imagePath}
+                            onChange={(e) => setImagePath(e.target.value)}
+                            placeholder="/obras/Sara-Farola.jpg"
+                            className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
+                        />
+                    </div>
+
+                    {/* Código Manual/Giclée (NUEVO) */}
+                    <div className="col-span-1 md:col-span-3">
+                        <label className="block text-xs font-medium text-slate-500 mb-1">CÓDIGO de Certificado (Opcional/Giclée)</label>
+                        <input
+                            type="text"
+                            value={manualCode}
+                            onChange={(e) => setManualCode(e.target.value)}
+                            placeholder="Ej: MA-2025-01/50 (Giclée) o MA-2025-09"
+                            className="w-full p-2 border rounded text-sm focus:ring-gold-500 focus:border-gold-500"
+                        />
+                        <p className="text-[10px] text-slate-400 mt-1">Si introduce un código aquí, la obra se marcará como **GENERADA**.</p>
+                    </div>
+
+
+                    {/* Control de Serie 🛑 MODIFICADO */}
+                    <div className="flex flex-col gap-2 col-span-1 md:col-span-6 border-t pt-4 mt-4">
+                        <label className="text-xs font-medium text-slate-500 mb-1">Tipo de Edición</label>
+
+                        <div className="flex items-center gap-6">
+                            {/* Opción Obra Única (Default) */}
+                            <label className="flex items-center text-sm cursor-pointer">
+                                <input
+                                    type="radio"
+                                    checked={!isSeries && !isOpenSeries}
+                                    onChange={() => {
+                                        setIsSeries(false);
+                                        setIsOpenSeries(false);
+                                    }}
+                                    className="mr-2 rounded-full text-gold-500 focus:ring-gold-500"
+                                    name="editionType"
+                                />
+                                Obra Única Original
+                            </label>
+
+                            {/* Opción Edición Limitada (Con índices) */}
+                            <label className="flex items-center text-sm cursor-pointer">
+                                <input
+                                    type="radio"
+                                    checked={isSeries && !isOpenSeries}
+                                    onChange={() => {
+                                        setIsSeries(true);
+                                        setIsOpenSeries(false);
+                                    }}
+                                    className="mr-2 rounded-full text-gold-500 focus:ring-gold-500"
+                                    name="editionType"
+                                />
+                                Edición Seriada Limitada
+                            </label>
+
+                            {/* Opción Edición Abierta (Giclée) */}
+                            <label className="flex items-center text-sm cursor-pointer">
+                                <input
+                                    type="radio"
+                                    checked={isOpenSeries}
+                                    onChange={() => {
+                                        setIsOpenSeries(true);
+                                        setIsSeries(false);
+                                        // Cuando es Abierta, no hay índices, así que se fuerzan a null
+                                        setSeriesIndex('');
+                                        setSeriesTotal('');
+                                    }}
+                                    className="mr-2 rounded-full text-gold-500 focus:ring-gold-500"
+                                    name="editionType"
+                                />
+                                Edición Seriada Abierta (Giclée)
+                            </label>
+                        </div>
+
+                        {/* Inputs de Series Limitadas (Visibles solo si es Edición Limitada) */}
+                        {isSeries && !isOpenSeries && (
+                            <div className="flex gap-4 max-w-md mt-3 p-3 bg-stone-50 rounded border">
+                                <input
+                                    type="number"
+                                    value={seriesIndex}
+                                    onChange={(e) => setSeriesIndex(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
+                                    placeholder="N° Pieza (Ej: 1)"
+                                    className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
+                                    min="1"
+                                    required
+                                />
+                                <input
+                                    type="number"
+                                    value={seriesTotal}
+                                    onChange={(e) => setSeriesTotal(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
+                                    placeholder="Total Edición (Ej: 50)"
+                                    className="p-2 border rounded text-sm w-1/2 text-center focus:ring-gold-500 focus:border-gold-500"
+                                    min="1"
+                                    required
+                                />
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Botón Guardar */}
+                    <div className="col-span-6 mt-4">
+                        <button
+                            type="submit"
+                            className="w-full bg-slate-700 text-white py-3 rounded-lg font-bold text-sm hover:bg-slate-800 transition-colors flex items-center justify-center gap-2 shadow-md"
+                            disabled={!title.trim() || !dimensions.trim() || !technique.trim()}
+                        >
+                            <Check size={18} /> {isEditing ? 'ACTUALIZAR OBRA' : 'GUARDAR Y VOLVER'}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    );
+};
+
+
+// =========================================================
+// 📊 COMPONENTE: REPORTE DE VENTAS VISUAL (MODAL)
+// =========================================================
+const SalesReportModal: React.FC<{ artworks: Artwork[], onClose: () => void }> = ({ artworks, onClose }) => {
+    // DATOS MAESTROS DE GICLÉE (Costes Base Raúl & PVP Actualizados)
+    const GICLEE_DATA = [
+        { id: 'standard', name: 'Estándar (40cm)', pvp: 180, cost: 27, limit: 30 },
+        { id: 'intermediate', name: 'Intermedio (50cm)', pvp: 280, cost: 56, limit: 25 },
+        { id: 'medium', name: 'Mediano (70cm)', pvp: 450, cost: 104, limit: 15 },
+        { id: 'large', name: 'Grande (90cm)', pvp: 680, cost: 130, limit: 10 }, // Est. cost
+        { id: 'collection', name: 'Colección (100cm)', pvp: 950, cost: 200, limit: 5 }
+    ];
+
+    const today = new Date().toLocaleDateString('es-ES');
+
+    // Generar datos procesados para la tabla
+    const reportData = artworks.flatMap(art => {
+        return GICLEE_DATA.map(size => {
+            // 🔮 SIMULACIÓN DE VENTAS (Determinista)
+            const pseudoRandom = (art.id * size.limit) % size.limit;
+            const soldCount = Math.floor(pseudoRandom * 0.8);
+            const remaining = size.limit - soldCount;
+            const nextEditionNum = soldCount + 1;
+
+            // CÓDIGO DE EDICIÓN FORMATO: MA-26-GC-[ID]-[Nº/Total]
+            // "26" por el año 2026.
+            const code = `MA-26-GC-${art.id}-${nextEditionNum}/${size.limit}`;
+
+            const profit = size.pvp - size.cost;
+
+            let status = 'OK';
+            let statusColor = 'text-green-600 bg-green-50';
+            if (remaining <= 3) {
+                status = 'CRÍTICO';
+                statusColor = 'text-red-700 bg-red-100 font-bold animate-pulse';
+            } else if (remaining <= 10) {
+                status = 'BAJO';
+                statusColor = 'text-orange-600 bg-orange-50';
+            }
+
+            return {
+                id: `${art.id}-${size.id}`,
+                date: today,
+                title: art.title,
+                code,
+                sizeName: size.name,
+                pvp: size.pvp,
+                cost: size.cost,
+                profit,
+                remaining,
+                limit: size.limit,
+                status,
+                statusColor
+            };
+        });
+    });
+
+    const handleDownloadCSV = () => {
+        const csvRows = [
+            ["Fecha", "Obra", "Código Edición", "Tamaño", "PVP (€)", "Coste Raúl (€)", "Beneficio (€)", "Estado Stock", "Restantes"]
+        ];
+        reportData.forEach(row => {
+            csvRows.push([
+                row.date,
+                `"${row.title}"`,
+                row.code,
+                row.sizeName,
+                row.pvp.toString(),
+                row.cost.toString(),
+                row.profit.toString(),
+                row.status,
+                row.remaining.toString()
+            ]);
+        });
+
+        const csvContent = "data:text/csv;charset=utf-8," + csvRows.map(e => e.join(",")).join("\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `registro_ventas_giclee_${new Date().toISOString().slice(0, 10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/90 z-[80] flex items-center justify-center p-4">
+            <div className="bg-white w-full max-w-7xl h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+                {/* Header */}
+                <div className="p-6 border-b flex justify-between items-center bg-slate-50">
                     <div>
-                        <h3 className="text-xl font-serif text-gray-800 italic">{artwork.title}</h3>
-                        <p className="text-sm text-gray-500 mt-1">{artwork.technique} • {artwork.dimensions}</p>
+                        <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+                            <Briefcase className="text-green-600" /> INFORME DE VENTAS & STOCK
+                        </h2>
+                        <p className="text-sm text-slate-500 mt-1">
+                            Control de ediciones Giclée en tiempo real.
+                        </p>
+                    </div>
+                    <div className="flex gap-4">
+                        <button
+                            onClick={handleDownloadCSV}
+                            className="flex items-center gap-2 bg-green-600 text-white px-5 py-2.5 rounded-lg hover:bg-green-700 transition font-bold shadow-lg"
+                        >
+                            <Printer size={18} /> DESCARGAR CSV
+                        </button>
+                        <button
+                            onClick={onClose}
+                            className="text-slate-400 hover:text-red-500 transition p-2"
+                        >
+                            <X size={28} />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Tabla Scrolleable */}
+                <div className="flex-1 overflow-auto p-6 bg-slate-100">
+                    <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
+                        <table className="w-full text-left border-collapse">
+                            <thead className="bg-slate-800 text-white sticky top-0 z-10">
+                                <tr>
+                                    <th className="p-4 font-semibold text-sm tracking-wider w-24">FECHA</th>
+                                    <th className="p-4 font-semibold text-sm tracking-wider">OBRA</th>
+                                    <th className="p-4 font-semibold text-sm tracking-wider">CÓDIGO (Next)</th>
+                                    <th className="p-4 font-semibold text-sm tracking-wider">TAMAÑO</th>
+                                    <th className="p-4 font-semibold text-sm tracking-wider text-right">PVP</th>
+                                    <th className="p-4 font-semibold text-sm tracking-wider text-right text-orange-300">COSTE RAÚL</th>
+                                    <th className="p-4 font-semibold text-sm tracking-wider text-right text-green-300">BENEFICIO</th>
+                                    <th className="p-4 font-semibold text-sm tracking-wider text-center">STOCK</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {reportData.map((row) => (
+                                    <tr key={row.id} className="hover:bg-slate-50 transition-colors group">
+                                        <td className="p-4 text-sm text-slate-500">{row.date}</td>
+                                        <td className="p-4 font-medium text-slate-800">{row.title}</td>
+                                        <td className="p-4 font-mono text-xs text-blue-600 bg-blue-50/50 rounded px-2 w-fit">{row.code}</td>
+                                        <td className="p-4 text-sm text-slate-600">{row.sizeName}</td>
+                                        <td className="p-4 text-right font-bold text-slate-700">{row.pvp}€</td>
+                                        <td className="p-4 text-right text-sm text-slate-500">{row.cost}€</td>
+                                        <td className="p-4 text-right font-bold text-green-600 text-lg group-hover:scale-110 transition-transform origin-right">
+                                            +{row.profit}€
+                                        </td>
+                                        <td className="p-4 text-center">
+                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${row.statusColor}`}>
+                                                {row.status === 'CRÍTICO' && <AlertTriangle size={12} className="mr-1" />}
+                                                {row.status} ({row.remaining})
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -621,70 +1175,229 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
 
 
 // =========================================================
-// 🎨 COMPONENTE PRINCIPAL: ARTIST DASHBOARD
+// ⚙️ COMPONENTE PRINCIPAL DEL DASHBOARD (CONTENEDOR)
 // =========================================================
-
 interface ArtistDashboardProps {
-    onLogout?: () => void;
+    onLogout: () => void;
 }
+export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
 
-const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) => {
+    // 🛑 Inicialización con los datos REALES del catálogo completo
     const [artworks, setArtworks] = useState<Artwork[]>(REAL_ARTWORKS);
-    const [settings] = useState<DocumentSettings>(initialSettings);
 
+    // 🛑 Inicialización con los datos CORREGIDOS
+    const [documentSettings, setDocumentSettings] = useState<DocumentSettings>(initialSettings);
+
+    // 🛑 CAMBIADO: artworkToManage se inicializa en null, pero en el botón se le asigna NEW_WORK_PLACEHOLDER (id: 0)
+    const [artworkToManage, setArtworkToManage] = useState<Artwork | null>(null);
+
+    // 🖼️ Estado para controlar vista de Giclée
+    const [showGiclee, setShowGiclee] = useState(false);
+    // 📊 Estado para el modal de Reporte de Ventas
+    const [showReport, setShowReport] = useState(false);
+
+    // 🛑 Handler para añadir o editar obra (Acepta ahora code y status)
+    const handleSaveArtwork = (artworkData: Omit<Artwork, 'id' | 'originalIndex'>, idToUpdate: number | null) => {
+
+        // El status ya viene determinado por el formulario (si hay código manual o no)
+        const finalStatus = artworkData.code ? 'GENERADO' : 'PENDIENTE';
+
+        if (idToUpdate) {
+            // EDICIÓN
+            setArtworks(prevArtworks => prevArtworks.map(artwork => {
+                if (artwork.id === idToUpdate) {
+                    return {
+                        ...artwork,
+                        ...artworkData,
+                        status: finalStatus, // Asegura el estado correcto si se puso/quitó el código
+                    };
+                }
+                return artwork;
+            }));
+        } else {
+            // AÑADIR NUEVA
+            // Genera el ID más alto + 1
+            const newId = Math.max(0, ...artworks.map(a => a.id)) + 1;
+            const newArtwork: Artwork = {
+                id: newId,
+                ...artworkData,
+                status: finalStatus,
+                originalIndex: artworks.length, // Se añade al final
+            };
+            setArtworks(prevArtworks => [newArtwork, ...prevArtworks]);
+        }
+        setArtworkToManage(null); // Limpiar el estado de gestión
+    };
+
+    // Handler para duplicar (Prepara el formulario con los datos de la obra original, pero con ID temporal -1 para que se cree como nueva)
+    const handleDuplicateArtwork = (artwork: Artwork) => {
+        const temporaryDuplicationArtwork: Artwork = {
+            ...artwork,
+            id: -1, // ID temporal que indica duplicación
+            code: null, // El duplicado debe tener el código nulo para forzar la re-certificación
+            status: 'PENDIENTE',
+            seriesIndex: artwork.seriesIndex !== null ? artwork.seriesIndex + 1 : artwork.seriesIndex, // Sugiere el siguiente índice
+        };
+        setArtworkToManage(temporaryDuplicationArtwork);
+    };
+
+    // Handler para generar código (Se activa con el botón azul/rojo de la tarjeta)
     const handleGenerateCode = (id: number) => {
-        setArtworks(prev => prev.map(art => {
-            if (art.id === id) {
-                return { ...art, code: generateSmartCode(art), status: 'GENERADO' as const };
+        setArtworks(prevArtworks => prevArtworks.map(artwork => {
+            if (artwork.id === id && artwork.status === 'PENDIENTE') {
+                const newCode = generateSmartCode(artwork);
+                return { ...artwork, code: newCode, status: 'GENERADO' };
             }
-            return art;
+            return artwork;
         }));
     };
 
-    const handleDelete = (id: number) => {
-        setArtworks(prev => prev.filter(art => art.id !== id));
+    // Handler para eliminar obra
+    const handleDeleteArtwork = (id: number) => {
+        if (window.confirm("¿Seguro que quieres eliminar esta obra de la lista de gestión? Esta acción es irreversible.")) {
+            setArtworks(prevArtworks => prevArtworks.filter(artwork => artwork.id !== id));
+        }
     };
 
-    const handleDuplicate = (artwork: Artwork) => {
-        const newId = Math.max(...artworks.map(a => a.id)) + 1;
-        const newArtwork: Artwork = {
-            ...artwork,
-            id: newId,
-            code: null,
-            status: 'PENDIENTE'
-        };
-        setArtworks(prev => [...prev, newArtwork]);
-    };
+    // 🛑 Obras ordenadas: Generadas primero, luego pendientes. Dentro de cada grupo, respeta el orden original (constants.ts).
+    const sortedArtworks = useMemo(() => {
+        // Se hace una copia para evitar mutar el estado original durante la ordenación.
+        return [...artworks].sort((a, b) => {
+            // 1. Sort by Status (GENERADO: -1 / PENDIENTE: 1)
+            if (a.status === 'GENERADO' && b.status === 'PENDIENTE') return -1;
+            if (a.status === 'PENDIENTE' && b.status === 'GENERADO') return 1;
 
-    const handleEdit = (artwork: Artwork) => {
-        setArtworks(prev => prev.map(art => art.id === artwork.id ? artwork : art));
-    };
+            // 2. Sort by originalIndex (Mantiene el orden de constants.ts)
+            return a.originalIndex - b.originalIndex;
+        });
+    }, [artworks]);
+
 
     return (
-        <div className="min-h-screen bg-gray-50 p-8">
-            <h1 className="text-3xl font-serif text-gray-800 mb-8">Panel de Artista</h1>
+        <>
+        <div className="min-h-screen bg-slate-50 p-8 font-sans">
 
-            <div className="grid gap-6">
-                {artworks.map(artwork => (
-                    <ArtworkWorkstation
-                        key={artwork.id}
-                        artwork={artwork}
-                        settings={settings}
-                        onGenerateCode={handleGenerateCode}
-                        onDelete={handleDelete}
-                        onDuplicate={handleDuplicate}
-                        onEdit={handleEdit}
-                    />
-                ))}
+            <div className="max-w-6xl mx-auto">
+
+                {/* CABECERA Y BOTONES GLOBALES (LIMPIOS) */}
+                <div className="flex justify-between items-center mb-10 border-b pb-4">
+                    <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
+                        <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO
+                    </h1>
+
+                    {/* BOTÓN PERMANENTE DE NUEVA OBRA */}
+                    <div className="flex gap-4">
+                        {/* 🛑 FIX BOTÓN NUEVA OBRA: Usar el placeholder (id: 0) para forzar la apertura del modal */}
+                        <button
+                            onClick={() => setArtworkToManage(NEW_WORK_PLACEHOLDER)} // Abre el formulario en modo 'Añadir Nueva'
+                            className="flex items-center gap-2 text-sm font-bold text-white bg-gold-500 hover:bg-gold-600 transition-colors py-3 px-4 rounded-lg shadow-md"
+                            title="Añadir una nueva obra a tu catálogo"
+                        >
+                            <Plus size={16} /> NUEVA OBRA
+                        </button>
+                        {/* 🖼️ BOTÓN DE GICLÉE EXCLUSIVO (Solo visible en área protegida) */}
+                        <button
+                            onClick={() => setShowGiclee(true)}
+                            className="flex items-center gap-2 text-sm font-bold text-slate-700 bg-stone-200 hover:bg-stone-300 transition-colors py-3 px-4 rounded-lg shadow-md"
+                            title="Ver catálogo Giclée Exclusivo"
+                        >
+                            <Layout size={16} /> GICLÉE
+                        </button>
+
+                        {/* 📊 BOTÓN REPORTE HACIENDA (SECRET) - VISUAL */}
+                        <button
+                            onClick={() => setShowReport(true)}
+                            className="flex items-center gap-2 text-sm font-bold text-white bg-green-600 hover:bg-green-700 transition-colors py-3 px-6 rounded-lg shadow-md border border-green-700 transform hover:scale-105"
+                            title="Ver Informe Visual y Descargar"
+                        >
+                            <Briefcase size={18} /> INFORME VENTAS
+                        </button>
+
+                        <button
+                            onClick={onLogout}
+                            className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-500 transition-colors py-3 px-4 border border-stone-200 rounded-lg hover:border-red-500"
+                        >
+                            <LogOut size={16} /> Salir
+                        </button>
+                    </div>
+                </div>
+
+                {/* GALERÍA DE OBRAS */}
+                <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mb-6">
+                    <ImageIcon size={24} className="text-gold-500" /> Obras en Catálogo ({artworks.length})
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {artworks.length === 0 ? (
+                        <div className="md:col-span-4 p-12 bg-white rounded-xl shadow-lg border border-stone-100 text-center">
+                            <p className="text-xl text-slate-500 font-semibold flex items-center justify-center gap-2">
+                                <MinusCircle size={24} /> Catálogo de Obras vacío.
+                            </p>
+                            <p className="text-slate-400 mt-2">
+                                Para añadir su primera pieza, haga click en el botón **NUEVA OBRA** arriba a la derecha.
+                            </p>
+                            <p className="text-xs text-slate-300 mt-4">
+                                Nota: Para editar o duplicar una obra, use el icono <Edit size={12} className="inline-block" /> o <Copy size={12} className="inline-block" /> que aparece en cada foto.
+                            </p>
+                        </div>
+                    ) : (
+                        sortedArtworks.map(artwork => (
+                            <ArtworkWorkstation
+                                key={artwork.id}
+                                artwork={artwork}
+                                settings={documentSettings}
+                                onGenerateCode={handleGenerateCode}
+                                onDelete={handleDeleteArtwork}
+                                onDuplicate={handleDuplicateArtwork}
+                                onEdit={setArtworkToManage}
+                            />
+                        ))
+                    )}
+                </div>
+
             </div>
 
-            {/* 🤖 ASISTENTE DE IA FLOTANTE */}
-            <div className="fixed bottom-6 right-6 z-50 shadow-2xl">
-                <AIStudio />
-            </div>
+            {/* FORMULARIO DE GESTIÓN DE OBRA (Flotante) */}
+            {artworkToManage !== null && (
+                <ArtworkManagementForm
+                    onSave={handleSaveArtwork}
+                    artworkToManage={artworkToManage}
+                    onCancel={() => setArtworkToManage(null)}
+                />
+            )}
+
+            {/* 🖼️ MODAL DE GICLÉE EXCLUSIVO (Solo en área protegida) */}
+            {showGiclee && (
+                <div className="fixed inset-0 bg-black/80 z-50 overflow-y-auto">
+                    <div className="min-h-screen">
+                        <button
+                            onClick={() => setShowGiclee(false)}
+                            className="fixed top-6 left-6 flex items-center gap-2 text-white hover:text-gold-400 transition-colors bg-slate-800/50 backdrop-blur-sm px-4 py-2 rounded-lg z-[70]"
+                        >
+                            <ArrowLeft size={20} />
+                            <span className="text-sm font-semibold">VOLVER AL ESTUDIO</span>
+                        </button>
+                        <GicleeTab />
+                    </div>
+                </div>
+            )}
+
+            {/* 📊 MODAL DE REPORTE VISUAL (Solo en área protegida) */}
+            {showReport && (
+                <SalesReportModal
+                    artworks={artworks}
+                    onClose={() => setShowReport(false)}
+                />
+            )}
+
         </div>
+
+      {/* 🤖 ASISTENTE DE IA FLOTANTE */}
+      <div className="fixed bottom-6 right-6 z-50 shadow-2xl">
+        <AIStudio />
+      </div>
+        </>
     );
 };
 
-export { ArtistDashboard };
 export default ArtistDashboard;
