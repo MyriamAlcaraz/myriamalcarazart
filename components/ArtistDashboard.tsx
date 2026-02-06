@@ -695,6 +695,11 @@ const ArtworkWorkstation: React.FC<ArtworkWorkstationProps> = ({ artwork, settin
                 {artwork.code ? `ID: ${artwork.code}` : 'PENDIENTE'}
             </div>
         </div>
+
+      {/* 🤖 ASISTENTE DE IA FLOTANTE */}
+      <div className="fixed bottom-6 right-6 z-50 shadow-2xl">
+        <AIStudio />
+      </div>
     );
 };
 
@@ -929,6 +934,11 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                                     type="radio"
                                     checked={!isSeries && !isOpenSeries}
                                     onChange={() => {
+
+      {/* 🤖 ASISTENTE DE IA FLOTANTE */}
+      <div className="fixed bottom-6 right-6 z-50 shadow-2xl">
+        <AIStudio />
+      </div>
                                         setIsSeries(false);
                                         setIsOpenSeries(false);
                                     }}
@@ -1170,6 +1180,11 @@ const SalesReportModal: React.FC<{ artworks: Artwork[], onClose: () => void }> =
                 </div>
             </div>
         </div>
+
+      {/* 🤖 ASISTENTE DE IA FLOTANTE */}
+      <div className="fixed bottom-6 right-6 z-50 shadow-2xl">
+        <AIStudio />
+      </div>
     );
 };
 
@@ -1390,12 +1405,10 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
             )}
 
         </div>
+
+      {/* 🤖 ASISTENTE DE IA FLOTANTE */}
+      <div className="fixed bottom-6 right-6 z-50 shadow-2xl">
+        <AIStudio />
+      </div>
     );
 };
-const AIContainer = () => (
-  <div className="mt-12 border-t pt-12 pb-20">
-    <AIStudio />
-  </div>
-);
-
-export default ArtistDashboard;
