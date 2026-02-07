@@ -51,7 +51,15 @@ const initialSettings: DocumentSettings = {
 };
 
 // 🛑 CATALOGO DE OBRAS REALES (Extraídas de constants.ts, incluyendo sus IDs reales 4, 2, 3, 1...)
-const ARTWORKS_FOR_INITIALIZATION = [
+// Obras nuevas (IDs > 20) - Siempre al principio
+const NEW_ARTWORKS = [
+    { id: 21, title: 'Abruma y belleza', dimensions: '100x73 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_21.jpg' },
+    { id: 22, title: 'Joven con vela en la bruma', dimensions: '100x73 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_22.jpg' },
+    { id: 23, title: 'Sara en Retiro', dimensions: '100x80 cm', technique: 'Óleo sobre papel encolado en tabla', image: '/obras/OBRA_23.jpg' }
+];
+
+// Obras existentes (IDs 1-20) - Mantienen su orden original
+const EXISTING_ARTWORKS = [
     { id: 4, title: 'Sara en Marquesina', dimensions: '100x81 cm', technique: 'Óleo en tela', image: '/obras/OBRA_04.jpg' },
     { id: 2, title: 'Laura en el Crepúsculo', dimensions: '100x81 cm', technique: 'Óleo en tela montada en tabla', image: '/obras/OBRA_02.jpg' },
     { id: 3, title: 'Sara bajo la farola', dimensions: '92x60 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_03.jpg' },
@@ -71,11 +79,11 @@ const ARTWORKS_FOR_INITIALIZATION = [
     { id: 17, title: 'Jilguero en charca del Botánico', dimensions: '46x38 cm', technique: 'Óleo sobre lienzo', image: '/obras/OBRA_17.jpg' },
     { id: 18, title: 'Porteadores', dimensions: '55x46 cm', technique: 'Óleo sobre lienzo', image: '/obras/OBRA_18.jpg' },
     { id: 19, title: 'Carpe Diem', dimensions: '140x50 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_19.jpg' },
-    { id: 20, title: 'Más que amigos', dimensions: '100x60 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_20.jpg' },
-    { id: 21, title: 'Abruma y belleza', dimensions: '100x73 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_21.jpg' },
-    { id: 22, title: 'Joven con vela en la bruma', dimensions: '100x73 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_22.jpg' },
-    { id: 23, title: 'Sara en Retiro', dimensions: '100x80 cm', technique: 'Óleo sobre papel encolado en tabla', image: '/obras/OBRA_23.jpg' }
+    { id: 20, title: 'Más que amigos', dimensions: '100x60 cm', technique: 'Óleo sobre tela', image: '/obras/OBRA_20.jpg' }
 ];
+
+// Combinación final: Nuevas obras primero, luego las existentes
+const ARTWORKS_FOR_INITIALIZATION = [...NEW_ARTWORKS, ...EXISTING_ARTWORKS];
 
 const REAL_ARTWORKS: Artwork[] = ARTWORKS_FOR_INITIALIZATION.map((art, index) => ({
     id: art.id,
