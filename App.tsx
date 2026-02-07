@@ -3,7 +3,7 @@ import PublicSite from './components/PublicSite';
 import { ArtistDashboard } from './components/ArtistDashboard';
 import { DigitalCompanion } from './components/DigitalCompanion';
 import GicleeExclusivo from './components/GicleeExclusivo';
-import { Layout, Palette, Lock, ArrowRight, Eye, EyeOff, X, Shield } from 'lucide-react';
+import { Lock, ArrowRight, Eye, EyeOff, X, Shield } from 'lucide-react';
 
 // --- CONFIGURACIÓN DE SEGURIDAD (PASSWORD) ---
 const PASSWORD = "arte2026";

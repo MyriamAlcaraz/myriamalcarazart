@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, AlertTriangle, Hash, Save } from 'lucide-react';
-import { AIStudio } from "./AIStudio";
 
 
 // ---------------------------------------------------------
@@ -1677,11 +1676,6 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
             )}
 
         </div>
-
-      {/* 🤖 ASISTENTE DE IA FLOTANTE */}
-      <div className="fixed bottom-6 right-6 z-50 shadow-2xl">
-        <AIStudio />
-      </div>
         </>
     );
 };
