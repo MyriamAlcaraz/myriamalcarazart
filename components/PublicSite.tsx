@@ -251,104 +251,153 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
         {activeTab === 'app' && (
           <div className="space-y-16">
 
-            {/* Introducción Personal */}
-            <div className="max-w-4xl mx-auto text-center">
-              <p className="text-xl text-slate-700 leading-relaxed font-serif italic border-l-4 border-gold-500 pl-6 text-left">
-                "Durante mi práctica artística he desarrollado herramientas digitales que me ayudan en el estudio.
-                Aplicaciones nacidas de necesidades reales frente al lienzo, que ahora comparto con otros artistas."
+            {/* ============================================ */}
+            {/* HEADER - Suite Digital */}
+            {/* ============================================ */}
+            <header className="text-center max-w-4xl mx-auto pt-4">
+              <p className="text-xs tracking-[0.5em] text-stone-400 uppercase mb-8 font-light">
+                Laboratorio de Innovación Artística
               </p>
-            </div>
+              <h2 className="font-serif text-5xl md:text-6xl text-slate-900 tracking-wide mb-8 leading-tight">
+                Suite Digital para el Artista
+              </h2>
+              <div className="w-24 h-px bg-gold-500 mx-auto mb-10"></div>
+              <p className="text-stone-600 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
+                Donde la tradición pictórica se encuentra con la tecnología de vanguardia.
+                <br />
+                <span className="text-stone-500">Herramientas digitales desarrolladas desde la experiencia real del estudio.</span>
+              </p>
+            </header>
 
-            {/* Header Hero Section - Bilingüe y Elegante */}
-            <div className="text-center space-y-8">
-              <div className="max-w-5xl mx-auto">
-                <div className="w-24 h-24 bg-gold-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl">
-                  <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
-                </div>
-
-                {/* Títulos Bilingües */}
-                <h1 className="font-serif text-5xl md:text-7xl font-bold text-slate-900 mb-2">
-                  Analizador Técnico del Color
-                </h1>
-                <p className="font-serif text-3xl md:text-4xl text-gold-600 italic mb-6">
-                  Technical Color Analyzer
-                </p>
-
-                {/* Subtítulos Bilingües */}
-                <p className="text-xl font-serif text-slate-600 italic mb-8">
-                  Herramienta Digital Exclusiva para Artistas
-                </p>
-                <p className="text-lg font-serif text-gold-500 italic mb-8">
-                  Exclusive Digital Tool for Artists
-                </p>
-
-                {/* Descripción Bilingüe */}
-                <div className="space-y-6 max-w-4xl mx-auto">
-                  <p className="text-lg text-slate-700 leading-relaxed">
-                    La herramienta práctica que utilizo, diseñada por mí. Ahora comparto contigo esta aplicación profesional
-                    con análisis técnico avanzado mediante inteligencia artificial para perfeccionar tu proceso creativo.
-                    Incluye las denominaciones exactas de las tres marcas de óleos que utilizo profesionalmente:
-                    Old Holland, Williamsburg y Winsor & Newton.
-                  </p>
-                  <p className="text-lg text-slate-600 leading-relaxed italic">
-                    The practical tool I use, designed by me. Now I share with you this professional application
-                    with advanced technical analysis through artificial intelligence to perfect your creative process.
-                    Includes the exact denominations of three oil paint brands I use professionally:
-                    Old Holland, Williamsburg and Winsor & Newton.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Sección de Compra - Centrado */}
+            {/* ============================================ */}
+            {/* CITA INTRODUCTORIA */}
+            {/* ============================================ */}
             <div className="max-w-3xl mx-auto">
-              <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl shadow-2xl p-12 text-center text-white">
-                <h3 className="font-serif text-3xl font-bold text-white mb-6">
-                  Buy Now / Comprar Ahora
-                </h3>
-                <p className="text-slate-200 mb-8 text-lg">
-                  Get unlimited access to the complete professional tool.<br />
-                  Obtén acceso ilimitado a la herramienta profesional completa.
+              <blockquote className="border-l border-gold-500 pl-8 py-2">
+                <p className="text-xl text-slate-700 leading-relaxed font-serif italic">
+                  "Durante mi práctica artística he desarrollado herramientas digitales que me ayudan en el estudio.
+                  Aplicaciones nacidas de necesidades reales frente al lienzo, que ahora comparto con otros artistas."
                 </p>
-                <div className="mb-8">
-                  <div>
-                    <span className="text-4xl font-bold text-gold-400">46,99 €</span>
-                    <span className="text-lg text-slate-300 ml-2">(+ IVA según tu país)</span>
-                    <br />
-                    <span className="text-base text-slate-400 italic">Cargo final en tu cuenta: aprox. 57€ (España)</span>
-                  </div>
-                  <p className="text-sm text-slate-300 mt-2">One-time payment / Pago único</p>
-                </div>
-                <a
-                  href="https://payhip.com/ARTEFIGURATIVO"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full bg-gold-500 text-white px-10 py-5 rounded-full font-semibold hover:bg-gold-600 transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105 inline-block text-lg"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                  </svg>
-                  Comprar Ahora
-                </a>
-              </div>
+                <footer className="mt-4 text-stone-500 text-sm tracking-wide">
+                  — Myriam Alcaraz
+                </footer>
+              </blockquote>
             </div>
 
-            {/* Firma Profesional */}
-            <div className="text-center max-w-3xl mx-auto">
-              <div className="bg-slate-50 p-8 rounded-2xl">
-                <p className="text-lg text-slate-700 italic mb-4">
-                  "Created with passion for artists who seek excellence in their creative process."<br />
-                  "Creado con pasión para artistas que buscan la excelencia en su proceso creativo."
-                </p>
-                <p className="text-slate-900 font-semibold">
-                  Myriam Alcaraz<br />
-                  <span className="text-gold-600">Artist, Contemporary Figurative Painter</span><br />
-                  <span className="text-slate-600">Artista, Pintura Figurativa Contemporánea</span>
-                </p>
+            {/* ============================================ */}
+            {/* GALERÍA DE HERRAMIENTAS - 3 CARDS */}
+            {/* ============================================ */}
+            <section className="max-w-5xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                {/* APP 1: Analizador de Color - DISPONIBLE */}
+                <div className="bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-300 hover:shadow-lg transition-all duration-300">
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                      </svg>
+                    </div>
+                    <span className="text-[10px] tracking-[0.3em] text-gold-600 uppercase font-medium">Disponible</span>
+                  </div>
+
+                  <h3 className="font-serif text-2xl text-slate-900 text-center mb-4 leading-snug">
+                    Analizador Técnico del Color
+                  </h3>
+
+                  <p className="text-stone-600 text-base leading-relaxed text-center flex-grow mb-6">
+                    Análisis cromático avanzado mediante inteligencia artificial.
+                    Identifica pigmentos exactos de Old Holland, Williamsburg y Winsor & Newton
+                    para recrear cualquier paleta con precisión profesional.
+                  </p>
+
+                  <div className="border-t border-stone-100 pt-6 text-center">
+                    <p className="text-2xl text-slate-900 font-light mb-4">47 <span className="text-base text-stone-500">EUR</span></p>
+                    <a
+                      href="https://payhip.com/ARTEFIGURATIVO"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block w-full border border-slate-800 text-slate-800 py-3 text-sm tracking-[0.2em] uppercase hover:bg-slate-800 hover:text-white transition-all duration-300"
+                    >
+                      Acceder
+                    </a>
+                  </div>
+                </div>
+
+                {/* APP 2: Gestor de Paletas - PRÓXIMAMENTE */}
+                <div className="bg-white border border-stone-200 p-8 flex flex-col hover:border-stone-300 transition-all duration-300">
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                      </svg>
+                    </div>
+                    <span className="text-[10px] tracking-[0.3em] text-stone-400 uppercase font-medium">En desarrollo</span>
+                  </div>
+
+                  <h3 className="font-serif text-2xl text-slate-900 text-center mb-4 leading-snug">
+                    Gestor de Paletas Históricas
+                  </h3>
+
+                  <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
+                    Biblioteca de paletas de los grandes maestros.
+                    Analiza la gama cromática de Velázquez, Sorolla o Sargent
+                    y aplícala a tu obra con referencias exactas de pigmentos.
+                  </p>
+
+                  <div className="border-t border-stone-100 pt-6 text-center">
+                    <p className="text-stone-400 text-sm mb-4 tracking-wide">Próximamente</p>
+                    <button
+                      className="inline-block w-full border border-stone-300 text-stone-400 py-3 text-sm tracking-[0.2em] uppercase cursor-default"
+                    >
+                      Registro de interés
+                    </button>
+                  </div>
+                </div>
+
+                {/* APP 3: Asistente de Composición - PRÓXIMAMENTE */}
+                <div className="bg-white border border-stone-200 p-8 flex flex-col hover:border-stone-300 transition-all duration-300">
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                      </svg>
+                    </div>
+                    <span className="text-[10px] tracking-[0.3em] text-stone-400 uppercase font-medium">En desarrollo</span>
+                  </div>
+
+                  <h3 className="font-serif text-2xl text-slate-900 text-center mb-4 leading-snug">
+                    Asistente de Composición
+                  </h3>
+
+                  <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
+                    Herramienta de análisis compositivo basada en los principios clásicos.
+                    Proporciones áureas, puntos de interés y equilibrio visual
+                    aplicados a tu fotografía de referencia.
+                  </p>
+
+                  <div className="border-t border-stone-100 pt-6 text-center">
+                    <p className="text-stone-400 text-sm mb-4 tracking-wide">Próximamente</p>
+                    <button
+                      className="inline-block w-full border border-stone-300 text-stone-400 py-3 text-sm tracking-[0.2em] uppercase cursor-default"
+                    >
+                      Registro de interés
+                    </button>
+                  </div>
+                </div>
+
               </div>
-            </div>
+            </section>
+
+            {/* ============================================ */}
+            {/* NOTA FINAL */}
+            {/* ============================================ */}
+            <section className="text-center pt-8">
+              <p className="text-stone-500 text-base leading-relaxed italic font-serif max-w-2xl mx-auto">
+                "Herramientas creadas con pasión para artistas que buscan la excelencia en su proceso creativo."
+              </p>
+            </section>
+
           </div>
         )}
 
