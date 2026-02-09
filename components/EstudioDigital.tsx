@@ -179,7 +179,7 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const [flipH, setFlipH] = useState(false);
   const [flipV, setFlipV] = useState(false);
   const [spiralColor, setSpiralColor] = useState<'gold' | 'white'>('gold');
-  const [opacity, setOpacity] = useState<number>(80);
+  const [spiralSize, setSpiralSize] = useState<number>(100);
 
   // Estados para drag & drop
   const [spiralPosition, setSpiralPosition] = useState({ x: 0, y: 0 });
@@ -220,21 +220,35 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   // Colores de la espiral
   const spiralStroke = spiralColor === 'gold' ? '#d4af37' : '#ffffff';
 
-  // Path estático de precisión para la Espiral de Fibonacci
-  const STATIC_SPIRAL_PATH = "M0,100 A100,100 0 0,1 100,0 M100,0 A61.8,61.8 0 0,1 161.8,61.8 M161.8,61.8 A38.2,38.2 0 0,1 123.6,100 M123.6,100 A23.6,23.6 0 0,1 100,76.4 M100,76.4 A14.6,14.6 0 0,1 114.6,61.8";
+  // Path de Espiral de Fibonacci con círculos concéntricos fluidos
+  const generateSpiralPath = useMemo(() => {
+    const scale = spiralSize / 100;
+    const baseSize = 100;
+    
+    // Generar una espiral fluida usando círculos que se van cerrando
+    const path = `
+      M ${0 * scale} ${baseSize * scale}
+      A ${baseSize * scale} ${baseSize * scale} 0 0 1 ${baseSize * scale} ${0 * scale}
+      A ${(baseSize / PHI) * scale} ${(baseSize / PHI) * scale} 0 0 1 ${(baseSize + baseSize / PHI) * scale} ${(baseSize / PHI) * scale}
+      A ${(baseSize / (PHI * PHI)) * scale} ${(baseSize / (PHI * PHI)) * scale} 0 0 1 ${(baseSize + baseSize / PHI - baseSize / (PHI * PHI)) * scale} ${(baseSize / PHI + baseSize / (PHI * PHI)) * scale}
+      A ${(baseSize / (PHI * PHI * PHI)) * scale} ${(baseSize / (PHI * PHI * PHI)) * scale} 0 0 1 ${(baseSize + baseSize / PHI - baseSize / (PHI * PHI) + baseSize / (PHI * PHI * PHI)) * scale} ${(baseSize / PHI + baseSize / (PHI * PHI) - baseSize / (PHI * PHI * PHI)) * scale}
+    `;
+    
+    return path.trim();
+  }, [spiralSize]);
 
-  // Espiral de Fibonacci estática
-  const fibonacciSpiralPath = STATIC_SPIRAL_PATH;
+  // Espiral de Fibonacci dinámica
+  const fibonacciSpiralPath = generateSpiralPath;
 
   // Calcular centro del "ojo" de la espiral (punto de anclaje)
   const spiralEye = useMemo(() => {
-    // Centro estático basado en el path de precisión
-    // El último punto del path es (114.6, 61.8)
+    // Centro escalado basado en el tamaño de la espiral
+    const scale = spiralSize / 100;
     return {
-      x: 114.6,
-      y: 61.8
+      x: 185.4 * scale,
+      y: 100 * scale
     };
-  }, []);
+  }, [spiralSize]);
 
   // Handlers para Drag & Drop - anclado al centro de la espiral
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -245,13 +259,14 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     if (rect) {
       const clickX = e.clientX - rect.left;
       const clickY = e.clientY - rect.top;
+      const scale = spiralSize / 100;
       const eyeX = spiralEye.x + spiralPosition.x;
       const eyeY = spiralEye.y + spiralPosition.y;
       
       const distance = Math.sqrt(Math.pow(clickX - eyeX, 2) + Math.pow(clickY - eyeY, 2));
       
-      // Solo permitir drag si está cerca del centro (radio de 20px)
-      if (distance <= 20) {
+      // Solo permitir drag si está cerca del centro (radio de 30px escalado)
+      if (distance <= 30 * scale) {
         setIsDragging(true);
         setDragStart({
           x: e.clientX - spiralPosition.x,
@@ -281,10 +296,16 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   // Transformación de la espiral
   const getSpiralTransform = () => {
     const transforms: string[] = [];
-    transforms.push(`translate(${spiralPosition.x}px, ${spiralPosition.y}px)`);
+    const scale = spiralSize / 100;
+    
+    // Primero escalar, luego posicionar
+    transforms.push(`scale(${scale})`);
+    transforms.push(`translate(${spiralPosition.x / scale}px, ${spiralPosition.y / scale}px)`);
+    
     if (rotation !== 0) transforms.push(`rotate(${rotation}deg)`);
     if (flipH) transforms.push('scaleX(-1)');
     if (flipV) transforms.push('scaleY(-1)');
+    
     return transforms.join(' ');
   };
 
@@ -459,18 +480,18 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             </div>
           </div>
 
-          {/* Tercera fila: Opacidad y Reset */}
+          {/* Tercera fila: Tamaño de la Espiral y Reset */}
           <div className="flex items-center gap-6 mt-4 pt-4 border-t border-stone-100">
             <div className="flex-1">
               <label className="block text-[10px] tracking-[0.2em] text-slate-500 uppercase mb-2">
-                Opacidad: {opacity}%
+                Tamaño de la Espiral: {spiralSize}%
               </label>
               <input
                 type="range"
-                min="20"
-                max="100"
-                value={opacity}
-                onChange={(e) => setOpacity(parseInt(e.target.value))}
+                min="10"
+                max="200"
+                value={spiralSize}
+                onChange={(e) => setSpiralSize(parseInt(e.target.value))}
                 className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-gold-500"
               />
             </div>
@@ -527,18 +548,21 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 style={{
                   transform: getSpiralTransform(),
                   transformOrigin: `${spiralEye.x}px ${spiralEye.y}px`,
-                  transition: isDragging ? 'none' : 'transform 0.3s ease-out',
-                  opacity: opacity / 100
+                  transition: isDragging ? 'none' : 'transform 0.3s ease-out'
                 }}
               >
-                {/* Regla de los Tercios */}
+                {/* Regla de los Tercios - siempre cubre 100% del lienzo */}
                 {activeOverlay === 'thirds' && (
                   <g>
+                    {/* Líneas verticales - siempre del 0 al 100% del alto */}
                     <line x1={canvasSize.w / 3} y1="0" x2={canvasSize.w / 3} y2={canvasSize.h} stroke={spiralStroke} strokeWidth="1.5" />
                     <line x1={(canvasSize.w * 2) / 3} y1="0" x2={(canvasSize.w * 2) / 3} y2={canvasSize.h} stroke={spiralStroke} strokeWidth="1.5" />
+                    
+                    {/* Líneas horizontales - siempre del 0 al 100% del ancho */}
                     <line x1="0" y1={canvasSize.h / 3} x2={canvasSize.w} y2={canvasSize.h / 3} stroke={spiralStroke} strokeWidth="1.5" />
                     <line x1="0" y1={(canvasSize.h * 2) / 3} x2={canvasSize.w} y2={(canvasSize.h * 2) / 3} stroke={spiralStroke} strokeWidth="1.5" />
-                    {/* Puntos de interés */}
+                    
+                    {/* Puntos de interés - en las intersecciones exactas */}
                     {[
                       [canvasSize.w / 3, canvasSize.h / 3],
                       [(canvasSize.w * 2) / 3, canvasSize.h / 3],
@@ -553,9 +577,9 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 {/* Espiral de Fibonacci */}
                 {activeOverlay === 'spiral' && (
                   <g>
-                    {/* Espiral de Fibonacci estática con path de precisión */}
+                    {/* Espiral de Fibonacci dinámica con círculos fluidos */}
                     <path
-                      d={STATIC_SPIRAL_PATH}
+                      d={fibonacciSpiralPath}
                       fill="none"
                       stroke="#D4AF37"
                       stroke-width="1"
