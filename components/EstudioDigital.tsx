@@ -167,21 +167,38 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
 );
 
 // ============================================
-// APP 1: COMPOSICIÓN ÁUREA (Funcional)
+// APP 1: COMPOSICIÓN ÁUREA (Versión Profesional)
 // ============================================
 const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+  // Estados principales
   const [width, setWidth] = useState<number>(100);
   const [height, setHeight] = useState<number>(81);
-  const [showSpiral, setShowSpiral] = useState(true);
-  const [showThirds, setShowThirds] = useState(true);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [activeOverlay, setActiveOverlay] = useState<'spiral' | 'thirds'>('spiral');
+  const [rotation, setRotation] = useState<0 | 90 | 180 | 270>(0);
+  const [flipH, setFlipH] = useState(false);
+  const [flipV, setFlipV] = useState(false);
+  const [spiralColor, setSpiralColor] = useState<'gold' | 'white' | 'dark'>('gold');
 
   // Constante PHI (proporción áurea)
   const PHI = 1.618033988749895;
 
+  // Manejar subida de imagen
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setUploadedImage(event.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   // Calcular dimensiones del canvas manteniendo proporción
   const canvasSize = useMemo(() => {
-    const maxWidth = 500;
-    const maxHeight = 400;
+    const maxWidth = 600;
+    const maxHeight = 500;
     const ratio = width / height;
 
     if (ratio > maxWidth / maxHeight) {
@@ -191,36 +208,127 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     }
   }, [width, height]);
 
-  // Generar puntos de la espiral áurea
-  const generateSpiralPath = () => {
+  // Colores según selección
+  const colors = useMemo(() => {
+    switch (spiralColor) {
+      case 'gold': return { main: '#c5a059', secondary: '#d4af37', glow: 'rgba(197, 160, 89, 0.3)' };
+      case 'white': return { main: '#ffffff', secondary: '#f5f5f5', glow: 'rgba(255, 255, 255, 0.3)' };
+      case 'dark': return { main: '#1e293b', secondary: '#334155', glow: 'rgba(30, 41, 59, 0.3)' };
+    }
+  }, [spiralColor]);
+
+  // Generar la espiral de Fibonacci real con arcos
+  const generateFibonacciSpiral = () => {
     const { w, h } = canvasSize;
-    const points: string[] = [];
-    let x = 0, y = 0;
-    let currentW = w, currentH = h;
+    const arcs: string[] = [];
 
-    // Generar arcos para la espiral
+    // Secuencia de Fibonacci para los cuadrados
+    let a = Math.min(w, h);
+    let b = a / PHI;
+
+    // Posiciones iniciales
+    let x = 0;
+    let y = 0;
+
+    // Generar 10 segmentos de la espiral
+    const segments = [
+      { startAngle: 180, sweep: 90, corner: 'bl' },  // 1
+      { startAngle: 270, sweep: 90, corner: 'br' },  // 2
+      { startAngle: 0, sweep: 90, corner: 'tr' },    // 3
+      { startAngle: 90, sweep: 90, corner: 'tl' },   // 4
+      { startAngle: 180, sweep: 90, corner: 'bl' },  // 5
+      { startAngle: 270, sweep: 90, corner: 'br' },  // 6
+      { startAngle: 0, sweep: 90, corner: 'tr' },    // 7
+      { startAngle: 90, sweep: 90, corner: 'tl' },   // 8
+    ];
+
+    let currentSize = Math.min(w, h);
+    let cx = 0, cy = h;
+
     for (let i = 0; i < 8; i++) {
-      const size = i % 2 === 0 ? currentW / PHI : currentH / PHI;
-      const startAngle = (i * 90) * Math.PI / 180;
-      const endAngle = ((i + 1) * 90) * Math.PI / 180;
+      const size = currentSize / PHI;
+      const radius = currentSize - size;
 
-      for (let t = 0; t <= 20; t++) {
-        const angle = startAngle + (endAngle - startAngle) * (t / 20);
-        const radius = size * (1 - t / 20 * 0.382);
-        const px = x + Math.cos(angle) * radius;
-        const py = y + Math.sin(angle) * radius;
-        points.push(`${px},${py}`);
+      // Calcular centro del arco según la posición
+      const seg = segments[i];
+      let arcCx = cx, arcCy = cy;
+
+      switch (i % 4) {
+        case 0: // Abajo-izquierda
+          arcCx = cx + radius;
+          arcCy = cy - radius;
+          break;
+        case 1: // Abajo-derecha
+          arcCx = cx + currentSize - radius;
+          arcCy = cy - currentSize + radius;
+          break;
+        case 2: // Arriba-derecha
+          arcCx = cx + size;
+          arcCy = cy - size;
+          break;
+        case 3: // Arriba-izquierda
+          arcCx = cx + radius;
+          arcCy = cy - radius;
+          break;
       }
 
-      if (i % 2 === 0) currentW = currentW / PHI;
-      else currentH = currentH / PHI;
+      // Crear arco SVG
+      const startRad = (seg.startAngle * Math.PI) / 180;
+      const endRad = ((seg.startAngle + seg.sweep) * Math.PI) / 180;
+
+      const x1 = arcCx + radius * Math.cos(startRad);
+      const y1 = arcCy + radius * Math.sin(startRad);
+      const x2 = arcCx + radius * Math.cos(endRad);
+      const y2 = arcCy + radius * Math.sin(endRad);
+
+      arcs.push(`M ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2}`);
+
+      currentSize = size;
     }
 
-    return `M ${points.join(' L ')}`;
+    return arcs;
   };
 
+  // Generar rectángulos de la proporción áurea
+  const generateGoldenRectangles = () => {
+    const { w, h } = canvasSize;
+    const rects: { x: number; y: number; w: number; h: number }[] = [];
+
+    let currentW = w;
+    let currentH = h;
+    let x = 0;
+    let y = 0;
+
+    for (let i = 0; i < 7; i++) {
+      if (i % 2 === 0) {
+        const newW = currentW / PHI;
+        rects.push({ x, y, w: newW, h: currentH });
+        x += newW;
+        currentW = currentW - newW;
+      } else {
+        const newH = currentH / PHI;
+        rects.push({ x, y, w: currentW, h: newH });
+        y += newH;
+        currentH = currentH - newH;
+      }
+    }
+
+    return rects;
+  };
+
+  // Transformación CSS para rotación y volteo
+  const getTransform = () => {
+    const transforms: string[] = [];
+    if (rotation !== 0) transforms.push(`rotate(${rotation}deg)`);
+    if (flipH) transforms.push('scaleX(-1)');
+    if (flipV) transforms.push('scaleY(-1)');
+    return transforms.join(' ');
+  };
+
+  const goldenRects = generateGoldenRectangles();
+
   return (
-    <div className="space-y-10 animate-fade-in">
+    <div className="space-y-8 animate-fade-in">
       {/* Header con botón volver */}
       <div className="flex items-center gap-4">
         <button
@@ -237,156 +345,348 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         <span className="inline-flex items-center gap-2 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-4 py-2 mb-6">
           <Gift size={14} /> Herramienta gratuita
         </span>
-        <h2 className="font-serif text-4xl md:text-5xl text-slate-900 tracking-wide mb-6">
+        <h2 className="font-serif text-4xl md:text-5xl text-slate-900 tracking-wide mb-4">
           Master de Composición Áurea
         </h2>
         <p className="text-stone-500 text-lg leading-relaxed">
-          Introduce las medidas de tu bastidor y visualiza las guías de composición clásicas.
+          Sube tu obra y analiza su composición con la Espiral de Fibonacci y la Regla de los Tercios.
         </p>
       </header>
 
-      {/* Controles */}
-      <section className="max-w-xl mx-auto">
-        <div className="bg-white border border-stone-200 p-8">
-          <label className="block text-xs tracking-[0.3em] text-slate-600 uppercase mb-6 font-medium text-center">
-            Medidas del lienzo (cm)
-          </label>
-          <div className="flex items-center justify-center gap-4">
-            <div className="text-center">
-              <input
-                type="number"
-                value={width}
-                onChange={(e) => setWidth(Math.max(1, parseInt(e.target.value) || 1))}
-                className="w-24 border border-stone-300 text-center py-3 text-2xl font-light text-slate-800 focus:border-gold-500 focus:outline-none transition-colors"
-              />
-              <p className="text-xs text-stone-400 mt-2 tracking-wide">Ancho</p>
-            </div>
-            <span className="text-3xl text-stone-300 font-light">×</span>
-            <div className="text-center">
-              <input
-                type="number"
-                value={height}
-                onChange={(e) => setHeight(Math.max(1, parseInt(e.target.value) || 1))}
-                className="w-24 border border-stone-300 text-center py-3 text-2xl font-light text-slate-800 focus:border-gold-500 focus:outline-none transition-colors"
-              />
-              <p className="text-xs text-stone-400 mt-2 tracking-wide">Alto</p>
-            </div>
-          </div>
+      {/* Panel de Control Principal */}
+      <section className="max-w-4xl mx-auto">
+        <div className="bg-white border border-stone-200 p-6 md:p-8">
+          <div className="grid md:grid-cols-2 gap-8">
 
-          {/* Toggles */}
-          <div className="flex justify-center gap-8 mt-8 pt-6 border-t border-stone-100">
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={showThirds}
-                onChange={(e) => setShowThirds(e.target.checked)}
-                className="w-5 h-5 accent-gold-500"
-              />
-              <span className="text-sm text-slate-700">Regla de los Tercios</span>
-            </label>
-            <label className="flex items-center gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={showSpiral}
-                onChange={(e) => setShowSpiral(e.target.checked)}
-                className="w-5 h-5 accent-gold-500"
-              />
-              <span className="text-sm text-slate-700">Espiral Áurea</span>
-            </label>
+            {/* Columna 1: Subida de imagen y medidas */}
+            <div className="space-y-6">
+              {/* Subida de imagen */}
+              <div>
+                <label className="block text-xs tracking-[0.3em] text-slate-600 uppercase mb-3 font-medium">
+                  Sube tu obra o boceto
+                </label>
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-stone-300 hover:border-gold-400 transition-colors cursor-pointer bg-stone-50 hover:bg-stone-100">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  {uploadedImage ? (
+                    <div className="text-center">
+                      <svg className="w-8 h-8 text-emerald-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-sm text-emerald-600">Imagen cargada</span>
+                      <p className="text-xs text-stone-400 mt-1">Clic para cambiar</p>
+                    </div>
+                  ) : (
+                    <div className="text-center">
+                      <svg className="w-10 h-10 text-stone-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <span className="text-sm text-stone-500">Arrastra o haz clic</span>
+                    </div>
+                  )}
+                </label>
+              </div>
+
+              {/* Medidas del lienzo */}
+              <div>
+                <label className="block text-xs tracking-[0.3em] text-slate-600 uppercase mb-3 font-medium">
+                  Medidas del lienzo (cm)
+                </label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="number"
+                    value={width}
+                    onChange={(e) => setWidth(Math.max(1, parseInt(e.target.value) || 1))}
+                    className="w-20 border border-stone-300 text-center py-2 text-lg text-slate-800 focus:border-gold-500 focus:outline-none"
+                  />
+                  <span className="text-xl text-stone-300">×</span>
+                  <input
+                    type="number"
+                    value={height}
+                    onChange={(e) => setHeight(Math.max(1, parseInt(e.target.value) || 1))}
+                    className="w-20 border border-stone-300 text-center py-2 text-lg text-slate-800 focus:border-gold-500 focus:outline-none"
+                  />
+                  <span className="text-sm text-stone-400 ml-2">cm</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Columna 2: Controles de visualización */}
+            <div className="space-y-6">
+              {/* Selector de overlay */}
+              <div>
+                <label className="block text-xs tracking-[0.3em] text-slate-600 uppercase mb-3 font-medium">
+                  Tipo de guía
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setActiveOverlay('spiral')}
+                    className={`flex-1 py-3 text-sm tracking-wide transition-all ${
+                      activeOverlay === 'spiral'
+                        ? 'bg-slate-900 text-white'
+                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                    }`}
+                  >
+                    Espiral Áurea
+                  </button>
+                  <button
+                    onClick={() => setActiveOverlay('thirds')}
+                    className={`flex-1 py-3 text-sm tracking-wide transition-all ${
+                      activeOverlay === 'thirds'
+                        ? 'bg-slate-900 text-white'
+                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                    }`}
+                  >
+                    Regla de Tercios
+                  </button>
+                </div>
+              </div>
+
+              {/* Rotación */}
+              <div>
+                <label className="block text-xs tracking-[0.3em] text-slate-600 uppercase mb-3 font-medium">
+                  Rotar espiral
+                </label>
+                <div className="flex gap-2">
+                  {([0, 90, 180, 270] as const).map((deg) => (
+                    <button
+                      key={deg}
+                      onClick={() => setRotation(deg)}
+                      className={`flex-1 py-2 text-sm transition-all ${
+                        rotation === deg
+                          ? 'bg-gold-500 text-white'
+                          : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                      }`}
+                    >
+                      {deg}°
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Voltear */}
+              <div>
+                <label className="block text-xs tracking-[0.3em] text-slate-600 uppercase mb-3 font-medium">
+                  Voltear (espejo)
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setFlipH(!flipH)}
+                    className={`flex-1 py-2 text-sm transition-all flex items-center justify-center gap-2 ${
+                      flipH
+                        ? 'bg-gold-500 text-white'
+                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                    }`}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                    Horizontal
+                  </button>
+                  <button
+                    onClick={() => setFlipV(!flipV)}
+                    className={`flex-1 py-2 text-sm transition-all flex items-center justify-center gap-2 ${
+                      flipV
+                        ? 'bg-gold-500 text-white'
+                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                    }`}
+                  >
+                    <svg className="w-4 h-4 rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                    Vertical
+                  </button>
+                </div>
+              </div>
+
+              {/* Color de la espiral */}
+              <div>
+                <label className="block text-xs tracking-[0.3em] text-slate-600 uppercase mb-3 font-medium">
+                  Color de la guía
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setSpiralColor('gold')}
+                    className={`flex-1 py-2 text-sm transition-all ${
+                      spiralColor === 'gold' ? 'ring-2 ring-gold-500' : ''
+                    } bg-gradient-to-r from-amber-200 to-gold-400 text-amber-900`}
+                  >
+                    Dorado
+                  </button>
+                  <button
+                    onClick={() => setSpiralColor('white')}
+                    className={`flex-1 py-2 text-sm transition-all border ${
+                      spiralColor === 'white' ? 'ring-2 ring-gold-500' : 'border-stone-200'
+                    } bg-white text-stone-700`}
+                  >
+                    Blanco
+                  </button>
+                  <button
+                    onClick={() => setSpiralColor('dark')}
+                    className={`flex-1 py-2 text-sm transition-all ${
+                      spiralColor === 'dark' ? 'ring-2 ring-gold-500' : ''
+                    } bg-slate-800 text-white`}
+                  >
+                    Oscuro
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Visualización */}
-      <section className="max-w-3xl mx-auto">
-        <div className="bg-slate-900 p-8 md:p-12 flex items-center justify-center">
-          <svg
-            width={canvasSize.w}
-            height={canvasSize.h}
-            viewBox={`0 0 ${canvasSize.w} ${canvasSize.h}`}
-            className="bg-slate-800 shadow-2xl"
-            style={{ maxWidth: '100%', height: 'auto' }}
-          >
-            {/* Fondo del lienzo */}
-            <rect x="0" y="0" width={canvasSize.w} height={canvasSize.h} fill="#f5f5f4" />
+      {/* Visualización Principal - Mesa de Luz */}
+      <section className="max-w-5xl mx-auto">
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 md:p-10 rounded-sm shadow-2xl">
+          {/* Título sobre la mesa */}
+          <div className="text-center mb-6">
+            <p className="text-xs tracking-[0.4em] text-slate-500 uppercase">Mesa de composición</p>
+          </div>
 
-            {/* Regla de los Tercios */}
-            {showThirds && (
-              <g className="animate-fade-in">
-                {/* Líneas verticales */}
-                <line x1={canvasSize.w / 3} y1="0" x2={canvasSize.w / 3} y2={canvasSize.h} stroke="#c5a059" strokeWidth="1" opacity="0.7" />
-                <line x1={(canvasSize.w * 2) / 3} y1="0" x2={(canvasSize.w * 2) / 3} y2={canvasSize.h} stroke="#c5a059" strokeWidth="1" opacity="0.7" />
-                {/* Líneas horizontales */}
-                <line x1="0" y1={canvasSize.h / 3} x2={canvasSize.w} y2={canvasSize.h / 3} stroke="#c5a059" strokeWidth="1" opacity="0.7" />
-                <line x1="0" y1={(canvasSize.h * 2) / 3} x2={canvasSize.w} y2={(canvasSize.h * 2) / 3} stroke="#c5a059" strokeWidth="1" opacity="0.7" />
-                {/* Puntos de interés */}
-                <circle cx={canvasSize.w / 3} cy={canvasSize.h / 3} r="6" fill="#c5a059" opacity="0.8" />
-                <circle cx={(canvasSize.w * 2) / 3} cy={canvasSize.h / 3} r="6" fill="#c5a059" opacity="0.8" />
-                <circle cx={canvasSize.w / 3} cy={(canvasSize.h * 2) / 3} r="6" fill="#c5a059" opacity="0.8" />
-                <circle cx={(canvasSize.w * 2) / 3} cy={(canvasSize.h * 2) / 3} r="6" fill="#c5a059" opacity="0.8" />
-              </g>
-            )}
-
-            {/* Espiral Áurea (simplificada como rectángulos) */}
-            {showSpiral && (
-              <g className="animate-fade-in">
-                {/* Rectángulos áureos */}
-                <rect x="0" y="0" width={canvasSize.w / PHI} height={canvasSize.h} fill="none" stroke="#1e293b" strokeWidth="1.5" opacity="0.6" />
-                <rect x={canvasSize.w / PHI} y="0" width={canvasSize.w - canvasSize.w / PHI} height={canvasSize.h / PHI} fill="none" stroke="#1e293b" strokeWidth="1.5" opacity="0.5" />
-                <rect x={canvasSize.w / PHI} y={canvasSize.h / PHI} width={(canvasSize.w - canvasSize.w / PHI) / PHI} height={canvasSize.h - canvasSize.h / PHI} fill="none" stroke="#1e293b" strokeWidth="1.5" opacity="0.4" />
-
-                {/* Curva espiral aproximada */}
-                <path
-                  d={`M ${canvasSize.w / PHI} 0
-                      Q ${canvasSize.w / PHI} ${canvasSize.h / 2}, ${canvasSize.w / PHI + (canvasSize.w - canvasSize.w / PHI) / 2} ${canvasSize.h / PHI}
-                      Q ${canvasSize.w} ${canvasSize.h / PHI}, ${canvasSize.w / PHI + (canvasSize.w - canvasSize.w / PHI) / PHI} ${canvasSize.h / PHI + (canvasSize.h - canvasSize.h / PHI) / 2}`}
-                  fill="none"
-                  stroke="#1e293b"
-                  strokeWidth="2"
-                  opacity="0.7"
+          {/* Canvas */}
+          <div className="flex items-center justify-center">
+            <div
+              className="relative shadow-2xl"
+              style={{
+                width: canvasSize.w,
+                height: canvasSize.h,
+                maxWidth: '100%',
+              }}
+            >
+              {/* Imagen de fondo o lienzo vacío */}
+              {uploadedImage ? (
+                <img
+                  src={uploadedImage}
+                  alt="Tu obra"
+                  className="absolute inset-0 w-full h-full object-cover"
                 />
-              </g>
-            )}
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-200" />
+              )}
 
-            {/* Marco */}
-            <rect x="0" y="0" width={canvasSize.w} height={canvasSize.h} fill="none" stroke="#1e293b" strokeWidth="3" />
-          </svg>
-        </div>
+              {/* SVG Overlay */}
+              <svg
+                width="100%"
+                height="100%"
+                viewBox={`0 0 ${canvasSize.w} ${canvasSize.h}`}
+                className="absolute inset-0"
+                style={{
+                  transform: getTransform(),
+                  transformOrigin: 'center center',
+                  transition: 'transform 0.5s ease-out',
+                }}
+              >
+                {/* Regla de los Tercios */}
+                {activeOverlay === 'thirds' && (
+                  <g>
+                    {/* Líneas */}
+                    <line x1={canvasSize.w / 3} y1="0" x2={canvasSize.w / 3} y2={canvasSize.h} stroke={colors.main} strokeWidth="2" opacity="0.8" />
+                    <line x1={(canvasSize.w * 2) / 3} y1="0" x2={(canvasSize.w * 2) / 3} y2={canvasSize.h} stroke={colors.main} strokeWidth="2" opacity="0.8" />
+                    <line x1="0" y1={canvasSize.h / 3} x2={canvasSize.w} y2={canvasSize.h / 3} stroke={colors.main} strokeWidth="2" opacity="0.8" />
+                    <line x1="0" y1={(canvasSize.h * 2) / 3} x2={canvasSize.w} y2={(canvasSize.h * 2) / 3} stroke={colors.main} strokeWidth="2" opacity="0.8" />
+                    {/* Puntos de interés con glow */}
+                    {[
+                      [canvasSize.w / 3, canvasSize.h / 3],
+                      [(canvasSize.w * 2) / 3, canvasSize.h / 3],
+                      [canvasSize.w / 3, (canvasSize.h * 2) / 3],
+                      [(canvasSize.w * 2) / 3, (canvasSize.h * 2) / 3],
+                    ].map(([cx, cy], i) => (
+                      <g key={i}>
+                        <circle cx={cx} cy={cy} r="12" fill={colors.glow} />
+                        <circle cx={cx} cy={cy} r="6" fill={colors.main} />
+                        <circle cx={cx} cy={cy} r="3" fill={colors.secondary} />
+                      </g>
+                    ))}
+                  </g>
+                )}
 
-        {/* Leyenda */}
-        <div className="flex justify-center gap-8 mt-6">
-          {showThirds && (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-gold-500 rounded-full"></div>
-              <span className="text-sm text-stone-600">Puntos de interés (Tercios)</span>
+                {/* Espiral de Fibonacci */}
+                {activeOverlay === 'spiral' && (
+                  <g>
+                    {/* Rectángulos áureos con transparencia */}
+                    {goldenRects.map((rect, i) => (
+                      <rect
+                        key={i}
+                        x={rect.x}
+                        y={rect.y}
+                        width={rect.w}
+                        height={rect.h}
+                        fill="none"
+                        stroke={colors.main}
+                        strokeWidth="1"
+                        opacity={0.4 - i * 0.04}
+                      />
+                    ))}
+
+                    {/* Espiral curva - Aproximación con curvas de Bézier */}
+                    <path
+                      d={`
+                        M ${canvasSize.w / PHI} ${canvasSize.h}
+                        A ${canvasSize.w / PHI} ${canvasSize.w / PHI} 0 0 0 ${canvasSize.w} ${canvasSize.h - canvasSize.w / PHI}
+                        A ${canvasSize.w / PHI / PHI} ${canvasSize.w / PHI / PHI} 0 0 0 ${canvasSize.w - canvasSize.w / PHI / PHI} ${canvasSize.h / PHI}
+                        A ${canvasSize.w / Math.pow(PHI, 3)} ${canvasSize.w / Math.pow(PHI, 3)} 0 0 0 ${canvasSize.w / PHI + canvasSize.w / Math.pow(PHI, 3)} ${canvasSize.h / PHI + canvasSize.h / Math.pow(PHI, 3)}
+                        A ${canvasSize.w / Math.pow(PHI, 4)} ${canvasSize.w / Math.pow(PHI, 4)} 0 0 0 ${canvasSize.w / PHI + canvasSize.w / Math.pow(PHI, 3) + canvasSize.w / Math.pow(PHI, 5)} ${canvasSize.h / PHI}
+                      `}
+                      fill="none"
+                      stroke={colors.main}
+                      strokeWidth="3"
+                      opacity="0.9"
+                      strokeLinecap="round"
+                    />
+
+                    {/* Punto central de la espiral */}
+                    <circle
+                      cx={canvasSize.w / PHI + canvasSize.w / Math.pow(PHI, 3)}
+                      cy={canvasSize.h / PHI + canvasSize.h / Math.pow(PHI, 4)}
+                      r="8"
+                      fill={colors.glow}
+                    />
+                    <circle
+                      cx={canvasSize.w / PHI + canvasSize.w / Math.pow(PHI, 3)}
+                      cy={canvasSize.h / PHI + canvasSize.h / Math.pow(PHI, 4)}
+                      r="4"
+                      fill={colors.main}
+                    />
+                  </g>
+                )}
+              </svg>
+
+              {/* Marco del lienzo */}
+              <div className="absolute inset-0 border-2 border-slate-600 pointer-events-none" />
             </div>
-          )}
-          {showSpiral && (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-1 bg-slate-800"></div>
-              <span className="text-sm text-stone-600">Proporción Áurea (φ = 1.618)</span>
-            </div>
-          )}
+          </div>
+
+          {/* Info bajo el canvas */}
+          <div className="flex justify-center gap-8 mt-6 text-slate-400 text-sm">
+            <span>Lienzo: {width} × {height} cm</span>
+            <span>Proporción: {(width / height).toFixed(2)}:1</span>
+            <span>φ = 1.618</span>
+          </div>
         </div>
       </section>
 
       {/* Información educativa */}
-      <section className="max-w-3xl mx-auto">
+      <section className="max-w-4xl mx-auto">
         <div className="grid md:grid-cols-2 gap-6">
           <div className="bg-white border border-stone-200 p-6">
-            <h4 className="font-serif text-lg text-slate-900 mb-3">Regla de los Tercios</h4>
+            <h4 className="font-serif text-lg text-slate-900 mb-3">La Espiral de Fibonacci</h4>
             <p className="text-stone-600 text-sm leading-relaxed">
-              Dividir el lienzo en nueve partes iguales crea cuatro puntos de intersección donde
-              el ojo humano se dirige naturalmente. Colocar los elementos clave en estos puntos
-              genera composiciones más dinámicas y visualmente equilibradas.
+              También llamada "caracol dorado", esta curva aparece en conchas, galaxias y girasoles.
+              Leonardo da Vinci, Botticelli y Dalí la emplearon para guiar la mirada del espectador
+              hacia el punto focal de la composición, creando un recorrido visual natural y armónico.
             </p>
           </div>
           <div className="bg-white border border-stone-200 p-6">
-            <h4 className="font-serif text-lg text-slate-900 mb-3">Proporción Áurea (φ)</h4>
+            <h4 className="font-serif text-lg text-slate-900 mb-3">Cómo usarla</h4>
             <p className="text-stone-600 text-sm leading-relaxed">
-              La razón 1:1.618 aparece en la naturaleza, el arte clásico y la arquitectura.
-              Leonardo, Vermeer y Bouguereau la emplearon para crear armonía visual.
-              Guía el recorrido del ojo de forma orgánica y placentera.
+              Alinea el centro de la espiral con el elemento más importante de tu obra.
+              Usa los botones de rotación y volteo para encontrar la orientación que mejor
+              se adapte a tu composición. El ojo seguirá naturalmente la curva hacia tu punto focal.
             </p>
           </div>
         </div>
@@ -395,15 +695,19 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       {/* Medidas calculadas */}
       <section className="max-w-xl mx-auto text-center">
         <div className="bg-stone-50 border border-stone-200 p-6">
-          <p className="text-xs tracking-[0.3em] text-stone-400 uppercase mb-4">Tu lienzo de {width}×{height} cm</p>
-          <div className="grid grid-cols-2 gap-4 text-sm">
+          <p className="text-xs tracking-[0.3em] text-stone-400 uppercase mb-4">Cálculos para tu lienzo de {width}×{height} cm</p>
+          <div className="grid grid-cols-3 gap-4 text-sm">
             <div>
-              <p className="text-stone-500">División en tercios</p>
-              <p className="text-slate-800 font-medium">{(width / 3).toFixed(1)} cm × {(height / 3).toFixed(1)} cm</p>
+              <p className="text-stone-500">Tercios</p>
+              <p className="text-slate-800 font-medium">{(width / 3).toFixed(1)} × {(height / 3).toFixed(1)}</p>
             </div>
             <div>
-              <p className="text-stone-500">Sección áurea mayor</p>
-              <p className="text-slate-800 font-medium">{(width / PHI).toFixed(1)} cm × {height} cm</p>
+              <p className="text-stone-500">Sección áurea</p>
+              <p className="text-slate-800 font-medium">{(width / PHI).toFixed(1)} × {height}</p>
+            </div>
+            <div>
+              <p className="text-stone-500">Centro espiral</p>
+              <p className="text-slate-800 font-medium">{(width / PHI).toFixed(1)}, {(height / PHI).toFixed(1)}</p>
             </div>
           </div>
         </div>
