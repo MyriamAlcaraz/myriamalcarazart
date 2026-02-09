@@ -174,15 +174,10 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const [width, setWidth] = useState<number>(100);
   const [height, setHeight] = useState<number>(81);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [activeOverlay, setActiveOverlay] = useState<'spiral' | 'thirds'>('spiral');
-  const [rotation, setRotation] = useState<0 | 90 | 180 | 270>(0);
-  const [flipH, setFlipH] = useState(false);
-  const [flipV, setFlipV] = useState(false);
-  const [spiralColor, setSpiralColor] = useState<'gold' | 'white'>('gold');
-  const [spiralSize, setSpiralSize] = useState<number>(100);
+  const [activeOverlay, setActiveOverlay] = useState<'thirds'>('thirds');
 
-  // Estados para drag & drop
-  const [spiralPosition, setSpiralPosition] = useState({ x: 0, y: 0 });
+  // Estados para drag & drop de la imagen
+  const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
@@ -217,68 +212,28 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     }
   }, [width, height]);
 
-  // Colores de la espiral
-  const spiralStroke = spiralColor === 'gold' ? '#d4af37' : '#ffffff';
+  // Color de la rejilla
+  const gridStroke = '#d4af37';
 
-  // Path de Espiral de Fibonacci con círculos concéntricos fluidos
-  const generateSpiralPath = useMemo(() => {
-    const scale = spiralSize / 100;
-    const baseSize = 100;
-    
-    // Generar una espiral fluida usando círculos que se van cerrando
-    const path = `
-      M ${0 * scale} ${baseSize * scale}
-      A ${baseSize * scale} ${baseSize * scale} 0 0 1 ${baseSize * scale} ${0 * scale}
-      A ${(baseSize / PHI) * scale} ${(baseSize / PHI) * scale} 0 0 1 ${(baseSize + baseSize / PHI) * scale} ${(baseSize / PHI) * scale}
-      A ${(baseSize / (PHI * PHI)) * scale} ${(baseSize / (PHI * PHI)) * scale} 0 0 1 ${(baseSize + baseSize / PHI - baseSize / (PHI * PHI)) * scale} ${(baseSize / PHI + baseSize / (PHI * PHI)) * scale}
-      A ${(baseSize / (PHI * PHI * PHI)) * scale} ${(baseSize / (PHI * PHI * PHI)) * scale} 0 0 1 ${(baseSize + baseSize / PHI - baseSize / (PHI * PHI) + baseSize / (PHI * PHI * PHI)) * scale} ${(baseSize / PHI + baseSize / (PHI * PHI) - baseSize / (PHI * PHI * PHI)) * scale}
-    `;
-    
-    return path.trim();
-  }, [spiralSize]);
+  
 
-  // Espiral de Fibonacci dinámica
-  const fibonacciSpiralPath = generateSpiralPath;
-
-  // Calcular centro del "ojo" de la espiral (punto de anclaje)
-  const spiralEye = useMemo(() => {
-    // Centro escalado basado en el tamaño de la espiral
-    const scale = spiralSize / 100;
-    return {
-      x: 185.4 * scale,
-      y: 100 * scale
-    };
-  }, [spiralSize]);
-
-  // Handlers para Drag & Drop - anclado al centro de la espiral
+  // Handlers para Drag & Drop de la imagen
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (activeOverlay !== 'spiral') return;
+    if (!uploadedImage) return;
     
-    // Verificar si el clic está cerca del centro de la espiral
+    setIsDragging(true);
     const rect = containerRef.current?.getBoundingClientRect();
     if (rect) {
-      const clickX = e.clientX - rect.left;
-      const clickY = e.clientY - rect.top;
-      const scale = spiralSize / 100;
-      const eyeX = spiralEye.x + spiralPosition.x;
-      const eyeY = spiralEye.y + spiralPosition.y;
-      
-      const distance = Math.sqrt(Math.pow(clickX - eyeX, 2) + Math.pow(clickY - eyeY, 2));
-      
-      // Solo permitir drag si está cerca del centro (radio de 30px escalado)
-      if (distance <= 30 * scale) {
-        setIsDragging(true);
-        setDragStart({
-          x: e.clientX - spiralPosition.x,
-          y: e.clientY - spiralPosition.y
-        });
-      }
+      setDragStart({
+        x: e.clientX - imagePosition.x,
+        y: e.clientY - imagePosition.y
+      });
     }
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging) return;
-    setSpiralPosition({
+    setImagePosition({
       x: e.clientX - dragStart.x,
       y: e.clientY - dragStart.y
     });
@@ -288,25 +243,9 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     setIsDragging(false);
   };
 
-  // Reset posición
+  // Reset posición de la imagen
   const resetPosition = () => {
-    setSpiralPosition({ x: 0, y: 0 });
-  };
-
-  // Transformación de la espiral
-  const getSpiralTransform = () => {
-    const transforms: string[] = [];
-    const scale = spiralSize / 100;
-    
-    // Primero escalar, luego posicionar
-    transforms.push(`scale(${scale})`);
-    transforms.push(`translate(${spiralPosition.x / scale}px, ${spiralPosition.y / scale}px)`);
-    
-    if (rotation !== 0) transforms.push(`rotate(${rotation}deg)`);
-    if (flipH) transforms.push('scaleX(-1)');
-    if (flipV) transforms.push('scaleY(-1)');
-    
-    return transforms.join(' ');
+    setImagePosition({ x: 0, y: 0 });
   };
 
   return (
@@ -331,7 +270,7 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           Master de Composición Áurea
         </h2>
 <p className="text-stone-500 text-lg leading-relaxed">
-           Arrastra el "ojo" de la espiral sobre tu obra para encontrar el punto focal perfecto.
+           Arrastra tu imagen para encuadrarla bajo la rejilla de los tercios.
          </p>
       </header>
 
@@ -384,122 +323,16 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               />
             </div>
 
-            {/* Tipo de guía */}
-            <div className="col-span-2">
-              <label className="block text-[10px] tracking-[0.2em] text-slate-500 uppercase mb-2">
-                Guía
-              </label>
-              <div className="flex h-12">
-                <button
-                  onClick={() => setActiveOverlay('spiral')}
-                  className={`flex-1 text-sm transition-all ${
-                    activeOverlay === 'spiral' ? 'bg-slate-900 text-white' : 'bg-stone-100 text-stone-600'
-                  }`}
-                >
-                  Espiral
-                </button>
-                <button
-                  onClick={() => setActiveOverlay('thirds')}
-                  className={`flex-1 text-sm transition-all ${
-                    activeOverlay === 'thirds' ? 'bg-slate-900 text-white' : 'bg-stone-100 text-stone-600'
-                  }`}
-                >
-                  Tercios
-                </button>
-              </div>
-            </div>
+            
           </div>
 
-          {/* Segunda fila de controles */}
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-4 mt-4 pt-4 border-t border-stone-100">
-
-            {/* Rotación */}
-            <div className="col-span-4">
-              <label className="block text-[10px] tracking-[0.2em] text-slate-500 uppercase mb-2">
-                Rotar
-              </label>
-              <div className="flex h-10">
-                {([0, 90, 180, 270] as const).map((deg) => (
-                  <button
-                    key={deg}
-                    onClick={() => setRotation(deg)}
-                    className={`flex-1 text-sm transition-all ${
-                      rotation === deg ? 'bg-gold-500 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-                    }`}
-                  >
-                    {deg}°
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Voltear */}
-            <div className="col-span-2">
-              <label className="block text-[10px] tracking-[0.2em] text-slate-500 uppercase mb-2">
-                Espejo
-              </label>
-              <div className="flex h-10">
-                <button
-                  onClick={() => setFlipH(!flipH)}
-                  className={`flex-1 text-xs transition-all ${flipH ? 'bg-gold-500 text-white' : 'bg-stone-100 text-stone-600'}`}
-                >
-                  ↔ H
-                </button>
-                <button
-                  onClick={() => setFlipV(!flipV)}
-                  className={`flex-1 text-xs transition-all ${flipV ? 'bg-gold-500 text-white' : 'bg-stone-100 text-stone-600'}`}
-                >
-                  ↕ V
-                </button>
-              </div>
-            </div>
-
-            {/* Color */}
-            <div className="col-span-2">
-              <label className="block text-[10px] tracking-[0.2em] text-slate-500 uppercase mb-2">
-                Color
-              </label>
-              <div className="flex h-10">
-                <button
-                  onClick={() => setSpiralColor('gold')}
-                  className={`flex-1 text-xs transition-all bg-gradient-to-r from-amber-300 to-gold-500 ${
-                    spiralColor === 'gold' ? 'ring-2 ring-slate-900' : ''
-                  }`}
-                >
-                  Oro
-                </button>
-                <button
-                  onClick={() => setSpiralColor('white')}
-                  className={`flex-1 text-xs transition-all bg-white border border-stone-300 ${
-                    spiralColor === 'white' ? 'ring-2 ring-slate-900' : ''
-                  }`}
-                >
-                  Blanco
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Tercera fila: Tamaño de la Espiral y Reset */}
+          {/* Control de Reset */}
           <div className="flex items-center gap-6 mt-4 pt-4 border-t border-stone-100">
-            <div className="flex-1">
-              <label className="block text-[10px] tracking-[0.2em] text-slate-500 uppercase mb-2">
-                Tamaño de la Espiral: {spiralSize}%
-              </label>
-              <input
-                type="range"
-                min="10"
-                max="200"
-                value={spiralSize}
-                onChange={(e) => setSpiralSize(parseInt(e.target.value))}
-                className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-gold-500"
-              />
-            </div>
             <button
               onClick={resetPosition}
               className="px-4 py-2 text-xs tracking-wide uppercase bg-stone-100 text-stone-600 hover:bg-stone-200 transition-colors"
             >
-              Centrar espiral
+              Centrar imagen
             </button>
           </div>
         </div>
@@ -510,7 +343,7 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 md:p-8 shadow-2xl">
           <div className="text-center mb-4">
 <p className="text-[10px] tracking-[0.4em] text-slate-500 uppercase">
-               {activeOverlay === 'spiral' ? 'Arrastra el ojo de la espiral para ajustar' : 'Regla de los Tercios'}
+               Regla de los Tercios - Arrastra tu imagen para encuadrar
              </p>
           </div>
 
@@ -528,81 +361,55 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 width: canvasSize.w,
                 height: canvasSize.h,
                 maxWidth: '100%',
-                cursor: activeOverlay === 'spiral' ? 'default' : 'default'
+                cursor: uploadedImage ? (isDragging ? 'grabbing' : 'grab') : 'default'
               }}
               onMouseDown={handleMouseDown}
             >
-              {/* Imagen de fondo */}
+{/* Imagen de fondo con drag */}
               {uploadedImage ? (
-                <img src={uploadedImage} alt="Tu obra" className="absolute inset-0 w-full h-full object-cover" />
+                <img 
+                  src={uploadedImage} 
+                  alt="Tu obra" 
+                  className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                  style={{
+                    transform: `translate(${imagePosition.x}px, ${imagePosition.y}px)`,
+                    transition: isDragging ? 'none' : 'transform 0.3s ease-out'
+                  }}
+                />
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-stone-200 to-stone-300" />
               )}
 
-              {/* SVG con la espiral */}
+              {/* SVG con la rejilla de tercios fija */}
               <svg
                 width="100%"
                 height="100%"
                 viewBox={`0 0 ${canvasSize.w} ${canvasSize.h}`}
                 className="absolute inset-0 pointer-events-none"
-                style={{
-                  transform: getSpiralTransform(),
-                  transformOrigin: `${spiralEye.x}px ${spiralEye.y}px`,
-                  transition: isDragging ? 'none' : 'transform 0.3s ease-out'
-                }}
               >
                 {/* Regla de los Tercios - siempre cubre 100% del lienzo */}
-                {activeOverlay === 'thirds' && (
-                  <g>
-                    {/* Líneas verticales - siempre del 0 al 100% del alto */}
-                    <line x1={canvasSize.w / 3} y1="0" x2={canvasSize.w / 3} y2={canvasSize.h} stroke={spiralStroke} strokeWidth="1.5" />
-                    <line x1={(canvasSize.w * 2) / 3} y1="0" x2={(canvasSize.w * 2) / 3} y2={canvasSize.h} stroke={spiralStroke} strokeWidth="1.5" />
-                    
-                    {/* Líneas horizontales - siempre del 0 al 100% del ancho */}
-                    <line x1="0" y1={canvasSize.h / 3} x2={canvasSize.w} y2={canvasSize.h / 3} stroke={spiralStroke} strokeWidth="1.5" />
-                    <line x1="0" y1={(canvasSize.h * 2) / 3} x2={canvasSize.w} y2={(canvasSize.h * 2) / 3} stroke={spiralStroke} strokeWidth="1.5" />
-                    
-                    {/* Puntos de interés - en las intersecciones exactas */}
-                    {[
-                      [canvasSize.w / 3, canvasSize.h / 3],
-                      [(canvasSize.w * 2) / 3, canvasSize.h / 3],
-                      [canvasSize.w / 3, (canvasSize.h * 2) / 3],
-                      [(canvasSize.w * 2) / 3, (canvasSize.h * 2) / 3],
-                    ].map(([cx, cy], i) => (
-                      <circle key={i} cx={cx} cy={cy} r="5" fill={spiralStroke} />
-                    ))}
-                  </g>
-                )}
-
-                {/* Espiral de Fibonacci */}
-                {activeOverlay === 'spiral' && (
-                  <g>
-                    {/* Espiral de Fibonacci dinámica con círculos fluidos */}
-                    <path
-                      d={fibonacciSpiralPath}
-                      fill="none"
-                      stroke="#D4AF37"
-                      stroke-width="1"
-                    />
-
-                    {/* Centro de la espiral - punto de anclaje para drag */}
-                    <circle
-                      cx={spiralEye.x}
-                      cy={spiralEye.y}
-                      r="8"
-                      fill="none"
-                      stroke="#D4AF37"
-                      stroke-width="1"
-                      className="pointer-events-auto cursor-move"
-                    />
-                    <circle
-                      cx={spiralEye.x}
-                      cy={spiralEye.y}
-                      r="3"
-                      fill="#D4AF37"
-                    />
-                  </g>
-                )}
+                <g>
+                  {/* Líneas verticales - siempre del 0 al 100% del alto */}
+                  <line x1={canvasSize.w / 3} y1="0" x2={canvasSize.w / 3} y2={canvasSize.h} stroke={gridStroke} strokeWidth="1.5" />
+                  <line x1={(canvasSize.w * 2) / 3} y1="0" x2={(canvasSize.w * 2) / 3} y2={canvasSize.h} stroke={gridStroke} strokeWidth="1.5" />
+                  
+                  {/* Líneas horizontales - siempre del 0 al 100% del ancho */}
+                  <line x1="0" y1={canvasSize.h / 3} x2={canvasSize.w} y2={canvasSize.h / 3} stroke={gridStroke} strokeWidth="1.5" />
+                  <line x1="0" y1={(canvasSize.h * 2) / 3} x2={canvasSize.w} y2={(canvasSize.h * 2) / 3} stroke={gridStroke} strokeWidth="1.5" />
+                  
+                  {/* Puntos de oro - elegantes y pequeños en las intersecciones */}
+                  {[
+                    [canvasSize.w / 3, canvasSize.h / 3],
+                    [(canvasSize.w * 2) / 3, canvasSize.h / 3],
+                    [canvasSize.w / 3, (canvasSize.h * 2) / 3],
+                    [(canvasSize.w * 2) / 3, (canvasSize.h * 2) / 3],
+                  ].map(([cx, cy], i) => (
+                    <g key={i}>
+                      <circle cx={cx} cy={cy} r="4" fill="none" stroke={gridStroke} strokeWidth="1.5" />
+                      <circle cx={cx} cy={cy} r="2" fill={gridStroke} />
+                    </g>
+                  ))}
+                </g>
               </svg>
 
               {/* Marco */}
@@ -618,14 +425,14 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         </div>
       </section>
 
-      {/* Instrucciones */}
+{/* Texto explicativo */}
       <section className="max-w-3xl mx-auto">
-        <div className="bg-stone-50 border border-stone-200 p-6 text-center">
-<p className="text-stone-600 text-sm leading-relaxed">
-             <strong>Cómo usar:</strong> Sube tu imagen, ajusta las medidas de tu lienzo, y arrastra el "ojo" de la espiral
-             (punto dorado central) hasta que coincida con el punto focal de tu composición.
-             Prueba las 4 rotaciones y los espejos para encontrar la orientación perfecta.
-           </p>
+        <div className="bg-stone-50 border border-stone-200 p-8 text-center">
+          <p className="text-stone-600 text-base leading-relaxed font-serif">
+            <strong>La Regla de los Tercios ayuda a equilibrar tu obra.</strong> Coloca el centro de atención 
+            (ojos, luces principales o elementos clave) sobre uno de los 4 puntos de intersección para crear 
+            una composición dinámica y profesional.
+          </p>
         </div>
       </section>
     </div>
