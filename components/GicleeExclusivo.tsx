@@ -56,14 +56,14 @@ const GicleeExclusivo: React.FC = () => {
       {
         id: 'small' as const,
         name: 'Pequeño',
-        description: 'Proporcional a 30x40 aprox',
+        description: 'Proporcional a 30x40',
         dimensions: calculateProportionalSize(dims.width, dims.height, 40),
         price: '220'
       },
       {
         id: 'medium' as const,
         name: 'Mediano',
-        description: 'Proporcional a 50x63 aprox',
+        description: 'Proporcional a 50x63',
         dimensions: calculateProportionalSize(dims.width, dims.height, 63),
         price: '380'
       },
@@ -80,44 +80,55 @@ const GicleeExclusivo: React.FC = () => {
   const selectedSizeData = sizes?.find(s => s.id === selectedSize);
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-12">
 
-      {/* Header */}
-      <div className="text-center max-w-3xl mx-auto">
-        <p className="text-[11px] tracking-[0.4em] text-stone-400 uppercase mb-6">Reproducciones de Arte</p>
-        <h2 className="font-serif text-4xl md:text-5xl text-slate-800 font-normal tracking-wide mb-6">
+      {/* ============================================ */}
+      {/* HEADER - Tipografía impactante */}
+      {/* ============================================ */}
+      <header className="text-center max-w-4xl mx-auto pt-4">
+        <p className="text-xs tracking-[0.5em] text-stone-400 uppercase mb-8 font-light">
+          Reproducciones de Arte
+        </p>
+        <h2 className="font-serif text-5xl md:text-6xl text-slate-900 tracking-wide mb-8 leading-tight">
           Colección Giclée
         </h2>
-        <div className="w-20 h-px bg-stone-300 mx-auto mb-8"></div>
-        <p className="text-stone-500 font-light text-lg leading-relaxed">
-          Edición limitada de <span className="text-slate-700 font-medium">20 ejemplares</span>, numerados y firmados
-          <br />
-          <span className="text-stone-400 text-base">con certificado de autenticidad Hahnemühle</span>
-        </p>
-      </div>
+        <div className="w-24 h-px bg-gold-500 mx-auto mb-10"></div>
 
-      {/* Selector de Obra */}
+        {/* Edición Limitada - DESTACADO */}
+        <div className="inline-block border border-slate-200 px-8 py-5 bg-white">
+          <p className="text-slate-800 text-xl md:text-2xl font-serif tracking-wide leading-relaxed">
+            Edición limitada de <span className="text-gold-600 font-semibold">10 ejemplares</span>
+          </p>
+          <p className="text-stone-500 text-base mt-2 leading-relaxed tracking-wide">
+            numerados y firmados con certificado Hahnemühle
+          </p>
+        </div>
+      </header>
+
+      {/* ============================================ */}
+      {/* SELECTOR DE OBRA - Posición destacada */}
+      {/* ============================================ */}
       <section className="max-w-2xl mx-auto">
-        <label className="block text-[10px] tracking-[0.3em] text-stone-400 uppercase mb-3">
-          Selecciona una obra
+        <label className="block text-xs tracking-[0.4em] text-slate-600 uppercase mb-4 font-medium">
+          Selecciona tu obra
         </label>
 
         <div className="relative">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="w-full bg-white border border-stone-200 px-6 py-4 text-left flex items-center justify-between hover:border-stone-300 transition-colors"
+            className="w-full bg-white border border-stone-200 px-8 py-5 text-left flex items-center justify-between hover:border-gold-400 transition-all duration-300"
           >
-            <span className={`font-light ${selectedArtwork ? 'text-slate-700' : 'text-stone-400'}`}>
+            <span className={`text-lg tracking-wide ${selectedArtwork ? 'text-slate-800' : 'text-stone-400'}`}>
               {selectedArtwork ? selectedArtwork.title : 'Elige una obra de la colección'}
             </span>
             <ChevronDown
-              size={18}
-              className={`text-stone-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
+              size={20}
+              className={`text-stone-400 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}
             />
           </button>
 
           {isDropdownOpen && (
-            <div className="absolute z-20 w-full mt-1 bg-white border border-stone-200 shadow-lg max-h-80 overflow-y-auto">
+            <div className="absolute z-20 w-full mt-1 bg-white border border-stone-200 shadow-xl max-h-96 overflow-y-auto">
               {availableArtworks.map((artwork) => (
                 <button
                   key={artwork.id}
@@ -126,18 +137,18 @@ const GicleeExclusivo: React.FC = () => {
                     setSelectedSize(null);
                     setIsDropdownOpen(false);
                   }}
-                  className={`w-full px-6 py-4 text-left hover:bg-stone-50 transition-colors border-b border-stone-100 last:border-b-0 flex items-center gap-4 ${
+                  className={`w-full px-8 py-5 text-left hover:bg-stone-50 transition-all duration-200 border-b border-stone-100 last:border-b-0 flex items-center gap-5 ${
                     selectedArtworkId === artwork.id ? 'bg-stone-50' : ''
                   }`}
                 >
                   <img
                     src={artwork.image}
                     alt={artwork.title}
-                    className="w-14 h-14 object-cover"
+                    className="w-16 h-16 object-cover"
                   />
                   <div>
-                    <p className="text-slate-700 font-light">{artwork.title}</p>
-                    <p className="text-[11px] text-stone-400 mt-0.5">{artwork.dimensions}</p>
+                    <p className="text-slate-800 text-lg tracking-wide">{artwork.title}</p>
+                    <p className="text-sm text-stone-400 mt-1 tracking-wide">{artwork.dimensions}</p>
                   </div>
                 </button>
               ))}
@@ -146,83 +157,98 @@ const GicleeExclusivo: React.FC = () => {
         </div>
       </section>
 
-      {/* Vista previa de obra seleccionada */}
+      {/* ============================================ */}
+      {/* VISTA PREVIA DE OBRA SELECCIONADA */}
+      {/* ============================================ */}
       {selectedArtwork && (
-        <section className="max-w-2xl mx-auto animate-fade-in">
-          <div className="bg-white border border-stone-100 p-8">
-            <div className="flex flex-col md:flex-row gap-8 items-center">
+        <section className="max-w-3xl mx-auto animate-fade-in">
+          <div className="bg-white border border-stone-100 p-10">
+            <div className="flex flex-col md:flex-row gap-10 items-center">
               <img
                 src={selectedArtwork.image}
                 alt={selectedArtwork.title}
-                className="w-full md:w-56 h-56 object-contain"
+                className="w-full md:w-72 h-72 object-contain"
               />
-              <div className="text-center md:text-left">
-                <h3 className="text-2xl font-serif text-slate-800 font-normal mb-2">{selectedArtwork.title}</h3>
-                <p className="text-stone-400 text-sm mb-1">{selectedArtwork.technique}</p>
-                <p className="text-stone-400 text-sm">Original: {selectedArtwork.dimensions}</p>
+              <div className="text-center md:text-left space-y-3">
+                <h3 className="text-3xl font-serif text-slate-900 leading-snug">{selectedArtwork.title}</h3>
+                <p className="text-stone-500 text-base tracking-wide">{selectedArtwork.technique}</p>
+                <p className="text-stone-400 text-base tracking-wide">Original: {selectedArtwork.dimensions}</p>
               </div>
             </div>
           </div>
         </section>
       )}
 
-      {/* Selector de Tamaño */}
+      {/* ============================================ */}
+      {/* SELECTOR DE TAMAÑO - Estilo Galería */}
+      {/* ============================================ */}
       {sizes && (
-        <section className="max-w-3xl mx-auto animate-fade-in">
-          <label className="block text-[10px] tracking-[0.3em] text-stone-400 uppercase mb-4 text-center">
+        <section className="max-w-4xl mx-auto animate-fade-in">
+          <label className="block text-xs tracking-[0.4em] text-slate-600 uppercase mb-6 text-center font-medium">
             Elige el tamaño
           </label>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {sizes.map((size) => (
               <button
                 key={size.id}
                 onClick={() => setSelectedSize(size.id)}
-                className={`relative bg-white p-6 border transition-all text-center ${
+                className={`group relative bg-white py-10 px-6 border transition-all duration-300 text-center ${
                   selectedSize === size.id
-                    ? 'border-gold-500'
-                    : 'border-stone-200 hover:border-stone-300'
+                    ? 'border-gold-500 shadow-lg'
+                    : 'border-stone-200 hover:border-gold-300 hover:shadow-md'
                 }`}
               >
+                {/* Check de selección */}
                 {selectedSize === size.id && (
-                  <div className="absolute top-3 right-3 w-5 h-5 bg-gold-500 rounded-full flex items-center justify-center">
-                    <Check size={12} className="text-white" />
+                  <div className="absolute top-4 right-4 w-6 h-6 bg-gold-500 rounded-full flex items-center justify-center">
+                    <Check size={14} className="text-white" />
                   </div>
                 )}
 
-                <p className="text-lg text-slate-700 font-light mb-1">{size.name}</p>
-                <p className="text-[11px] text-stone-400 mb-4">{size.description}</p>
+                {/* Nombre del tamaño */}
+                <p className="text-2xl font-serif text-slate-800 mb-2 tracking-wide">{size.name}</p>
+                <p className="text-xs text-stone-400 tracking-wider uppercase mb-6">{size.description}</p>
 
-                {/* Medidas exactas */}
-                <div className="border-t border-stone-100 pt-4 mb-4">
-                  <p className="text-slate-800 font-medium">{size.dimensions}</p>
+                {/* Medidas exactas - DESTACADAS */}
+                <div className="border-t border-stone-100 pt-6 mb-6">
+                  <p className="text-xl text-slate-900 font-medium tracking-wide">{size.dimensions}</p>
                 </div>
 
-                <p className="text-xl text-gold-600 font-light">{size.price} <span className="text-sm">EUR</span></p>
+                {/* Precio */}
+                <p className="text-2xl text-gold-600 tracking-wide">
+                  {size.price} <span className="text-base font-light">EUR</span>
+                </p>
               </button>
             ))}
           </div>
         </section>
       )}
 
-      {/* Especificaciones */}
+      {/* ============================================ */}
+      {/* ESPECIFICACIONES TÉCNICAS */}
+      {/* ============================================ */}
       {selectedSize && (
-        <section className="max-w-2xl mx-auto animate-fade-in">
-          <div className="border-t border-b border-stone-200 py-8">
-            <p className="text-[10px] tracking-[0.3em] text-stone-400 uppercase mb-4 text-center">Especificaciones</p>
-            <div className="space-y-2 text-stone-500 text-sm text-center font-light">
-              <p>Impresión Giclée sobre papel <span className="text-slate-700">Hahnemühle William Turner 310g</span></p>
+        <section className="max-w-3xl mx-auto animate-fade-in">
+          <div className="border-t border-b border-stone-200 py-10">
+            <p className="text-xs tracking-[0.4em] text-slate-600 uppercase mb-6 text-center font-medium">
+              Especificaciones
+            </p>
+            <div className="space-y-4 text-stone-600 text-base text-center leading-loose">
+              <p>Impresión Giclée sobre papel <span className="text-slate-800 font-medium">Hahnemühle William Turner 310g</span></p>
               <p>100% algodón moldeado en tina con textura mate</p>
-              <p>Tintas pigmentadas de archivo con durabilidad superior a 100 años</p>
+              <p>Tintas pigmentadas de archivo, durabilidad superior a 100 años</p>
               <p>Certificado de autenticidad con holograma y numeración</p>
             </div>
           </div>
         </section>
       )}
 
-      {/* Botón de solicitud */}
+      {/* ============================================ */}
+      {/* BOTÓN DE SOLICITUD */}
+      {/* ============================================ */}
       {selectedArtwork && selectedSize && selectedSizeData && (
-        <section className="text-center animate-fade-in">
+        <section className="text-center animate-fade-in py-4">
           <button
             onClick={() => {
               const subject = encodeURIComponent(`Solicitud Giclée: ${selectedArtwork.title}`);
@@ -239,7 +265,7 @@ Detalles de la solicitud:
   Precio: ${selectedSizeData.price} EUR
 
   Papel: Hahnemühle William Turner 310g
-  Edición: Limitada a 20 ejemplares, numerados y firmados
+  Edición: Limitada a 10 ejemplares, numerados y firmados
 
 Quedo a la espera de sus indicaciones para formalizar la reserva.
 
@@ -250,19 +276,23 @@ Atentamente,
               );
               window.location.href = `mailto:myriamhotmail@hotmail.com?subject=${subject}&body=${body}`;
             }}
-            className="border border-slate-800 text-slate-800 px-10 py-3 font-light hover:bg-slate-800 hover:text-white transition-colors tracking-widest text-sm uppercase"
+            className="border border-slate-300 text-slate-700 px-14 py-4 text-base tracking-[0.2em] uppercase hover:border-gold-500 hover:text-gold-600 transition-all duration-300"
           >
             Solicitar información
           </button>
-          <p className="text-stone-400 text-xs mt-4 font-light">Te responderemos en menos de 24 horas</p>
+          <p className="text-stone-400 text-sm mt-5 tracking-wide">Te responderemos en menos de 24 horas</p>
         </section>
       )}
 
-      {/* Nota final */}
-      <section className="text-center pt-8">
-        <p className="text-stone-400 text-sm font-light italic">
-          Series estrictamente limitadas. Una vez agotada la edición, no volverá a producirse.
-        </p>
+      {/* ============================================ */}
+      {/* NOTA DE EXCLUSIVIDAD */}
+      {/* ============================================ */}
+      <section className="text-center pt-6 pb-4">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-stone-500 text-base leading-relaxed italic font-serif">
+            "Series estrictamente limitadas. Una vez agotada la edición, no volverá a producirse."
+          </p>
+        </div>
       </section>
 
     </div>
