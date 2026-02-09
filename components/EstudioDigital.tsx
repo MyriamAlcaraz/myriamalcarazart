@@ -220,138 +220,166 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   // Colores de la espiral
   const spiralStroke = spiralColor === 'gold' ? '#d4af37' : '#ffffff';
 
-  // Generar la Espiral de Fibonacci REAL con arcos suaves
-  const generateSpiralPath = useMemo(() => {
+  // Generar Espiral de Fibonacci técnica con arcos SVG precisos
+  const generateFibonacciSpiral = useMemo(() => {
     const size = Math.min(canvasSize.w, canvasSize.h);
-
-    // Secuencia de Fibonacci normalizada
-    const fib = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55];
-    const total = fib[fib.length - 1];
-    const scale = size / total;
-
-    // Construir la espiral con arcos de 90°
+    
+    // Secuencia de Fibonacci: 1,1,2,3,5,8,13
+    const fib = [1, 1, 2, 3, 5, 8, 13];
+    const total = fib.reduce((sum, val) => sum + val, 0);
+    const scale = size / (total * 1.2); // Factor de ajuste para espacio
+    
+    // Construir cuadrados y arcos de Fibonacci
     let path = '';
-    let x = 0;
-    let y = 0;
-
-    // Empezar desde el centro hacia afuera o viceversa
-    // Vamos de afuera hacia adentro para el efecto "caracol"
-
-    // Punto de inicio
-    const startX = 0;
-    const startY = fib[9] * scale;
-
-    path = `M ${startX} ${startY}`;
-
-    // Secuencia de direcciones: abajo-derecha, arriba-derecha, arriba-izquierda, abajo-izquierda
-    // Cada arco es un cuarto de círculo (90°)
-
-    let currentX = startX;
-    let currentY = startY;
-
-    // Arcos desde el exterior hacia el interior
-    for (let i = 9; i >= 2; i--) {
-      const radius = fib[i] * scale;
-      const direction = (9 - i) % 4;
-
-      let endX, endY, sweepFlag;
-
+    let squares = [];
+    
+    // Posición inicial (esquina superior izquierda)
+    let currentX = 0;
+    let currentY = 0;
+    
+    // Dirección inicial: hacia la derecha
+    let direction = 0; // 0=derecha, 1=abajo, 2=izquierda, 3=arriba
+    
+    // Generar cuadrados de Fibonacci
+    for (let i = 0; i < fib.length; i++) {
+      const side = fib[i] * scale;
+      let endX, endY, arcEndX, arcEndY;
+      
       switch (direction) {
-        case 0: // Hacia arriba-derecha
-          endX = currentX + radius;
-          endY = currentY - radius;
-          sweepFlag = 0;
+        case 0: // Derecha
+          endX = currentX + side;
+          endY = currentY;
+          arcEndX = endX;
+          arcEndY = currentY + side;
           break;
-        case 1: // Hacia arriba-izquierda
-          endX = currentX - fib[i - 1] * scale;
-          endY = currentY - fib[i - 1] * scale;
-          sweepFlag = 0;
+        case 1: // Abajo
+          endX = currentX;
+          endY = currentY + side;
+          arcEndX = currentX - side;
+          arcEndY = endY;
           break;
-        case 2: // Hacia abajo-izquierda
-          endX = currentX - radius;
-          endY = currentY + fib[i - 1] * scale;
-          sweepFlag = 0;
+        case 2: // Izquierda
+          endX = currentX - side;
+          endY = currentY;
+          arcEndX = endX;
+          arcEndY = currentY - side;
           break;
-        case 3: // Hacia abajo-derecha
-          endX = currentX + fib[i - 1] * scale;
-          endY = currentY + radius;
-          sweepFlag = 0;
+        case 3: // Arriba
+          endX = currentX;
+          endY = currentY - side;
+          arcEndX = currentX + side;
+          arcEndY = endY;
           break;
         default:
           endX = currentX;
           endY = currentY;
-          sweepFlag = 0;
+          arcEndX = currentX;
+          arcEndY = currentY;
       }
-
-      path += ` A ${radius} ${radius} 0 0 ${sweepFlag} ${endX} ${endY}`;
+      
+      // Guardar cuadrado para referencia
+      squares.push({
+        x: currentX,
+        y: currentY,
+        width: direction === 0 || direction === 2 ? side : 0,
+        height: direction === 1 || direction === 3 ? side : 0,
+        side: side
+      });
+      
+      // Añadir arco de 90°
+      if (i > 0) {
+        const radius = side;
+        const sweepFlag = 1; // Siempre en sentido horario para espiral
+        
+        // Calcular punto de inicio del arco
+        let arcStartX, arcStartY;
+        switch (direction) {
+          case 0: // Derecha
+            arcStartX = currentX;
+            arcStartY = currentY + side;
+            break;
+          case 1: // Abajo
+            arcStartX = currentX - side;
+            arcStartY = currentY;
+            break;
+          case 2: // Izquierda
+            arcStartX = currentX;
+            arcStartY = currentY - side;
+            break;
+          case 3: // Arriba
+            arcStartX = currentX + side;
+            arcStartY = currentY;
+            break;
+          default:
+            arcStartX = currentX;
+            arcStartY = currentY;
+        }
+        
+        if (i === 1) {
+          path = `M ${arcStartX} ${arcStartY}`;
+        }
+        
+        path += ` A ${radius} ${radius} 0 0 ${sweepFlag} ${arcEndX} ${arcEndY}`;
+      }
+      
+      // Actualizar posición para siguiente cuadrado
       currentX = endX;
       currentY = endY;
+      direction = (direction + 1) % 4;
     }
-
-    return path;
+    
+    return { path, squares };
   }, [canvasSize]);
 
-  // Espiral simplificada y elegante usando curvas de Bézier
-  const elegantSpiralPath = useMemo(() => {
-    const w = canvasSize.w;
-    const h = canvasSize.h;
-
-    // Punto de partida en la esquina
-    const startX = 0;
-    const startY = h;
-
-    // Construir espiral con arcos precisos
-    // Cada segmento es un cuarto de círculo que sigue la proporción áurea
-    const r1 = h; // Radio del primer arco
-    const r2 = h / PHI;
-    const r3 = r2 / PHI;
-    const r4 = r3 / PHI;
-    const r5 = r4 / PHI;
-    const r6 = r5 / PHI;
-    const r7 = r6 / PHI;
-
-    // Puntos clave de la espiral
-    const p1 = { x: 0, y: h };
-    const p2 = { x: w / PHI, y: 0 };
-    const p3 = { x: w, y: h / PHI };
-    const p4 = { x: w - (w - w / PHI) / PHI, y: h };
-    const p5 = { x: w / PHI, y: h - (h - h / PHI) / PHI };
-
-    // Path con arcos suaves
-    const path = `
-      M ${p1.x} ${p1.y}
-      A ${r1} ${r1} 0 0 1 ${p2.x} ${p2.y}
-      A ${r2} ${r2} 0 0 1 ${p3.x} ${p3.y}
-      A ${r3} ${r3} 0 0 1 ${p4.x} ${p4.y}
-      A ${r4} ${r4} 0 0 1 ${p5.x} ${p5.y}
-      A ${r5} ${r5} 0 0 1 ${w / PHI + r5 / PHI} ${h / PHI}
-      A ${r6} ${r6} 0 0 1 ${w / PHI + r5 / PHI - r6 / PHI} ${h / PHI + r6 / PHI}
-    `;
-
+  // Espiral de Fibonacci técnica y minimalista
+  const fibonacciSpiralPath = useMemo(() => {
+    const { path } = generateFibonacciSpiral;
     return path;
-  }, [canvasSize]);
+  }, [generateFibonacciSpiral]);
 
-  // Calcular centro del "ojo" de la espiral
+  // Calcular centro del "ojo" de la espiral (punto de anclaje)
   const spiralEye = useMemo(() => {
-    const w = canvasSize.w;
-    const h = canvasSize.h;
-    // El "ojo" está aproximadamente en el punto de convergencia de la espiral
+    const { squares } = generateFibonacciSpiral;
+    const size = Math.min(canvasSize.w, canvasSize.h);
+    
+    // El "ojo" está en el centro del último cuadrado de Fibonacci
+    if (squares.length > 0) {
+      const lastSquare = squares[squares.length - 1];
+      return {
+        x: lastSquare.x + lastSquare.side / 2,
+        y: lastSquare.y + lastSquare.side / 2
+      };
+    }
+    
+    // Fallback al centro del canvas
     return {
-      x: w / PHI + w / Math.pow(PHI, 4),
-      y: h / PHI + h / Math.pow(PHI, 5)
+      x: canvasSize.w / 2,
+      y: canvasSize.h / 2
     };
-  }, [canvasSize]);
+  }, [generateFibonacciSpiral, canvasSize]);
 
-  // Handlers para Drag & Drop
+  // Handlers para Drag & Drop - anclado al ojo de la espiral
   const handleMouseDown = (e: React.MouseEvent) => {
     if (activeOverlay !== 'spiral') return;
-    setIsDragging(true);
+    
+    // Verificar si el clic está cerca del ojo de la espiral
     const rect = containerRef.current?.getBoundingClientRect();
     if (rect) {
-      setDragStart({
-        x: e.clientX - spiralPosition.x,
-        y: e.clientY - spiralPosition.y
-      });
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
+      const eyeX = spiralEye.x + spiralPosition.x;
+      const eyeY = spiralEye.y + spiralPosition.y;
+      
+      const distance = Math.sqrt(Math.pow(clickX - eyeX, 2) + Math.pow(clickY - eyeY, 2));
+      
+      // Solo permitir drag si está cerca del ojo (radio de 20px)
+      if (distance <= 20) {
+        setIsDragging(true);
+        setDragStart({
+          x: e.clientX - spiralPosition.x,
+          y: e.clientY - spiralPosition.y
+        });
+      }
     }
   };
 
@@ -403,9 +431,9 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         <h2 className="font-serif text-4xl md:text-5xl text-slate-900 tracking-wide mb-4">
           Master de Composición Áurea
         </h2>
-        <p className="text-stone-500 text-lg leading-relaxed">
-          Arrastra la espiral sobre tu obra para encontrar el punto focal perfecto.
-        </p>
+<p className="text-stone-500 text-lg leading-relaxed">
+           Arrastra el "ojo" de la espiral sobre tu obra para encontrar el punto focal perfecto.
+         </p>
       </header>
 
       {/* Panel de Control */}
@@ -582,9 +610,9 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       <section className="max-w-5xl mx-auto">
         <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4 md:p-8 shadow-2xl">
           <div className="text-center mb-4">
-            <p className="text-[10px] tracking-[0.4em] text-slate-500 uppercase">
-              {activeOverlay === 'spiral' ? 'Arrastra la espiral para ajustar' : 'Regla de los Tercios'}
-            </p>
+<p className="text-[10px] tracking-[0.4em] text-slate-500 uppercase">
+               {activeOverlay === 'spiral' ? 'Arrastra el ojo de la espiral para ajustar' : 'Regla de los Tercios'}
+             </p>
           </div>
 
           {/* Canvas interactivo */}
@@ -601,7 +629,7 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 width: canvasSize.w,
                 height: canvasSize.h,
                 maxWidth: '100%',
-                cursor: activeOverlay === 'spiral' ? (isDragging ? 'grabbing' : 'grab') : 'default'
+                cursor: activeOverlay === 'spiral' ? 'default' : 'default'
               }}
               onMouseDown={handleMouseDown}
             >
@@ -647,29 +675,30 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 {/* Espiral de Fibonacci */}
                 {activeOverlay === 'spiral' && (
                   <g>
-                    {/* La curva del caracol */}
+                    {/* Espiral de Fibonacci técnica */}
                     <path
-                      d={elegantSpiralPath}
+                      d={fibonacciSpiralPath}
                       fill="none"
                       stroke={spiralStroke}
-                      strokeWidth="2"
+                      strokeWidth="1"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
 
-                    {/* Ojo de la espiral */}
+                    {/* Ojo de la espiral - punto de anclaje para drag */}
                     <circle
                       cx={spiralEye.x}
                       cy={spiralEye.y}
-                      r="8"
+                      r="6"
                       fill="none"
                       stroke={spiralStroke}
-                      strokeWidth="2"
+                      strokeWidth="1"
+                      className="pointer-events-auto cursor-move"
                     />
                     <circle
                       cx={spiralEye.x}
                       cy={spiralEye.y}
-                      r="3"
+                      r="2"
                       fill={spiralStroke}
                     />
                   </g>
@@ -692,11 +721,11 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       {/* Instrucciones */}
       <section className="max-w-3xl mx-auto">
         <div className="bg-stone-50 border border-stone-200 p-6 text-center">
-          <p className="text-stone-600 text-sm leading-relaxed">
-            <strong>Cómo usar:</strong> Sube tu imagen, ajusta las medidas de tu lienzo, y arrastra la espiral
-            hasta que el "ojo" (el centro del caracol) coincida con el punto focal de tu composición.
-            Prueba las 4 rotaciones y los espejos para encontrar la orientación perfecta.
-          </p>
+<p className="text-stone-600 text-sm leading-relaxed">
+             <strong>Cómo usar:</strong> Sube tu imagen, ajusta las medidas de tu lienzo, y arrastra el "ojo" de la espiral
+             (punto dorado central) hasta que coincida con el punto focal de tu composición.
+             Prueba las 4 rotaciones y los espejos para encontrar la orientación perfecta.
+           </p>
         </div>
       </section>
     </div>
