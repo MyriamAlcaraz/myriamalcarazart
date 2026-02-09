@@ -75,10 +75,10 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
             Master de Composición Áurea
           </h3>
 
-          <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
-            Calcula la Regla de los Tercios y la Espiral de Oro para cualquier formato de lienzo.
-            Visualización interactiva en tiempo real.
-          </p>
+<p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
+             Aplica la Regla de los Tercios a cualquier formato de lienzo.
+             Encuentra los puntos de fuerza para una composición equilibrada.
+           </p>
 
           <div className="border-t border-stone-100 pt-6 text-center">
             <span className="inline-block border border-gold-500 text-gold-600 py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-500 group-hover:text-white transition-all duration-300">
@@ -266,12 +266,12 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         <span className="inline-flex items-center gap-2 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-4 py-2 mb-6">
           <Gift size={14} /> Herramienta gratuita
         </span>
-        <h2 className="font-serif text-4xl md:text-5xl text-slate-900 tracking-wide mb-4">
-          Master de Composición Áurea
+<h2 className="font-serif text-4xl md:text-5xl text-slate-900 tracking-wide mb-4">
+          Máster de Composición: Regla de los Tercios
         </h2>
-<p className="text-stone-500 text-lg leading-relaxed">
-           Arrastra tu imagen para encuadrarla bajo la rejilla de los tercios.
-         </p>
+        <p className="text-stone-500 text-lg leading-relaxed">
+          Encuadra tu obra utilizando los puntos de fuerza para lograr un equilibrio visual perfecto.
+        </p>
       </header>
 
       {/* Panel de Control */}
@@ -389,25 +389,22 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
               >
                 {/* Regla de los Tercios - siempre cubre 100% del lienzo */}
                 <g>
-                  {/* Líneas verticales - siempre del 0 al 100% del alto */}
-                  <line x1={canvasSize.w / 3} y1="0" x2={canvasSize.w / 3} y2={canvasSize.h} stroke={gridStroke} strokeWidth="1.5" />
-                  <line x1={(canvasSize.w * 2) / 3} y1="0" x2={(canvasSize.w * 2) / 3} y2={canvasSize.h} stroke={gridStroke} strokeWidth="1.5" />
+                  {/* Líneas verticales - muy finas para no molestar */}
+                  <line x1={canvasSize.w / 3} y1="0" x2={canvasSize.w / 3} y2={canvasSize.h} stroke={gridStroke} strokeWidth="0.5" />
+                  <line x1={(canvasSize.w * 2) / 3} y1="0" x2={(canvasSize.w * 2) / 3} y2={canvasSize.h} stroke={gridStroke} strokeWidth="0.5" />
                   
-                  {/* Líneas horizontales - siempre del 0 al 100% del ancho */}
-                  <line x1="0" y1={canvasSize.h / 3} x2={canvasSize.w} y2={canvasSize.h / 3} stroke={gridStroke} strokeWidth="1.5" />
-                  <line x1="0" y1={(canvasSize.h * 2) / 3} x2={canvasSize.w} y2={(canvasSize.h * 2) / 3} stroke={gridStroke} strokeWidth="1.5" />
+                  {/* Líneas horizontales - muy finas para no molestar */}
+                  <line x1="0" y1={canvasSize.h / 3} x2={canvasSize.w} y2={canvasSize.h / 3} stroke={gridStroke} strokeWidth="0.5" />
+                  <line x1="0" y1={(canvasSize.h * 2) / 3} x2={canvasSize.w} y2={(canvasSize.h * 2) / 3} stroke={gridStroke} strokeWidth="0.5" />
                   
-                  {/* Puntos de oro - elegantes y pequeños en las intersecciones */}
+                  {/* Puntos de interés - círculos sutiles de color oro en las intersecciones */}
                   {[
                     [canvasSize.w / 3, canvasSize.h / 3],
                     [(canvasSize.w * 2) / 3, canvasSize.h / 3],
                     [canvasSize.w / 3, (canvasSize.h * 2) / 3],
                     [(canvasSize.w * 2) / 3, (canvasSize.h * 2) / 3],
                   ].map(([cx, cy], i) => (
-                    <g key={i}>
-                      <circle cx={cx} cy={cy} r="4" fill="none" stroke={gridStroke} strokeWidth="1.5" />
-                      <circle cx={cx} cy={cy} r="2" fill={gridStroke} />
-                    </g>
+                    <circle key={i} cx={cx} cy={cy} r="3" fill="#d4af37" opacity="0.8" />
                   ))}
                 </g>
               </svg>
