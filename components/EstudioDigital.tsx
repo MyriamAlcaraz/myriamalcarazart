@@ -440,50 +440,90 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 // APP 2: DICCIONARIO DE PIGMENTOS
 // ============================================
 const PIGMENTS_DATA = [
-  // OLD HOLLAND
-  { name: 'Naranja Cadmio', pigment: 'PO20', opacity: 'Opaco', permanence: 'Excelente', family: 'Old Holland', color: '#ff6b35', history: 'Naranja cálido y vibrante. Excelente para mezclas de piel y atardeceres. Alta cubrición.' },
-  { name: 'Rojo Quinacridona', pigment: 'PV19', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#d63031', history: 'Alta transparencia y gran poder de tinción. Rojo intenso y profundo, ideal para veladuras.' },
-  { name: 'Azul Ftalocianina', pigment: 'PB15', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#0984e3', history: 'Alta transparencia y gran poder de tinción. Azul intenso y frío, perfecto para cielos y aguas.' },
-  { name: 'Verde Ftalocianina', pigment: 'PG7', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#00b894', history: 'Verde intenso y brillante. Alta transparencia, ideal para vegetación y paisajes.' },
-  { name: 'Azul Ultramar', pigment: 'PB29', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Old Holland', color: '#5f3dc4', history: 'Azul cálido y profundo. Excelente para atmósferas y sombras. Granulador natural.' },
-  { name: 'Carmín Alizarina', pigment: 'PR83', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#e63946', history: 'Rojo profundo y transparente. Ideal para veladuras y mezclas de sombras.' },
-  { name: 'Verde Vejiga', pigment: 'PG18', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Old Holland', color: '#556b2f', history: 'Verde terroso y natural. Granulador, perfecto para paisajes y vegetación.' },
-  { name: 'Pardo Óxido Transparente', pigment: 'PBr6', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#8b4513', history: 'Marrón transparente cálido. Ideal para veladuras y envejecimiento.' },
-  { name: 'Rojo Óxido Transparente', pigment: 'PR101', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#cd5c5c', history: 'Rojo terroso transparente. Perfecto para óxidos y efectos de envejecimiento.' },
-  { name: 'Negro Marfil', pigment: 'PBk9', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Old Holland', color: '#4a4a4a', history: 'Negro cálido y natural. Ideal para mezclas y sombras suaves.' },
-  { name: 'Magenta Quinacridona', pigment: 'PR122', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#e84393', history: 'Alta transparencia y gran poder de tinción. Magenta vibrante para mezclas modernas.' },
-  { name: 'Azul Real', pigment: 'PB29', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Old Holland', color: '#1e3a8a', history: 'Azul profundo y real. Excelente para marinas y cielos nocturnos.' },
-  { name: 'Bermellón', pigment: 'PR106', opacity: 'Opaco', permanence: 'Buena', family: 'Old Holland', color: '#ff4757', history: 'Rojo histórico y vibrante. Usado por los grandes maestros. Requiere cuidado por su toxicidad.' },
+  // BLANCOS (más claros)
+  { name: 'Blanco de Titanio', pigment: 'PW6', opacity: 'Opaco', permanence: 'Excelente', family: 'Winsor & Newton', color: '#ffffff', history: 'El blanco más cubriente y versátil. Desde 1921, reemplazó al tóxico Blanco de Plomo.' },
+  { name: 'Blanco de Zinc', pigment: 'PW4', opacity: 'Semi-transparente', permanence: 'Excelente', family: 'Old Holland', color: '#f8f8f8', history: 'Blanco más frío y transparente. Ideal para veladuras y mezclas delicadas.' },
+  { name: 'Blanco de Plata', pigment: 'PW7', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Williamsburg', color: '#f5f5f5', history: 'Blanco semicubriente con ligero tono amarillento. Excelente para piel.' },
   
-  // WILLIAMSBURG
+  // AMARILLOS
+  { name: 'Amarillo Cadmio Claro', pigment: 'PY35', opacity: 'Opaco', permanence: 'Excelente', family: 'Old Holland', color: '#fff44f', history: 'Amarillo limón brillante. Sintetizado en 1817, usado por Monet y Van Gogh.' },
+  { name: 'Amarillo Cadmio Medio', pigment: 'PY37', opacity: 'Opaco', permanence: 'Excelente', family: 'Williamsburg', color: '#ffb300', history: 'El cadmio más versátil. Cálido y luminoso, ideal para mezclas con naranjas.' },
+  { name: 'Amarillo Nápoles', pigment: 'PY41', opacity: 'Opaco', permanence: 'Excelente', family: 'Winsor & Newton', color: '#ffeb3b', history: 'Clásico amarillo italiano. Opaco y cálido, perfecto para arquitectura.' },
+  { name: 'Amarillo Ocre', pigment: 'PY43', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Old Holland', color: '#cc7722', history: 'El pigmento más antiguo conocido. Usado desde el Renacimiento.' },
+  
+  // OCREs Y TIERRAS
+  { name: 'Ocre Amarillo', pigment: 'PY43', opacity: 'Opaco', permanence: 'Excelente', family: 'Williamsburg', color: '#d4a76a', history: 'Tierra amarilla clásica. Estable y versátil para paisajes.' },
+  { name: 'Siena Natural', pigment: 'PBr7', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#a0522d', history: 'De la región de Siena, Italia. Ideal para veladuras cálidas.' },
+  { name: 'Siena Tostada', pigment: 'PBr7', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#8b4513', history: 'Siena calcinada. Rembrandt la mezclaba con negros para sombras.' },
+  { name: 'Sombra Natural', pigment: 'PBr7', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#635147', history: 'De Umbría, Italia. Más fría que las Sienas. Velázquez la usó en fondos.' },
+  { name: 'Sombra Tostada', pigment: 'PBr7', opacity: 'Semi-transparente', permanence: 'Excelente', family: 'Old Holland', color: '#4a3728', history: 'Marrón cálido profundo. Caravaggio construyó su claroscuro sobre esta base.' },
+  
+  // NARANJAS
+  { name: 'Naranja Cadmio', pigment: 'PO20', opacity: 'Opaco', permanence: 'Excelente', family: 'Old Holland', color: '#ff6b35', history: 'Naranja cálido y vibrante. Excelente para mezclas de piel y atardeceres.' },
   { name: 'Naranja Cadmio Claro', pigment: 'PO20', opacity: 'Opaco', permanence: 'Excelente', family: 'Williamsburg', color: '#ffa502', history: 'Naranja brillante y luminoso. Excelente para resaltar y mezclas vibrantes.' },
-  { name: 'Rojo Quinacridona Profundo', pigment: 'PV19', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#c44569', history: 'Alta transparencia y gran poder de tinción. Rojo profundo y elegante.' },
-  { name: 'Azul Ftalocianina Verde', pigment: 'PB15:3', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#00cec9', history: 'Alta transparencia y gran poder de tinción. Azul verdoso único y versátil.' },
-  { name: 'Verde Ftalocianina Intenso', pigment: 'PG7', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#00b894', history: 'Verde brillante y moderno. Alta transparencia para efectos de luz.' },
-  { name: 'Azul Ultramar Francés', pigment: 'PB29', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Williamsburg', color: '#6c5ce7', history: 'Azul cálido clásico. Granulador natural, ideal para atmósferas.' },
-  { name: 'Carmín Alizarina Permanente', pigment: 'PR83', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#d63031', history: 'Rojo profundo y estable. Perfecto para veladuras y glaseados.' },
-  { name: 'Verde Vejiga Italiano', pigment: 'PG18', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Williamsburg', color: '#6b8e23', history: 'Verde terroso clásico. Granulador, ideal para paisajes mediterráneos.' },
-  { name: 'Pardo Óxido Transparente Profundo', pigment: 'PBr6', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#8b4513', history: 'Marrón transparente intenso. Perfecto para efectos de envejecimiento.' },
-  { name: 'Rojo Óxido Transparente Cálido', pigment: 'PR101', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#e17055', history: 'Rojo terroso cálido. Ideal para óxidos y efectos naturales.' },
-  { name: 'Negro Marfil Frío', pigment: 'PBk9', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Williamsburg', color: '#636e72', history: 'Negro frío y natural. Excelente para mezclas de sombras.' },
-  { name: 'Magenta Brillante', pigment: 'PR122', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#fd79a8', history: 'Alta transparencia y gran poder de tinción. Magenta vibrante y moderno.' },
-  { name: 'Azul Real Profundo', pigment: 'PB29', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Williamsburg', color: '#2d3436', history: 'Azul oscuro y profundo. Ideal para marinas y nocturnos.' },
-  { name: 'Bermellón Moderno', pigment: 'PR106', opacity: 'Opaco', permanence: 'Buena', family: 'Williamsburg', color: '#ff6348', history: 'Versión moderna del bermellón clásico. Rojo vibrante y estable.' },
-  
-  // WINSOR & NEWTON
   { name: 'Naranja Cadmio Brillante', pigment: 'PO20', opacity: 'Opaco', permanence: 'Excelente', family: 'Winsor & Newton', color: '#ff7675', history: 'Naranja intenso y brillante. Excelente cubrición y luminosidad.' },
-  { name: 'Rojo Quinacridona Rosa', pigment: 'PV19', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#fab1a0', history: 'Alta transparencia y gran poder de tinción. Rosado intenso y versátil.' },
-  { name: 'Azul Ftalocianina Winsor', pigment: 'PB15', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#74b9ff', history: 'Alta transparencia y gran poder de tinción. Azul brillante y moderno.' },
-  { name: 'Verde Ftalocianina Winsor', pigment: 'PG7', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#55efc4', history: 'Verde brillante y limpio. Alta transparencia para efectos de luz.' },
-  { name: 'Azul Ultramar Winsor', pigment: 'PB29', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Winsor & Newton', color: '#a29bfe', history: 'Azul cálido y luminoso. Granulador natural, ideal para cielos.' },
-  { name: 'Carmín Alizarina Winsor', pigment: 'PR83', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#ff6b9d', history: 'Rojo profundo y transparente. Perfecto para veladuras y flores.' },
-  { name: 'Verde Vejiga Winsor', pigment: 'PG18', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Winsor & Newton', color: '#81ecec', history: 'Verde terroso y natural. Granulador, ideal para paisajes.' },
-  { name: 'Pardo Óxido Transparente Winsor', pigment: 'PBr6', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#fab1a0', history: 'Marrón transparente cálido. Ideal para veladuras y efectos.' },
-  { name: 'Rojo Óxido Transparente Winsor', pigment: 'PR101', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#e17055', history: 'Rojo terroso transparente. Perfecto para óxidos y rust.' },
-  { name: 'Negro Marfil Winsor', pigment: 'PBk9', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Winsor & Newton', color: '#b2bec3', history: 'Negro cálido y suave. Excelente para mezclas y sombras.' },
-  { name: 'Magenta Winsor', pigment: 'PR122', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#e84393', history: 'Alta transparencia y gran poder de tinción. Magenta vibrante y puro.' },
-  { name: 'Azul Real Winsor', pigment: 'PB29', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Winsor & Newton', color: '#0984e3', history: 'Azul profundo y real. Excelente para marinas y cielos.' },
+  
+  // ROJOS
+  { name: 'Rojo Cadmio', pigment: 'PR108', opacity: 'Opaco', permanence: 'Excelente', family: 'Williamsburg', color: '#e63946', history: 'Disponible desde 1910. Reemplazó al Bermellón por su estabilidad.' },
+  { name: 'Bermellón', pigment: 'PR106', opacity: 'Opaco', permanence: 'Buena', family: 'Old Holland', color: '#ff4757', history: 'Rojo histórico y vibrante. Usado por los grandes maestros. Requiere cuidado.' },
+  { name: 'Bermellón Moderno', pigment: 'PR106', opacity: 'Opaco', permanence: 'Buena', family: 'Williamsburg', color: '#ff6348', history: 'Versión segura del bermellón clásico. Rojo vibrante y estable.' },
   { name: 'Bermellón Winsor', pigment: 'PR106', opacity: 'Opaco', permanence: 'Buena', family: 'Winsor & Newton', color: '#ff4757', history: 'Versión segura del bermellón clásico. Rojo vibrante y estable.' },
+  
+  // MAGENTAS Y QUINACRIDONAS
+  { name: 'Magenta Quinacridona', pigment: 'PR122', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#e84393', history: 'Alta transparencia y gran poder de tinción. Magenta vibrante para mezclas modernas.' },
+  { name: 'Rojo Quinacridona', pigment: 'PV19', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#d63031', history: 'Alta transparencia y gran poder de tinción. Rojo intenso y profundo, ideal para veladuras.' },
+  { name: 'Magenta Brillante', pigment: 'PR122', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#fd79a8', history: 'Alta transparencia y gran poder de tinción. Magenta vibrante y moderno.' },
+  { name: 'Rojo Quinacridona Profundo', pigment: 'PV19', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#c44569', history: 'Alta transparencia y gran poder de tinción. Rojo profundo y elegante.' },
+  { name: 'Magenta Winsor', pigment: 'PR122', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#e84393', history: 'Alta transparencia y gran poder de tinción. Magenta vibrante y puro.' },
+  { name: 'Rojo Quinacridona Rosa', pigment: 'PV19', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#fab1a0', history: 'Alta transparencia y gran poder de tinción. Rosado intenso y versátil.' },
+  
+  // CARMÍN Y ALCARAZ
+  { name: 'Carmín Alizarina', pigment: 'PR83', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#e63946', history: 'Rojo profundo y transparente. Ideal para veladuras y mezclas de sombras.' },
+  { name: 'Carmín Alizarina Permanente', pigment: 'PR83', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#d63031', history: 'Rojo profundo y estable. Perfecto para veladuras y glaseados.' },
+  { name: 'Carmín Alizarina Winsor', pigment: 'PR83', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#ff6b9d', history: 'Rojo profundo y transparente. Perfecto para veladuras y flores.' },
+  
+  // VIOLETAS
+  { name: 'Violeta Cobalto', pigment: 'PV14', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Old Holland', color: '#7f00ff', history: 'El violeta más permanente. Monet lo usó extensivamente en sus series de catedrales.' },
+  { name: 'Violeta Quinacridona', pigment: 'PV19', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#8e44ad', history: 'Violeta transparente y moderno. Ideal para flores y atmósferas.' },
+  { name: 'Violeta Winsor', pigment: 'PV23', opacity: 'Semi-transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#9b59b6', history: 'Violeta profundo y estable. Excelente para sombras y nocturnos.' },
+  
+  // AZULES
+  { name: 'Azul Cerúleo', pigment: 'PB35', opacity: 'Opaco', permanence: 'Excelente', family: 'Old Holland', color: '#2a52be', history: 'Introducido en 1860. Perfecto para cielos por su tono frío y granulación.' },
+  { name: 'Azul Cobalto', pigment: 'PB28', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Williamsburg', color: '#0047ab', history: 'Descubierto en 1802. Renoir lo consideraba indispensable. Secado rápido.' },
+  { name: 'Azul Ultramar', pigment: 'PB29', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Old Holland', color: '#5f3dc4', history: 'Azul cálido y profundo. Excelente para atmósferas y sombras. Granulador natural.' },
+  { name: 'Azul Ultramar Francés', pigment: 'PB29', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Williamsburg', color: '#6c5ce7', history: 'Azul cálido clásico. Granulador natural, ideal para atmósferas.' },
+  { name: 'Azul Ultramar Winsor', pigment: 'PB29', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Winsor & Newton', color: '#a29bfe', history: 'Azul cálido y luminoso. Granulador natural, ideal para cielos.' },
+  { name: 'Azul Real', pigment: 'PB29', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Old Holland', color: '#1e3a8a', history: 'Azul profundo y real. Excelente para marinas y cielos nocturnos.' },
+  { name: 'Azul Real Profundo', pigment: 'PB29', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Williamsburg', color: '#2d3436', history: 'Azul oscuro y profundo. Ideal para marinas y nocturnos.' },
+  { name: 'Azul Real Winsor', pigment: 'PB29', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Winsor & Newton', color: '#0984e3', history: 'Azul profundo y real. Excelente para marinas y cielos.' },
+  
+  // AZULES PHALO (FTALOCIANINAS)
+  { name: 'Azul Ftalocianina', pigment: 'PB15', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#0984e3', history: 'Alta transparencia y gran poder de tinción. Azul intenso y frío, perfecto para cielos y aguas.' },
+  { name: 'Azul Ftalocianina Verde', pigment: 'PB15:3', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#00cec9', history: 'Alta transparencia y gran poder de tinción. Azul verdoso único y versátil.' },
+  { name: 'Azul Ftalocianina Winsor', pigment: 'PB15', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#74b9ff', history: 'Alta transparencia y gran poder de tinción. Azul brillante y moderno.' },
+  
+  // VERDES
+  { name: 'Verde Vejiga', pigment: 'PG18', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Old Holland', color: '#556b2f', history: 'Verde terroso y natural. Granulador, perfecto para paisajes y vegetación.' },
+  { name: 'Verde Vejiga Italiano', pigment: 'PG18', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Williamsburg', color: '#6b8e23', history: 'Verde terroso clásico. Granulador, ideal para paisajes mediterráneos.' },
+  { name: 'Verde Vejiga Winsor', pigment: 'PG18', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Winsor & Newton', color: '#81ecec', history: 'Verde terroso y natural. Granulador, ideal para paisajes.' },
+  
+  // VERDES PHALO (FTALOCIANINAS)
+  { name: 'Verde Ftalocianina', pigment: 'PG7', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#00b894', history: 'Verde intenso y brillante. Alta transparencia, ideal para vegetación y paisajes.' },
+  { name: 'Verde Ftalocianina Intenso', pigment: 'PG7', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#00b894', history: 'Verde brillante y moderno. Alta transparencia para efectos de luz.' },
+  { name: 'Verde Ftalocianina Winsor', pigment: 'PG7', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#55efc4', history: 'Verde brillante y limpio. Alta transparencia para efectos de luz.' },
+  
+  // TIERRAS Y ÓXIDOS
+  { name: 'Pardo Óxido Transparente', pigment: 'PBr6', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#8b4513', history: 'Marrón transparente cálido. Ideal para veladuras y envejecimiento.' },
+  { name: 'Pardo Óxido Transparente Profundo', pigment: 'PBr6', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#8b4513', history: 'Marrón transparente intenso. Perfecto para efectos de envejecimiento.' },
+  { name: 'Pardo Óxido Transparente Winsor', pigment: 'PBr6', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#fab1a0', history: 'Marrón transparente cálido. Ideal para veladuras y efectos.' },
+  { name: 'Rojo Óxido Transparente', pigment: 'PR101', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#cd5c5c', history: 'Rojo terroso transparente. Perfecto para óxidos y efectos de envejecimiento.' },
+  { name: 'Rojo Óxido Transparente Cálido', pigment: 'PR101', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#e17055', history: 'Rojo terroso cálido. Ideal para óxidos y efectos naturales.' },
+  { name: 'Rojo Óxido Transparente Winsor', pigment: 'PR101', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#e17055', history: 'Rojo terroso transparente. Perfecto para óxidos y rust.' },
+  
+  // NEGROS (más oscuros)
+  { name: 'Negro Marfil', pigment: 'PBk9', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Old Holland', color: '#4a4a4a', history: 'Negro cálido y natural. Ideal para mezclas y sombras suaves.' },
+  { name: 'Negro Marfil Frío', pigment: 'PBk9', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Williamsburg', color: '#636e72', history: 'Negro frío y natural. Excelente para mezclas de sombras.' },
+  { name: 'Negro Marfil Winsor', pigment: 'PBk9', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Winsor & Newton', color: '#b2bec3', history: 'Negro cálido y suave. Excelente para mezclas y sombras.' },
 ];
 
 const DiccionarioPigmentos: React.FC<{ onBack: () => void }> = ({ onBack }) => {
@@ -537,22 +577,40 @@ const DiccionarioPigmentos: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         </div>
       </section>
 
-      {/* Grid de pigmentos - optimizado para móvil */}
-      <section className="max-w-6xl mx-auto px-2">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+      {/* Grid de pigmentos - diseño profesional de bellas artes */}
+      <section className="max-w-7xl mx-auto px-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
           {filteredPigments.map((pigment, index) => (
             <button
               key={index}
               onClick={() => setSelectedPigment(pigment)}
-              className={`group bg-white border p-3 sm:p-4 text-left transition-all duration-300 hover:shadow-lg ${
+              className={`group bg-white border p-3 text-left transition-all duration-300 hover:shadow-lg ${
                 selectedPigment?.name === pigment.name ? 'border-gold-500 shadow-lg' : 'border-stone-200 hover:border-gold-300'
               }`}
             >
+              {/* PRIORIDAD VISUAL: Indicador de Transparencia/Opacidad */}
+              <div className="flex items-center justify-between mb-2">
+                <div className={`w-3 h-3 rounded-full border ${
+                  pigment.opacity === 'Opaco' ? 'bg-slate-900 border-slate-900' :
+                  pigment.opacity === 'Semi-opaco' ? 'bg-slate-500 border-slate-500' :
+                  pigment.opacity === 'Semi-transparente' ? 'bg-slate-400 border-slate-400' :
+                  'bg-slate-300 border-slate-400'
+                }`}></div>
+                <span className="text-xs text-stone-500 font-medium">
+                  {pigment.opacity === 'Semi-transparente' ? 'Semi-trans' : 
+                   pigment.opacity === 'Semi-opaco' ? 'Semi-opaco' : 
+                   pigment.opacity}
+                </span>
+              </div>
+              
+              {/* Muestra de color */}
               <div
-                className="w-full h-12 sm:h-16 mb-3 sm:mb-4 border border-stone-200 rounded-lg group-hover:scale-105 transition-transform duration-300 shadow-sm"
+                className="w-full h-16 mb-3 border border-stone-200 rounded group-hover:scale-105 transition-transform duration-300 shadow-sm"
                 style={{ backgroundColor: pigment.color }}
               ></div>
-              <h4 className="font-serif text-sm sm:text-base text-slate-900 mb-1 leading-snug font-medium">{pigment.name}</h4>
+              
+              {/* Información del pigmento */}
+              <h4 className="font-serif text-xs text-slate-900 mb-1 leading-tight font-medium">{pigment.name}</h4>
               <p className="text-xs text-stone-500 mb-1">{pigment.pigment}</p>
               <p className="text-xs text-stone-400">{pigment.family}</p>
             </button>
@@ -560,7 +618,7 @@ const DiccionarioPigmentos: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         </div>
       </section>
 
-{/* Detalle del pigmento seleccionado - optimizado para móvil */}
+{/* Detalle del pigmento seleccionado - prioridad visual en transparencia */}
       {selectedPigment && (
         <section className="max-w-4xl mx-auto animate-fade-in px-2">
           <div className="bg-white border border-stone-200 p-4 sm:p-6 lg:p-8">
@@ -573,21 +631,34 @@ const DiccionarioPigmentos: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 <h3 className="font-serif text-lg sm:text-2xl text-slate-900 mb-2">{selectedPigment.name}</h3>
                 <p className="text-sm text-gold-600 mb-3 sm:mb-4 font-medium">{selectedPigment.pigment} · {selectedPigment.family}</p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
-                  <div className="bg-stone-50 p-3 rounded-lg">
-                    <p className="text-xs text-stone-400 uppercase tracking-wide mb-1">Opacidad</p>
-                    <div className="flex items-center gap-2">
-                      <div className={`w-4 h-4 rounded-full ${
-                        selectedPigment.opacity === 'Opaco' ? 'bg-slate-900' :
-                        selectedPigment.opacity === 'Semi-opaco' ? 'bg-slate-500' :
-                        'bg-slate-300 border border-stone-400'
-                      }`}></div>
-                      <span className="text-slate-700 font-medium">{selectedPigment.opacity}</span>
-                    </div>
+                {/* PRIORIDAD VISUAL: Transparencia/Opacidad en la parte superior */}
+                <div className="bg-gradient-to-r from-stone-50 to-stone-100 p-4 rounded-lg mb-4 sm:mb-6 border border-stone-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-sm font-semibold text-slate-700 uppercase tracking-wide">Transparencia / Opacidad</p>
+                    <div className={`w-6 h-6 rounded-full border-2 ${
+                      selectedPigment.opacity === 'Opaco' ? 'bg-slate-900 border-slate-900' :
+                      selectedPigment.opacity === 'Semi-opaco' ? 'bg-slate-500 border-slate-500' :
+                      selectedPigment.opacity === 'Semi-transparente' ? 'bg-slate-400 border-slate-400' :
+                      'bg-slate-300 border-stone-400'
+                    }`}></div>
                   </div>
+                  <p className="text-lg font-bold text-slate-900 mb-1">{selectedPigment.opacity}</p>
+                  <p className="text-xs text-stone-600">
+                    {selectedPigment.opacity === 'Opaco' ? 'Totalmente cubriente, ideal para capas base.' :
+                     selectedPigment.opacity === 'Semi-opaco' ? 'Cubriente con algo de transparencia.' :
+                     selectedPigment.opacity === 'Semi-transparente' ? 'Transparencia media, bueno para veladuras.' :
+                     'Altamente transparente, perfecto para glaseados y veladuras.'}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
                   <div className="bg-stone-50 p-3 rounded-lg">
                     <p className="text-xs text-stone-400 uppercase tracking-wide mb-1">Permanencia</p>
                     <span className="text-slate-700 font-medium">{selectedPigment.permanence}</span>
+                  </div>
+                  <div className="bg-stone-50 p-3 rounded-lg">
+                    <p className="text-xs text-stone-400 uppercase tracking-wide mb-1">Código</p>
+                    <span className="text-slate-700 font-medium">{selectedPigment.pigment}</span>
                   </div>
                 </div>
 
