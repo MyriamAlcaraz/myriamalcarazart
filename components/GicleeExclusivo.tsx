@@ -1,150 +1,270 @@
-import React, { useState } from 'react';
-import { ArrowLeft, Check, Shield, Award, Crown } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { ArrowLeft, ChevronDown, Check } from 'lucide-react';
+import { ARTWORKS } from '../constants';
 
 interface GicleeExclusivoProps {
   onBack: () => void;
 }
 
-const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+// Función para parsear dimensiones "100x81 cm" -> { width: 100, height: 81 }
+const parseDimensions = (dim: string): { width: number; height: number } | null => {
+  const match = dim.match(/(\d+)x(\d+)/);
+  if (!match) return null;
+  return { width: parseInt(match[1]), height: parseInt(match[2]) };
+};
 
-  const sizes = [
-    { id: 'standard', name: 'Formato Estándar', label: '(Lado mayor aprox. 40 cm | Ed. Limitada de 30)', price: '180€' },
-    { id: 'intermediate', name: 'Formato Intermedio', label: '(Lado mayor aprox. 50 cm | Ed. Limitada de 25)', price: '280€' },
-    { id: 'medium', name: 'Formato Mediano', label: '(Lado mayor aprox. 70 cm | Ed. Limitada de 15)', price: '450€' },
-    { id: 'large', name: 'Formato Grande', label: '(Lado mayor aprox. 90 cm | Ed. Limitada de 10)', price: '680€' },
-    { id: 'collection', name: 'Formato Colección', label: '(Lado mayor aprox. 100 cm | Ed. Limitada de 5)', price: '950€' }
-  ];
+// Función para calcular dimensiones escaladas
+const scaleDimensions = (width: number, height: number, scale: number): string => {
+  const newWidth = Math.round(width * scale);
+  const newHeight = Math.round(height * scale);
+  return `${newWidth}x${newHeight} cm`;
+};
+
+const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
+  const [selectedArtworkId, setSelectedArtworkId] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<'small' | 'medium' | 'large' | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Filtrar obras disponibles para Giclée (excluir vendidas)
+  const availableArtworks = useMemo(() =>
+    ARTWORKS.filter(art => art.status !== 'sold'),
+    []
+  );
+
+  const selectedArtwork = useMemo(() =>
+    availableArtworks.find(art => art.id === selectedArtworkId),
+    [selectedArtworkId, availableArtworks]
+  );
+
+  // Calcular los tamaños disponibles para la obra seleccionada
+  const sizes = useMemo(() => {
+    if (!selectedArtwork) return null;
+
+    const dims = parseDimensions(selectedArtwork.dimensions);
+    if (!dims) return null;
+
+    return [
+      {
+        id: 'small' as const,
+        name: 'Pequeño',
+        scale: '50%',
+        dimensions: scaleDimensions(dims.width, dims.height, 0.5),
+        price: '280€'
+      },
+      {
+        id: 'medium' as const,
+        name: 'Mediano',
+        scale: '75%',
+        dimensions: scaleDimensions(dims.width, dims.height, 0.75),
+        price: '450€'
+      },
+      {
+        id: 'large' as const,
+        name: 'Grande',
+        scale: 'Tamaño Original',
+        dimensions: scaleDimensions(dims.width, dims.height, 1),
+        price: '680€'
+      }
+    ];
+  }, [selectedArtwork]);
+
+  const selectedSizeData = sizes?.find(s => s.id === selectedSize);
 
   return (
-    <div className="min-h-screen bg-stone-50 animate-fade-in">
-      <div className="max-w-4xl mx-auto px-6 py-12">
+    <div className="min-h-screen bg-stone-50">
+      <div className="max-w-4xl mx-auto px-6 py-16 md:py-24">
 
-        {/* Header - Centrado y con Corona */}
-        <div className="mb-12 text-center relative">
+        {/* Header minimalista */}
+        <div className="mb-16 text-center relative">
           <button
             onClick={onBack}
-            className="absolute left-0 top-2 flex items-center gap-2 text-stone-600 hover:text-gold-500 transition-colors"
+            className="absolute left-0 top-0 flex items-center gap-2 text-stone-400 hover:text-stone-700 transition-colors"
           >
             <ArrowLeft size={20} />
-            <span className="text-sm tracking-wider uppercase hidden md:inline">Volver</span>
+            <span className="text-sm tracking-widest uppercase hidden md:inline">Volver</span>
           </button>
 
-          <div className="flex justify-center mb-6">
-            <Crown className="text-gold-500" size={48} />
-          </div>
-          <h1 className="text-5xl md:text-6xl font-serif text-slate-800 mb-6">
-            Giclée Exclusivo
+          <p className="text-xs tracking-[0.3em] text-stone-400 uppercase mb-4">Colección Giclée</p>
+          <h1 className="text-4xl md:text-5xl font-serif text-slate-800 font-light tracking-wide">
+            Ediciones de Arte
           </h1>
-          <div className="w-32 h-1 bg-gold-500 mx-auto mb-8"></div>
-          <p className="text-lg md:text-xl text-stone-600 font-light tracking-widest leading-relaxed max-w-3xl mx-auto">
-            Reproducciones Giclée de alta fidelidad — Ediciones limitadas en calidad museo
+          <div className="w-16 h-px bg-gold-500 mx-auto mt-8"></div>
+        </div>
+
+        {/* Texto de edición limitada */}
+        <div className="text-center mb-16">
+          <p className="text-stone-600 font-light text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
+            Edición limitada de 50 ejemplares, numerados y firmados
+            <br />
+            <span className="text-stone-500">con certificado de autenticidad Hahnemühle</span>
           </p>
         </div>
 
-        {/* Calidad Section */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-serif text-slate-800 mb-6">La Calidad</h2>
-          <div className="bg-white p-8 rounded-lg shadow-sm border border-stone-100">
-            <p className="text-stone-700 leading-relaxed text-lg">
-              Cada obra se imprime en el prestigioso papel Hahnemühle William Turner de 310g, un papel 100% algodón moldeado en tina. Su superficie tiene una textura mate sutil y genuina que preserva la profundidad y el carácter de mis óleos, aportando una tridimensionalidad y una riqueza cromática que solo los estándares de conservación de museos pueden ofrecer. Una joya eterna para tu colección.
-            </p>
-          </div>
-        </section>
+        {/* Selector de Obra */}
+        <section className="mb-12">
+          <label className="block text-xs tracking-[0.2em] text-stone-400 uppercase mb-4">
+            Selecciona una obra
+          </label>
 
-        {/* Garantía Section */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-serif text-slate-800 mb-6">Garantía de Autenticidad</h2>
-          <div className="bg-white p-8 rounded-lg shadow-sm border border-stone-100">
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="flex items-start gap-4">
-                <Shield className="text-gold-500 mt-1" size={24} />
-                <div>
-                  <h3 className="font-semibold text-slate-800 mb-2">Certificado Hahnemühle</h3>
-                  <p className="text-stone-600">Con holograma de autenticidad y número de serie único</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <Award className="text-gold-500 mt-1" size={24} />
-                <div>
-                  <h3 className="font-semibold text-slate-800 mb-2">Certificado Myriam Alcaraz</h3>
-                  <p className="text-stone-600">Con Sello Seco y firma autógrafa de la artista</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+          <div className="relative">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="w-full bg-white border border-stone-200 rounded-lg px-6 py-4 text-left flex items-center justify-between hover:border-stone-300 transition-colors"
+            >
+              <span className={selectedArtwork ? 'text-slate-800' : 'text-stone-400'}>
+                {selectedArtwork ? selectedArtwork.title : 'Elige una obra de la colección'}
+              </span>
+              <ChevronDown
+                size={20}
+                className={`text-stone-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+              />
+            </button>
 
-        {/* Selector de Tamaños */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-serif text-slate-800 mb-2">Elección de Formato</h2>
-          <p className="text-stone-400 text-sm italic font-serif mb-6 leading-relaxed">
-            * Las dimensiones finales pueden variar ligeramente para respetar la proporción y composición original de la obra, garantizando así la integridad artística de la reproducción.
-          </p>
-
-          <div className="space-y-4">
-            {sizes.map((size) => (
-              <div
-                key={size.id}
-                onClick={() => setSelectedSize(size.id)}
-                className={`bg-white p-6 rounded-lg border-2 cursor-pointer transition-all ${selectedSize === size.id
-                  ? 'border-gold-500 shadow-lg'
-                  : 'border-stone-100 hover:border-stone-300'
-                  }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedSize === size.id ? 'border-gold-500 bg-gold-500' : 'border-stone-300'
-                      }`}>
-                      {selectedSize === size.id && <Check size={16} className="text-white" />}
-                    </div>
+            {isDropdownOpen && (
+              <div className="absolute z-20 w-full mt-2 bg-white border border-stone-200 rounded-lg shadow-xl max-h-80 overflow-y-auto">
+                {availableArtworks.map((artwork) => (
+                  <button
+                    key={artwork.id}
+                    onClick={() => {
+                      setSelectedArtworkId(artwork.id);
+                      setSelectedSize(null);
+                      setIsDropdownOpen(false);
+                    }}
+                    className={`w-full px-6 py-4 text-left hover:bg-stone-50 transition-colors border-b border-stone-100 last:border-b-0 flex items-center gap-4 ${
+                      selectedArtworkId === artwork.id ? 'bg-stone-50' : ''
+                    }`}
+                  >
+                    <img
+                      src={artwork.image}
+                      alt={artwork.title}
+                      className="w-12 h-12 object-cover rounded"
+                    />
                     <div>
-                      <h3 className="font-semibold text-slate-800">{size.name}</h3>
-                      <p className="text-sm text-stone-600">{size.label}</p>
+                      <p className="text-slate-800 font-medium">{artwork.title}</p>
+                      <p className="text-xs text-stone-400">{artwork.dimensions}</p>
                     </div>
-                  </div>
-                  <div className="text-2xl font-bold text-gold-500">{size.price}</div>
-                </div>
+                  </button>
+                ))}
               </div>
-            ))}
+            )}
           </div>
-
-          {/* Botón de Acción (Solo aparece si hay tamaño seleccionado) */}
-          {selectedSize && (
-            <div className="text-center mt-12 animate-fade-in">
-              <button
-                onClick={() => {
-                  const selectedFormat = sizes.find(s => s.id === selectedSize);
-                  const subject = encodeURIComponent(`Interés en la adquisición de Giclée: [Título de la Obra]`);
-                  const body = encodeURIComponent(
-                    `Estimada Myriam Alcaraz,
-\nLe escribo interesado/a en la adquisición de una reproducción de alta fidelidad (Giclée) de su obra titulada [Título de la Obra].
-\nLos detalles de la selección son los siguientes:
-\n• Obra: [Título de la Obra]
-• Formato: ${selectedFormat?.name}
-• Dimensiones: ${selectedFormat?.label}
-• Especificaciones: Impresión pigmentada de alta fidelidad sobre papel Hahnemühle William Turner 310g.
-• Certificación: Doble aval (Certificado Hahnemühle con registro digital y Certificado de Artista firmado con sello seco).
-• Importe: ${selectedFormat?.price}
-\nQuedo a la espera de sus instrucciones personales para formalizar la reserva y proceder con los trámites de adquisición y envío.
-\nAtentamente,
-\n[Nombre y Apellidos]
-[Teléfono de contacto]`
-                  );
-                  window.location.href = `mailto:myriamhotmail@hotmail.com?subject=${subject}&body=${body}`;
-                }}
-                className="bg-gold-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-gold-600 transition-colors text-lg tracking-wider shadow-xl hover:shadow-2xl transform hover:scale-105 duration-300"
-              >
-                SOLICITAR ADQUISICIÓN
-              </button>
-            </div>
-          )}
-
         </section>
 
-        {/* Nota de Exclusividad */}
-        <section className="bg-stone-100 p-8 rounded-lg text-center">
-          <p className="text-stone-700 italic text-lg">
+        {/* Vista previa de obra seleccionada */}
+        {selectedArtwork && (
+          <section className="mb-12 animate-fade-in">
+            <div className="bg-white rounded-lg p-8 border border-stone-100">
+              <div className="flex flex-col md:flex-row gap-8 items-center">
+                <img
+                  src={selectedArtwork.image}
+                  alt={selectedArtwork.title}
+                  className="w-full md:w-64 h-64 object-contain rounded"
+                />
+                <div className="text-center md:text-left">
+                  <h2 className="text-2xl font-serif text-slate-800 mb-2">{selectedArtwork.title}</h2>
+                  <p className="text-stone-500 text-sm mb-1">{selectedArtwork.technique}</p>
+                  <p className="text-stone-400 text-sm">Original: {selectedArtwork.dimensions}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Selector de Tamaño */}
+        {sizes && (
+          <section className="mb-12 animate-fade-in">
+            <label className="block text-xs tracking-[0.2em] text-stone-400 uppercase mb-4">
+              Elige el tamaño
+            </label>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {sizes.map((size) => (
+                <button
+                  key={size.id}
+                  onClick={() => setSelectedSize(size.id)}
+                  className={`relative bg-white rounded-lg p-6 border-2 transition-all text-center ${
+                    selectedSize === size.id
+                      ? 'border-gold-500 shadow-lg'
+                      : 'border-stone-100 hover:border-stone-300'
+                  }`}
+                >
+                  {selectedSize === size.id && (
+                    <div className="absolute top-3 right-3 w-5 h-5 bg-gold-500 rounded-full flex items-center justify-center">
+                      <Check size={12} className="text-white" />
+                    </div>
+                  )}
+
+                  <p className="text-lg font-medium text-slate-800 mb-1">{size.name}</p>
+                  <p className="text-xs text-stone-400 mb-3">{size.scale}</p>
+
+                  {/* Medidas exactas destacadas */}
+                  <div className="bg-stone-50 rounded py-2 px-3 mb-4">
+                    <p className="text-slate-700 font-semibold">{size.dimensions}</p>
+                  </div>
+
+                  <p className="text-2xl font-light text-gold-500">{size.price}</p>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Información de calidad */}
+        {selectedSize && (
+          <section className="mb-12 animate-fade-in">
+            <div className="bg-white rounded-lg p-8 border border-stone-100">
+              <h3 className="text-xs tracking-[0.2em] text-stone-400 uppercase mb-4">Especificaciones</h3>
+              <div className="space-y-3 text-stone-600">
+                <p>Impresión Giclée de alta fidelidad sobre papel <strong>Hahnemühle William Turner 310g</strong></p>
+                <p>Papel 100% algodón moldeado en tina con textura mate</p>
+                <p>Tintas pigmentadas de archivo con durabilidad superior a 100 años</p>
+                <p>Incluye certificado de autenticidad con holograma y número de serie</p>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Botón de solicitud */}
+        {selectedArtwork && selectedSize && selectedSizeData && (
+          <section className="text-center mb-16 animate-fade-in">
+            <button
+              onClick={() => {
+                const subject = encodeURIComponent(`Solicitud Giclée: ${selectedArtwork.title}`);
+                const body = encodeURIComponent(
+`Estimada Myriam Alcaraz,
+
+Me gustaría adquirir una reproducción Giclée de su obra.
+
+Detalles de la solicitud:
+
+• Obra: ${selectedArtwork.title}
+• Tamaño: ${selectedSizeData.name} (${selectedSizeData.scale})
+• Dimensiones: ${selectedSizeData.dimensions}
+• Precio: ${selectedSizeData.price}
+
+• Papel: Hahnemühle William Turner 310g
+• Edición: Limitada a 50 ejemplares, numerados y firmados
+
+Quedo a la espera de sus indicaciones para formalizar la reserva.
+
+Atentamente,
+
+[Nombre y Apellidos]
+[Teléfono de contacto]`
+                );
+                window.location.href = `mailto:myriamhotmail@hotmail.com?subject=${subject}&body=${body}`;
+              }}
+              className="bg-slate-800 text-white px-12 py-4 rounded font-medium hover:bg-slate-900 transition-colors tracking-widest text-sm uppercase"
+            >
+              Solicitar esta obra
+            </button>
+            <p className="text-stone-400 text-xs mt-4">Te responderemos en menos de 24 horas</p>
+          </section>
+        )}
+
+        {/* Nota final */}
+        <section className="text-center border-t border-stone-200 pt-12">
+          <p className="text-stone-400 text-sm font-light italic">
             Series estrictamente limitadas. Una vez agotada la edición, no volverá a producirse.
           </p>
         </section>
