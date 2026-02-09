@@ -498,9 +498,9 @@ const PIGMENTS_DATA = [
   { name: 'Azul Real Winsor', pigment: 'PB29', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Winsor & Newton', color: '#0984e3', history: 'Azul profundo y real. Excelente para marinas y cielos.' },
   
   // AZULES PHALO (FTALOCIANINAS)
-  { name: 'Azul Ftalocianina', pigment: 'PB15', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#0984e3', history: 'Alta transparencia y gran poder de tinción. Azul intenso y frío, perfecto para cielos y aguas.' },
-  { name: 'Azul Ftalocianina Verde', pigment: 'PB15:3', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#00cec9', history: 'Alta transparencia y gran poder de tinción. Azul verdoso único y versátil.' },
-  { name: 'Azul Ftalocianina Winsor', pigment: 'PB15', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#74b9ff', history: 'Alta transparencia y gran poder de tinción. Azul brillante y moderno.' },
+  { name: 'Azul Ftalocianina', pigment: 'PB15', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#0047AB', history: 'Alta transparencia y gran poder de tinción. Azul verdoso profundo y frío, perfecto para cielos y aguas.' },
+  { name: 'Azul Ftalocianina Verde', pigment: 'PB15:3', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#006994', history: 'Alta transparencia y gran poder de tinción. Azul verdoso intenso y característico.' },
+  { name: 'Azul Ftalocianina Winsor', pigment: 'PB15', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#005A9C', history: 'Alta transparencia y gran poder de tinción. Azul verdoso profundo y moderno.' },
   
   // VERDES
   { name: 'Verde Vejiga', pigment: 'PG18', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Old Holland', color: '#556b2f', history: 'Verde terroso y natural. Granulador, perfecto para paisajes y vegetación.' },
@@ -513,12 +513,12 @@ const PIGMENTS_DATA = [
   { name: 'Verde Ftalocianina Winsor', pigment: 'PG7', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#55efc4', history: 'Verde brillante y limpio. Alta transparencia para efectos de luz.' },
   
   // TIERRAS Y ÓXIDOS
-  { name: 'Pardo Óxido Transparente', pigment: 'PBr6', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#8b4513', history: 'Marrón transparente cálido. Ideal para veladuras y envejecimiento.' },
-  { name: 'Pardo Óxido Transparente Profundo', pigment: 'PBr6', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#8b4513', history: 'Marrón transparente intenso. Perfecto para efectos de envejecimiento.' },
-  { name: 'Pardo Óxido Transparente Winsor', pigment: 'PBr6', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#fab1a0', history: 'Marrón transparente cálido. Ideal para veladuras y efectos.' },
-  { name: 'Rojo Óxido Transparente', pigment: 'PR101', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#cd5c5c', history: 'Rojo terroso transparente. Perfecto para óxidos y efectos de envejecimiento.' },
-  { name: 'Rojo Óxido Transparente Cálido', pigment: 'PR101', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#e17055', history: 'Rojo terroso cálido. Ideal para óxidos y efectos naturales.' },
-  { name: 'Rojo Óxido Transparente Winsor', pigment: 'PR101', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#e17055', history: 'Rojo terroso transparente. Perfecto para óxidos y rust.' },
+  { name: 'Pardo Óxido Transparente', pigment: 'PBr6', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#4E342E', history: 'Marrón rojizo oscuro y cálido. Transparente profundo, ideal para veladuras y envejecimiento.' },
+  { name: 'Pardo Óxido Transparente Profundo', pigment: 'PBr6', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#5D4037', history: 'Marrón chocolate tostado profundo. Transparente intenso, perfecto para efectos de envejecimiento.' },
+  { name: 'Pardo Óxido Transparente Winsor', pigment: 'PBr6', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#4E342E', history: 'Marrón rojizo oscuro transparente. Ideal para veladuras y efectos de envejecimiento.' },
+  { name: 'Rojo Óxido Transparente', pigment: 'PR101', opacity: 'Transparente', permanence: 'Excelente', family: 'Old Holland', color: '#8B4513', history: 'Terracota rojiza transparente. Perfecto para óxidos y efectos de envejecimiento.' },
+  { name: 'Rojo Óxido Transparente Cálido', pigment: 'PR101', opacity: 'Transparente', permanence: 'Excelente', family: 'Williamsburg', color: '#A0522D', history: 'Terracota cálida transparente. Ideal para óxidos y efectos naturales.' },
+  { name: 'Rojo Óxido Transparente Winsor', pigment: 'PR101', opacity: 'Transparente', permanence: 'Excelente', family: 'Winsor & Newton', color: '#8B4513', history: 'Terracota rojiza transparente. Perfecto para óxidos y rust.' },
   
   // NEGROS (más oscuros)
   { name: 'Negro Marfil', pigment: 'PBk9', opacity: 'Semi-opaco', permanence: 'Excelente', family: 'Old Holland', color: '#4a4a4a', history: 'Negro cálido y natural. Ideal para mezclas y sombras suaves.' },
@@ -588,14 +588,19 @@ const DiccionarioPigmentos: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 selectedPigment?.name === pigment.name ? 'border-gold-500 shadow-lg' : 'border-stone-200 hover:border-gold-300'
               }`}
             >
-              {/* PRIORIDAD VISUAL: Indicador de Transparencia/Opacidad */}
+              {/* PRIORIDAD VISUAL: Indicador elegante de Transparencia/Opacidad */}
               <div className="flex items-center justify-between mb-2">
-                <div className={`w-3 h-3 rounded-full border ${
-                  pigment.opacity === 'Opaco' ? 'bg-slate-900 border-slate-900' :
-                  pigment.opacity === 'Semi-opaco' ? 'bg-slate-500 border-slate-500' :
-                  pigment.opacity === 'Semi-transparente' ? 'bg-slate-400 border-slate-400' :
-                  'bg-slate-300 border-slate-400'
-                }`}></div>
+                <div className="flex items-center gap-1">
+                  {pigment.opacity === 'Opaco' ? (
+                    <div className="w-4 h-4 bg-slate-900 rounded-sm"></div>
+                  ) : pigment.opacity === 'Semi-opaco' ? (
+                    <div className="w-4 h-4 bg-gradient-to-r from-slate-900 to-slate-500 rounded-sm"></div>
+                  ) : pigment.opacity === 'Semi-transparente' ? (
+                    <div className="w-4 h-4 bg-gradient-to-r from-slate-500 via-slate-300 to-transparent rounded-sm"></div>
+                  ) : (
+                    <div className="w-4 h-4 border-2 border-slate-400 rounded-sm bg-transparent"></div>
+                  )}
+                </div>
                 <span className="text-xs text-stone-500 font-medium">
                   {pigment.opacity === 'Semi-transparente' ? 'Semi-trans' : 
                    pigment.opacity === 'Semi-opaco' ? 'Semi-opaco' : 
@@ -631,16 +636,27 @@ const DiccionarioPigmentos: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 <h3 className="font-serif text-lg sm:text-2xl text-slate-900 mb-2">{selectedPigment.name}</h3>
                 <p className="text-sm text-gold-600 mb-3 sm:mb-4 font-medium">{selectedPigment.pigment} · {selectedPigment.family}</p>
 
-                {/* PRIORIDAD VISUAL: Transparencia/Opacidad en la parte superior */}
-                <div className="bg-gradient-to-r from-stone-50 to-stone-100 p-4 rounded-lg mb-4 sm:mb-6 border border-stone-200">
+                {/* PRIORIDAD VISUAL: Transparencia/Opacidad elegante en la parte superior */}
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-4 rounded-lg mb-4 sm:mb-6 border border-amber-200">
                   <div className="flex items-center justify-between mb-3">
                     <p className="text-sm font-semibold text-slate-700 uppercase tracking-wide">Transparencia / Opacidad</p>
-                    <div className={`w-6 h-6 rounded-full border-2 ${
-                      selectedPigment.opacity === 'Opaco' ? 'bg-slate-900 border-slate-900' :
-                      selectedPigment.opacity === 'Semi-opaco' ? 'bg-slate-500 border-slate-500' :
-                      selectedPigment.opacity === 'Semi-transparente' ? 'bg-slate-400 border-slate-400' :
-                      'bg-slate-300 border-stone-400'
-                    }`}></div>
+                    <div className="flex items-center gap-2">
+                      {selectedPigment.opacity === 'Opaco' ? (
+                        <div className="w-6 h-6 bg-slate-900 rounded-sm"></div>
+                      ) : selectedPigment.opacity === 'Semi-opaco' ? (
+                        <div className="w-6 h-6 bg-gradient-to-r from-slate-900 to-slate-500 rounded-sm"></div>
+                      ) : selectedPigment.opacity === 'Semi-transparente' ? (
+                        <div className="w-6 h-6 bg-gradient-to-r from-slate-500 via-slate-300 to-transparent rounded-sm"></div>
+                      ) : (
+                        <div className="w-6 h-6 border-2 border-slate-400 rounded-sm bg-transparent"></div>
+                      )}
+                      <span className="text-xs text-amber-700 font-medium">
+                        {selectedPigment.opacity === 'Transparente' ? 'Transparente' :
+                         selectedPigment.opacity === 'Semi-transparente' ? 'Semi-transparente' :
+                         selectedPigment.opacity === 'Semi-opaco' ? 'Semi-opaco' :
+                         'Opaco'}
+                      </span>
+                    </div>
                   </div>
                   <p className="text-lg font-bold text-slate-900 mb-1">{selectedPigment.opacity}</p>
                   <p className="text-xs text-stone-600">
