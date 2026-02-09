@@ -220,149 +220,107 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   // Colores de la espiral
   const spiralStroke = spiralColor === 'gold' ? '#d4af37' : '#ffffff';
 
-  // Generar Espiral de Fibonacci técnica con arcos SVG precisos
-  const generateFibonacciSpiral = useMemo(() => {
+  // Componente SVG de Espiral de Fibonacci con 6 arcos perfectos
+  const FibonacciSpiralSVG = useMemo(() => {
     const size = Math.min(canvasSize.w, canvasSize.h);
     
-    // Secuencia de Fibonacci: 1,1,2,3,5,8,13
-    const fib = [1, 1, 2, 3, 5, 8, 13];
+    // Secuencia de Fibonacci: 1, 2, 3, 5, 8, 13
+    const fib = [1, 2, 3, 5, 8, 13];
     const total = fib.reduce((sum, val) => sum + val, 0);
-    const scale = size / (total * 1.2); // Factor de ajuste para espacio
+    const scale = size / (total * 0.8); // Factor de ajuste para espacio
     
-    // Construir cuadrados y arcos de Fibonacci
+    // Construir la espiral con 6 arcos circulares perfectos
     let path = '';
-    let squares = [];
+    let centerX = 0;
+    let centerY = 0;
     
-    // Posición inicial (esquina superior izquierda)
-    let currentX = 0;
-    let currentY = 0;
+    // Posición inicial para el primer arco
+    let currentX = fib[5] * scale; // Empezar desde el cuadrado más grande
+    let currentY = fib[5] * scale;
     
-    // Dirección inicial: hacia la derecha
-    let direction = 0; // 0=derecha, 1=abajo, 2=izquierda, 3=arriba
-    
-    // Generar cuadrados de Fibonacci
-    for (let i = 0; i < fib.length; i++) {
-      const side = fib[i] * scale;
-      let endX, endY, arcEndX, arcEndY;
+    // Generar arcos en sentido horario, desde el exterior hacia el interior
+    for (let i = fib.length - 1; i >= 0; i--) {
+      const radius = fib[i] * scale;
+      const direction = (fib.length - 1 - i) % 4;
+      
+      let startX, startY, endX, endY;
       
       switch (direction) {
-        case 0: // Derecha
-          endX = currentX + side;
+        case 0: // Arco superior-derecho
+          startX = currentX;
+          startY = currentY - radius;
+          endX = currentX + radius;
           endY = currentY;
-          arcEndX = endX;
-          arcEndY = currentY + side;
           break;
-        case 1: // Abajo
+        case 1: // Arco inferior-derecho
+          startX = currentX + radius;
+          startY = currentY;
           endX = currentX;
-          endY = currentY + side;
-          arcEndX = currentX - side;
-          arcEndY = endY;
+          endY = currentY + radius;
           break;
-        case 2: // Izquierda
-          endX = currentX - side;
+        case 2: // Arco inferior-izquierdo
+          startX = currentX;
+          startY = currentY + radius;
+          endX = currentX - radius;
           endY = currentY;
-          arcEndX = endX;
-          arcEndY = currentY - side;
           break;
-        case 3: // Arriba
+        case 3: // Arco superior-izquierdo
+          startX = currentX - radius;
+          startY = currentY;
           endX = currentX;
-          endY = currentY - side;
-          arcEndX = currentX + side;
-          arcEndY = endY;
+          endY = currentY - radius;
           break;
         default:
+          startX = currentX;
+          startY = currentY;
           endX = currentX;
           endY = currentY;
-          arcEndX = currentX;
-          arcEndY = currentY;
       }
       
-      // Guardar cuadrado para referencia
-      squares.push({
-        x: currentX,
-        y: currentY,
-        width: direction === 0 || direction === 2 ? side : 0,
-        height: direction === 1 || direction === 3 ? side : 0,
-        side: side
-      });
-      
-      // Añadir arco de 90°
-      if (i > 0) {
-        const radius = side;
-        const sweepFlag = 1; // Siempre en sentido horario para espiral
-        
-        // Calcular punto de inicio del arco
-        let arcStartX, arcStartY;
-        switch (direction) {
-          case 0: // Derecha
-            arcStartX = currentX;
-            arcStartY = currentY + side;
-            break;
-          case 1: // Abajo
-            arcStartX = currentX - side;
-            arcStartY = currentY;
-            break;
-          case 2: // Izquierda
-            arcStartX = currentX;
-            arcStartY = currentY - side;
-            break;
-          case 3: // Arriba
-            arcStartX = currentX + side;
-            arcStartY = currentY;
-            break;
-          default:
-            arcStartX = currentX;
-            arcStartY = currentY;
-        }
-        
-        if (i === 1) {
-          path = `M ${arcStartX} ${arcStartY}`;
-        }
-        
-        path += ` A ${radius} ${radius} 0 0 ${sweepFlag} ${arcEndX} ${arcEndY}`;
+      // Primer arco: mover al punto de inicio
+      if (i === fib.length - 1) {
+        path = `M ${startX} ${startY}`;
       }
       
-      // Actualizar posición para siguiente cuadrado
+      // Añadir arco circular perfecto
+      path += ` A ${radius} ${radius} 0 0 1 ${endX} ${endY}`;
+      
+      // Actualizar posición para el siguiente arco
       currentX = endX;
       currentY = endY;
-      direction = (direction + 1) % 4;
+      
+      // El centro de la espiral está en la posición del último arco
+      if (i === 0) {
+        centerX = currentX;
+        centerY = currentY;
+      }
     }
     
-    return { path, squares };
+    return { path, centerX, centerY };
   }, [canvasSize]);
 
-  // Espiral de Fibonacci técnica y minimalista
+  // Espiral de Fibonacci con 6 arcos perfectos
   const fibonacciSpiralPath = useMemo(() => {
-    const { path } = generateFibonacciSpiral;
+    const { path } = FibonacciSpiralSVG;
     return path;
-  }, [generateFibonacciSpiral]);
+  }, [FibonacciSpiralSVG]);
 
   // Calcular centro del "ojo" de la espiral (punto de anclaje)
   const spiralEye = useMemo(() => {
-    const { squares } = generateFibonacciSpiral;
-    const size = Math.min(canvasSize.w, canvasSize.h);
+    const { centerX, centerY } = FibonacciSpiralSVG;
     
-    // El "ojo" está en el centro del último cuadrado de Fibonacci
-    if (squares.length > 0) {
-      const lastSquare = squares[squares.length - 1];
-      return {
-        x: lastSquare.x + lastSquare.side / 2,
-        y: lastSquare.y + lastSquare.side / 2
-      };
-    }
-    
-    // Fallback al centro del canvas
+    // El "ojo" está en el centro del último arco (cuadrado más pequeño)
     return {
-      x: canvasSize.w / 2,
-      y: canvasSize.h / 2
+      x: centerX,
+      y: centerY
     };
-  }, [generateFibonacciSpiral, canvasSize]);
+  }, [FibonacciSpiralSVG]);
 
-  // Handlers para Drag & Drop - anclado al ojo de la espiral
+  // Handlers para Drag & Drop - anclado al centro de la espiral
   const handleMouseDown = (e: React.MouseEvent) => {
     if (activeOverlay !== 'spiral') return;
     
-    // Verificar si el clic está cerca del ojo de la espiral
+    // Verificar si el clic está cerca del centro de la espiral
     const rect = containerRef.current?.getBoundingClientRect();
     if (rect) {
       const clickX = e.clientX - rect.left;
@@ -372,7 +330,7 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       
       const distance = Math.sqrt(Math.pow(clickX - eyeX, 2) + Math.pow(clickY - eyeY, 2));
       
-      // Solo permitir drag si está cerca del ojo (radio de 20px)
+      // Solo permitir drag si está cerca del centro (radio de 20px)
       if (distance <= 20) {
         setIsDragging(true);
         setDragStart({
@@ -675,31 +633,31 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 {/* Espiral de Fibonacci */}
                 {activeOverlay === 'spiral' && (
                   <g>
-                    {/* Espiral de Fibonacci técnica */}
+                    {/* Espiral de Fibonacci con 6 arcos perfectos */}
                     <path
                       d={fibonacciSpiralPath}
                       fill="none"
-                      stroke={spiralStroke}
+                      stroke="#D4AF37"
                       strokeWidth="1"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
 
-                    {/* Ojo de la espiral - punto de anclaje para drag */}
+                    {/* Centro de la espiral - punto de anclaje para drag */}
                     <circle
                       cx={spiralEye.x}
                       cy={spiralEye.y}
-                      r="6"
+                      r="8"
                       fill="none"
-                      stroke={spiralStroke}
+                      stroke="#D4AF37"
                       strokeWidth="1"
                       className="pointer-events-auto cursor-move"
                     />
                     <circle
                       cx={spiralEye.x}
                       cy={spiralEye.y}
-                      r="2"
-                      fill={spiralStroke}
+                      r="3"
+                      fill="#D4AF37"
                     />
                   </g>
                 )}
