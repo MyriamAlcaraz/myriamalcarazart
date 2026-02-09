@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { ARTIST_INFO, ARTWORKS } from '../constants';
-import { Eye, Lock, Layout } from 'lucide-react';
+import { Eye, Lock } from 'lucide-react';
+import GicleeExclusivo from './GicleeExclusivo';
 
 interface PublicSiteProps {
   onOpenCompanion: (id: string) => void;
   onOpenStudioLogin: () => void;
-  onOpenGiclee: () => void;
-  onTabChange?: (tab: 'portfolio' | 'bio' | 'prices' | 'app') => void;
+  onTabChange?: (tab: 'portfolio' | 'bio' | 'prices' | 'giclee' | 'app') => void;
 }
 
 const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
@@ -17,10 +17,10 @@ const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
   </ul>
 );
 
-const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin, onOpenGiclee, onTabChange }) => {
-  const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices' | 'app'>('portfolio');
+const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin, onTabChange }) => {
+  const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices' | 'giclee' | 'app'>('portfolio');
 
-  const handleTabChange = (tab: 'portfolio' | 'bio' | 'prices' | 'app') => {
+  const handleTabChange = (tab: 'portfolio' | 'bio' | 'prices' | 'giclee' | 'app') => {
     setActiveTab(tab);
     onTabChange?.(tab);
   };
@@ -58,8 +58,8 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               ENCARGOS & PRECIOS
             </button>
             <button
-              onClick={onOpenGiclee}
-              className="px-3 py-1 md:px-4 md:py-2 transition-colors text-slate-500 hover:text-slate-800"
+              onClick={() => handleTabChange('giclee')}
+              className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'giclee' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
             >
               GICLÉE
             </button>
@@ -214,10 +214,10 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                   ¿Buscas una opción más accesible o un formato específico? Ofrezco copias de museo Giclée (impresión de altísima fidelidad). Cada reproducción incluye un **Certificado de Autenticidad** original, numerado y firmado.
                 </p>
                 <button
-                  onClick={onOpenGiclee}
-                  className="mt-4 bg-gold-500 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors flex items-center gap-2"
+                  onClick={() => handleTabChange('giclee')}
+                  className="mt-4 bg-gold-500 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors"
                 >
-                  <Layout size={16} /> Ver Catálogo Giclée
+                  Ver Catálogo Giclée
                 </button>
               </div>
 
@@ -236,6 +236,13 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               </div>
             </div>
           </div>
+        )}
+
+        {/* ========================================= */}
+        {/* GICLÉE TAB */}
+        {/* ========================================= */}
+        {activeTab === 'giclee' && (
+          <GicleeExclusivo />
         )}
 
         {/* ========================================= */}
@@ -346,7 +353,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
         )}
 
         {/* Cierre - CTA Final (Solo para Portfolio y Bio) */}
-        {activeTab !== 'prices' && activeTab !== 'app' && (
+        {activeTab !== 'prices' && activeTab !== 'giclee' && activeTab !== 'app' && (
           <div className="mt-16 bg-slate-800 p-12 text-center">
             <div className="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="text-left">

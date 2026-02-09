@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import PublicSite from './components/PublicSite';
 import { ArtistDashboard } from './components/ArtistDashboard';
 import { DigitalCompanion } from './components/DigitalCompanion';
-import GicleeExclusivo from './components/GicleeExclusivo';
 import { Lock, ArrowRight, Eye, EyeOff, X, Shield } from 'lucide-react';
 
 // --- CONFIGURACIÓN DE SEGURIDAD (PASSWORD) ---
@@ -16,14 +15,13 @@ const App: React.FC = () => {
   // 🛑 ESTADO: Para el segundo candado (acceso a ESTUDIO)
   const [showStudioLoginModal, setShowStudioLoginModal] = useState(false);
 
-  // 'public' = Web en modo "Vista Previa" o "En Construcción"
-  // 'artist' = ESTUDIO
-  // 'giclee' = Página Giclée Exclusivo (oculta)
-  const [view, setView] = useState<'public' | 'artist' | 'giclee'>('public');
+  // 'public' = Web pública (con todas sus pestañas incluida Giclée)
+  // 'artist' = ESTUDIO (panel de gestión)
+  const [view, setView] = useState<'public' | 'artist'>('public');
   const [selectedCompanionId, setSelectedCompanionId] = useState<string | null>(null);
 
   // 🛑 ESTADO: Pestaña activa en PublicSite (para mostrar candado solo en 'prices')
-  const [activePublicTab, setActivePublicTab] = useState<'portfolio' | 'bio' | 'prices' | 'app'>('portfolio');
+  const [activePublicTab, setActivePublicTab] = useState<'portfolio' | 'bio' | 'prices' | 'giclee' | 'app'>('portfolio');
 
   // Hooks para el formulario de login (reutilizados para ambos candados)
   const [passwordInput, setPasswordInput] = useState("");
@@ -174,18 +172,14 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen animate-fade-in relative">
 
-      {/* VISTA PRINCIPAL (Alterna entre PublicSite, ArtistDashboard y GicleeExclusivo) */}
+      {/* VISTA PRINCIPAL (Alterna entre PublicSite y ArtistDashboard) */}
       {view === 'public' ? (
         <PublicSite
           onOpenCompanion={(id) => setSelectedCompanionId(id)}
           onOpenStudioLogin={() => setShowStudioLoginModal(true)}
-          onOpenGiclee={() => setView('giclee')}
           onTabChange={(tab) => setActivePublicTab(tab)}
         />
-      ) : view === 'giclee' ? (
-        <GicleeExclusivo onBack={() => setView('public')} />
       ) : (
-        // 💡 Asegúrate de que ArtistDashboard espera esta prop:
         <ArtistDashboard onLogout={handleLogout} />
       )}
 
