@@ -220,101 +220,21 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   // Colores de la espiral
   const spiralStroke = spiralColor === 'gold' ? '#d4af37' : '#ffffff';
 
-  // Componente SVG de Espiral de Fibonacci con 6 arcos perfectos
-  const FibonacciSpiralSVG = useMemo(() => {
-    const size = Math.min(canvasSize.w, canvasSize.h);
-    
-    // Secuencia de Fibonacci: 1, 2, 3, 5, 8, 13
-    const fib = [1, 2, 3, 5, 8, 13];
-    const total = fib.reduce((sum, val) => sum + val, 0);
-    const scale = size / (total * 0.8); // Factor de ajuste para espacio
-    
-    // Construir la espiral con 6 arcos circulares perfectos
-    let path = '';
-    let centerX = 0;
-    let centerY = 0;
-    
-    // Posición inicial para el primer arco
-    let currentX = fib[5] * scale; // Empezar desde el cuadrado más grande
-    let currentY = fib[5] * scale;
-    
-    // Generar arcos en sentido horario, desde el exterior hacia el interior
-    for (let i = fib.length - 1; i >= 0; i--) {
-      const radius = fib[i] * scale;
-      const direction = (fib.length - 1 - i) % 4;
-      
-      let startX, startY, endX, endY;
-      
-      switch (direction) {
-        case 0: // Arco superior-derecho
-          startX = currentX;
-          startY = currentY - radius;
-          endX = currentX + radius;
-          endY = currentY;
-          break;
-        case 1: // Arco inferior-derecho
-          startX = currentX + radius;
-          startY = currentY;
-          endX = currentX;
-          endY = currentY + radius;
-          break;
-        case 2: // Arco inferior-izquierdo
-          startX = currentX;
-          startY = currentY + radius;
-          endX = currentX - radius;
-          endY = currentY;
-          break;
-        case 3: // Arco superior-izquierdo
-          startX = currentX - radius;
-          startY = currentY;
-          endX = currentX;
-          endY = currentY - radius;
-          break;
-        default:
-          startX = currentX;
-          startY = currentY;
-          endX = currentX;
-          endY = currentY;
-      }
-      
-      // Primer arco: mover al punto de inicio
-      if (i === fib.length - 1) {
-        path = `M ${startX} ${startY}`;
-      }
-      
-      // Añadir arco circular perfecto
-      path += ` A ${radius} ${radius} 0 0 1 ${endX} ${endY}`;
-      
-      // Actualizar posición para el siguiente arco
-      currentX = endX;
-      currentY = endY;
-      
-      // El centro de la espiral está en la posición del último arco
-      if (i === 0) {
-        centerX = currentX;
-        centerY = currentY;
-      }
-    }
-    
-    return { path, centerX, centerY };
-  }, [canvasSize]);
+  // Path estático de precisión para la Espiral de Fibonacci
+  const STATIC_SPIRAL_PATH = "M0,100 A100,100 0 0,1 100,0 M100,0 A61.8,61.8 0 0,1 161.8,61.8 M161.8,61.8 A38.2,38.2 0 0,1 123.6,100 M123.6,100 A23.6,23.6 0 0,1 100,76.4 M100,76.4 A14.6,14.6 0 0,1 114.6,61.8";
 
-  // Espiral de Fibonacci con 6 arcos perfectos
-  const fibonacciSpiralPath = useMemo(() => {
-    const { path } = FibonacciSpiralSVG;
-    return path;
-  }, [FibonacciSpiralSVG]);
+  // Espiral de Fibonacci estática
+  const fibonacciSpiralPath = STATIC_SPIRAL_PATH;
 
   // Calcular centro del "ojo" de la espiral (punto de anclaje)
   const spiralEye = useMemo(() => {
-    const { centerX, centerY } = FibonacciSpiralSVG;
-    
-    // El "ojo" está en el centro del último arco (cuadrado más pequeño)
+    // Centro estático basado en el path de precisión
+    // El último punto del path es (114.6, 61.8)
     return {
-      x: centerX,
-      y: centerY
+      x: 114.6,
+      y: 61.8
     };
-  }, [FibonacciSpiralSVG]);
+  }, []);
 
   // Handlers para Drag & Drop - anclado al centro de la espiral
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -633,14 +553,12 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 {/* Espiral de Fibonacci */}
                 {activeOverlay === 'spiral' && (
                   <g>
-                    {/* Espiral de Fibonacci con 6 arcos perfectos */}
+                    {/* Espiral de Fibonacci estática con path de precisión */}
                     <path
-                      d={fibonacciSpiralPath}
+                      d={STATIC_SPIRAL_PATH}
                       fill="none"
                       stroke="#D4AF37"
-                      strokeWidth="1"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                      stroke-width="1"
                     />
 
                     {/* Centro de la espiral - punto de anclaje para drag */}
@@ -650,7 +568,7 @@ const ComposicionAurea: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                       r="8"
                       fill="none"
                       stroke="#D4AF37"
-                      strokeWidth="1"
+                      stroke-width="1"
                       className="pointer-events-auto cursor-move"
                     />
                     <circle
