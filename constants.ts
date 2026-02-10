@@ -19,6 +19,7 @@ export const ARTIST_INFO = {
 
   accolades: {
       exposiciones: [
+          'Museo de Arte Cromática de Toledo. Obra "Ana y la Habana" seleccionada por la Asociación Española de Pintores y Escultores para ser expuesta durante el mes de febrero de 2026.',
           '92 Salón de Otoño de la Asociación Española de Pintores y Escultores. Formó parte de la exposición en la Casa de Vacas del Parque del Retiro - Madrid, del 30 de octubre al 23 de noviembre de 2025.',
           'X Salón de Realismo, exposición colectiva organizada por la Asociación Española de Pintores y Escultores en la Sala de Exposiciones del Centro Cultural "La Vaguada" de la JM Fuencarral-El Pardo, C/ Monforte de Lemos, 40 Madrid, del 25 de septiembre al 27 de octubre de 2025.',
           'Exposición virtual TargetPrice 2025 (tres obras semifinalistas).',
@@ -118,14 +119,14 @@ export const ARTWORKS: Artwork[] = [
     status: 'available', 
     year: '2025' 
   },
-  { 
-    id: '5', 
-    title: 'Ana y la Habana', 
-    dimensions: '92x60 cm', 
-    technique: 'Óleo sobre tela', 
-    price: 3000, 
-    image: '/obras/OBRA_05.jpg', 
-    description: 'Podemos encontrarla en la Guía de Arte y Artistas Leonardo 2025. Exposición: Febrero 2026, Museo Cromática de Toledo.', 
+  {
+    id: '5',
+    title: 'Ana y la Habana',
+    dimensions: '92x60 cm',
+    technique: 'Óleo sobre tela',
+    price: 3000,
+    image: '/obras/OBRA_05.jpg',
+    description: 'Obra seleccionada por la Asociación Española de Pintores y Escultores y el Museo de Arte Cromática de Toledo para ser expuesta durante el mes de febrero de 2026. Incluida en la Guía de Arte y Artistas Leonardo 2025.',
     status: 'available' 
   },
   { 
