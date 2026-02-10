@@ -1585,7 +1585,50 @@ const GicleePanel: React.FC<GicleePanelProps> = ({ artworks, settings, onClose }
                         <div className="p-6">
                             <div className="flex items-center justify-between mb-6">
                                 <h3 className="text-lg font-bold text-slate-800">Historial de Impresiones</h3>
-                                <p className="text-sm text-slate-500">{printedCopies.length} certificados generados</p>
+                                <div className="flex items-center gap-3">
+                                    <p className="text-sm text-slate-500">{printedCopies.length} certificados generados</p>
+                                    {printedCopies.length > 0 && (
+                                        <button
+                                            onClick={() => {
+                                                const date = new Date().toLocaleDateString('es-ES');
+                                                let content = `INVENTARIO GICLÉE - MYRIAM ALCARAZ\nFecha: ${date}\n\n`;
+                                                content += `Total de certificados generados: ${printedCopies.length}\n`;
+                                                content += `═══════════════════════════════════════════════════════════════\n\n`;
+
+                                                // Agrupar por obra
+                                                const byArtwork: { [key: string]: GicleePrint[] } = {};
+                                                printedCopies.forEach(p => {
+                                                    if (!byArtwork[p.artworkTitle]) byArtwork[p.artworkTitle] = [];
+                                                    byArtwork[p.artworkTitle].push(p);
+                                                });
+
+                                                Object.entries(byArtwork).forEach(([title, prints]) => {
+                                                    content += `▸ ${title} (${prints.length} copia${prints.length > 1 ? 's' : ''})\n`;
+                                                    content += `───────────────────────────────────────────────────────────────\n`;
+                                                    prints.forEach(p => {
+                                                        content += `  • Copia ${p.copyNumber}/10 - ${p.sizeName} (${p.dimensions})\n`;
+                                                        content += `    Código: ${p.code}\n`;
+                                                        content += `    Holograma: ${p.hologramNumber || 'No registrado'}\n`;
+                                                        content += `    Fecha: ${new Date(p.date).toLocaleDateString('es-ES')}\n\n`;
+                                                    });
+                                                });
+
+                                                const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                                                const url = URL.createObjectURL(blob);
+                                                const link = document.createElement('a');
+                                                link.href = url;
+                                                link.download = `inventario-giclee-${new Date().toISOString().split('T')[0]}.txt`;
+                                                document.body.appendChild(link);
+                                                link.click();
+                                                document.body.removeChild(link);
+                                                URL.revokeObjectURL(url);
+                                            }}
+                                            className="flex items-center gap-2 text-sm font-medium text-emerald-600 hover:text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-4 py-2 rounded-lg transition-colors"
+                                        >
+                                            <FileText size={16} /> Exportar
+                                        </button>
+                                    )}
+                                </div>
                             </div>
 
                             {printedCopies.length === 0 ? (
