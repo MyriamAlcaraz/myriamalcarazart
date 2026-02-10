@@ -1,155 +1,286 @@
-import React, { useState } from 'react';
-import { ArrowLeft, Check, Shield, Award, Crown } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { ArrowLeft, Check, Shield, Award, Crown, ChevronDown } from 'lucide-react';
 
 interface GicleeExclusivoProps {
   onBack: () => void;
 }
 
-const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+// Base de datos de obras disponibles para Giclée
+const OBRAS_GICLEE = [
+  {
+    id: 'joven-vela',
+    titulo: 'Joven con vela',
+    referencia: 'MA-2025-JV1',
+    holograma: '287213',
+    originalWidth: 40,
+    originalHeight: 30,
+    imagen: '/obras/OBRA_01.jpg'
+  },
+  {
+    id: 'sara-marquesina',
+    titulo: 'Sara en marquesina',
+    referencia: 'MA-2025-SA-M1',
+    holograma: '287214',
+    originalWidth: 100,
+    originalHeight: 81,
+    imagen: '/obras/OBRA_02.jpg'
+  },
+  {
+    id: 'laura-crepusculo',
+    titulo: 'Laura en el crepúsculo',
+    referencia: 'MA-2025-LA1',
+    holograma: '287215',
+    originalWidth: 100,
+    originalHeight: 81,
+    imagen: '/obras/OBRA_03.jpg'
+  },
+  {
+    id: 'sara-farola',
+    titulo: 'Sara bajo la farola',
+    referencia: 'MA-2025-SA1',
+    holograma: '287216',
+    originalWidth: 100,
+    originalHeight: 81,
+    imagen: '/obras/OBRA_04.jpg'
+  }
+];
 
-  const sizes = [
-    { id: 'standard', name: 'Formato Estándar', label: '(Lado mayor aprox. 40 cm | Ed. Limitada de 30)', price: '180€' },
-    { id: 'intermediate', name: 'Formato Intermedio', label: '(Lado mayor aprox. 50 cm | Ed. Limitada de 25)', price: '280€' },
-    { id: 'medium', name: 'Formato Mediano', label: '(Lado mayor aprox. 70 cm | Ed. Limitada de 15)', price: '450€' },
-    { id: 'large', name: 'Formato Grande', label: '(Lado mayor aprox. 90 cm | Ed. Limitada de 10)', price: '680€' },
-    { id: 'collection', name: 'Formato Colección', label: '(Lado mayor aprox. 100 cm | Ed. Limitada de 5)', price: '950€' }
+const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
+  const [selectedObra, setSelectedObra] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Obtener obra seleccionada
+  const obra = useMemo(() =>
+    OBRAS_GICLEE.find(o => o.id === selectedObra),
+    [selectedObra]
+  );
+
+  // Calcular medidas según el tamaño seleccionado
+  const calcularMedidas = (porcentaje: number) => {
+    if (!obra) return { width: 0, height: 0 };
+    const width = Math.round(obra.originalWidth * porcentaje);
+    const height = Math.round(obra.originalHeight * porcentaje);
+    return { width, height };
+  };
+
+  // Definir los 3 tamaños
+  const tamaños = [
+    { id: 'pequeño', nombre: 'Pequeño', porcentaje: 0.5, label: '50% del original' },
+    { id: 'mediano', nombre: 'Mediano', porcentaje: 0.75, label: '75% del original' },
+    { id: 'grande', nombre: 'Grande', porcentaje: 1, label: 'Tamaño Original' }
   ];
 
   return (
-    <div className="min-h-screen bg-stone-50 animate-fade-in">
-      <div className="max-w-4xl mx-auto px-6 py-12">
+    <div className="min-h-screen bg-stone-50">
+      <div className="max-w-4xl mx-auto px-6 py-16">
 
-        {/* Header - Centrado y con Corona */}
-        <div className="mb-12 text-center relative">
+        {/* Header */}
+        <div className="mb-16 text-center relative">
           <button
             onClick={onBack}
-            className="absolute left-0 top-2 flex items-center gap-2 text-stone-600 hover:text-gold-500 transition-colors"
+            className="absolute left-0 top-2 flex items-center gap-2 text-stone-500 hover:text-gold-600 transition-colors"
           >
             <ArrowLeft size={20} />
-            <span className="text-sm tracking-wider uppercase hidden md:inline">Volver</span>
+            <span className="text-sm tracking-widest uppercase hidden md:inline">Volver</span>
           </button>
 
-          <div className="flex justify-center mb-6">
-            <Crown className="text-gold-500" size={48} />
+          <div className="flex justify-center mb-8">
+            <Crown className="text-gold-500" size={40} />
           </div>
-          <h1 className="text-5xl md:text-6xl font-serif text-slate-800 mb-6">
+
+          <h1 className="text-4xl md:text-5xl font-serif text-slate-900 mb-4 tracking-wide">
             Giclée Exclusivo
           </h1>
-          <div className="w-32 h-1 bg-gold-500 mx-auto mb-8"></div>
-          <p className="text-lg md:text-xl text-stone-600 font-light tracking-widest leading-relaxed max-w-3xl mx-auto">
-            Reproducciones Giclée de alta fidelidad — Ediciones limitadas en calidad museo
+
+          <div className="w-24 h-px bg-gold-500 mx-auto mb-6"></div>
+
+          <p className="text-stone-500 text-lg font-light max-w-2xl mx-auto leading-relaxed">
+            Reproducciones de alta fidelidad sobre papel Hahnemühle
           </p>
         </div>
 
-        {/* Calidad Section */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-serif text-slate-800 mb-6">La Calidad</h2>
-          <div className="bg-white p-8 rounded-lg shadow-sm border border-stone-100">
-            <p className="text-stone-700 leading-relaxed text-lg">
-              Cada obra se imprime en el prestigioso papel Hahnemühle William Turner de 310g, un papel 100% algodón moldeado en tina. Su superficie tiene una textura mate sutil y genuina que preserva la profundidad y el carácter de mis óleos, aportando una tridimensionalidad y una riqueza cromática que solo los estándares de conservación de museos pueden ofrecer. Una joya eterna para tu colección.
-            </p>
+        {/* Selector de Obra */}
+        <section className="mb-12">
+          <h2 className="text-xl font-serif text-slate-800 mb-4">Selecciona la obra</h2>
+
+          <div className="relative">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="w-full bg-white border border-stone-200 rounded-lg p-4 flex items-center justify-between hover:border-gold-500 transition-colors"
+            >
+              <span className={obra ? 'text-slate-900' : 'text-stone-400'}>
+                {obra ? obra.titulo : 'Elige una obra...'}
+              </span>
+              <ChevronDown
+                size={20}
+                className={`text-stone-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+              />
+            </button>
+
+            {isDropdownOpen && (
+              <div className="absolute z-10 w-full mt-2 bg-white border border-stone-200 rounded-lg shadow-xl overflow-hidden">
+                {OBRAS_GICLEE.map((o) => (
+                  <button
+                    key={o.id}
+                    onClick={() => {
+                      setSelectedObra(o.id);
+                      setIsDropdownOpen(false);
+                      setSelectedSize(null);
+                    }}
+                    className={`w-full p-4 text-left hover:bg-stone-50 transition-colors border-b border-stone-100 last:border-0 ${
+                      selectedObra === o.id ? 'bg-gold-50' : ''
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-12 bg-stone-100 rounded overflow-hidden">
+                        <img src={o.imagen} alt={o.titulo} className="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-slate-900">{o.titulo}</p>
+                        <p className="text-sm text-stone-500">Original: {o.originalWidth}×{o.originalHeight} cm</p>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
-        {/* Garantía Section */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-serif text-slate-800 mb-6">Garantía de Autenticidad</h2>
-          <div className="bg-white p-8 rounded-lg shadow-sm border border-stone-100">
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="flex items-start gap-4">
-                <Shield className="text-gold-500 mt-1" size={24} />
-                <div>
-                  <h3 className="font-semibold text-slate-800 mb-2">Certificado Hahnemühle</h3>
-                  <p className="text-stone-600">Con holograma de autenticidad y número de serie único</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <Award className="text-gold-500 mt-1" size={24} />
-                <div>
-                  <h3 className="font-semibold text-slate-800 mb-2">Certificado Myriam Alcaraz</h3>
-                  <p className="text-stone-600">Con Sello Seco y firma autógrafa de la artista</p>
-                </div>
-              </div>
+        {/* Selector de Tamaño - Solo visible si hay obra seleccionada */}
+        {obra && (
+          <section className="mb-12 animate-fade-in">
+            <h2 className="text-xl font-serif text-slate-800 mb-4">Elige el tamaño</h2>
+
+            <div className="grid grid-cols-3 gap-4">
+              {tamaños.map((t) => {
+                const medidas = calcularMedidas(t.porcentaje);
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => setSelectedSize(t.id)}
+                    className={`relative p-6 rounded-lg border-2 transition-all text-center ${
+                      selectedSize === t.id
+                        ? 'border-gold-500 bg-gold-50 shadow-lg'
+                        : 'border-stone-200 bg-white hover:border-stone-300'
+                    }`}
+                  >
+                    {selectedSize === t.id && (
+                      <div className="absolute top-3 right-3 w-5 h-5 bg-gold-500 rounded-full flex items-center justify-center">
+                        <Check size={12} className="text-white" />
+                      </div>
+                    )}
+
+                    <p className="font-serif text-lg text-slate-900 mb-1">{t.nombre}</p>
+                    <p className="text-xs text-stone-400 mb-3">{t.label}</p>
+
+                    <div className="bg-stone-100 rounded px-3 py-2">
+                      <p className="text-lg font-semibold text-slate-800">
+                        {medidas.width} × {medidas.height} cm
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
-        {/* Selector de Tamaños */}
-        <section className="mb-16">
-          <h2 className="text-2xl font-serif text-slate-800 mb-2">Elección de Formato</h2>
-          <p className="text-stone-400 text-sm italic font-serif mb-6 leading-relaxed">
-            * Las dimensiones finales pueden variar ligeramente para respetar la proporción y composición original de la obra, garantizando así la integridad artística de la reproducción.
-          </p>
-
-          <div className="space-y-4">
-            {sizes.map((size) => (
-              <div
-                key={size.id}
-                onClick={() => setSelectedSize(size.id)}
-                className={`bg-white p-6 rounded-lg border-2 cursor-pointer transition-all ${selectedSize === size.id
-                  ? 'border-gold-500 shadow-lg'
-                  : 'border-stone-100 hover:border-stone-300'
-                  }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${selectedSize === size.id ? 'border-gold-500 bg-gold-500' : 'border-stone-300'
-                      }`}>
-                      {selectedSize === size.id && <Check size={16} className="text-white" />}
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-slate-800">{size.name}</h3>
-                      <p className="text-sm text-stone-600">{size.label}</p>
-                    </div>
-                  </div>
-                  <div className="text-2xl font-bold text-gold-500">{size.price}</div>
+        {/* Resumen y Acción */}
+        {obra && selectedSize && (
+          <section className="mb-12 animate-fade-in">
+            <div className="bg-white border border-stone-200 rounded-lg p-8">
+              <div className="flex items-start gap-6 mb-6">
+                <div className="w-24 h-20 bg-stone-100 rounded overflow-hidden flex-shrink-0">
+                  <img src={obra.imagen} alt={obra.titulo} className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-xl text-slate-900 mb-1">{obra.titulo}</h3>
+                  <p className="text-stone-500 text-sm mb-2">Ref: {obra.referencia}</p>
+                  <p className="text-gold-600 font-medium">
+                    {tamaños.find(t => t.id === selectedSize)?.nombre} — {' '}
+                    {calcularMedidas(tamaños.find(t => t.id === selectedSize)?.porcentaje || 1).width} × {' '}
+                    {calcularMedidas(tamaños.find(t => t.id === selectedSize)?.porcentaje || 1).height} cm
+                  </p>
                 </div>
               </div>
-            ))}
-          </div>
 
-          {/* Botón de Acción (Solo aparece si hay tamaño seleccionado) */}
-          {selectedSize && (
-            <div className="text-center mt-12 animate-fade-in">
               <button
                 onClick={() => {
-                  const selectedFormat = sizes.find(s => s.id === selectedSize);
-                  const subject = encodeURIComponent(`Interés en la adquisición de Giclée: [Título de la Obra]`);
+                  const tamañoSeleccionado = tamaños.find(t => t.id === selectedSize);
+                  const medidas = calcularMedidas(tamañoSeleccionado?.porcentaje || 1);
+                  const subject = encodeURIComponent(`Solicitud Giclée: ${obra.titulo}`);
                   const body = encodeURIComponent(
-                    `Estimada Myriam Alcaraz,
-\nLe escribo interesado/a en la adquisición de una reproducción de alta fidelidad (Giclée) de su obra titulada [Título de la Obra].
-\nLos detalles de la selección son los siguientes:
-\n• Obra: [Título de la Obra]
-• Formato: ${selectedFormat?.name}
-• Dimensiones: ${selectedFormat?.label}
-• Especificaciones: Impresión pigmentada de alta fidelidad sobre papel Hahnemühle William Turner 310g.
-• Certificación: Doble aval (Certificado Hahnemühle con registro digital y Certificado de Artista firmado con sello seco).
-• Importe: ${selectedFormat?.price}
-\nQuedo a la espera de sus instrucciones personales para formalizar la reserva y proceder con los trámites de adquisición y envío.
-\nAtentamente,
-\n[Nombre y Apellidos]
-[Teléfono de contacto]`
+`Estimada Myriam Alcaraz,
+
+Deseo solicitar información para adquirir una reproducción Giclée de su obra.
+
+DETALLES DE LA SELECCIÓN:
+• Obra: ${obra.titulo}
+• Referencia: ${obra.referencia}
+• Tamaño: ${tamañoSeleccionado?.nombre} (${tamañoSeleccionado?.label})
+• Dimensiones: ${medidas.width} × ${medidas.height} cm
+• Papel: Hahnemühle William Turner 310g
+• Certificación: Hahnemühle + Artista
+
+Quedo a la espera de sus indicaciones.
+
+Atentamente,
+[Nombre]
+[Teléfono]`
                   );
                   window.location.href = `mailto:myriamhotmail@hotmail.com?subject=${subject}&body=${body}`;
                 }}
-                className="bg-gold-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-gold-600 transition-colors text-lg tracking-wider shadow-xl hover:shadow-2xl transform hover:scale-105 duration-300"
+                className="w-full bg-slate-900 text-white py-4 rounded-lg font-medium hover:bg-slate-800 transition-colors tracking-wide"
               >
-                SOLICITAR ADQUISICIÓN
+                SOLICITAR INFORMACIÓN
               </button>
             </div>
-          )}
+          </section>
+        )}
 
+        {/* Garantías */}
+        <section className="mb-12">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="flex items-start gap-4 p-6 bg-white rounded-lg border border-stone-100">
+              <Shield className="text-gold-500 flex-shrink-0" size={24} />
+              <div>
+                <h3 className="font-medium text-slate-900 mb-1">Certificado Hahnemühle</h3>
+                <p className="text-sm text-stone-500">Holograma de autenticidad y número de serie único</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4 p-6 bg-white rounded-lg border border-stone-100">
+              <Award className="text-gold-500 flex-shrink-0" size={24} />
+              <div>
+                <h3 className="font-medium text-slate-900 mb-1">Certificado de Artista</h3>
+                <p className="text-sm text-stone-500">Sello seco y firma autógrafa de Myriam Alcaraz</p>
+              </div>
+            </div>
+          </div>
         </section>
 
-        {/* Nota de Exclusividad */}
-        <section className="bg-stone-100 p-8 rounded-lg text-center">
-          <p className="text-stone-700 italic text-lg">
-            Series estrictamente limitadas. Una vez agotada la edición, no volverá a producirse.
+        {/* Edición Limitada */}
+        <section className="text-center py-8 border-t border-stone-200">
+          <p className="text-stone-600 font-serif italic">
+            Edición limitada de 50 ejemplares, numerados y firmados
+          </p>
+          <p className="text-stone-400 text-sm mt-2">
+            Con certificado de autenticidad Hahnemühle
           </p>
         </section>
 
       </div>
+
+      <style>{`
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 };
