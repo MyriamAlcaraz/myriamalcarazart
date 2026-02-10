@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ARTIST_INFO, ARTWORKS } from '../constants';
-import { Eye, Lock, Layout } from 'lucide-react';
+import { Eye, Lock, Layout, Shield, Award, Crown } from 'lucide-react';
 
 interface PublicSiteProps {
   onOpenCompanion: (id: string) => void;
@@ -27,142 +27,83 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
 
   return (
     <div className="min-h-screen bg-stone-50 font-sans text-slate-800">
-      {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-stone-50/95 backdrop-blur-sm border-b border-stone-200">
         <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-4">
-            <img src="/logo-myriam.png" alt="Myriam Alcaraz Logo" className="h-12 w-auto md:h-16 object-contain" />
+            <img src="/logo-myriam.png" alt="Logo" className="h-12 w-auto md:h-16 object-contain" />
             <div className="hidden md:block border-l border-slate-300 pl-4">
               <h1 className="font-serif text-lg tracking-[0.2em] text-slate-900 uppercase">Myriam Alcaraz</h1>
               <p className="text-[10px] text-gold-600 tracking-[0.3em] uppercase">Artista Figurativa</p>
             </div>
           </div>
-          {/* Main Tabs */}
           <div className="flex gap-1 md:gap-4 text-sm font-semibold">
-            <button
-              onClick={() => handleTabChange('portfolio')}
-              className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'portfolio' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
-            >
-              PORTFOLIO
-            </button>
-            <button
-              onClick={() => handleTabChange('bio')}
-              className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'bio' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
-            >
-              TRAYECTORIA & BIO
-            </button>
-            <button
-              onClick={() => handleTabChange('prices')}
-              className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'prices' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
-            >
-              ENCARGOS & PRECIOS
-            </button>
-            <button
-              onClick={onOpenGiclee}
-              className="px-3 py-1 md:px-4 md:py-2 transition-colors text-slate-500 hover:text-slate-800"
-            >
-              GICLÉE
-            </button>
-            <button
-              onClick={() => handleTabChange('app')}
-              className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'app' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
-            >
-              ESTUDIO DIGITAL
-            </button>
+            <button onClick={() => handleTabChange('portfolio')} className={`px-3 py-1 ${activeTab === 'portfolio' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500'}`}>PORTFOLIO</button>
+            <button onClick={() => handleTabChange('bio')} className={`px-3 py-1 ${activeTab === 'bio' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500'}`}>BIO</button>
+            <button onClick={() => handleTabChange('prices')} className={`px-3 py-1 ${activeTab === 'prices' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500'}`}>ENCARGOS</button>
+            <button onClick={onOpenGiclee} className="px-3 py-1 text-slate-500 hover:text-gold-600">GICLÉE</button>
+            <button onClick={() => handleTabChange('app')} className={`px-3 py-1 ${activeTab === 'app' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500'}`}>ESTUDIO DIGITAL</button>
           </div>
         </div>
       </nav>
 
       <main className="max-w-6xl mx-auto px-6 py-12">
-        {/* ========================================= */}
-        {/* PORTFOLIO TAB */}
-        {/* ========================================= */}
         {activeTab === 'portfolio' && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {ARTWORKS.map(artwork => (
-              <div key={artwork.id} className="group relative overflow-hidden bg-white shadow-lg border border-stone-100">
-                <img
-                  src={artwork.image}
-                  alt={artwork.title}
-                  className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="p-4">
-                  <h3 className="font-serif text-lg font-semibold text-slate-800 truncate">{artwork.title}</h3>
-                  <p className="text-xs text-slate-500 mt-1">{artwork.dimensions} | {artwork.technique}</p>
-                </div>
-                {/* Overlay for Detail View */}
-                <button
-                  onClick={() => onOpenCompanion(artwork.id)}
-                  className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                >
+              <div key={artwork.id} className="group relative overflow-hidden bg-white shadow-lg">
+                <img src={artwork.image} alt={artwork.title} className="w-full h-72 object-cover" />
+                <div className="p-4"><h3 className="font-serif text-lg font-semibold">{artwork.title}</h3></div>
+                <button onClick={() => onOpenCompanion(artwork.id)} className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                   <Eye size={36} className="text-white" />
-                  <span className="sr-only">Ver detalles de {artwork.title}</span>
                 </button>
               </div>
             ))}
           </div>
         )}
 
-        {/* ========================================= */}
-        {/* BIO & TRAYECTORIA TAB */}
-        {/* ========================================= */}
-        {activeTab === 'bio' && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="md:col-span-1">
-              <h2 className="font-serif text-4xl font-bold text-slate-900 mb-6">Biografía</h2>
-              <p className="text-lg text-slate-700 leading-relaxed mb-6">{ARTIST_INFO.bioShort}</p>
-              <h3 className="text-xl font-semibold mb-3">Declaración del Artista</h3>
-              <p className="text-slate-600 leading-relaxed mb-8 font-serif italic border-l-2 border-gold-500 pl-4">"{ARTIST_INFO.statement}"</p>
-              <div className="space-y-3">
-                <a href={`mailto:${ARTIST_INFO.email}`} className="flex items-center gap-2 text-slate-600 hover:text-gold-600 transition-colors text-sm">
-                  {ARTIST_INFO.email}
-                </a>
-                <a href={`https://www.instagram.com/${ARTIST_INFO.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-slate-600 hover:text-gold-600 transition-colors text-sm">
-                  {ARTIST_INFO.instagram}
-                </a>
-              </div>
+        {activeTab === 'prices' && (
+          <div className="space-y-12">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="font-serif text-5xl font-bold mb-4">El Arte de Coleccionar</h2>
+              <p className="text-xl italic text-slate-600 border-b border-gold-500 pb-4">"Arte con alma y sofisticación para tu espacio."</p>
             </div>
-            <div className="md:col-span-2 space-y-10">
-              <div className="flex justify-between items-start relative">
-                <h2 className="font-serif text-4xl font-bold text-slate-900">Trayectoria & Reconocimientos</h2>
-                <div className="w-60 h-60 overflow-hidden rounded-lg shadow-lg border-2 border-stone-200 ml-4 group transition-all duration-300 hover:shadow-xl">
-                  <img src="/obras/ARTISTA.jpg" alt="Retrato de la Artista" className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0" />
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 text-center">
+                <h3 className="font-serif text-2xl font-bold mb-3">1. Obra Original Única</h3>
+                <p className="text-sm text-slate-600 mb-4">Óleo sobre lienzo. Piezas exclusivas de mi portfolio.</p>
+                <button onClick={() => handleTabChange('portfolio')} className="bg-slate-800 text-white px-6 py-2 rounded">Ver Disponibles</button>
               </div>
-              <div>
-                <h3 className="text-2xl font-serif font-semibold text-gold-600 mb-4">Exposiciones Colectivas</h3>
-                <AccoladeList items={ARTIST_INFO.accolades.exposiciones} />
+              <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 text-center">
+                <h3 className="font-serif text-2xl font-bold mb-3">2. Giclée de Lujo</h3>
+                <p className="text-sm text-slate-600 mb-4">Ediciones limitadas sobre papel Hahnemühle. Con certificado.</p>
+                <button onClick={onOpenGiclee} className="bg-gold-500 text-white px-6 py-2 rounded">Ver Catálogo</button>
               </div>
-              <div>
-                <h3 className="text-2xl font-serif font-semibold text-gold-600 mb-4">Concursos y Premios</h3>
-                <AccoladeList items={ARTIST_INFO.accolades.concursos} />
+              <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 text-center">
+                <h3 className="font-serif text-2xl font-bold mb-3">3. Encargo Personalizado</h3>
+                <p className="text-sm text-slate-600 mb-4">Creamos una obra desde cero basada en tu idea.</p>
+                <a href={`mailto:${ARTIST_INFO.email}`} className="bg-slate-800 text-white px-6 py-2 rounded inline-block">Solicitar Consulta</a>
               </div>
             </div>
           </div>
         )}
 
-        {/* ========================================= */}
-        {/* ENCARGOS Y PRECIOS TAB */}
-        {/* ========================================= */}
-        {activeTab === 'prices' && (
-          <div className="space-y-12">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="font-serif text-5xl font-bold text-slate-900 mb-4">El Arte de Coleccionar</h2>
-              <p className="text-slate-700 leading-relaxed mt-6">Explora mi galería de obras únicas o solicita un encargo personalizado.</p>
-            </div>
+        {activeTab === 'app' && (
+          <div className="max-w-4xl mx-auto space-y-12">
+             <div className="text-center bg-slate-900 text-white p-12 rounded-3xl shadow-2xl">
+                <h2 className="font-serif text-5xl font-bold mb-4">Analizador Técnico del Color</h2>
+                <p className="text-gold-400 text-2xl italic mb-8">Technical Color Analyzer</p>
+                <p className="text-lg mb-8 opacity-90">La herramienta profesional que utilizo en mi estudio para Old Holland, Williamsburg y Winsor & Newton.</p>
+                <div className="text-3xl font-bold text-gold-500 mb-8">46,99 € <span className="text-sm text-white/60 font-normal">+ IVA</span></div>
+                <a href="https://payhip.com/ARTEFIGURATIVO" target="_blank" className="bg-gold-500 hover:bg-gold-600 text-white px-12 py-4 rounded-full font-bold text-xl transition-all inline-block">COMPRAR AHORA</a>
+             </div>
           </div>
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white text-slate-500 py-16 text-center border-t border-slate-100 relative">
-        <div className="max-w-4xl mx-auto px-6">
-          <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
-          <p className="text-[10px] opacity-40 uppercase tracking-wide">© 2025 Myriam Alcaraz.</p>
-        </div>
-        <button onClick={onOpenStudioLogin} className="absolute bottom-3 right-3 opacity-0 hover:opacity-20 transition-opacity duration-300">
-          <Lock size={14} className="text-slate-300" />
-        </button>
+      <footer className="bg-white py-10 border-t text-center relative">
+        <img src="/logo-myriam.png" className="h-8 mx-auto mb-4 opacity-50" alt="logo" />
+        <p className="text-[10px] opacity-40">© 2025 Myriam Alcaraz</p>
+        <button onClick={onOpenStudioLogin} className="absolute bottom-3 right-3 opacity-0 hover:opacity-100"><Lock size={14} /></button>
       </footer>
     </div>
   );
