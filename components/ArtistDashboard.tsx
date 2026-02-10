@@ -1106,9 +1106,9 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
 // 🎨 COMPONENTE: PANEL GICLÉE - GENERADOR DE CERTIFICADOS
 // =========================================================
 const GICLEE_SIZES = [
-    { id: 'S', name: 'Pequeño', dimensions: '30 x 40 cm', price: 195 },
-    { id: 'M', name: 'Mediano', dimensions: '50 x 63 cm', price: 420 },
-    { id: 'L', name: 'Grande', dimensions: '60 x 93 cm', price: 780, isOriginal: true }
+    { id: 'S', name: 'Pequeño', dimensions: '30 x 40 cm', price: 245 },
+    { id: 'M', name: 'Mediano', dimensions: '50 x 63 cm', price: 425 },
+    { id: 'L', name: 'Original', dimensions: 'Tamaño original', price: 780, isOriginal: true }
 ];
 
 interface GicleePanelProps {
@@ -1117,11 +1117,37 @@ interface GicleePanelProps {
     onClose: () => void;
 }
 
+// Tipo para el registro de impresiones
+interface GicleePrint {
+    id: string;
+    artworkId: number;
+    artworkTitle: string;
+    size: string;
+    sizeName: string;
+    copyNumber: number;
+    hologramNumber: string;
+    code: string;
+    date: string;
+    dimensions: string;
+}
+
 const GicleePanel: React.FC<GicleePanelProps> = ({ artworks, settings, onClose }) => {
     const [selectedArtworkId, setSelectedArtworkId] = useState<number | null>(null);
     const [selectedSize, setSelectedSize] = useState<string>('M');
     const [copyNumber, setCopyNumber] = useState<number>(1);
     const [hologramNumber, setHologramNumber] = useState<string>('');
+    const [activeTab, setActiveTab] = useState<'generate' | 'inventory'>('generate');
+
+    // Estado para el inventario de impresiones (persistido en localStorage)
+    const [printedCopies, setPrintedCopies] = useState<GicleePrint[]>(() => {
+        const saved = localStorage.getItem('giclee-prints');
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    // Guardar en localStorage cuando cambie
+    useEffect(() => {
+        localStorage.setItem('giclee-prints', JSON.stringify(printedCopies));
+    }, [printedCopies]);
 
     const selectedArtwork = artworks.find(a => a.id === selectedArtworkId);
     const selectedSizeData = GICLEE_SIZES.find(s => s.id === selectedSize);
@@ -1132,6 +1158,59 @@ const GicleePanel: React.FC<GicleePanelProps> = ({ artworks, settings, onClose }
         const year = new Date().getFullYear();
         const initials = selectedArtwork.title.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
         return `MA-${year}-GC-${initials}-${String(copyNumber).padStart(2, '0')}/10-${selectedSize}`;
+    };
+
+    // Verificar si una copia ya está impresa
+    const isCopyPrinted = (artworkId: number, size: string, copy: number) => {
+        return printedCopies.some(p => p.artworkId === artworkId && p.size === size && p.copyNumber === copy);
+    };
+
+    // Obtener el siguiente número de copia disponible
+    const getNextAvailableCopy = (artworkId: number, size: string) => {
+        for (let i = 1; i <= 10; i++) {
+            if (!isCopyPrinted(artworkId, size, i)) return i;
+        }
+        return null; // Todas vendidas
+    };
+
+    // Actualizar número de copia cuando cambia obra o tamaño
+    useEffect(() => {
+        if (selectedArtworkId) {
+            const next = getNextAvailableCopy(selectedArtworkId, selectedSize);
+            if (next) setCopyNumber(next);
+        }
+    }, [selectedArtworkId, selectedSize]);
+
+    // Registrar una impresión
+    const registerPrint = () => {
+        if (!selectedArtwork || !selectedSizeData) return;
+
+        const newPrint: GicleePrint = {
+            id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            artworkId: selectedArtwork.id,
+            artworkTitle: selectedArtwork.title,
+            size: selectedSize,
+            sizeName: selectedSizeData.name,
+            copyNumber: copyNumber,
+            hologramNumber: hologramNumber,
+            code: generateGicleeCode(),
+            date: new Date().toISOString(),
+            dimensions: selectedSizeData.dimensions
+        };
+
+        setPrintedCopies(prev => [...prev, newPrint]);
+    };
+
+    // Eliminar una impresión del registro
+    const deletePrint = (printId: string) => {
+        if (window.confirm('¿Eliminar este registro? La copia volverá a estar disponible.')) {
+            setPrintedCopies(prev => prev.filter(p => p.id !== printId));
+        }
+    };
+
+    // Contar copias impresas por obra y tamaño
+    const getPrintedCount = (artworkId: number, size: string) => {
+        return printedCopies.filter(p => p.artworkId === artworkId && p.size === size).length;
     };
 
     // Generar e imprimir certificado
@@ -1244,134 +1323,373 @@ const GicleePanel: React.FC<GicleePanelProps> = ({ artworks, settings, onClose }
         if (printWindow) {
             printWindow.document.write(certificateHtml);
             printWindow.document.close();
+            // Registrar la impresión en el inventario
+            registerPrint();
             setTimeout(() => printWindow.print(), 500);
         }
     };
 
+    // Obras disponibles para Giclée (las principales)
+    const gicleeArtworks = artworks.filter(a =>
+        ['Sara en Marquesina', 'Laura en el Crepúsculo', 'Sara bajo la farola', 'Ana y la Habana',
+         'Joven con vela en la bruma', 'Abruma y belleza', 'Memorias de Mekong I', 'Pablo en Cascada'].includes(a.title)
+    );
+
     return (
-        <div className="fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-4">
-            <div className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden">
+        <div className="fixed inset-0 bg-slate-900/95 z-[80] overflow-y-auto">
+            <div className="min-h-screen p-6">
 
                 {/* Header */}
-                <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-6 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <Printer size={24} />
-                        <div>
-                            <h2 className="text-xl font-bold">Certificados Giclée</h2>
-                            <p className="text-amber-100 text-sm">Genera certificados con el diseño elegante</p>
-                        </div>
-                    </div>
-                    <button onClick={onClose} className="text-white/80 hover:text-white text-2xl">×</button>
-                </div>
-
-                <div className="p-6 grid grid-cols-2 gap-6">
-
-                    {/* Columna izquierda: Selección de obra */}
-                    <div>
-                        <label className="block text-sm font-semibold text-slate-700 mb-3">1. Selecciona la obra</label>
-                        <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto p-1">
-                            {artworks.slice(0, 23).map(art => (
-                                <button
-                                    key={art.id}
-                                    onClick={() => setSelectedArtworkId(art.id)}
-                                    className={`relative rounded-lg overflow-hidden border-2 transition-all ${
-                                        selectedArtworkId === art.id
-                                            ? 'border-amber-500 ring-2 ring-amber-200'
-                                            : 'border-transparent hover:border-slate-300'
-                                    }`}
-                                >
-                                    <img src={art.image} alt={art.title} className="w-full h-16 object-cover" />
-                                    {selectedArtworkId === art.id && (
-                                        <div className="absolute inset-0 bg-amber-500/20 flex items-center justify-center">
-                                            <Check size={20} className="text-amber-600 bg-white rounded-full p-1" />
-                                        </div>
-                                    )}
-                                </button>
-                            ))}
-                        </div>
-                        {selectedArtwork && (
-                            <p className="mt-2 text-sm text-slate-600 font-medium">{selectedArtwork.title}</p>
-                        )}
-                    </div>
-
-                    {/* Columna derecha: Opciones */}
-                    <div className="space-y-5">
-
-                        {/* Tamaño */}
-                        <div>
-                            <label className="block text-sm font-semibold text-slate-700 mb-2">2. Tamaño de impresión</label>
-                            <div className="space-y-2">
-                                {GICLEE_SIZES.map(size => (
-                                    <button
-                                        key={size.id}
-                                        onClick={() => setSelectedSize(size.id)}
-                                        className={`w-full p-3 rounded-lg border-2 flex justify-between items-center transition-all ${
-                                            selectedSize === size.id
-                                                ? 'border-amber-500 bg-amber-50'
-                                                : 'border-slate-200 hover:border-slate-300'
-                                        }`}
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className={`w-4 h-4 rounded-full border-2 ${selectedSize === size.id ? 'border-amber-500 bg-amber-500' : 'border-slate-300'}`}>
-                                                {selectedSize === size.id && <Check size={10} className="text-white m-0.5" />}
-                                            </div>
-                                            <div className="text-left">
-                                                <span className="font-medium text-slate-700">{size.name}</span>
-                                                <span className="text-slate-500 text-sm ml-2">{size.dimensions}</span>
-                                                {size.isOriginal && <span className="ml-2 text-xs bg-amber-200 text-amber-700 px-2 py-0.5 rounded-full">= Original</span>}
-                                            </div>
-                                        </div>
-                                        <span className="font-bold text-slate-700">{size.price}€</span>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Número de copia y holograma */}
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-semibold text-slate-700 mb-2">3. Nº de copia</label>
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="number"
-                                        min={1}
-                                        max={10}
-                                        value={copyNumber}
-                                        onChange={(e) => setCopyNumber(Math.min(10, Math.max(1, Number(e.target.value))))}
-                                        className="w-20 p-3 border-2 border-slate-200 rounded-lg text-xl font-bold text-center focus:border-amber-500"
-                                    />
-                                    <span className="text-xl text-slate-400">/ 10</span>
-                                </div>
+                <div className="max-w-7xl mx-auto mb-6">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
+                                <Printer size={24} className="text-white" />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-slate-700 mb-2">4. Nº Holograma</label>
-                                <input
-                                    type="text"
-                                    value={hologramNumber}
-                                    onChange={(e) => setHologramNumber(e.target.value.toUpperCase())}
-                                    placeholder="HAH-XXXXXX"
-                                    className="w-full p-3 border-2 border-slate-200 rounded-lg font-mono focus:border-amber-500"
-                                />
+                                <h1 className="text-2xl font-bold text-white">Gestión Giclée</h1>
+                                <p className="text-amber-200/80 text-sm">Certificados e Inventario de Ediciones</p>
                             </div>
                         </div>
-
-                        {/* Vista previa del código */}
-                        {selectedArtwork && (
-                            <div className="bg-slate-100 rounded-lg p-4">
-                                <p className="text-xs text-slate-500 mb-1">Código del certificado:</p>
-                                <p className="font-mono text-lg text-slate-800">{generateGicleeCode()}</p>
-                            </div>
-                        )}
-
-                        {/* Botón generar */}
                         <button
-                            onClick={handlePrintCertificate}
-                            disabled={!selectedArtwork}
-                            className="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl font-bold text-lg hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            onClick={onClose}
+                            className="text-white/60 hover:text-white p-2 hover:bg-white/10 rounded-lg transition-all"
                         >
-                            <Printer size={20} /> GENERAR CERTIFICADO
+                            <X size={24} />
                         </button>
                     </div>
+
+                    {/* Tabs */}
+                    <div className="flex gap-2 mt-6">
+                        <button
+                            onClick={() => setActiveTab('generate')}
+                            className={`px-6 py-3 rounded-t-xl font-semibold transition-all ${
+                                activeTab === 'generate'
+                                    ? 'bg-white text-slate-800'
+                                    : 'bg-white/10 text-white/70 hover:bg-white/20'
+                            }`}
+                        >
+                            <Printer size={16} className="inline mr-2" />
+                            Generar Certificado
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('inventory')}
+                            className={`px-6 py-3 rounded-t-xl font-semibold transition-all ${
+                                activeTab === 'inventory'
+                                    ? 'bg-white text-slate-800'
+                                    : 'bg-white/10 text-white/70 hover:bg-white/20'
+                            }`}
+                        >
+                            <Hash size={16} className="inline mr-2" />
+                            Inventario ({printedCopies.length} impresas)
+                        </button>
+                    </div>
+                </div>
+
+                {/* Contenido */}
+                <div className="max-w-7xl mx-auto bg-white rounded-xl rounded-tl-none shadow-2xl overflow-hidden">
+
+                    {/* TAB: GENERAR CERTIFICADO */}
+                    {activeTab === 'generate' && (
+                        <div className="p-6">
+                            <div className="grid lg:grid-cols-3 gap-6">
+
+                                {/* Columna 1: Selección de obra */}
+                                <div className="lg:col-span-1">
+                                    <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">1. Selecciona Obra</h3>
+                                    <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+                                        {gicleeArtworks.map(art => {
+                                            const totalPrinted = GICLEE_SIZES.reduce((acc, size) => acc + getPrintedCount(art.id, size.id), 0);
+                                            return (
+                                                <button
+                                                    key={art.id}
+                                                    onClick={() => setSelectedArtworkId(art.id)}
+                                                    className={`w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all ${
+                                                        selectedArtworkId === art.id
+                                                            ? 'border-amber-500 bg-amber-50 shadow-lg'
+                                                            : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                                                    }`}
+                                                >
+                                                    <img
+                                                        src={art.image}
+                                                        alt={art.title}
+                                                        className="w-16 h-16 object-cover rounded-lg shadow"
+                                                    />
+                                                    <div className="flex-1 text-left">
+                                                        <p className="font-semibold text-slate-800 text-sm leading-tight">{art.title}</p>
+                                                        <p className="text-xs text-slate-500 mt-1">{art.dimensions}</p>
+                                                        {totalPrinted > 0 && (
+                                                            <p className="text-xs text-emerald-600 font-medium mt-1">
+                                                                {totalPrinted} copia{totalPrinted > 1 ? 's' : ''} impresa{totalPrinted > 1 ? 's' : ''}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                    {selectedArtworkId === art.id && (
+                                                        <Check size={20} className="text-amber-600" />
+                                                    )}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                {/* Columna 2: Tamaño y Grid de copias */}
+                                <div className="lg:col-span-1">
+                                    <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">2. Tamaño y Copia</h3>
+
+                                    {/* Selector de tamaño */}
+                                    <div className="space-y-2 mb-6">
+                                        {GICLEE_SIZES.map(size => {
+                                            const printed = selectedArtworkId ? getPrintedCount(selectedArtworkId, size.id) : 0;
+                                            const available = 10 - printed;
+                                            return (
+                                                <button
+                                                    key={size.id}
+                                                    onClick={() => setSelectedSize(size.id)}
+                                                    className={`w-full p-4 rounded-xl border-2 transition-all ${
+                                                        selectedSize === size.id
+                                                            ? 'border-amber-500 bg-gradient-to-r from-amber-50 to-orange-50'
+                                                            : 'border-slate-200 hover:border-slate-300'
+                                                    }`}
+                                                >
+                                                    <div className="flex justify-between items-center">
+                                                        <div className="text-left">
+                                                            <span className="font-bold text-slate-800">{size.name}</span>
+                                                            <span className="text-slate-500 text-sm ml-2">{size.dimensions}</span>
+                                                        </div>
+                                                        <span className="font-bold text-lg text-amber-600">{size.price}€</span>
+                                                    </div>
+                                                    {selectedArtworkId && (
+                                                        <div className="mt-2 flex items-center gap-2">
+                                                            <div className="flex-1 bg-slate-200 rounded-full h-2 overflow-hidden">
+                                                                <div
+                                                                    className="bg-emerald-500 h-full transition-all"
+                                                                    style={{ width: `${(printed / 10) * 100}%` }}
+                                                                />
+                                                            </div>
+                                                            <span className={`text-xs font-medium ${available === 0 ? 'text-red-500' : 'text-slate-500'}`}>
+                                                                {available === 0 ? 'AGOTADO' : `${available} disp.`}
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+
+                                    {/* Grid visual de las 10 copias */}
+                                    {selectedArtworkId && (
+                                        <div>
+                                            <p className="text-xs font-semibold text-slate-500 mb-2">Edición de 10 copias:</p>
+                                            <div className="grid grid-cols-5 gap-2">
+                                                {[1,2,3,4,5,6,7,8,9,10].map(num => {
+                                                    const isPrinted = isCopyPrinted(selectedArtworkId, selectedSize, num);
+                                                    const isSelected = copyNumber === num;
+                                                    return (
+                                                        <button
+                                                            key={num}
+                                                            onClick={() => !isPrinted && setCopyNumber(num)}
+                                                            disabled={isPrinted}
+                                                            className={`aspect-square rounded-lg font-bold text-lg transition-all ${
+                                                                isPrinted
+                                                                    ? 'bg-emerald-500 text-white cursor-not-allowed'
+                                                                    : isSelected
+                                                                        ? 'bg-amber-500 text-white ring-4 ring-amber-200'
+                                                                        : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
+                                                            }`}
+                                                            title={isPrinted ? 'Ya impresa' : `Seleccionar copia ${num}`}
+                                                        >
+                                                            {num}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                            <div className="flex gap-4 mt-3 text-xs text-slate-500">
+                                                <span className="flex items-center gap-1">
+                                                    <span className="w-3 h-3 bg-emerald-500 rounded"></span> Impresa
+                                                </span>
+                                                <span className="flex items-center gap-1">
+                                                    <span className="w-3 h-3 bg-amber-500 rounded"></span> Seleccionada
+                                                </span>
+                                                <span className="flex items-center gap-1">
+                                                    <span className="w-3 h-3 bg-slate-100 rounded border"></span> Disponible
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Columna 3: Datos y Generar */}
+                                <div className="lg:col-span-1">
+                                    <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">3. Datos del Certificado</h3>
+
+                                    {selectedArtwork ? (
+                                        <div className="space-y-4">
+                                            {/* Preview de la obra seleccionada */}
+                                            <div className="bg-slate-100 rounded-xl p-4">
+                                                <img
+                                                    src={selectedArtwork.image}
+                                                    alt={selectedArtwork.title}
+                                                    className="w-full h-40 object-cover rounded-lg shadow-lg mb-3"
+                                                />
+                                                <p className="font-bold text-slate-800">{selectedArtwork.title}</p>
+                                                <p className="text-sm text-slate-500">{selectedSizeData?.name} - {selectedSizeData?.dimensions}</p>
+                                            </div>
+
+                                            {/* Número de holograma */}
+                                            <div>
+                                                <label className="block text-sm font-semibold text-slate-700 mb-2">Nº Holograma Hahnemühle</label>
+                                                <input
+                                                    type="text"
+                                                    value={hologramNumber}
+                                                    onChange={(e) => setHologramNumber(e.target.value.toUpperCase())}
+                                                    placeholder="Ej: 287213"
+                                                    className="w-full p-3 border-2 border-slate-200 rounded-xl font-mono text-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200"
+                                                />
+                                            </div>
+
+                                            {/* Código generado */}
+                                            <div className="bg-slate-800 rounded-xl p-4">
+                                                <p className="text-xs text-slate-400 mb-1">Código del certificado:</p>
+                                                <p className="font-mono text-xl text-amber-400">{generateGicleeCode()}</p>
+                                            </div>
+
+                                            {/* Botón generar */}
+                                            <button
+                                                onClick={handlePrintCertificate}
+                                                disabled={isCopyPrinted(selectedArtworkId!, selectedSize, copyNumber)}
+                                                className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-bold text-lg hover:from-amber-600 hover:to-orange-600 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                            >
+                                                <Printer size={20} /> IMPRIMIR CERTIFICADO
+                                            </button>
+
+                                            {isCopyPrinted(selectedArtworkId!, selectedSize, copyNumber) && (
+                                                <p className="text-center text-red-500 text-sm font-medium">
+                                                    Esta copia ya fue impresa. Selecciona otra.
+                                                </p>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="bg-slate-100 rounded-xl p-8 text-center">
+                                            <ImageIcon size={48} className="mx-auto text-slate-300 mb-3" />
+                                            <p className="text-slate-500">Selecciona una obra para comenzar</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* TAB: INVENTARIO */}
+                    {activeTab === 'inventory' && (
+                        <div className="p-6">
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="text-lg font-bold text-slate-800">Historial de Impresiones</h3>
+                                <p className="text-sm text-slate-500">{printedCopies.length} certificados generados</p>
+                            </div>
+
+                            {printedCopies.length === 0 ? (
+                                <div className="text-center py-16 bg-slate-50 rounded-xl">
+                                    <Printer size={48} className="mx-auto text-slate-300 mb-4" />
+                                    <p className="text-slate-500 text-lg">No hay impresiones registradas</p>
+                                    <p className="text-slate-400 text-sm mt-1">Cuando generes certificados, aparecerán aquí</p>
+                                </div>
+                            ) : (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full">
+                                        <thead>
+                                            <tr className="border-b-2 border-slate-200">
+                                                <th className="text-left py-3 px-4 text-xs font-bold text-slate-500 uppercase">Obra</th>
+                                                <th className="text-left py-3 px-4 text-xs font-bold text-slate-500 uppercase">Tamaño</th>
+                                                <th className="text-left py-3 px-4 text-xs font-bold text-slate-500 uppercase">Copia</th>
+                                                <th className="text-left py-3 px-4 text-xs font-bold text-slate-500 uppercase">Código</th>
+                                                <th className="text-left py-3 px-4 text-xs font-bold text-slate-500 uppercase">Holograma</th>
+                                                <th className="text-left py-3 px-4 text-xs font-bold text-slate-500 uppercase">Fecha</th>
+                                                <th className="text-right py-3 px-4"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {printedCopies
+                                                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                                                .map(print => (
+                                                <tr key={print.id} className="border-b border-slate-100 hover:bg-slate-50">
+                                                    <td className="py-3 px-4">
+                                                        <span className="font-medium text-slate-800">{print.artworkTitle}</span>
+                                                    </td>
+                                                    <td className="py-3 px-4">
+                                                        <span className="text-sm text-slate-600">{print.sizeName}</span>
+                                                        <span className="text-xs text-slate-400 ml-1">({print.dimensions})</span>
+                                                    </td>
+                                                    <td className="py-3 px-4">
+                                                        <span className="inline-flex items-center justify-center w-8 h-8 bg-emerald-100 text-emerald-700 rounded-lg font-bold">
+                                                            {print.copyNumber}
+                                                        </span>
+                                                        <span className="text-slate-400 ml-1">/10</span>
+                                                    </td>
+                                                    <td className="py-3 px-4">
+                                                        <code className="text-xs bg-slate-100 px-2 py-1 rounded font-mono">{print.code}</code>
+                                                    </td>
+                                                    <td className="py-3 px-4">
+                                                        <span className="text-sm font-mono text-slate-600">{print.hologramNumber || '—'}</span>
+                                                    </td>
+                                                    <td className="py-3 px-4">
+                                                        <span className="text-sm text-slate-500">
+                                                            {new Date(print.date).toLocaleDateString('es-ES')}
+                                                        </span>
+                                                    </td>
+                                                    <td className="py-3 px-4 text-right">
+                                                        <button
+                                                            onClick={() => deletePrint(print.id)}
+                                                            className="text-red-400 hover:text-red-600 p-1 rounded hover:bg-red-50 transition-colors"
+                                                            title="Eliminar registro"
+                                                        >
+                                                            <Trash2 size={16} />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+
+                            {/* Resumen por obra */}
+                            {printedCopies.length > 0 && (
+                                <div className="mt-8 pt-6 border-t border-slate-200">
+                                    <h4 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Resumen por Obra</h4>
+                                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                        {gicleeArtworks.map(art => {
+                                            const artPrints = printedCopies.filter(p => p.artworkId === art.id);
+                                            if (artPrints.length === 0) return null;
+                                            return (
+                                                <div key={art.id} className="bg-slate-50 rounded-xl p-4">
+                                                    <div className="flex items-center gap-3 mb-3">
+                                                        <img src={art.image} alt={art.title} className="w-12 h-12 object-cover rounded-lg" />
+                                                        <div>
+                                                            <p className="font-semibold text-slate-800 text-sm">{art.title}</p>
+                                                            <p className="text-xs text-emerald-600">{artPrints.length} impresa{artPrints.length > 1 ? 's' : ''}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        {GICLEE_SIZES.map(size => {
+                                                            const count = artPrints.filter(p => p.size === size.id).length;
+                                                            if (count === 0) return null;
+                                                            return (
+                                                                <div key={size.id} className="flex justify-between text-xs">
+                                                                    <span className="text-slate-500">{size.name}:</span>
+                                                                    <span className="font-medium text-slate-700">{count}/10</span>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
