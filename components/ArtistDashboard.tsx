@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, AlertTriangle, Hash, Save, Crown } from 'lucide-react';
-import { GicleeCertificateGenerator } from './GicleeCertificateGenerator';
+import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, AlertTriangle, Hash, Save } from 'lucide-react';
 
 
 // ---------------------------------------------------------
@@ -18,8 +17,12 @@ interface Artwork {
     image: string; // URL o ruta de la imagen
     dimensions: string;
     technique: string;
-    originalIndex: number; // 🛑 NUEVO: Para mantener el orden de constants.ts
-    isOpenSeries: boolean; // 🛑 NUEVO: Si es una serie sin límite fijo (ej. Giclée abierta)
+    originalIndex: number; // Para mantener el orden de constants.ts
+    isOpenSeries: boolean; // Si es una serie sin límite fijo (ej. Giclée abierta)
+    // Campos específicos para Giclée
+    originalDimensions?: string; // Medidas de la obra original (ej: "92 x 60 cm")
+    gicleeDimensions?: string;   // Medidas de la impresión Giclée (ej: "30 x 40 cm")
+    hologramNumber?: string;     // Nº Holograma Hahnemühle
 }
 
 interface DocumentSettings {
@@ -409,22 +412,39 @@ const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): strin
                         <strong>Año de Creación:</strong>
                         <span>${creationMonthAndYear}</span>
                     </p>
+                    ${artwork.isOpenSeries && artwork.originalDimensions ? `
+                    <p>
+                        <strong>Medidas Original:</strong>
+                        <span>${artwork.originalDimensions}</span>
+                    </p>
+                    <p>
+                        <strong>Medidas Impresión:</strong>
+                        <span>${artwork.gicleeDimensions || artwork.dimensions}</span>
+                    </p>
+                    ` : `
                     <p>
                         <strong>Medidas:</strong>
                         <span>${artwork.dimensions}</span>
                     </p>
+                    `}
                     <p>
-                        <strong>Técnica/Medio:</strong>
-                        <span>${artwork.technique}</span>
+                        <strong>${artwork.isOpenSeries ? 'Soporte:' : 'Técnica/Medio:'}</strong>
+                        <span>${artwork.isOpenSeries ? 'Papel Hahnemühle Textured - William Turner' : artwork.technique}</span>
                     </p>
                     <p>
                         <strong>ID de Referencia:</strong>
                         <span class="code-display">${artwork.code}</span>
                     </p>
-                    <p style="border-bottom: none;">
+                    <p style="${artwork.isOpenSeries && artwork.hologramNumber ? '' : 'border-bottom: none;'}">
                         <strong>Edición:</strong>
                         <span>${getSeriesText(artwork)}</span>
                     </p>
+                    ${artwork.isOpenSeries && artwork.hologramNumber ? `
+                    <p style="border-bottom: none;">
+                        <strong style="font-size: 9pt; color: #666;">Nº Holograma:</strong>
+                        <span style="font-size: 9pt; color: #666; font-family: 'Courier New', monospace;">${artwork.hologramNumber}</span>
+                    </p>
+                    ` : ''}
                 </div>
 
                 <div class="signature-row">
@@ -740,6 +760,11 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
     const [technique, setTechnique] = useState('');
     const [manualCode, setManualCode] = useState<string>('');
 
+    // Campos específicos para Giclée
+    const [originalDimensions, setOriginalDimensions] = useState('');
+    const [gicleeDimensions, setGicleeDimensions] = useState('');
+    const [hologramNumber, setHologramNumber] = useState('');
+
     // Hook para PRE-RELLENAR el formulario (al añadir, duplicar o editar)
     useEffect(() => {
         if (artworkToManage) {
@@ -756,6 +781,10 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                 setDimensions('');
                 setTechnique('');
                 setManualCode('');
+                // Campos Giclée
+                setOriginalDimensions('');
+                setGicleeDimensions('');
+                setHologramNumber('');
                 return;
             }
 
@@ -778,6 +807,11 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
             setDimensions(artworkToManage.dimensions);
             setTechnique(artworkToManage.technique);
             setManualCode(artworkToManage.code ?? '');
+
+            // Campos Giclée
+            setOriginalDimensions(artworkToManage.originalDimensions ?? '');
+            setGicleeDimensions(artworkToManage.gicleeDimensions ?? '');
+            setHologramNumber(artworkToManage.hologramNumber ?? '');
         }
     }, [artworkToManage, isDuplicating, isAddingNew]);
 
@@ -817,6 +851,10 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
             code: finalCode,
             status: finalStatus,
             isOpenSeries: isOpenSeries,
+            // Campos Giclée (solo si es edición abierta)
+            originalDimensions: isOpenSeries ? originalDimensions.trim() : undefined,
+            gicleeDimensions: isOpenSeries ? gicleeDimensions.trim() : undefined,
+            hologramNumber: isOpenSeries ? hologramNumber.trim() : undefined,
         };
 
         // Si id es 0 (nueva) o -1 (duplicado), se pasa null a onSave para crear una nueva
@@ -1003,6 +1041,46 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
                                     min="1"
                                     required
                                 />
+                            </div>
+                        )}
+
+                        {/* Campos específicos para Giclée */}
+                        {isOpenSeries && (
+                            <div className="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200">
+                                <p className="text-xs font-semibold text-amber-700 mb-3 uppercase tracking-wide">Datos para Certificado Giclée</p>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <div>
+                                        <label className="block text-xs text-slate-500 mb-1">Medidas Original</label>
+                                        <input
+                                            type="text"
+                                            value={originalDimensions}
+                                            onChange={(e) => setOriginalDimensions(e.target.value)}
+                                            placeholder="Ej: 92 x 60 cm"
+                                            className="w-full p-2 border rounded text-sm focus:ring-amber-500 focus:border-amber-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs text-slate-500 mb-1">Medidas Impresión</label>
+                                        <input
+                                            type="text"
+                                            value={gicleeDimensions}
+                                            onChange={(e) => setGicleeDimensions(e.target.value)}
+                                            placeholder="Ej: 30 x 40 cm"
+                                            className="w-full p-2 border rounded text-sm focus:ring-amber-500 focus:border-amber-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs text-slate-500 mb-1">Nº Holograma Hahnemühle</label>
+                                        <input
+                                            type="text"
+                                            value={hologramNumber}
+                                            onChange={(e) => setHologramNumber(e.target.value.toUpperCase())}
+                                            placeholder="Ej: HAH-XXXXXX"
+                                            className="w-full p-2 border rounded text-sm font-mono focus:ring-amber-500 focus:border-amber-500"
+                                        />
+                                    </div>
+                                </div>
+                                <p className="text-[10px] text-amber-600 mt-2">Soporte: Papel Hahnemühle Textured - William Turner (se añadirá automáticamente al certificado)</p>
                             </div>
                         )}
                     </div>
@@ -1478,9 +1556,6 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     // 🔢 Estado para el modal de Ajuste Manual de Edición
     const [showEditionAdjust, setShowEditionAdjust] = useState(false);
 
-    // 🎨 Estado para el generador de certificados Giclée
-    const [showGicleeGenerator, setShowGicleeGenerator] = useState(false);
-
     // 🔢 Handler para ajustar manualmente el índice de edición de una obra
     const handleAdjustEdition = (artworkId: number, newSeriesIndex: number) => {
         setArtworks(prevArtworks => prevArtworks.map(artwork => {
@@ -1607,15 +1682,6 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                             <Briefcase size={18} /> INFORME VENTAS
                         </button>
 
-                        {/* 🎨 BOTÓN GENERADOR GICLÉE - DESTACADO */}
-                        <button
-                            onClick={() => setShowGicleeGenerator(true)}
-                            className="flex items-center gap-2 text-sm font-bold text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 transition-all py-3 px-5 rounded-lg shadow-lg shadow-amber-200 border border-amber-400"
-                            title="Generar certificados Giclée profesionales"
-                        >
-                            <Crown size={18} /> CERTIFICADO GICLÉE
-                        </button>
-
                         {/* 🔢 BOTÓN AJUSTE MANUAL DE EDICIÓN */}
                         <button
                             onClick={() => setShowEditionAdjust(true)}
@@ -1697,15 +1763,6 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                         setArtworkToManage(artwork);
                     }}
                 />
-            )}
-
-            {/* 🎨 MODAL DEL GENERADOR DE CERTIFICADOS GICLÉE */}
-            {showGicleeGenerator && (
-                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[80] flex items-center justify-center p-4 overflow-auto">
-                    <div className="w-full max-w-2xl my-8">
-                        <GicleeCertificateGenerator onClose={() => setShowGicleeGenerator(false)} />
-                    </div>
-                </div>
             )}
 
         </div>
