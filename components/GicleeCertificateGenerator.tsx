@@ -185,19 +185,15 @@ const getGicleeCertificateHtml = (
   hahnemuehleLot?: string,
   hologramNumber?: string
 ): string => {
-  const today = new Date().toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
 
-  // Parámetros de Estilo del Marco (IDÉNTICOS al original)
+  // Parámetros de Estilo EXACTOS del certificado original
   const GOLD_COLOR = "#b8860b";
   const OUTLINE_WIDTH = "12px";
   const OUTLINE_OFFSET = "12px";
   const MARGIN_SAFETY_CSS = "10mm auto 0 auto";
 
-  // Footer con iconos SVG
+  // Footer con iconos SVG (idéntico al original)
   const contactFooterHtml = `
     <div class="contact-footer">
       <span class="contact-item">
@@ -221,7 +217,7 @@ const getGicleeCertificateHtml = (
     <head>
       <title>Certificado Giclée - ${artwork.title} - ${code}</title>
       <style>
-        /* ESTILOS IDÉNTICOS AL CERTIFICADO ORIGINAL */
+        /* ESTILOS EXACTOS DEL CERTIFICADO ORIGINAL */
         body {
           font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
           font-size: 12pt;
@@ -245,13 +241,13 @@ const getGicleeCertificateHtml = (
 
         .header {
           text-align: center;
-          padding-bottom: 15px;
+          padding-bottom: 20px;
           border-bottom: 1px solid #ddd;
-          margin-bottom: 12px;
+          margin-bottom: 15px;
         }
 
         .logo {
-          max-height: 70px;
+          max-height: 80px;
           width: auto;
           margin-bottom: 5px;
           opacity: 0.9;
@@ -266,7 +262,7 @@ const getGicleeCertificateHtml = (
         }
 
         h1 {
-          font-size: 24pt;
+          font-size: 26pt;
           text-align: center;
           margin: 0;
           font-weight: 300;
@@ -275,22 +271,11 @@ const getGicleeCertificateHtml = (
           text-transform: uppercase;
         }
 
-        .giclee-badge {
-          display: inline-block;
-          background: ${GOLD_COLOR};
-          color: white;
-          font-size: 8pt;
-          padding: 3px 12px;
-          border-radius: 12px;
-          letter-spacing: 1px;
-          margin-top: 8px;
-        }
-
         .fixed-text {
           text-align: center;
           font-size: 10pt;
           color: #333;
-          margin: 12px 0;
+          margin: 15px 0;
           line-height: 1.5;
         }
 
@@ -303,12 +288,12 @@ const getGicleeCertificateHtml = (
 
         .artwork-image-section {
           width: 70%;
-          max-width: 140px;
-          max-height: 160px;
+          max-width: 160px;
+          max-height: 180px;
           overflow: hidden;
-          margin: 8px auto;
+          margin: 10px auto;
           border: 1px solid #ccc;
-          padding: 4px;
+          padding: 5px;
           box-shadow: 0 0 8px rgba(0,0,0,0.1);
           text-align: center;
         }
@@ -321,22 +306,22 @@ const getGicleeCertificateHtml = (
 
         .details-grid {
           width: 90%;
-          margin: 12px auto 20px auto;
+          margin: 15px auto 30px auto;
           font-size: 11pt;
         }
 
         .details-grid p {
-          margin: 8px 0;
+          margin: 10px 0;
           display: flex;
           justify-content: space-between;
           border-bottom: 1px dashed #ccc;
-          padding-bottom: 4px;
+          padding-bottom: 5px;
         }
 
         .details-grid strong {
           font-weight: bold;
           color: #000;
-          width: 160px;
+          width: 150px;
         }
 
         .details-grid span {
@@ -352,46 +337,18 @@ const getGicleeCertificateHtml = (
           font-family: 'Courier New', monospace;
         }
 
-        .edition-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin: 8px 0;
-          padding-bottom: 4px;
-          border-bottom: 1px dashed #ccc;
-        }
-
-        .edition-row.no-border {
-          border-bottom: none;
-        }
-
-        .edition-number {
-          font-size: 16pt;
-          font-weight: bold;
-          color: ${GOLD_COLOR};
-        }
-
-        .hologram-line {
+        .hologram-subtle {
           font-size: 9pt;
           color: #666;
           font-style: italic;
-        }
-
-        .hologram-code {
-          font-family: 'Courier New', monospace;
-          font-size: 9pt;
-          color: #444;
-          background: #f5f5f0;
-          padding: 2px 6px;
-          border-radius: 3px;
         }
 
         .contact-footer {
           font-size: 9pt;
           text-align: center;
           color: #555;
-          margin-top: 15px;
-          padding-top: 12px;
+          margin-top: 20px;
+          padding-top: 15px;
           border-top: 1px solid #eee;
           display: flex;
           justify-content: center;
@@ -417,8 +374,8 @@ const getGicleeCertificateHtml = (
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          margin-top: 15px;
-          padding-top: 15px;
+          margin-top: 20px;
+          padding-top: 20px;
         }
 
         .date-col {
@@ -431,7 +388,7 @@ const getGicleeCertificateHtml = (
         .signature-col {
           flex-basis: 45%;
           text-align: right;
-          padding-top: 10px;
+          padding-top: 15px;
         }
 
         .signature-line {
@@ -469,7 +426,6 @@ const getGicleeCertificateHtml = (
           <img src="/logo-myriam.png" alt="Myriam Alcaraz Logo" class="logo"/>
           <p class="subtitle">ARTE CON ALMA Y SOFISTICACIÓN</p>
           <h1>CERTIFICADO DE AUTENTICIDAD</h1>
-          <span class="giclee-badge">EDICIÓN GICLÉE</span>
         </div>
 
         <div class="fixed-text">
@@ -499,25 +455,25 @@ const getGicleeCertificateHtml = (
           </p>
           <p>
             <strong>Medidas Impresión:</strong>
-            <span>${size.dimensions}${size.isOriginalSize ? ' (Tamaño Original)' : ''}</span>
+            <span>${size.dimensions}</span>
           </p>
           <p>
             <strong>Soporte:</strong>
-            <span>Hahnemühle Textured ${PAPER_INFO.weight}</span>
+            <span>Papel Hahnemühle Textured - William Turner</span>
           </p>
           <p>
             <strong>ID de Referencia:</strong>
             <span class="code-display">${code}</span>
           </p>
-          <div class="edition-row">
+          <p style="border-bottom: none;">
             <strong>Edición:</strong>
-            <span class="edition-number">${copyNumber} / ${size.edition}</span>
-          </div>
+            <span>${copyNumber}/${size.edition}</span>
+          </p>
           ${hologramNumber ? `
-          <div class="edition-row no-border">
-            <span class="hologram-line">N° Holograma Hahnemühle:</span>
-            <span class="hologram-code">${hologramNumber}</span>
-          </div>
+          <p style="border-bottom: none; margin-top: 5px;">
+            <span class="hologram-subtle">Nº Holograma Hahnemühle:</span>
+            <span class="hologram-subtle">${hologramNumber}</span>
+          </p>
           ` : ''}
         </div>
 
