@@ -265,6 +265,19 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
               </div>
             )}
           </div>
+
+          {/* BOTÓN DE CONTACTO */}
+          <div className="mt-6 pt-6 border-t border-slate-100">
+            <p className="text-xs text-slate-500 text-center mb-3">
+              ¿Te gustaría saber más sobre esta obra?
+            </p>
+            <a
+              href={`mailto:${ARTIST_INFO.email}?subject=Consulta sobre "${artwork?.title}"&body=Estimada Myriam,%0A%0AHe descubierto tu obra "${artwork?.title}" y me ha cautivado profundamente.%0A%0AMe gustaría conocer más detalles sobre esta pieza: disponibilidad, opciones de envío y cualquier información adicional que puedas compartirme.%0A%0AQuedo a la espera de tu respuesta.%0A%0AUn cordial saludo.`}
+              className="block w-full bg-gradient-to-r from-slate-800 to-slate-700 text-white py-3 px-4 rounded-xl font-medium hover:from-gold-600 hover:to-gold-500 transition-all text-center text-sm shadow-lg hover:shadow-xl"
+            >
+              Solicitar Información
+            </a>
+          </div>
         </div>
       </div>
     </div>

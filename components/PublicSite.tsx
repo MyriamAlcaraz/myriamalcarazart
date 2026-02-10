@@ -272,7 +272,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                   Partimos de tus fotografías o ideas más queridas para crear una obra única, **pintada desde cero**. El precio se determina antes de comenzar, tras una consulta personal sobre el formato y la complejidad.
                 </p>
                 <a
-                  href={`mailto:${ARTIST_INFO.email}`}
+                  href={`mailto:${ARTIST_INFO.email}?subject=Consulta sobre encargo personalizado&body=Estimada Myriam,%0A%0AMe gustaría explorar la posibilidad de encargar una obra personalizada.%0A%0ATengo en mente:%0A• Tema o referencia: [Describe brevemente tu idea o adjunta foto]%0A• Tamaño aproximado: [Ej: 80x60 cm]%0A• Espacio donde irá: [Salón, despacho, regalo...]%0A%0AMe encantaría conocer tu visión artística y recibir un presupuesto orientativo.%0A%0AQuedo a la espera de tu respuesta.%0A%0AUn cordial saludo.`}
                   className="mt-4 bg-slate-800 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors"
                 >
                   Solicitar Consulta
@@ -726,7 +726,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                 </p>
               </div>
               <a
-                href={`mailto:${ARTIST_INFO.email}`}
+                href={`mailto:${ARTIST_INFO.email}?subject=Interés en adquirir obra o encargo&body=Estimada Myriam,%0A%0AHe visitado tu portfolio y me ha impresionado tu trabajo.%0A%0AMe gustaría recibir más información sobre:%0A[ ] Una obra específica del portfolio%0A[ ] Posibilidad de encargo personalizado%0A[ ] Reproducciones Giclée%0A%0AComéntame las opciones disponibles.%0A%0AGracias por tu tiempo.%0A%0AUn cordial saludo.`}
                 className="bg-gold-500 text-white px-8 py-3 hover:bg-gold-600 transition-colors uppercase tracking-widest text-xs font-bold whitespace-nowrap"
               >
                 Solicitar Propuesta
