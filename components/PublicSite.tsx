@@ -47,13 +47,27 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
       </nav>
 
       <main className="max-w-6xl mx-auto px-6 py-12">
+        {/* ========================================= */}
+        {/* PORTFOLIO TAB */}
+        {/* ========================================= */}
         {activeTab === 'portfolio' && (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-fade-in">
             {ARTWORKS.map(artwork => (
-              <div key={artwork.id} className="group relative overflow-hidden bg-white shadow-lg">
-                <img src={artwork.image} alt={artwork.title} className="w-full h-72 object-cover" />
-                <div className="p-4"><h3 className="font-serif text-lg font-semibold">{artwork.title}</h3></div>
-                <button onClick={() => onOpenCompanion(artwork.id)} className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+              <div key={artwork.id} className="group relative overflow-hidden bg-white shadow-lg border border-stone-100">
+                <img
+                  src={artwork.image}
+                  alt={artwork.title}
+                  className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="p-4">
+                  <h3 className="font-serif text-lg font-semibold text-slate-800 truncate">{artwork.title}</h3>
+                  <p className="text-xs text-slate-500 mt-1">{artwork.dimensions} | {artwork.technique}</p>
+                </div>
+                {/* Botón para abrir Companion (con el modo pixelado por defecto) */}
+                <button
+                  onClick={() => onOpenCompanion(artwork.id)}
+                  className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                >
                   <Eye size={36} className="text-white" />
                 </button>
               </div>
@@ -61,49 +75,82 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
           </div>
         )}
 
+        {/* ========================================= */}
+        {/* BIO & TRAYECTORIA TAB */}
+        {/* ========================================= */}
+        {activeTab === 'bio' && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 animate-fade-in">
+            <div className="md:col-span-1">
+              <h2 className="font-serif text-4xl font-bold text-slate-900 mb-6">Biografía</h2>
+              <p className="text-lg text-slate-700 leading-relaxed mb-6">{ARTIST_INFO.bioShort}</p>
+              <p className="text-slate-600 leading-relaxed mb-8 font-serif italic border-l-2 border-gold-500 pl-4">"{ARTIST_INFO.statement}"</p>
+            </div>
+            <div className="md:col-span-2 space-y-10">
+              <div className="flex justify-between items-start">
+                <h2 className="font-serif text-4xl font-bold text-slate-900">Trayectoria</h2>
+                <div className="w-48 h-48 overflow-hidden rounded-lg shadow-lg grayscale">
+                   <img src="/obras/ARTISTA.jpg" alt="Myriam Alcaraz" className="w-full h-full object-cover" />
+                </div>
+              </div>
+              <div>
+                <h3 className="text-2xl font-serif font-semibold text-gold-600 mb-4">Reconocimientos</h3>
+                <AccoladeList items={ARTIST_INFO.accolades.exposiciones} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================= */}
+        {/* ENCARGOS Y PRECIOS TAB */}
+        {/* ========================================= */}
         {activeTab === 'prices' && (
-          <div className="space-y-12">
+          <div className="space-y-12 animate-fade-in">
             <div className="max-w-4xl mx-auto text-center">
-              <h2 className="font-serif text-5xl font-bold mb-4">El Arte de Coleccionar</h2>
+              <h2 className="font-serif text-5xl font-bold text-slate-900 mb-4">El Arte de Coleccionar</h2>
               <p className="text-xl italic text-slate-600 border-b border-gold-500 pb-4">"Arte con alma y sofisticación para tu espacio."</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 text-center">
-                <h3 className="font-serif text-2xl font-bold mb-3">1. Obra Original Única</h3>
-                <p className="text-sm text-slate-600 mb-4">Óleo sobre lienzo. Piezas exclusivas de mi portfolio.</p>
-                <button onClick={() => handleTabChange('portfolio')} className="bg-slate-800 text-white px-6 py-2 rounded">Ver Disponibles</button>
+                <h3 className="font-serif text-2xl font-bold mb-3">Obra Original Única</h3>
+                <p className="text-sm text-slate-600 mb-6">Óleo sobre lienzo. Piezas exclusivas de colección.</p>
+                <button onClick={() => handleTabChange('portfolio')} className="bg-slate-800 text-white px-6 py-2 rounded">Ver Portfolio</button>
               </div>
               <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 text-center">
-                <h3 className="font-serif text-2xl font-bold mb-3">2. Giclée de Lujo</h3>
-                <p className="text-sm text-slate-600 mb-4">Ediciones limitadas sobre papel Hahnemühle. Con certificado.</p>
+                <h3 className="font-serif text-2xl font-bold mb-3">Giclée de Lujo</h3>
+                <p className="text-sm text-slate-600 mb-6">Ediciones limitadas sobre papel Hahnemühle.</p>
                 <button onClick={onOpenGiclee} className="bg-gold-500 text-white px-6 py-2 rounded">Ver Catálogo</button>
               </div>
               <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 text-center">
-                <h3 className="font-serif text-2xl font-bold mb-3">3. Encargo Personalizado</h3>
-                <p className="text-sm text-slate-600 mb-4">Creamos una obra desde cero basada en tu idea.</p>
-                <a href={`mailto:${ARTIST_INFO.email}`} className="bg-slate-800 text-white px-6 py-2 rounded inline-block">Solicitar Consulta</a>
+                <h3 className="font-serif text-2xl font-bold mb-3">Encargo Personalizado</h3>
+                <p className="text-sm text-slate-600 mb-6">Creamos una obra desde cero basada en tu idea.</p>
+                <a href={`mailto:${ARTIST_INFO.email}`} className="bg-slate-800 text-white px-6 py-2 rounded inline-block">Consultar</a>
               </div>
             </div>
           </div>
         )}
 
+        {/* ========================================= */}
+        {/* ESTUDIO DIGITAL TAB */}
+        {/* ========================================= */}
         {activeTab === 'app' && (
-          <div className="max-w-4xl mx-auto space-y-12">
-             <div className="text-center bg-slate-900 text-white p-12 rounded-3xl shadow-2xl">
-                <h2 className="font-serif text-5xl font-bold mb-4">Analizador Técnico del Color</h2>
-                <p className="text-gold-400 text-2xl italic mb-8">Technical Color Analyzer</p>
-                <p className="text-lg mb-8 opacity-90">La herramienta profesional que utilizo en mi estudio para Old Holland, Williamsburg y Winsor & Newton.</p>
-                <div className="text-3xl font-bold text-gold-500 mb-8">46,99 € <span className="text-sm text-white/60 font-normal">+ IVA</span></div>
-                <a href="https://payhip.com/ARTEFIGURATIVO" target="_blank" className="bg-gold-500 hover:bg-gold-600 text-white px-12 py-4 rounded-full font-bold text-xl transition-all inline-block">COMPRAR AHORA</a>
-             </div>
+          <div className="max-w-4xl mx-auto py-12 text-center bg-slate-900 text-white rounded-3xl shadow-2xl px-6 animate-fade-in">
+            <h2 className="font-serif text-5xl font-bold mb-4 text-gold-500">Analizador Técnico del Color</h2>
+            <p className="text-2xl italic mb-8">Technical Color Analyzer</p>
+            <p className="text-lg mb-8 opacity-80">La herramienta profesional avanzada para artistas desarrollada por Myriam Alcaraz.</p>
+            <div className="text-4xl font-bold text-gold-400 mb-8">46,99 € <span className="text-sm text-white/50 font-normal">+ IVA</span></div>
+            <a href="https://payhip.com/ARTEFIGURATIVO" target="_blank" className="bg-gold-500 hover:bg-gold-600 text-white px-12 py-4 rounded-full font-bold text-xl transition-all inline-block shadow-lg transform hover:scale-105">COMPRAR AHORA</a>
           </div>
         )}
       </main>
 
-      <footer className="bg-white py-10 border-t text-center relative">
-        <img src="/logo-myriam.png" className="h-8 mx-auto mb-4 opacity-50" alt="logo" />
-        <p className="text-[10px] opacity-40">© 2025 Myriam Alcaraz</p>
-        <button onClick={onOpenStudioLogin} className="absolute bottom-3 right-3 opacity-0 hover:opacity-100"><Lock size={14} /></button>
+      <footer className="bg-white py-12 border-t text-center relative mt-auto">
+        <div className="max-w-4xl mx-auto px-6">
+          <img src="/logo-myriam.png" alt="Logo" className="h-10 mx-auto mb-6 opacity-50 grayscale" />
+          <p className="text-[10px] opacity-40 uppercase tracking-[0.2em]">© 2025 Myriam Alcaraz. Todos los derechos reservados.</p>
+        </div>
+        <button onClick={onOpenStudioLogin} className="absolute bottom-4 right-4 opacity-0 hover:opacity-100 transition-opacity">
+          <Lock size={14} className="text-slate-300" />
+        </button>
       </footer>
     </div>
   );
