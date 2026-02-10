@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ARTIST_INFO, ARTWORKS } from '../constants';
-import { Eye, Lock, Layout, ArrowLeft } from 'lucide-react';
+import { Eye, Lock, Layout, ArrowLeft, Award, Shield, Sparkles, ChevronDown, Check } from 'lucide-react';
 import AtlasTransparencias from './AtlasTransparencias';
 import PaletasMaestros from './PaletasMaestros';
 
@@ -8,8 +8,27 @@ interface PublicSiteProps {
   onOpenCompanion: (id: string) => void;
   onOpenStudioLogin: () => void;
   onOpenGiclee: () => void;
-  onTabChange?: (tab: 'portfolio' | 'bio' | 'prices' | 'app') => void;
+  onTabChange?: (tab: 'portfolio' | 'bio' | 'prices' | 'giclee' | 'app') => void;
 }
+
+// Obras disponibles para Giclée con sus dimensiones originales
+const GICLEE_OBRAS = [
+  { id: 'joven-vela', titulo: 'Joven con vela en la bruma', imagen: '/obras/OBRA_22.jpg', dimensionesOriginal: '100x73', precioBase: 450 },
+  { id: 'sara-marquesina', titulo: 'Sara en Marquesina', imagen: '/obras/OBRA_04.jpg', dimensionesOriginal: '100x81', precioBase: 480 },
+  { id: 'laura-crepusculo', titulo: 'Laura en el Crepúsculo', imagen: '/obras/OBRA_02.jpg', dimensionesOriginal: '100x81', precioBase: 480 },
+  { id: 'sara-farola', titulo: 'Sara bajo la farola', imagen: '/obras/OBRA_03.jpg', dimensionesOriginal: '92x60', precioBase: 420 },
+  { id: 'ana-habana', titulo: 'Ana y la Habana', imagen: '/obras/OBRA_05.jpg', dimensionesOriginal: '92x60', precioBase: 420 },
+  { id: 'abruma-belleza', titulo: 'Abruma y belleza', imagen: '/obras/OBRA_21.jpg', dimensionesOriginal: '100x73', precioBase: 450 },
+  { id: 'memorias-mekong', titulo: 'Memorias de Mekong I', imagen: '/obras/OBRA_07.jpg', dimensionesOriginal: '100x65', precioBase: 440 },
+  { id: 'pablo-cascada', titulo: 'Pablo en Cascada', imagen: '/obras/OBRA_11.jpg', dimensionesOriginal: '55x46', precioBase: 380 },
+];
+
+// Configuración de tamaños Giclée
+const GICLEE_SIZES = {
+  pequeno: { label: 'Pequeño', dimensions: '30x40', factor: 0.6, edicion: 10 },
+  mediano: { label: 'Mediano', dimensions: '50x63', factor: 0.8, edicion: 10 },
+  original: { label: 'Original', factor: 1.0, edicion: 10 }
+};
 
 const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
   <ul className="list-disc pl-5 space-y-2 text-slate-600 text-sm">
@@ -20,12 +39,34 @@ const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
 );
 
 const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin, onOpenGiclee, onTabChange }) => {
-  const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices' | 'app'>('portfolio');
+  const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices' | 'giclee' | 'app'>('portfolio');
   const [activeDigitalTool, setActiveDigitalTool] = useState<'none' | 'atlas' | 'maestros'>('none');
 
-  const handleTabChange = (tab: 'portfolio' | 'bio' | 'prices' | 'app') => {
+  // Estado para Giclée
+  const [selectedObra, setSelectedObra] = useState<string | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+
+  const handleTabChange = (tab: 'portfolio' | 'bio' | 'prices' | 'giclee' | 'app') => {
     setActiveTab(tab);
-    onTabChange?.(tab);
+    if (tab !== 'giclee') {
+      onTabChange?.(tab);
+    }
+  };
+
+  // Obtener obra seleccionada
+  const obraActual = GICLEE_OBRAS.find(o => o.id === selectedObra);
+
+  // Calcular precio según tamaño
+  const calcularPrecio = (size: 'pequeno' | 'mediano' | 'original') => {
+    if (!obraActual) return 0;
+    return Math.round(obraActual.precioBase * GICLEE_SIZES[size].factor);
+  };
+
+  // Calcular dimensiones proporcionales para tamaño original
+  const getDimensionesOriginal = () => {
+    if (!obraActual) return '—';
+    return obraActual.dimensionesOriginal + ' cm';
   };
 
   return (
@@ -61,8 +102,8 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               ENCARGOS & PRECIOS
             </button>
             <button
-              onClick={onOpenGiclee}
-              className="px-3 py-1 md:px-4 md:py-2 transition-colors text-slate-500 hover:text-slate-800"
+              onClick={() => handleTabChange('giclee')}
+              className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'giclee' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
             >
               GICLÉE
             </button>
@@ -217,7 +258,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                   ¿Buscas una opción más accesible o un formato específico? Ofrezco copias de museo Giclée (impresión de altísima fidelidad). Cada reproducción incluye un **Certificado de Autenticidad** original, numerado y firmado.
                 </p>
                 <button
-                  onClick={onOpenGiclee}
+                  onClick={() => handleTabChange('giclee')}
                   className="mt-4 bg-gold-500 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-gold-600 transition-colors flex items-center gap-2"
                 >
                   <Layout size={16} /> Ver Catálogo Giclée
@@ -238,6 +279,291 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                 </a>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* ========================================= */}
+        {/* GICLÉE TAB */}
+        {/* ========================================= */}
+        {activeTab === 'giclee' && (
+          <div className="max-w-5xl mx-auto">
+
+            {/* Header elegante */}
+            <div className="text-center mb-12">
+              <p className="text-xs tracking-[0.4em] text-gold-500 uppercase mb-4 flex items-center justify-center gap-2">
+                <Sparkles size={14} />
+                Edición Limitada
+                <Sparkles size={14} />
+              </p>
+              <h1 className="font-serif text-4xl md:text-5xl text-slate-900 mb-4">
+                Reproducciones Giclée
+              </h1>
+              <div className="w-24 h-px bg-gold-500 mx-auto mb-6"></div>
+              <p className="text-stone-600 text-lg max-w-2xl mx-auto leading-relaxed">
+                Impresiones de museo sobre papel <span className="font-semibold text-slate-800">Hahnemühle William Turner 310g</span>,
+                100% algodón. Cada pieza incluye certificación oficial con holograma único.
+              </p>
+            </div>
+
+            {/* Badges de garantía */}
+            <div className="flex flex-wrap justify-center gap-4 mb-12">
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-stone-100">
+                <Shield size={16} className="text-gold-600" />
+                <span className="text-xs text-slate-700 font-medium">Certificado Hahnemühle con Holograma</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-stone-100">
+                <Award size={16} className="text-gold-600" />
+                <span className="text-xs text-slate-700 font-medium">Firmado y Numerado por la Artista</span>
+              </div>
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-stone-100">
+                <Sparkles size={16} className="text-gold-600" />
+                <span className="text-xs text-slate-700 font-medium">Edición Limitada: 10 unidades</span>
+              </div>
+            </div>
+
+            {/* Selector de Obra */}
+            <div className="mb-12">
+              <label className="block text-sm font-semibold text-slate-700 mb-3 text-center">
+                Selecciona una obra
+              </label>
+              <div className="relative max-w-md mx-auto">
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="w-full bg-white border-2 border-stone-200 rounded-lg px-4 py-4 flex items-center justify-between hover:border-gold-400 transition-colors shadow-sm"
+                >
+                  {selectedObra ? (
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={obraActual?.imagen}
+                        alt={obraActual?.titulo}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <div className="text-left">
+                        <p className="font-serif text-slate-800">{obraActual?.titulo}</p>
+                        <p className="text-xs text-stone-500">Original: {obraActual?.dimensionesOriginal} cm</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <span className="text-stone-400">Elige una obra del catálogo...</span>
+                  )}
+                  <ChevronDown
+                    size={20}
+                    className={`text-stone-400 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}
+                  />
+                </button>
+
+                {/* Dropdown con obras */}
+                {isDropdownOpen && (
+                  <div className="absolute z-50 w-full mt-2 bg-white border border-stone-200 rounded-lg shadow-xl max-h-80 overflow-y-auto">
+                    {GICLEE_OBRAS.map((obra) => (
+                      <button
+                        key={obra.id}
+                        onClick={() => {
+                          setSelectedObra(obra.id);
+                          setIsDropdownOpen(false);
+                          setSelectedSize(null);
+                        }}
+                        className={`w-full px-4 py-3 flex items-center gap-4 hover:bg-gold-50 transition-colors border-b border-stone-100 last:border-b-0 ${
+                          selectedObra === obra.id ? 'bg-gold-50' : ''
+                        }`}
+                      >
+                        <img
+                          src={obra.imagen}
+                          alt={obra.titulo}
+                          className="w-14 h-14 object-cover rounded shadow-sm"
+                        />
+                        <div className="text-left flex-grow">
+                          <p className="font-serif text-slate-800 text-sm">{obra.titulo}</p>
+                          <p className="text-xs text-stone-500">Original: {obra.dimensionesOriginal} cm</p>
+                        </div>
+                        {selectedObra === obra.id && (
+                          <Check size={18} className="text-gold-600" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Tarjetas de Tamaños - Solo visibles cuando hay obra seleccionada */}
+            {selectedObra && (
+              <div className="animate-fade-in">
+                <h2 className="text-center font-serif text-2xl text-slate-800 mb-8">
+                  Elige tu formato
+                </h2>
+
+                <div className="grid md:grid-cols-3 gap-6 mb-12">
+
+                  {/* Tamaño Pequeño */}
+                  <div
+                    onClick={() => setSelectedSize('pequeno')}
+                    className={`bg-white rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
+                      selectedSize === 'pequeno'
+                        ? 'ring-2 ring-gold-500 shadow-xl'
+                        : 'shadow-lg border border-stone-100'
+                    }`}
+                  >
+                    <div className="relative">
+                      <img
+                        src={obraActual?.imagen}
+                        alt={obraActual?.titulo}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                        <span className="text-xs font-semibold text-slate-700">30 × 40 cm</span>
+                      </div>
+                      {selectedSize === 'pequeno' && (
+                        <div className="absolute top-3 left-3 bg-gold-500 p-1.5 rounded-full">
+                          <Check size={14} className="text-white" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-6 text-center">
+                      <h3 className="font-serif text-xl text-slate-800 mb-1">Pequeño</h3>
+                      <p className="text-xs text-stone-500 mb-4">Formato íntimo</p>
+                      <div className="border-t border-stone-100 pt-4">
+                        <p className="text-3xl font-serif text-slate-900">{calcularPrecio('pequeno')} €</p>
+                        <p className="text-xs text-stone-400 mt-1">Ed. limitada 1/{GICLEE_SIZES.pequeno.edicion}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tamaño Mediano - Destacado */}
+                  <div
+                    onClick={() => setSelectedSize('mediano')}
+                    className={`bg-white rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative ${
+                      selectedSize === 'mediano'
+                        ? 'ring-2 ring-gold-500 shadow-xl'
+                        : 'shadow-lg border-2 border-gold-200'
+                    }`}
+                  >
+                    <div className="absolute -top-0 left-1/2 -translate-x-1/2 bg-gold-500 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1 rounded-b-lg z-10">
+                      Recomendado
+                    </div>
+                    <div className="relative">
+                      <img
+                        src={obraActual?.imagen}
+                        alt={obraActual?.titulo}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                        <span className="text-xs font-semibold text-slate-700">50 × 63 cm</span>
+                      </div>
+                      {selectedSize === 'mediano' && (
+                        <div className="absolute top-3 left-3 bg-gold-500 p-1.5 rounded-full">
+                          <Check size={14} className="text-white" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-6 text-center bg-gradient-to-b from-white to-gold-50/30">
+                      <h3 className="font-serif text-xl text-slate-800 mb-1">Mediano</h3>
+                      <p className="text-xs text-stone-500 mb-4">Presencia elegante</p>
+                      <div className="border-t border-gold-200 pt-4">
+                        <p className="text-3xl font-serif text-slate-900">{calcularPrecio('mediano')} €</p>
+                        <p className="text-xs text-stone-400 mt-1">Ed. limitada 1/{GICLEE_SIZES.mediano.edicion}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Tamaño Original */}
+                  <div
+                    onClick={() => setSelectedSize('original')}
+                    className={`bg-white rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
+                      selectedSize === 'original'
+                        ? 'ring-2 ring-gold-500 shadow-xl'
+                        : 'shadow-lg border border-stone-100'
+                    }`}
+                  >
+                    <div className="relative">
+                      <img
+                        src={obraActual?.imagen}
+                        alt={obraActual?.titulo}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="absolute top-3 right-3 bg-slate-900/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                        <span className="text-xs font-semibold text-white">{getDimensionesOriginal()}</span>
+                      </div>
+                      {selectedSize === 'original' && (
+                        <div className="absolute top-3 left-3 bg-gold-500 p-1.5 rounded-full">
+                          <Check size={14} className="text-white" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-6 text-center">
+                      <h3 className="font-serif text-xl text-slate-800 mb-1">Tamaño Original</h3>
+                      <p className="text-xs text-stone-500 mb-4">Escala museo</p>
+                      <div className="border-t border-stone-100 pt-4">
+                        <p className="text-3xl font-serif text-slate-900">{calcularPrecio('original')} €</p>
+                        <p className="text-xs text-stone-400 mt-1">Ed. limitada 1/{GICLEE_SIZES.original.edicion}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* Botón de solicitud */}
+                {selectedSize && (
+                  <div className="text-center animate-fade-in">
+                    <a
+                      href={`mailto:${ARTIST_INFO.email}?subject=Solicitud Giclée: ${obraActual?.titulo} - Tamaño ${GICLEE_SIZES[selectedSize as keyof typeof GICLEE_SIZES].label}&body=Hola Myriam,%0A%0AMe gustaría solicitar información sobre la reproducción Giclée:%0A%0A• Obra: ${obraActual?.titulo}%0A• Tamaño: ${selectedSize === 'original' ? getDimensionesOriginal() : GICLEE_SIZES[selectedSize as keyof typeof GICLEE_SIZES].dimensions + ' cm'}%0A• Precio: ${calcularPrecio(selectedSize as 'pequeno' | 'mediano' | 'original')} €%0A%0AGracias.`}
+                      className="inline-flex items-center gap-3 bg-slate-900 text-white px-10 py-4 rounded-lg font-semibold hover:bg-gold-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+                    >
+                      <Award size={20} />
+                      Solicitar esta Giclée
+                    </a>
+                    <p className="text-xs text-stone-400 mt-4">
+                      Recibirás respuesta en 24-48 horas con los detalles de envío
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Info adicional sobre el proceso */}
+            <div className="mt-16 border-t border-stone-200 pt-12">
+              <div className="grid md:grid-cols-3 gap-8 text-center">
+                <div>
+                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gold-50 flex items-center justify-center">
+                    <span className="text-2xl">1</span>
+                  </div>
+                  <h4 className="font-serif text-lg text-slate-800 mb-2">Impresión Profesional</h4>
+                  <p className="text-sm text-stone-500">
+                    Cada Giclée se imprime bajo supervisión artística en papel Hahnemühle William Turner certificado.
+                  </p>
+                </div>
+                <div>
+                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gold-50 flex items-center justify-center">
+                    <span className="text-2xl">2</span>
+                  </div>
+                  <h4 className="font-serif text-lg text-slate-800 mb-2">Doble Certificación</h4>
+                  <p className="text-sm text-stone-500">
+                    Certificado Hahnemühle con holograma único + Certificado de Artista con sello seco y firma autógrafa.
+                  </p>
+                </div>
+                <div>
+                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gold-50 flex items-center justify-center">
+                    <span className="text-2xl">3</span>
+                  </div>
+                  <h4 className="font-serif text-lg text-slate-800 mb-2">Envío Premium</h4>
+                  <p className="text-sm text-stone-500">
+                    Obra en tubo rígido protector + carta de lujo con certificados originales enviados por separado.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Nota sobre Hahnemühle */}
+            <div className="mt-12 text-center">
+              <p className="text-xs text-stone-400 tracking-wide mb-2">Papel certificado</p>
+              <p className="font-serif text-lg text-slate-700 italic">
+                "Hahnemühle William Turner 310g · 100% Algodón · Libre de Ácido"
+              </p>
+              <p className="text-xs text-stone-400 mt-2">
+                Durabilidad de museo · Resistencia a la luz superior a 100 años
+              </p>
+            </div>
+
           </div>
         )}
 
@@ -389,7 +715,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
         )}
 
         {/* Cierre - CTA Final (Solo para Portfolio y Bio) */}
-        {activeTab !== 'prices' && activeTab !== 'app' && (
+        {activeTab !== 'prices' && activeTab !== 'app' && activeTab !== 'giclee' && (
           <div className="mt-16 bg-slate-800 p-12 text-center">
             <div className="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="text-left">
