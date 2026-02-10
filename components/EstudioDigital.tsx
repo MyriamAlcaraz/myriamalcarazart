@@ -1,11 +1,10 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { ArrowLeft, Gift, Crown, Sparkles } from 'lucide-react';
-import PanelCertificados from './PanelCertificados';
 
 // ============================================
 // TIPOS
 // ============================================
-type AppView = 'gallery' | 'composicion' | 'pigmentos' | 'analizador' | 'certificados';
+type AppView = 'gallery' | 'composicion' | 'pigmentos' | 'analizador';
 
 // ============================================
 // COMPONENTE PRINCIPAL
@@ -19,7 +18,6 @@ const EstudioDigital: React.FC = () => {
       {currentView === 'composicion' && <ComposicionAurea onBack={() => setCurrentView('gallery')} />}
       {currentView === 'pigmentos' && <DiccionarioPigmentos onBack={() => setCurrentView('gallery')} />}
       {currentView === 'analizador' && <AnalizadorPremium onBack={() => setCurrentView('gallery')} />}
-      {currentView === 'certificados' && <PanelCertificados />}
     </div>
   );
 };
@@ -55,7 +53,7 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
 
     {/* Grid de Apps */}
     <section className="max-w-5xl mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
         {/* APP 1: Composición Áurea - GRATIS */}
         <button
@@ -150,45 +148,6 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
 
           <div className="border-t border-slate-700 pt-6 text-center relative">
             <p className="text-2xl text-gold-400 font-light mb-4">47 <span className="text-base text-slate-500">EUR</span></p>
-            <span className="inline-block bg-gold-500 text-white py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-400 transition-all duration-300">
-              Acceder
-            </span>
-          </div>
-        </button>
-
-        {/* APP 4: Panel de Certificados - PROFESIONAL */}
-        <button
-          onClick={() => onOpenApp('certificados')}
-          className="group bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 p-8 flex flex-col hover:shadow-2xl transition-all duration-500 text-left relative overflow-hidden"
-        >
-          {/* Efecto de brillo */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-
-          <div className="text-center mb-6 relative">
-            <div className="w-20 h-20 bg-gradient-to-br from-gold-500 to-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500 shadow-lg shadow-gold-500/30">
-              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
-            <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-gold-400 uppercase font-medium bg-gold-500/20 px-3 py-1">
-              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              Profesional
-            </span>
-          </div>
-
-          <h3 className="font-serif text-2xl text-white text-center mb-3 leading-snug">
-            Panel de Certificados
-          </h3>
-
-          <p className="text-slate-400 text-base leading-relaxed text-center flex-grow mb-6">
-            Sistema profesional de certificación y registro de obras.
-            Gestión de hologramas y edición limitada.
-          </p>
-
-          <div className="border-t border-slate-700 pt-6 text-center relative">
-            <p className="text-gold-400 text-sm mb-4">Gestión Completa</p>
             <span className="inline-block bg-gold-500 text-white py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-400 transition-all duration-300">
               Acceder
             </span>

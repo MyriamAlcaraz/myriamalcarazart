@@ -16,10 +16,14 @@ interface Obra {
   holograma: string;
   papelImpresion: string;
   dimensionesOriginal: string;
+  dimensionesBastidor: string;
+  tipoPapel: string;
+  serie: string;
   copiasTotales: number;
   copiasVendidas: number;
 }
 
+// DATOS REALES DE RAÚL - ACTUALIZADOS 2025
 const OBRAS_DB: Obra[] = [
   {
     id: 'joven-vela',
@@ -28,6 +32,9 @@ const OBRAS_DB: Obra[] = [
     holograma: '287213',
     papelImpresion: '30x40',
     dimensionesOriginal: '40x30',
+    dimensionesBastidor: '42x32',
+    tipoPapel: 'Hahnemühle Photo Rag 308gsm',
+    serie: 'PEQUEÑO',
     copiasTotales: 10,
     copiasVendidas: 0
   },
@@ -38,6 +45,9 @@ const OBRAS_DB: Obra[] = [
     holograma: '287214',
     papelImpresion: '50x61.5',
     dimensionesOriginal: '100x81',
+    dimensionesBastidor: '102x83',
+    tipoPapel: 'Hahnemühle Photo Rag 308gsm',
+    serie: 'MEDIANO',
     copiasTotales: 10,
     copiasVendidas: 0
   },
@@ -48,6 +58,9 @@ const OBRAS_DB: Obra[] = [
     holograma: '287215',
     papelImpresion: '50x61.5',
     dimensionesOriginal: '100x81',
+    dimensionesBastidor: '102x83',
+    tipoPapel: 'Hahnemühle Photo Rag 308gsm',
+    serie: 'MEDIANO',
     copiasTotales: 10,
     copiasVendidas: 0
   },
@@ -58,6 +71,9 @@ const OBRAS_DB: Obra[] = [
     holograma: '287216',
     papelImpresion: '60x93.3',
     dimensionesOriginal: '100x81',
+    dimensionesBastidor: '102x83',
+    tipoPapel: 'Hahnemühle Photo Rag 308gsm',
+    serie: 'GRANDE',
     copiasTotales: 10,
     copiasVendidas: 0
   }
@@ -76,39 +92,257 @@ const PanelCertificados: React.FC = () => {
     
     // Simulación de generación de PDF
     setTimeout(() => {
-      // Crear contenido del PDF
+      // Crear contenido del PDF con estructura A4 y diseño elegante
+      const siguienteCopia = obra.copiasVendidas + 1;
+      
       const pdfContent = `
-CERTIFICADO DE AUTENTICIDAD
-============================
-
-Obra: ${obra.titulo}
-Referencia: ${obra.referencia}
-Artista: Myriam Alcaraz
-Año: 2025
-
-DIMENSIONES OBRA ORIGINAL
-${obra.dimensionesOriginal} cm
-
-DIMENSIONES IMPRESIÓN GICLÉE
-${obra.papelImpresion} cm
-
-Holograma Hahnemühle Nº: ${obra.holograma}
-
-Impresión Giclée de calidad archivo sobre papel 100% algodón.
-
-Este certificado garantiza la autenticidad de la obra y su 
-limitada producción según las especificaciones del artista.
-
-Firma: ______________________
-Fecha: ${new Date().toLocaleDateString('es-ES')}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Certificado de Autenticidad - ${obra.titulo}</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:wght@300;400;600&display=swap');
+    
+    body {
+      font-family: 'Cormorant Garamond', serif;
+      line-height: 1.6;
+      color: #2c3e50;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 40px;
+      background: #fafafa;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      border-bottom: 2px solid #d4af37;
+      padding-bottom: 20px;
+    }
+    
+    .titulo {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+    }
+    
+    .subtitulo {
+      font-size: 18px;
+      color: #666;
+      font-weight: 300;
+    }
+    
+    .content {
+      margin-bottom: 40px;
+    }
+    
+    .info-section {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .info-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: #d4af37;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+    
+    .info-item {
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .info-label {
+      font-weight: 600;
+      color: #555;
+      font-size: 16px;
+    }
+    
+    .info-value {
+      font-weight: 400;
+      color: #2c3e50;
+      font-size: 16px;
+    }
+    
+    .imagen-container {
+      text-align: center;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    
+    .imagen-placeholder {
+      width: 100%;
+      max-width: 250px;
+      height: 180px;
+      background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-style: italic;
+      margin: 0 auto;
+      font-size: 14px;
+    }
+    
+    .legal {
+      background: #f8f8f8;
+      padding: 25px;
+      border-radius: 8px;
+      border-left: 4px solid #d4af37;
+      margin-bottom: 30px;
+    }
+    
+    .legal-text {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #555;
+    }
+    
+    .firma {
+      text-align: right;
+      margin-top: 40px;
+    }
+    
+    .firma-linea {
+      border-bottom: 1px solid #999;
+      width: 250px;
+      margin-left: auto;
+      margin-bottom: 5px;
+    }
+    
+    .firma-texto {
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .numeracion {
+      position: absolute;
+      top: 40px;
+      right: 40px;
+      background: #d4af37;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    
+    @media print {
+      body { padding: 20px; }
+      .numeracion { position: fixed; }
+    }
+  </style>
+</head>
+<body>
+  <div class="numeracion">${siguienteCopia}/${obra.copiasTotales}</div>
+  
+  <div class="header">
+    <div class="titulo">CERTIFICADO DE AUTENTICIDAD</div>
+    <div class="subtitulo">Myriam Alcaraz - Artista Plástica</div>
+  </div>
+  
+  <div class="content">
+    <div class="imagen-container">
+      <div class="imagen-placeholder">
+        ${obra.titulo}
+      </div>
+    </div>
+    
+    <div class="info-section">
+      <div class="info-title">Información de la Obra</div>
+      
+      <div class="info-item">
+        <span class="info-label">Título:</span>
+        <span class="info-value">${obra.titulo}</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Referencia:</span>
+        <span class="info-value">${obra.referencia}</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Año:</span>
+        <span class="info-value">2025</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Serie:</span>
+        <span class="info-value">${obra.serie}</span>
+      </div>
+    </div>
+    
+    <div class="info-section">
+      <div class="info-title">Especificaciones Técnicas</div>
+      
+      <div class="info-item">
+        <span class="info-label">Dimensiones Obra Original (Bastidor):</span>
+        <span class="info-value">${obra.dimensionesBastidor} cm</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Dimensiones Impresión (Papel):</span>
+        <span class="info-value">${obra.papelImpresion} cm</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Holograma Hahnemühle Nº:</span>
+        <span class="info-value">${obra.holograma}</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Tipo de Papel:</span>
+        <span class="info-value">100% Algodón</span>
+      </div>
+      
+      <div class="info-item">
+        <span class="info-label">Calidad:</span>
+        <span class="info-value">${obra.tipoPapel}</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="legal">
+    <div class="legal-text">
+      <strong>Declaración de Autenticidad:</strong><br>
+      Este certificado garantiza que la impresión Giclée "${obra.titulo}" es una reproducción 
+      de calidad archivo sobre papel 100% algodón, realizada bajo la supervisión directa de la artista. 
+      La obra está numerada, firmada y limitada a ${obra.copiasTotales} copias en la serie ${obra.serie}, 
+      asegurando su valor como pieza de colección. El holograma Hahnemühle Nº${obra.holograma} 
+      certifica la autenticidad del papel y la procedencia de la impresión.
+    </div>
+  </div>
+  
+  <div class="firma">
+    <div class="firma-linea"></div>
+    <div class="firma-texto">Myriam Alcaraz - ${new Date().toLocaleDateString('es-ES')}</div>
+  </div>
+</body>
+</html>
       `;
 
       // Crear blob y descargar
-      const blob = new Blob([pdfContent], { type: 'text/plain' });
+      const blob = new Blob([pdfContent], { type: 'text/html' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Certificado_${obra.referencia}.txt`;
+      a.download = `Certificado_${obra.referencia}_${siguienteCopia}de${obra.copiasTotales}.html`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
