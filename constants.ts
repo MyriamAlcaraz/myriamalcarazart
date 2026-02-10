@@ -120,8 +120,8 @@ export const ARTWORKS: Artwork[] = [
   {
     id: '5',
     title: 'Ana y la Habana',
-    dimensions: '92x60 cm',
-    technique: 'Óleo sobre tela',
+    dimensions: '100x81 cm',
+    technique: 'Óleo sobre tela grapada en tabla con bastidor',
     price: 3000,
     image: '/obras/OBRA_05.jpg',
     description: 'Obra seleccionada por la Asociación Española de Pintores y Escultores y el Museo de Arte Cromática de Toledo para ser expuesta durante el mes de febrero de 2026. Incluida en la Guía de Arte y Artistas Leonardo 2025.',

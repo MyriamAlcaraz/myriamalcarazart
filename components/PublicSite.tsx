@@ -17,7 +17,7 @@ const GICLEE_OBRAS = [
   { id: 'sara-marquesina', titulo: 'Sara en Marquesina', imagen: '/obras/OBRA_04.jpg', dimensionesOriginal: '100x81' },
   { id: 'laura-crepusculo', titulo: 'Laura en el Crepúsculo', imagen: '/obras/OBRA_02.jpg', dimensionesOriginal: '100x81' },
   { id: 'sara-farola', titulo: 'Sara bajo la farola', imagen: '/obras/OBRA_03.jpg', dimensionesOriginal: '92x60' },
-  { id: 'ana-habana', titulo: 'Ana y la Habana', imagen: '/obras/OBRA_05.jpg', dimensionesOriginal: '92x60' },
+  { id: 'ana-habana', titulo: 'Ana y la Habana', imagen: '/obras/OBRA_05.jpg', dimensionesOriginal: '100x81' },
   { id: 'abruma-belleza', titulo: 'Abruma y belleza', imagen: '/obras/OBRA_21.jpg', dimensionesOriginal: '100x73' },
   { id: 'memorias-mekong', titulo: 'Memorias de Mekong I', imagen: '/obras/OBRA_07.jpg', dimensionesOriginal: '100x65' },
   { id: 'pablo-cascada', titulo: 'Pablo en Cascada', imagen: '/obras/OBRA_11.jpg', dimensionesOriginal: '55x46' },
