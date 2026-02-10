@@ -242,7 +242,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
         {/* ESTUDIO DIGITAL TAB */}
         {/* ========================================= */}
         {activeTab === 'app' && (
-          <div className="max-w-4xl mx-auto py-8">
+          <div className="max-w-5xl mx-auto py-8">
 
             {/* Header minimalista */}
             <div className="text-center mb-16">
@@ -252,64 +252,119 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               </h1>
               <div className="w-16 h-px bg-gold-500 mx-auto mb-8"></div>
               <p className="text-stone-600 text-lg max-w-2xl mx-auto leading-relaxed">
-                Exploración de la materia a través de herramientas digitales avanzadas para el análisis de pigmentos y color.
+                Herramientas digitales para la exploración técnica del color y los pigmentos históricos.
               </p>
             </div>
 
-            {/* Analizador Técnico - Presentación elegante */}
-            <div className="bg-white border border-stone-200 rounded-lg overflow-hidden mb-12">
+            {/* Grid de 3 herramientas */}
+            <div className="grid md:grid-cols-3 gap-6 mb-16">
 
-              {/* Cabecera */}
-              <div className="bg-slate-900 text-white p-8 text-center">
-                <p className="text-xs tracking-[0.3em] text-gold-400 uppercase mb-4">Herramienta Profesional</p>
-                <h2 className="font-serif text-3xl mb-2">Analizador Técnico de Pigmentos</h2>
-                <p className="text-slate-400 italic">Technical Pigment Analyzer</p>
+              {/* ============================================ */}
+              {/* HERRAMIENTA 1: ATLAS DE TRANSPARENCIAS (GRATIS) */}
+              {/* ============================================ */}
+              <div className="bg-white border border-stone-200 rounded-lg overflow-hidden group hover:shadow-xl transition-shadow">
+                <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-6 text-center border-b border-stone-100">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white shadow-inner flex items-center justify-center">
+                    <svg className="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                    </svg>
+                  </div>
+                  <span className="text-[10px] tracking-[0.3em] text-amber-700 uppercase font-medium">Acceso Libre</span>
+                </div>
+                <div className="p-6">
+                  <h3 className="font-serif text-xl text-slate-900 mb-2 text-center">Atlas de Transparencias</h3>
+                  <p className="text-sm text-stone-500 text-center mb-4 leading-relaxed">
+                    Visualización del comportamiento lumínico de cada pigmento. Opacidad, veladura y poder cubriente en Old Holland, Williamsburg y W&N.
+                  </p>
+                  <div className="flex flex-wrap gap-2 justify-center mb-4">
+                    <span className="text-[10px] bg-stone-100 text-stone-600 px-2 py-1 rounded">Transparente</span>
+                    <span className="text-[10px] bg-stone-100 text-stone-600 px-2 py-1 rounded">Semiopaco</span>
+                    <span className="text-[10px] bg-stone-100 text-stone-600 px-2 py-1 rounded">Opaco</span>
+                  </div>
+                  <button className="w-full py-2 text-sm text-amber-700 border border-amber-200 rounded hover:bg-amber-50 transition-colors">
+                    Explorar Atlas
+                  </button>
+                </div>
               </div>
 
-              {/* Contenido */}
-              <div className="p-8">
-                <p className="text-stone-600 leading-relaxed mb-6 text-center max-w-xl mx-auto">
-                  Sistema de análisis cromático con inteligencia artificial.
-                  Incluye las denominaciones exactas de Old Holland, Williamsburg y Winsor & Newton.
-                </p>
-
-                {/* Características discretas */}
-                <div className="grid grid-cols-3 gap-4 mb-8 text-center">
-                  <div className="p-4">
-                    <p className="text-2xl font-serif text-slate-900 mb-1">3</p>
-                    <p className="text-xs text-stone-400 uppercase tracking-wide">Marcas</p>
+              {/* ============================================ */}
+              {/* HERRAMIENTA 2: PALETAS DE LOS MAESTROS (GRATIS) */}
+              {/* ============================================ */}
+              <div className="bg-white border border-stone-200 rounded-lg overflow-hidden group hover:shadow-xl transition-shadow">
+                <div className="bg-gradient-to-br from-stone-100 to-stone-50 p-6 text-center border-b border-stone-100">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white shadow-inner flex items-center justify-center">
+                    <svg className="w-8 h-8 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
                   </div>
-                  <div className="p-4 border-x border-stone-100">
-                    <p className="text-2xl font-serif text-slate-900 mb-1">IA</p>
-                    <p className="text-xs text-stone-400 uppercase tracking-wide">Análisis</p>
-                  </div>
-                  <div className="p-4">
-                    <p className="text-2xl font-serif text-slate-900 mb-1">Pro</p>
-                    <p className="text-xs text-stone-400 uppercase tracking-wide">Nivel</p>
-                  </div>
+                  <span className="text-[10px] tracking-[0.3em] text-stone-600 uppercase font-medium">Acceso Libre</span>
                 </div>
+                <div className="p-6">
+                  <h3 className="font-serif text-xl text-slate-900 mb-2 text-center">Paletas de los Maestros</h3>
+                  <p className="text-sm text-stone-500 text-center mb-4 leading-relaxed">
+                    Las paletas reales de Velázquez, Rembrandt, Sorolla y Zorn. Pigmentos históricos con sus equivalentes modernos.
+                  </p>
+                  <div className="flex justify-center gap-1 mb-4">
+                    <div className="w-6 h-6 rounded-full bg-amber-900 border border-white shadow-sm" title="Tierra Sombra"></div>
+                    <div className="w-6 h-6 rounded-full bg-yellow-600 border border-white shadow-sm" title="Ocre Amarillo"></div>
+                    <div className="w-6 h-6 rounded-full bg-red-800 border border-white shadow-sm" title="Rojo Venecia"></div>
+                    <div className="w-6 h-6 rounded-full bg-slate-900 border border-white shadow-sm" title="Negro Marfil"></div>
+                    <div className="w-6 h-6 rounded-full bg-stone-100 border border-stone-300 shadow-sm" title="Blanco Plomo"></div>
+                  </div>
+                  <button className="w-full py-2 text-sm text-stone-600 border border-stone-200 rounded hover:bg-stone-50 transition-colors">
+                    Ver Paletas
+                  </button>
+                </div>
+              </div>
 
-                {/* Precio y acceso */}
-                <div className="text-center border-t border-stone-100 pt-8">
-                  <p className="text-3xl font-serif text-slate-900 mb-2">46,99 €</p>
-                  <p className="text-sm text-stone-400 mb-6">Acceso único · Sin suscripción</p>
-
+              {/* ============================================ */}
+              {/* HERRAMIENTA 3: ANALIZADOR TÉCNICO (DE PAGO) */}
+              {/* ============================================ */}
+              <div className="bg-white border-2 border-gold-500 rounded-lg overflow-hidden shadow-lg">
+                <div className="bg-slate-900 p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gold-500 flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                  <span className="text-[10px] tracking-[0.3em] text-gold-400 uppercase font-medium">Herramienta Pro</span>
+                </div>
+                <div className="p-6">
+                  <h3 className="font-serif text-xl text-slate-900 mb-2 text-center">Analizador Técnico</h3>
+                  <p className="text-sm text-stone-500 text-center mb-4 leading-relaxed">
+                    Sistema de análisis cromático con IA. Identifica pigmentos exactos de cualquier imagen en las 3 marcas profesionales.
+                  </p>
+                  <div className="text-center mb-4">
+                    <span className="text-2xl font-serif text-slate-900">46,99 €</span>
+                    <p className="text-xs text-stone-400 mt-1">Acceso único</p>
+                  </div>
                   <a
                     href="https://payhip.com/ARTEFIGURATIVO"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block bg-slate-900 text-white px-8 py-3 text-sm tracking-widest uppercase hover:bg-slate-800 transition-colors"
+                    className="block w-full py-2 text-sm text-white bg-slate-900 rounded hover:bg-slate-800 transition-colors text-center"
                   >
-                    Acceder
+                    Obtener Acceso
                   </a>
                 </div>
               </div>
+
             </div>
 
-            {/* Firma sutil */}
-            <div className="text-center">
+            {/* Nota sobre las marcas */}
+            <div className="text-center mb-8">
+              <p className="text-xs text-stone-400 tracking-wide">
+                Todas las herramientas incluyen las denominaciones exactas de
+              </p>
+              <p className="text-sm text-stone-600 font-medium mt-1">
+                Old Holland · Williamsburg · Winsor & Newton
+              </p>
+            </div>
+
+            {/* Firma */}
+            <div className="text-center border-t border-stone-100 pt-8">
               <p className="text-stone-400 text-sm italic">
-                Desarrollado por Myriam Alcaraz
+                Desarrollado por Myriam Alcaraz · Artista e Investigadora
               </p>
             </div>
 

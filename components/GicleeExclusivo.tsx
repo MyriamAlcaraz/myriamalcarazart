@@ -6,14 +6,16 @@ interface GicleeExclusivoProps {
 }
 
 // Base de datos de obras disponibles para Giclée
+// Las medidas son del PAPEL Giclée (100% = tamaño máximo disponible)
 const OBRAS_GICLEE = [
   {
     id: 'joven-vela',
     titulo: 'Joven con vela',
     referencia: 'MA-2025-JV1',
     holograma: '287213',
-    originalWidth: 40,
-    originalHeight: 30,
+    // Papel: 30x40 cm (vertical)
+    papelWidth: 30,
+    papelHeight: 40,
     imagen: '/obras/OBRA_01.jpg'
   },
   {
@@ -21,8 +23,9 @@ const OBRAS_GICLEE = [
     titulo: 'Sara en marquesina',
     referencia: 'MA-2025-SA-M1',
     holograma: '287214',
-    originalWidth: 100,
-    originalHeight: 81,
+    // Papel: 50x61,5 cm
+    papelWidth: 62,
+    papelHeight: 50,
     imagen: '/obras/OBRA_02.jpg'
   },
   {
@@ -30,8 +33,9 @@ const OBRAS_GICLEE = [
     titulo: 'Laura en el crepúsculo',
     referencia: 'MA-2025-LA1',
     holograma: '287215',
-    originalWidth: 100,
-    originalHeight: 81,
+    // Papel: 50x61,5 cm
+    papelWidth: 62,
+    papelHeight: 50,
     imagen: '/obras/OBRA_03.jpg'
   },
   {
@@ -39,8 +43,9 @@ const OBRAS_GICLEE = [
     titulo: 'Sara bajo la farola',
     referencia: 'MA-2025-SA1',
     holograma: '287216',
-    originalWidth: 100,
-    originalHeight: 81,
+    // Papel: 60x93,3 cm → 92x60 redondeado
+    papelWidth: 92,
+    papelHeight: 60,
     imagen: '/obras/OBRA_04.jpg'
   }
 ];
@@ -56,11 +61,11 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
     [selectedObra]
   );
 
-  // Calcular medidas según el tamaño seleccionado
+  // Calcular medidas según el tamaño seleccionado (basado en el tamaño del papel)
   const calcularMedidas = (porcentaje: number) => {
     if (!obra) return { width: 0, height: 0 };
-    const width = Math.round(obra.originalWidth * porcentaje);
-    const height = Math.round(obra.originalHeight * porcentaje);
+    const width = Math.round(obra.papelWidth * porcentaje);
+    const height = Math.round(obra.papelHeight * porcentaje);
     return { width, height };
   };
 
@@ -138,7 +143,7 @@ const GicleeExclusivo: React.FC<GicleeExclusivoProps> = ({ onBack }) => {
                       </div>
                       <div>
                         <p className="font-medium text-slate-900">{o.titulo}</p>
-                        <p className="text-sm text-stone-500">Original: {o.originalWidth}×{o.originalHeight} cm</p>
+                        <p className="text-sm text-stone-500">Máx: {o.papelWidth}×{o.papelHeight} cm</p>
                       </div>
                     </div>
                   </button>
