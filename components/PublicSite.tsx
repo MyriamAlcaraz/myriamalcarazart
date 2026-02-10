@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ARTIST_INFO, ARTWORKS } from '../constants';
-import { Eye, Lock, Layout } from 'lucide-react';
+import { Eye, Lock, Layout, ArrowLeft } from 'lucide-react';
+import AtlasTransparencias from './AtlasTransparencias';
+import PaletasMaestros from './PaletasMaestros';
 
 interface PublicSiteProps {
   onOpenCompanion: (id: string) => void;
@@ -19,6 +21,7 @@ const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
 
 const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin, onOpenGiclee, onTabChange }) => {
   const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices' | 'app'>('portfolio');
+  const [activeDigitalTool, setActiveDigitalTool] = useState<'none' | 'atlas' | 'maestros'>('none');
 
   const handleTabChange = (tab: 'portfolio' | 'bio' | 'prices' | 'app') => {
     setActiveTab(tab);
@@ -241,7 +244,15 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
         {/* ========================================= */}
         {/* ESTUDIO DIGITAL TAB */}
         {/* ========================================= */}
-        {activeTab === 'app' && (
+        {activeTab === 'app' && activeDigitalTool === 'atlas' && (
+          <AtlasTransparencias onBack={() => setActiveDigitalTool('none')} />
+        )}
+
+        {activeTab === 'app' && activeDigitalTool === 'maestros' && (
+          <PaletasMaestros onBack={() => setActiveDigitalTool('none')} />
+        )}
+
+        {activeTab === 'app' && activeDigitalTool === 'none' && (
           <div className="max-w-5xl mx-auto py-8">
 
             {/* Header minimalista */}
@@ -281,7 +292,10 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                     <span className="text-[10px] bg-stone-100 text-stone-600 px-2 py-1 rounded">Semiopaco</span>
                     <span className="text-[10px] bg-stone-100 text-stone-600 px-2 py-1 rounded">Opaco</span>
                   </div>
-                  <button className="w-full py-2 text-sm text-amber-700 border border-amber-200 rounded hover:bg-amber-50 transition-colors">
+                  <button
+                    onClick={() => setActiveDigitalTool('atlas')}
+                    className="w-full py-2 text-sm text-amber-700 border border-amber-200 rounded hover:bg-amber-50 transition-colors"
+                  >
                     Explorar Atlas
                   </button>
                 </div>
@@ -311,7 +325,10 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                     <div className="w-6 h-6 rounded-full bg-slate-900 border border-white shadow-sm" title="Negro Marfil"></div>
                     <div className="w-6 h-6 rounded-full bg-stone-100 border border-stone-300 shadow-sm" title="Blanco Plomo"></div>
                   </div>
-                  <button className="w-full py-2 text-sm text-stone-600 border border-stone-200 rounded hover:bg-stone-50 transition-colors">
+                  <button
+                    onClick={() => setActiveDigitalTool('maestros')}
+                    className="w-full py-2 text-sm text-stone-600 border border-stone-200 rounded hover:bg-stone-50 transition-colors"
+                  >
                     Ver Paletas
                   </button>
                 </div>
