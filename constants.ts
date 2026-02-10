@@ -20,15 +20,15 @@ export const ARTIST_INFO = {
   accolades: {
       exposiciones: [
           'Museo de Arte Cromática de Toledo. Obra "Ana y la Habana" seleccionada por la Asociación Española de Pintores y Escultores para ser expuesta durante el mes de febrero de 2026.',
-          '92 Salón de Otoño de la Asociación Española de Pintores y Escultores. Formó parte de la exposición en la Casa de Vacas del Parque del Retiro - Madrid, del 30 de octubre al 23 de noviembre de 2025.',
-          'X Salón de Realismo, exposición colectiva organizada por la Asociación Española de Pintores y Escultores en la Sala de Exposiciones del Centro Cultural "La Vaguada" de la JM Fuencarral-El Pardo, C/ Monforte de Lemos, 40 Madrid, del 25 de septiembre al 27 de octubre de 2025.',
-          'Exposición virtual TargetPrice 2025 (tres obras semifinalistas).',
+          '92 Salón de Otoño de la Asociación Española de Pintores y Escultores. Obra "Sara en Marquesina" seleccionada para la exposición en la Casa de Vacas del Parque del Retiro, Madrid, del 30 de octubre al 23 de noviembre de 2025.',
+          'X Salón de Realismo, exposición colectiva organizada por la Asociación Española de Pintores y Escultores. Obras "Memorias de Mekong I" y "Memorias de Mekong II" seleccionadas para la exposición en el Centro Cultural "La Vaguada", Madrid, del 25 de septiembre al 27 de octubre de 2025.',
+          '44 Certamen de Pequeño Formato de la Asociación Española de Pintores y Escultores. Obra "Jilguero en charca del Botánico" seleccionada para la exposición en el Centro Cultural Príncipe de Asturias, Madrid, octubre de 2025.',
+          'Exposición virtual TargetPrice 2025. Tres obras semifinalistas: "Laura en el Crepúsculo", "Sara bajo la farola" y "Viajera".',
           '"Alba y Crepúsculo", exposición colectiva de la Asociación Española de Pintores y Escultores. Salas Juana Francés y Pablo Serrano, Junta Municipal de Tetuán, Madrid. Del 2 al 28 de abril de 2025.',
       ],
       concursos: [
-          // ¡Comillas rectas aplicadas!
-          'Finalista en el concurso internacional ModPortrait 2022 con "Pablo en Cascada"',
-          'Semifinalista en concurso internacional TargetPrice 2025 con tres obras: "Laura en Parque Oeste", "La Farola" y "La Viajera"',
+          'Finalista en el concurso internacional ModPortrait 2022 con "Pablo en Cascada".',
+          'Semifinalista en el concurso internacional Target Prize 2025 con tres obras: "Laura en el Crepúsculo", "Sara bajo la farola" y "Viajera".',
       ]
   },
 
@@ -74,37 +74,35 @@ export const ARTWORKS: Artwork[] = [
     year: '2026' 
   },
   // --- OBRAS DESTACADAS ---
-  { 
-    id: '4', 
-    title: 'Sara en Marquesina', 
-    dimensions: '100x81 cm', 
-    technique: 'Óleo en tela', 
-    price: 3000, 
-    image: '/obras/OBRA_04.jpg', 
-    description: '92 Salón de Otoño de la Asociación Española de Pintores y Escultores. Obra seleccionada para la exposición en la Casa de Vacas del Parque del Retiro - Madrid, del 30 de octubre al 23 de noviembre de 2025, y que forma parte del catálogo de la misma. Podemos encontrarla en la Guía de Arte y Artistas Leonardo 2025. Exposición: Febrero 2026, Museo Cromática de Toledo.', 
-    status: 'available' 
+  {
+    id: '4',
+    title: 'Sara en Marquesina',
+    dimensions: '100x81 cm',
+    technique: 'Óleo en tela',
+    price: 3000,
+    image: '/obras/OBRA_04.jpg',
+    description: 'Obra seleccionada por la Asociación Española de Pintores y Escultores para el 92 Salón de Otoño. Expuesta en la Casa de Vacas del Parque del Retiro, Madrid, del 30 de octubre al 23 de noviembre de 2025. Forma parte del catálogo oficial e incluida en la Guía de Arte y Artistas Leonardo 2025.',
+    status: 'available'
   },
-  { 
-    id: '2', 
-    title: 'Laura en el Crepúsculo', 
-    dimensions: '100x81 cm', 
-    technique: 'Óleo en tela montada en tabla', 
-    price: 3000, 
-    image: '/obras/OBRA_02.jpg', 
-    // URL con typo corregido (targetpaintingprize)
-    description: 'Obra semifinalista en el concurso Target Prize 2025. Formó parte de la exposición colectiva del certamen "Alba y Crepúsculo" organizado por la Asociación Española de Pintores y Escultores, expuesta en las Salas de exposiciones "Juana Francés y Pablo Serrano" Madrid. Forma parte del catálogo físico ModPortrait 2024, de la Guía de arte y artistas Leonardo 2025, así como la exposición virtual de Target Prize 2025 https://targetpaintingprize.com/?artworks=laura-en-parque-oeste', 
-    status: 'available' 
+  {
+    id: '2',
+    title: 'Laura en el Crepúsculo',
+    dimensions: '100x81 cm',
+    technique: 'Óleo en tela montada en tabla',
+    price: 3000,
+    image: '/obras/OBRA_02.jpg',
+    description: 'Obra semifinalista en el concurso internacional Target Prize 2025. Expuesta en la muestra colectiva "Alba y Crepúsculo" de la Asociación Española de Pintores y Escultores, Salas Juana Francés y Pablo Serrano, Madrid. Incluida en el catálogo ModPortrait 2024 y en la Guía de Arte y Artistas Leonardo 2025.',
+    status: 'available'
   },
-  { 
-    id: '3', 
-    title: 'Sara bajo la farola', 
-    dimensions: '92x60 cm', 
-    technique: 'Óleo sobre tela', 
-    price: 3000, 
-    image: '/obras/OBRA_03.jpg', 
-    // URL con typo corregido (targetpaintingprize)
-    description: 'Podemos encontrar esta obra en la Guía de arte y artistas Leonardo 2025, ademas de la exposición virtual del concurso Internacional Target Prize 2025 https://targetpaintingprize.com/?artworks=la-farola', 
-    status: 'available' 
+  {
+    id: '3',
+    title: 'Sara bajo la farola',
+    dimensions: '92x60 cm',
+    technique: 'Óleo sobre tela',
+    price: 3000,
+    image: '/obras/OBRA_03.jpg',
+    description: 'Obra semifinalista en el concurso internacional Target Prize 2025. Seleccionada para la exposición virtual del certamen. Incluida en la Guía de Arte y Artistas Leonardo 2025.',
+    status: 'available'
   },
   
   // --- RESTO DE OBRAS ---
@@ -129,36 +127,35 @@ export const ARTWORKS: Artwork[] = [
     description: 'Obra seleccionada por la Asociación Española de Pintores y Escultores y el Museo de Arte Cromática de Toledo para ser expuesta durante el mes de febrero de 2026. Incluida en la Guía de Arte y Artistas Leonardo 2025.',
     status: 'available' 
   },
-  { 
-    id: '6', 
-    title: 'Viajera', 
-    dimensions: '81x100 cm', 
-    technique: 'Óleo sobre tela', 
-    price: 3000, 
-    image: '/obras/OBRA_06.jpg', 
-    // URL con typo corregido (targetpaintingprize)
-    description: 'Forma parte de la exposición virtual del concurso Internacional Target Prize 2025 https://targetpaintingprize.com/?artworks=la-viajera', 
-    status: 'available' 
+  {
+    id: '6',
+    title: 'Viajera',
+    dimensions: '81x100 cm',
+    technique: 'Óleo sobre tela',
+    price: 3000,
+    image: '/obras/OBRA_06.jpg',
+    description: 'Obra semifinalista en el concurso internacional Target Prize 2025. Seleccionada para la exposición virtual del certamen.',
+    status: 'available'
   },
-  { 
-    id: '7', 
-    title: 'Memorias de Mekong I', 
-    dimensions: '100x65 cm', 
-    technique: 'Óleo sobre tela', 
-    price: 3000, 
-    image: '/obras/OBRA_07.jpg', 
-    description: 'Obra Seleccionada PARA EXPOSICIÓN en EL X SALÓN DE REALISMO ORGANIZADO POR LA ASOCIACIÓN ESPAÑOLA DE PINTORES Y ESCULTORES EN LA SALA DE EXPOSICIONES DEL CENTRO CULTURAL "LA VAGUADA" DE LA JM FUENCARRAL-EL PARDO -MADRID, DEL 25 DE SEPTIEMBRE AL 27 DE OCTUBRE DE 2025.', 
-    status: 'available' 
+  {
+    id: '7',
+    title: 'Memorias de Mekong I',
+    dimensions: '100x65 cm',
+    technique: 'Óleo sobre tela',
+    price: 3000,
+    image: '/obras/OBRA_07.jpg',
+    description: 'Obra seleccionada por la Asociación Española de Pintores y Escultores para el X Salón de Realismo. Expuesta en el Centro Cultural "La Vaguada", Madrid, del 25 de septiembre al 27 de octubre de 2025.',
+    status: 'available'
   },
-  { 
-    id: '8', 
-    title: 'Memorias de Mekong II', 
-    dimensions: '100x65 cm', 
-    technique: 'Óleo sobre tela', 
-    price: 3000, 
-    image: '/obras/OBRA_08.jpg', 
-    description: 'Obra Seleccionada PARA EXPOSICIÓN en EL X SALÓN DE REALISMO ORGANIZADO POR LA ASOCIACIÓN ESPAÑOLA DE PINTORES Y ESCULTORES EN LA SALA DE EXPOSICIONES DEL CENTRO CULTURAL "LA VAGUADA" DE LA JM FUENCARRAL-EL PARDO -MADRID, DEL 25 DE SEPTIEMBRE AL 27 DE OCTUBRE DE 2025.', 
-    status: 'available' 
+  {
+    id: '8',
+    title: 'Memorias de Mekong II',
+    dimensions: '100x65 cm',
+    technique: 'Óleo sobre tela',
+    price: 3000,
+    image: '/obras/OBRA_08.jpg',
+    description: 'Obra seleccionada por la Asociación Española de Pintores y Escultores para el X Salón de Realismo. Expuesta en el Centro Cultural "La Vaguada", Madrid, del 25 de septiembre al 27 de octubre de 2025.',
+    status: 'available'
   },
   { 
     id: '9', 
@@ -240,14 +237,14 @@ export const ARTWORKS: Artwork[] = [
     description: 'Pincelada suelta y vibrante.', 
     status: 'available' 
   },
-  { 
-    id: '17', 
-    title: 'Jilguero en charca del Botánico', 
-    dimensions: '46x38 cm', 
-    technique: 'Óleo sobre lienzo', 
-    price: 0, 
-    image: '/obras/OBRA_17.jpg', 
-    description: 'Obra seleccionada para Exposición Certamen Pequeño Formato en Centro Cultural Principe de Asturias-Madrid en octubre de 2025.', 
+  {
+    id: '17',
+    title: 'Jilguero en charca del Botánico',
+    dimensions: '46x38 cm',
+    technique: 'Óleo sobre lienzo',
+    price: 0,
+    image: '/obras/OBRA_17.jpg',
+    description: 'Obra seleccionada por la Asociación Española de Pintores y Escultores para integrar la exposición del 44 Certamen de Pequeño Formato. Centro Cultural Príncipe de Asturias, Madrid, octubre de 2025.',
     status: 'sold' 
   },
   { 
