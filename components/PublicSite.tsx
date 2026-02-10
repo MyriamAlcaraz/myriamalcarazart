@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ARTIST_INFO, ARTWORKS } from '../constants';
-import { Eye, Lock, Layout, Shield, Award, Crown } from 'lucide-react';
+import { Eye, Lock, Shield, Award, Crown } from 'lucide-react';
 
 interface PublicSiteProps {
   onOpenCompanion: (id: string) => void;
@@ -47,27 +47,16 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
       </nav>
 
       <main className="max-w-6xl mx-auto px-6 py-12">
-        {/* ========================================= */}
-        {/* PORTFOLIO TAB */}
-        {/* ========================================= */}
         {activeTab === 'portfolio' && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-fade-in">
             {ARTWORKS.map(artwork => (
               <div key={artwork.id} className="group relative overflow-hidden bg-white shadow-lg border border-stone-100">
-                <img
-                  src={artwork.image}
-                  alt={artwork.title}
-                  className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+                <img src={artwork.image} alt={artwork.title} className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105" />
                 <div className="p-4">
                   <h3 className="font-serif text-lg font-semibold text-slate-800 truncate">{artwork.title}</h3>
                   <p className="text-xs text-slate-500 mt-1">{artwork.dimensions} | {artwork.technique}</p>
                 </div>
-                {/* Botón para abrir Companion (con el modo pixelado por defecto) */}
-                <button
-                  onClick={() => onOpenCompanion(artwork.id)}
-                  className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                >
+                <button onClick={() => onOpenCompanion(artwork.id)} className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <Eye size={36} className="text-white" />
                 </button>
               </div>
@@ -83,18 +72,22 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
             <div className="md:col-span-1">
               <h2 className="font-serif text-4xl font-bold text-slate-900 mb-6">Biografía</h2>
               <p className="text-lg text-slate-700 leading-relaxed mb-6">{ARTIST_INFO.bioShort}</p>
-              <p className="text-slate-600 leading-relaxed mb-8 font-serif italic border-l-2 border-gold-500 pl-4">"{ARTIST_INFO.statement}"</p>
+              <h3 className="text-xl font-semibold mb-3">Declaración Artística</h3>
+              <p className="text-slate-600 italic border-l-2 border-gold-500 pl-4">"{ARTIST_INFO.statement}"</p>
             </div>
             <div className="md:col-span-2 space-y-10">
               <div className="flex justify-between items-start">
                 <h2 className="font-serif text-4xl font-bold text-slate-900">Trayectoria</h2>
-                <div className="w-48 h-48 overflow-hidden rounded-lg shadow-lg grayscale">
+                <div className="w-48 h-48 overflow-hidden rounded-lg shadow-lg grayscale hover:grayscale-0 transition-all duration-700">
                    <img src="/obras/ARTISTA.jpg" alt="Myriam Alcaraz" className="w-full h-full object-cover" />
                 </div>
               </div>
               <div>
-                <h3 className="text-2xl font-serif font-semibold text-gold-600 mb-4">Reconocimientos</h3>
+                <h3 className="text-2xl font-serif font-semibold text-gold-600 mb-4">Exposiciones y Premios</h3>
                 <AccoladeList items={ARTIST_INFO.accolades.exposiciones} />
+                <div className="mt-6">
+                  <AccoladeList items={ARTIST_INFO.accolades.concursos} />
+                </div>
               </div>
             </div>
           </div>
@@ -112,37 +105,38 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 text-center">
                 <h3 className="font-serif text-2xl font-bold mb-3">Obra Original Única</h3>
-                <p className="text-sm text-slate-600 mb-6">Óleo sobre lienzo. Piezas exclusivas de colección.</p>
-                <button onClick={() => handleTabChange('portfolio')} className="bg-slate-800 text-white px-6 py-2 rounded">Ver Portfolio</button>
+                <p className="text-sm text-slate-600 mb-6">Óleo sobre lienzo. Piezas exclusivas con certificado de autenticidad.</p>
+                <button onClick={() => handleTabChange('portfolio')} className="bg-slate-800 text-white px-6 py-2 rounded hover:bg-slate-700 transition-colors">Ver Disponibles</button>
               </div>
               <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 text-center">
                 <h3 className="font-serif text-2xl font-bold mb-3">Giclée de Lujo</h3>
-                <p className="text-sm text-slate-600 mb-6">Ediciones limitadas sobre papel Hahnemühle.</p>
-                <button onClick={onOpenGiclee} className="bg-gold-500 text-white px-6 py-2 rounded">Ver Catálogo</button>
+                <p className="text-sm text-slate-600 mb-6">Ediciones limitadas sobre papel Hahnemühle numeradas y firmadas.</p>
+                <button onClick={onOpenGiclee} className="bg-gold-500 text-white px-6 py-2 rounded hover:bg-gold-600 transition-colors">Ver Catálogo</button>
               </div>
               <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 text-center">
                 <h3 className="font-serif text-2xl font-bold mb-3">Encargo Personalizado</h3>
-                <p className="text-sm text-slate-600 mb-6">Creamos una obra desde cero basada en tu idea.</p>
-                <a href={`mailto:${ARTIST_INFO.email}`} className="bg-slate-800 text-white px-6 py-2 rounded inline-block">Consultar</a>
+                <p className="text-sm text-slate-600 mb-6">Proyectos a medida para coleccionistas exigentes.</p>
+                <a href={`mailto:${ARTIST_INFO.email}`} className="bg-slate-800 text-white px-6 py-2 rounded inline-block">Solicitar Info</a>
               </div>
             </div>
           </div>
         )}
 
         {/* ========================================= */}
-        {/* ESTUDIO DIGITAL TAB */}
+        {/* ESTUDIO DIGITAL TAB (ANALIZADOR) */}
         {/* ========================================= */}
         {activeTab === 'app' && (
           <div className="max-w-4xl mx-auto py-12 text-center bg-slate-900 text-white rounded-3xl shadow-2xl px-6 animate-fade-in">
             <h2 className="font-serif text-5xl font-bold mb-4 text-gold-500">Analizador Técnico del Color</h2>
             <p className="text-2xl italic mb-8">Technical Color Analyzer</p>
-            <p className="text-lg mb-8 opacity-80">La herramienta profesional avanzada para artistas desarrollada por Myriam Alcaraz.</p>
+            <p className="text-lg mb-8 opacity-80 leading-relaxed">La herramienta profesional avanzada que utilizo en mi estudio para Old Holland, Williamsburg y Winsor & Newton.</p>
             <div className="text-4xl font-bold text-gold-400 mb-8">46,99 € <span className="text-sm text-white/50 font-normal">+ IVA</span></div>
             <a href="https://payhip.com/ARTEFIGURATIVO" target="_blank" className="bg-gold-500 hover:bg-gold-600 text-white px-12 py-4 rounded-full font-bold text-xl transition-all inline-block shadow-lg transform hover:scale-105">COMPRAR AHORA</a>
           </div>
         )}
       </main>
 
+      {/* Footer con acceso oculto al Studio */}
       <footer className="bg-white py-12 border-t text-center relative mt-auto">
         <div className="max-w-4xl mx-auto px-6">
           <img src="/logo-myriam.png" alt="Logo" className="h-10 mx-auto mb-6 opacity-50 grayscale" />
