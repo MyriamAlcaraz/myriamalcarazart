@@ -1,89 +1,102 @@
 import React, { useState, useMemo } from 'react';
 import { Check, Shield, Award, Crown } from 'lucide-react';
-import { ARTWORKS } from '../constants';
 
-// Función para extraer dimensiones del string "92x60 cm"
-const parseDimensions = (dimensions: string) => {
-  const match = dimensions.match(/(\d+)x(\d+)/);
-  if (match) {
-    return {
-      width: parseInt(match[1]),
-      height: parseInt(match[2])
-    };
+// Obras específicas según la tabla de referencia
+const GICLEE_ARTWORKS = [
+  {
+    id: 'sara-farola',
+    title: 'Sara bajo la farola',
+    dimensions: { original: '92 x 60 cm', mediano: '69 x 45 cm', pequeno: '46 x 30 cm' }
+  },
+  {
+    id: 'laura-crepusculo',
+    title: 'Laura en el Crepúsculo',
+    dimensions: { original: '100 x 81 cm', mediano: '75 x 61 cm', pequeno: '50 x 40 cm' }
+  },
+  {
+    id: 'joven-vela',
+    title: 'Joven con vela...',
+    dimensions: { original: '100 x 73 cm', mediano: '75 x 55 cm', pequeno: '50 x 36 cm' }
+  },
+  {
+    id: 'sara-marquesina',
+    title: 'Sara en la marquesina',
+    dimensions: { original: '100 x 81 cm', mediano: '75 x 61 cm', pequeno: '50 x 40 cm' }
+  },
+  {
+    id: 'ninos-playa',
+    title: 'Niños en playa valenciana',
+    dimensions: { original: '80 x 60 cm', mediano: '60 x 45 cm', pequeno: '40 x 30 cm' }
+  },
+  {
+    id: 'jilguero-charca',
+    title: 'Jilguero en la charca',
+    dimensions: { original: '46 x 38 cm', mediano: '34 x 28 cm', pequeno: '23 x 19 cm' }
   }
-  // Valores por defecto si no puede parsear
-  return { width: 100, height: 81 };
-};
+];
 
 const GicleeTab: React.FC = () => {
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [selectedArtwork, setSelectedArtwork] = useState<any>(null);
+  const [selectedSize, setSelectedSize] = useState<string>('');
+  const [selectedArtwork, setSelectedArtwork] = useState<string>('');
 
-  // Cálculo automático de medidas proporcionales con información de tirada
+  // Opciones de tamaño según los porcentajes
   const sizes = useMemo(() => [
     {
-      id: 'standard',
-      name: 'Formato Estándar',
-      label: '(40 cm | Ed. Limitada de 30)',
-      price: '180€',
-      scale: 0.40,
-      tirada: 30
+      id: 'pequeno',
+      name: 'Pequeño (50%)',
+      scale: 0.5
     },
     {
-      id: 'intermediate',
-      name: 'Formato Intermedio',
-      label: '(50 cm | Ed. Limitada de 25)',
-      price: '280€',
-      scale: 0.50,
-      tirada: 25
+      id: 'mediano',
+      name: 'Mediano (75%)',
+      scale: 0.75
     },
     {
-      id: 'medium',
-      name: 'Formato Mediano',
-      label: '(70 cm | Ed. Limitada de 15)',
-      price: '450€',
-      scale: 0.70,
-      tirada: 15
-    },
-    {
-      id: 'large',
-      name: 'Formato Grande',
-      label: '(90 cm | Ed. Limitada de 10)',
-      price: '680€',
-      scale: 0.90,
-      tirada: 10
-    },
-    {
-      id: 'collection',
-      name: 'Formato Colección',
-      label: '(100 cm | Ed. Limitada de 5)',
-      price: '950€',
-      scale: 1.00,
-      tirada: 5
+      id: 'grande',
+      name: 'Grande (100%)',
+      scale: 1.0
     }
   ], []);
 
-  // Calcular medidas para cada formato con información de tirada
+  // Calcular medidas para cada tamaño seleccionado
   const sizesWithDimensions = useMemo(() => {
     if (!selectedArtwork) {
       // Si no hay obra seleccionada, mostrar solo el nombre base
       return sizes.map(size => ({
         ...size,
         dimensions: '',
-        displayName: size.name,
-        tiradaText: ''
+        displayName: size.name
       }));
     }
 
-    const originalDims = parseDimensions(selectedArtwork.dimensions);
+    const artwork = GICLEE_ARTWORKS.find(a => a.id === selectedArtwork);
+    if (!artwork) {
+      return sizes.map(size => ({
+        ...size,
+        dimensions: '',
+        displayName: size.name
+      }));
+    }
+
     return sizes.map(size => {
-      const scaledWidth = Math.round(originalDims.width * size.scale);
-      const scaledHeight = Math.round(originalDims.height * size.scale);
+      let dimensions = '';
+      switch (size.id) {
+        case 'pequeno':
+          dimensions = artwork.dimensions.pequeno;
+          break;
+        case 'mediano':
+          dimensions = artwork.dimensions.mediano;
+          break;
+        case 'grande':
+          dimensions = artwork.dimensions.original;
+          break;
+        default:
+          dimensions = artwork.dimensions.original;
+      }
       return {
         ...size,
-        dimensions: `${scaledWidth}x${scaledHeight} cm`,
-        displayName: `${size.name} (${size.label})`, // Use the label (e.g. "Lado mayor aprox 40cm") instead of exact px
-        tiradaText: `Edición limitada de ${size.tirada} ejemplares`
+        dimensions,
+        displayName: size.name
       };
     });
   }, [sizes, selectedArtwork]);
@@ -111,22 +124,19 @@ const GicleeTab: React.FC = () => {
           <h2 className="text-3xl font-serif text-slate-800 mb-6 text-center">Selecciona una Obra</h2>
           <div className="max-w-md mx-auto">
             <select
-              value={selectedArtwork?.id || ''}
+              value={selectedArtwork}
               onChange={(e) => {
-                const artwork = ARTWORKS.find(a => a.id === e.target.value);
-                if (artwork) {
-                  setSelectedArtwork(artwork);
-                  setSelectedSize(null); // Resetear selección de tamaño al cambiar obra
-                }
+                setSelectedArtwork(e.target.value);
+                setSelectedSize(''); // Resetear selección de tamaño al cambiar obra
               }}
               className="w-full p-4 border-2 border-stone-200 rounded-lg text-lg font-medium focus:border-gold-500 focus:outline-none bg-white cursor-pointer"
             >
               <option value="" disabled>
                 — Selecciona una Obra para ver Formatos —
               </option>
-              {ARTWORKS.map(artwork => (
+              {GICLEE_ARTWORKS.map(artwork => (
                 <option key={artwork.id} value={artwork.id}>
-                  {artwork.title} (Original: {artwork.dimensions})
+                  {artwork.title} (Original: {artwork.dimensions.original})
                 </option>
               ))}
             </select>
@@ -201,15 +211,12 @@ const GicleeTab: React.FC = () => {
                         {size.displayName}
                       </h3>
                     </div>
-                    <div className={`text-2xl font-bold ${!selectedArtwork ? 'text-stone-400' : 'text-gold-500'}`}>
-                      {size.price}
-                    </div>
+                    {selectedArtwork && size.dimensions && (
+                      <div className="text-lg font-medium text-stone-700">
+                        {size.dimensions}
+                      </div>
+                    )}
                   </div>
-                  {selectedArtwork && size.tiradaText && (
-                    <p className="text-sm text-stone-600 italic pl-10">
-                      {size.tiradaText}
-                    </p>
-                  )}
                 </div>
               </div>
             ))}
@@ -240,20 +247,20 @@ const GicleeTab: React.FC = () => {
             <button
               onClick={() => {
                 const selectedFormat = sizesWithDimensions.find(s => s.id === selectedSize);
-                const subject = encodeURIComponent(`Solicitud de adquisición: Edición Giclée - ${selectedArtwork.title}`);
+                const artwork = GICLEE_ARTWORKS.find(a => a.id === selectedArtwork);
+                const subject = encodeURIComponent(`Solicitud de adquisición: Edición Giclée - ${artwork?.title}`);
                 const body = encodeURIComponent(
                   `Estimada Myriam Alcaraz,
 
-Le escribo interesado/a en la adquisición de una reproducción de alta fidelidad (Giclée) de su obra titulada '${selectedArtwork.title}'.
+Le escribo interesado/a en la adquisición de una reproducción de alta fidelidad (Giclée) de su obra titulada '${artwork?.title}'.
 
 Los detalles de la selección son los siguientes:
 
-• Obra: ${selectedArtwork.title}
+• Obra: ${artwork?.title}
 • Formato: ${selectedFormat?.name}
-• Dimensiones: ${selectedFormat?.dimensions} cm
+• Dimensiones: ${selectedFormat?.dimensions}
 • Especificaciones: Impresión pigmentada de alta fidelidad sobre papel Hahnemühle 310g.
 • Certificación: Doble aval (Certificado Hahnemühle con registro digital y Certificado de Artista firmado con sello seco).
-• Importe: ${selectedFormat?.price}€
 
 Quedo a la espera de sus instrucciones personales para formalizar la reserva y proceder con los trámites de adquisición y envío.
 
