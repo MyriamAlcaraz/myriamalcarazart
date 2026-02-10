@@ -2065,76 +2065,209 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     }, [artworks]);
 
 
+    // Estadísticas del catálogo
+    const stats = useMemo(() => {
+        const pendientes = artworks.filter(a => a.status === 'PENDIENTE');
+        const asignados = artworks.filter(a => a.status === 'GENERADO');
+        return { total: artworks.length, pendientes, asignados };
+    }, [artworks]);
+
+    // Exportar listado a CSV/texto
+    const handleExportList = () => {
+        const date = new Date().toLocaleDateString('es-ES');
+        let content = `LISTADO DE OBRAS - MYRIAM ALCARAZ\nFecha de exportación: ${date}\n\n`;
+        content += `════════════════════════════════════════════════════════════\n`;
+        content += `RESUMEN: ${stats.total} obras | ${stats.asignados.length} con código | ${stats.pendientes.length} pendientes\n`;
+        content += `════════════════════════════════════════════════════════════\n\n`;
+
+        if (stats.asignados.length > 0) {
+            content += `✓ OBRAS CON CÓDIGO ASIGNADO (${stats.asignados.length})\n`;
+            content += `────────────────────────────────────────────────────────────\n`;
+            stats.asignados.forEach(art => {
+                content += `• ${art.title}\n`;
+                content += `  Código: ${art.code}\n`;
+                content += `  Dimensiones: ${art.dimensions} | Técnica: ${art.technique}\n`;
+                content += `  Tipo: ${art.isOpenSeries ? 'Giclée' : art.seriesTotal ? `Serie ${art.seriesIndex}/${art.seriesTotal}` : 'Obra única'}\n\n`;
+            });
+        }
+
+        if (stats.pendientes.length > 0) {
+            content += `\n○ OBRAS PENDIENTES DE CÓDIGO (${stats.pendientes.length})\n`;
+            content += `────────────────────────────────────────────────────────────\n`;
+            stats.pendientes.forEach(art => {
+                content += `• ${art.title}\n`;
+                content += `  Dimensiones: ${art.dimensions} | Técnica: ${art.technique}\n\n`;
+            });
+        }
+
+        // Crear y descargar archivo
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `inventario-obras-${new Date().toISOString().split('T')[0]}.txt`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
     return (
         <>
-        <div className="min-h-screen bg-slate-50 p-8 font-sans">
+        <div className="min-h-screen bg-gradient-to-br from-slate-100 to-stone-100 p-6 md:p-8 font-sans">
 
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-4xl mx-auto">
 
-                {/* CABECERA Y BOTONES GLOBALES (LIMPIOS) */}
-                <div className="flex justify-between items-center mb-10 border-b pb-4">
-                    <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-3">
-                        <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO
-                    </h1>
-
-                    {/* BOTONES DE ACCIÓN */}
-                    <div className="flex gap-3">
-                        <button
-                            onClick={() => setArtworkToManage(NEW_WORK_PLACEHOLDER)}
-                            className="flex items-center gap-2 text-sm font-bold text-white bg-gold-500 hover:bg-gold-600 transition-colors py-3 px-4 rounded-lg shadow-md"
-                            title="Añadir una nueva obra a tu catálogo"
-                        >
-                            <Plus size={16} /> NUEVA OBRA
-                        </button>
-
-                        <button
-                            onClick={() => setShowGicleePanel(true)}
-                            className="flex items-center gap-2 text-sm font-bold text-slate-700 bg-gradient-to-r from-amber-100 to-amber-200 hover:from-amber-200 hover:to-amber-300 transition-all py-3 px-5 rounded-lg shadow-md border border-amber-300"
-                            title="Generar certificados Giclée"
-                        >
-                            <Printer size={16} /> GICLÉE
-                        </button>
+                {/* CABECERA ELEGANTE */}
+                <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 bg-gradient-to-br from-gold-400 to-gold-600 rounded-xl flex items-center justify-center shadow-lg">
+                                <Layout size={28} className="text-white" />
+                            </div>
+                            <div>
+                                <h1 className="text-2xl font-bold text-slate-800">TALLER / ESTUDIO</h1>
+                                <p className="text-sm text-slate-500">Panel de gestión privado</p>
+                            </div>
+                        </div>
 
                         <button
                             onClick={onLogout}
-                            className="flex items-center gap-2 text-sm text-slate-500 hover:text-red-500 transition-colors py-3 px-4 border border-stone-200 rounded-lg hover:border-red-500"
+                            className="flex items-center gap-2 text-sm text-slate-400 hover:text-red-500 transition-colors"
                         >
-                            <LogOut size={16} /> Salir
+                            <LogOut size={16} /> Cerrar sesión
                         </button>
                     </div>
                 </div>
 
-                {/* GALERÍA DE OBRAS */}
-                <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mb-6">
-                    <ImageIcon size={24} className="text-gold-500" /> Obras en Catálogo ({artworks.length})
-                </h2>
+                {/* ACCIONES PRINCIPALES */}
+                <div className="grid md:grid-cols-3 gap-4 mb-6">
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {artworks.length === 0 ? (
-                        <div className="md:col-span-4 p-12 bg-white rounded-xl shadow-lg border border-stone-100 text-center">
-                            <p className="text-xl text-slate-500 font-semibold flex items-center justify-center gap-2">
-                                <MinusCircle size={24} /> Catálogo de Obras vacío.
-                            </p>
-                            <p className="text-slate-400 mt-2">
-                                Para añadir su primera pieza, haga click en el botón **NUEVA OBRA** arriba a la derecha.
-                            </p>
-                            <p className="text-xs text-slate-300 mt-4">
-                                Nota: Para editar o duplicar una obra, use el icono <Edit size={12} className="inline-block" /> o <Copy size={12} className="inline-block" /> que aparece en cada foto.
-                            </p>
+                    {/* Botón GICLÉE - Principal */}
+                    <button
+                        onClick={() => setShowGicleePanel(true)}
+                        className="bg-gradient-to-br from-amber-400 to-orange-500 text-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] group"
+                    >
+                        <Printer size={32} className="mb-3 group-hover:scale-110 transition-transform" />
+                        <h3 className="font-bold text-lg">Gestión Giclée</h3>
+                        <p className="text-amber-100 text-sm mt-1">Certificados e inventario</p>
+                    </button>
+
+                    {/* Botón NUEVA OBRA */}
+                    <button
+                        onClick={() => setArtworkToManage(NEW_WORK_PLACEHOLDER)}
+                        className="bg-white border-2 border-dashed border-slate-300 text-slate-600 p-6 rounded-2xl hover:border-gold-400 hover:bg-gold-50 transition-all group"
+                    >
+                        <Plus size={32} className="mb-3 text-slate-400 group-hover:text-gold-500 transition-colors" />
+                        <h3 className="font-bold text-lg">Nueva Obra</h3>
+                        <p className="text-slate-400 text-sm mt-1">Añadir al catálogo</p>
+                    </button>
+
+                    {/* Botón EXPORTAR */}
+                    <button
+                        onClick={handleExportList}
+                        className="bg-white border-2 border-slate-200 text-slate-600 p-6 rounded-2xl hover:border-emerald-400 hover:bg-emerald-50 transition-all group"
+                    >
+                        <FileText size={32} className="mb-3 text-slate-400 group-hover:text-emerald-500 transition-colors" />
+                        <h3 className="font-bold text-lg">Exportar Listado</h3>
+                        <p className="text-slate-400 text-sm mt-1">Descargar inventario</p>
+                    </button>
+                </div>
+
+                {/* RESUMEN DEL INVENTARIO */}
+                <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+
+                    {/* Stats Header */}
+                    <div className="bg-slate-800 text-white p-4 flex items-center justify-between">
+                        <h2 className="font-bold flex items-center gap-2">
+                            <ImageIcon size={20} /> Inventario de Obras
+                        </h2>
+                        <div className="flex gap-4 text-sm">
+                            <span className="flex items-center gap-1">
+                                <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
+                                {stats.asignados.length} con código
+                            </span>
+                            <span className="flex items-center gap-1">
+                                <span className="w-2 h-2 bg-amber-400 rounded-full"></span>
+                                {stats.pendientes.length} pendientes
+                            </span>
                         </div>
-                    ) : (
-                        sortedArtworks.map(artwork => (
-                            <ArtworkWorkstation
-                                key={artwork.id}
-                                artwork={artwork}
-                                settings={documentSettings}
-                                onGenerateCode={handleGenerateCode}
-                                onDelete={handleDeleteArtwork}
-                                onDuplicate={handleDuplicateArtwork}
-                                onEdit={setArtworkToManage}
-                            />
-                        ))
-                    )}
+                    </div>
+
+                    {/* Lista compacta de obras */}
+                    <div className="max-h-[400px] overflow-y-auto">
+                        {sortedArtworks.length === 0 ? (
+                            <div className="p-8 text-center text-slate-400">
+                                <p>No hay obras en el catálogo</p>
+                            </div>
+                        ) : (
+                            <table className="w-full">
+                                <thead className="bg-slate-50 sticky top-0">
+                                    <tr>
+                                        <th className="text-left py-3 px-4 text-xs font-bold text-slate-500 uppercase">Obra</th>
+                                        <th className="text-left py-3 px-4 text-xs font-bold text-slate-500 uppercase">Dimensiones</th>
+                                        <th className="text-left py-3 px-4 text-xs font-bold text-slate-500 uppercase">Código</th>
+                                        <th className="text-right py-3 px-4 text-xs font-bold text-slate-500 uppercase">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {sortedArtworks.map(artwork => (
+                                        <tr key={artwork.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                            <td className="py-3 px-4">
+                                                <div className="flex items-center gap-3">
+                                                    <img
+                                                        src={artwork.image}
+                                                        alt={artwork.title}
+                                                        className="w-10 h-10 object-cover rounded-lg shadow-sm"
+                                                    />
+                                                    <span className="font-medium text-slate-800 text-sm">{artwork.title}</span>
+                                                </div>
+                                            </td>
+                                            <td className="py-3 px-4 text-sm text-slate-500">{artwork.dimensions}</td>
+                                            <td className="py-3 px-4">
+                                                {artwork.code ? (
+                                                    <code className="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded font-mono">
+                                                        {artwork.code}
+                                                    </code>
+                                                ) : (
+                                                    <span className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded font-medium">
+                                                        Pendiente
+                                                    </span>
+                                                )}
+                                            </td>
+                                            <td className="py-3 px-4 text-right">
+                                                <div className="flex gap-1 justify-end">
+                                                    <button
+                                                        onClick={() => setArtworkToManage(artwork)}
+                                                        className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors"
+                                                        title="Editar"
+                                                    >
+                                                        <Edit size={16} />
+                                                    </button>
+                                                    {!artwork.code && (
+                                                        <button
+                                                            onClick={() => handleGenerateCode(artwork.id)}
+                                                            className="p-1.5 text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 rounded transition-colors"
+                                                            title="Generar código"
+                                                        >
+                                                            <Code size={16} />
+                                                        </button>
+                                                    )}
+                                                    <button
+                                                        onClick={() => handleDeleteArtwork(artwork.id)}
+                                                        className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                                                        title="Eliminar"
+                                                    >
+                                                        <Trash2 size={16} />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
                 </div>
 
             </div>
