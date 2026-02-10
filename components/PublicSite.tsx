@@ -13,21 +13,21 @@ interface PublicSiteProps {
 
 // Obras disponibles para Giclée con sus dimensiones originales
 const GICLEE_OBRAS = [
-  { id: 'joven-vela', titulo: 'Joven con vela en la bruma', imagen: '/obras/OBRA_22.jpg', dimensionesOriginal: '100x73', precioBase: 450 },
-  { id: 'sara-marquesina', titulo: 'Sara en Marquesina', imagen: '/obras/OBRA_04.jpg', dimensionesOriginal: '100x81', precioBase: 480 },
-  { id: 'laura-crepusculo', titulo: 'Laura en el Crepúsculo', imagen: '/obras/OBRA_02.jpg', dimensionesOriginal: '100x81', precioBase: 480 },
-  { id: 'sara-farola', titulo: 'Sara bajo la farola', imagen: '/obras/OBRA_03.jpg', dimensionesOriginal: '92x60', precioBase: 420 },
-  { id: 'ana-habana', titulo: 'Ana y la Habana', imagen: '/obras/OBRA_05.jpg', dimensionesOriginal: '92x60', precioBase: 420 },
-  { id: 'abruma-belleza', titulo: 'Abruma y belleza', imagen: '/obras/OBRA_21.jpg', dimensionesOriginal: '100x73', precioBase: 450 },
-  { id: 'memorias-mekong', titulo: 'Memorias de Mekong I', imagen: '/obras/OBRA_07.jpg', dimensionesOriginal: '100x65', precioBase: 440 },
-  { id: 'pablo-cascada', titulo: 'Pablo en Cascada', imagen: '/obras/OBRA_11.jpg', dimensionesOriginal: '55x46', precioBase: 380 },
+  { id: 'joven-vela', titulo: 'Joven con vela en la bruma', imagen: '/obras/OBRA_22.jpg', dimensionesOriginal: '100x73' },
+  { id: 'sara-marquesina', titulo: 'Sara en Marquesina', imagen: '/obras/OBRA_04.jpg', dimensionesOriginal: '100x81' },
+  { id: 'laura-crepusculo', titulo: 'Laura en el Crepúsculo', imagen: '/obras/OBRA_02.jpg', dimensionesOriginal: '100x81' },
+  { id: 'sara-farola', titulo: 'Sara bajo la farola', imagen: '/obras/OBRA_03.jpg', dimensionesOriginal: '92x60' },
+  { id: 'ana-habana', titulo: 'Ana y la Habana', imagen: '/obras/OBRA_05.jpg', dimensionesOriginal: '92x60' },
+  { id: 'abruma-belleza', titulo: 'Abruma y belleza', imagen: '/obras/OBRA_21.jpg', dimensionesOriginal: '100x73' },
+  { id: 'memorias-mekong', titulo: 'Memorias de Mekong I', imagen: '/obras/OBRA_07.jpg', dimensionesOriginal: '100x65' },
+  { id: 'pablo-cascada', titulo: 'Pablo en Cascada', imagen: '/obras/OBRA_11.jpg', dimensionesOriginal: '55x46' },
 ];
 
-// Configuración de tamaños Giclée
+// Configuración de tamaños Giclée - Precios fijos profesionales
 const GICLEE_SIZES = {
-  pequeno: { label: 'Pequeño', dimensions: '30x40', factor: 0.6, edicion: 10 },
-  mediano: { label: 'Mediano', dimensions: '50x63', factor: 0.8, edicion: 10 },
-  original: { label: 'Original', factor: 1.0, edicion: 10 }
+  pequeno: { label: 'Pequeño', dimensions: '30x40', precio: 245, edicion: 10 },
+  mediano: { label: 'Mediano', dimensions: '50x63', precio: 425, edicion: 10 },
+  original: { label: 'Original', precio: 780, edicion: 10 }
 };
 
 const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
@@ -57,10 +57,9 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
   // Obtener obra seleccionada
   const obraActual = GICLEE_OBRAS.find(o => o.id === selectedObra);
 
-  // Calcular precio según tamaño
+  // Obtener precio según tamaño
   const calcularPrecio = (size: 'pequeno' | 'mediano' | 'original') => {
-    if (!obraActual) return 0;
-    return Math.round(obraActual.precioBase * GICLEE_SIZES[size].factor);
+    return GICLEE_SIZES[size].precio;
   };
 
   // Calcular dimensiones proporcionales para tamaño original
