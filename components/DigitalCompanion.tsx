@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Shield, ZoomIn, Printer, X } from 'lucide-react';
+import { Shield, ZoomIn, Award, X, Sparkles } from 'lucide-react';
 import { ARTWORKS, ARTIST_INFO } from '../constants';
 import { Certificate } from './Certificate';
 
@@ -21,6 +21,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
   const [showCertificate, setShowCertificate] = useState(initialMode === 'certificate');
   const [showZoom, setShowZoom] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({});
+  const [showCertificatePreview, setShowCertificatePreview] = useState(false);
   const imgContainerRef = useRef<HTMLDivElement>(null);
 
   const displayYear = artwork && artwork.year && artwork.year.toString().trim() !== ''
@@ -37,7 +38,8 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     if(x < 0) x = 0; if(x > width) x = width;
     if(y < 0) y = 0; if(y > height) y = height;
 
-    const zoomFactor = 3.5;
+    const zoomFactor = 4;
+    const lupaSize = 140; // Tamaño de la lupa
     const backgroundPositionX = (x / width) * 100;
     const backgroundPositionY = (y / height) * 100;
 
@@ -45,8 +47,10 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
       backgroundImage: `url(${artwork.image})`,
       backgroundPosition: `${backgroundPositionX}% ${backgroundPositionY}%`,
       backgroundSize: `${width * zoomFactor}px ${height * zoomFactor}px`,
-      top: y + 20,
-      left: x + 20,
+      top: y - lupaSize / 2,
+      left: x - lupaSize / 2,
+      width: lupaSize,
+      height: lupaSize,
     });
   };
 
@@ -114,36 +118,112 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                 className="w-full h-auto max-h-96 object-contain"
               />
 
-              {/* LUPA MAGICA */}
+              {/* LUPA MAGICA - Centrada sobre el cursor */}
               {showZoom && (
                 <div
-                  className="absolute w-32 h-32 border-4 border-gold-500 rounded-full shadow-2xl pointer-events-none z-50"
-                  style={zoomStyle}
+                  className="absolute border-4 border-gold-500 rounded-full shadow-2xl pointer-events-none z-50"
+                  style={{
+                    ...zoomStyle,
+                    boxShadow: '0 0 30px rgba(197, 160, 89, 0.4), inset 0 0 20px rgba(0,0,0,0.1)'
+                  }}
                 />
               )}
             </div>
           </div>
 
-          {/* BOTONES DE ACCIÓN */}
-          <div className="flex gap-4 justify-center">
-            {showCertificateAccess && (
+          {/* BOTÓN CERTIFICADO - Solo en modo estudio */}
+          {showCertificateAccess && (
+            <div className="flex gap-4 justify-center">
               <button
                 onClick={() => setShowCertificate(true)}
                 className="flex-1 bg-gold-500 text-white py-3 px-6 rounded-xl font-bold hover:bg-gold-600 transition-all flex items-center justify-center gap-2 shadow-lg"
               >
                 <Shield size={20} />
-                CERTIFICADO
+                VER CERTIFICADO COMPLETO
               </button>
-            )}
+            </div>
+          )}
 
-            <button
-              onClick={() => window.print()}
-              className="flex-1 bg-slate-700 text-white py-3 px-6 rounded-xl font-bold hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-lg"
-            >
-              <Printer size={20} />
-              IMPRIMIR
-            </button>
-          </div>
+          {/* VISTA PREVIA DEL CERTIFICADO PIXELADO - Solo en modo público */}
+          {!showCertificateAccess && (
+            <div className="mt-4">
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <Award size={16} className="text-gold-500" />
+                <span className="text-xs text-slate-400 uppercase tracking-widest">Certificado de Autenticidad</span>
+                <Award size={16} className="text-gold-500" />
+              </div>
+
+              {/* Contenedor del certificado con efecto de revelación */}
+              <div
+                className="relative cursor-pointer group"
+                onClick={() => setShowCertificatePreview(!showCertificatePreview)}
+              >
+                {/* Miniatura del certificado */}
+                <div
+                  className={`bg-gradient-to-br from-amber-50 to-stone-100 rounded-xl overflow-hidden shadow-lg border-2 border-gold-200 transition-all duration-700 ${
+                    showCertificatePreview ? 'filter-none' : 'blur-[6px]'
+                  }`}
+                  style={{ maxHeight: '280px' }}
+                >
+                  <div className="p-4 transform scale-[0.35] origin-top" style={{ width: '210mm', margin: '0 auto' }}>
+                    {/* Mini certificado simplificado */}
+                    <div className="bg-[#fffdf8] p-8 border-8 border-gold-500">
+                      <div className="text-center">
+                        <img src="/logo-myriam.png" alt="Logo" className="mx-auto mb-4" style={{ maxWidth: '60px' }} />
+                        <h2 className="text-2xl font-serif text-slate-900 mb-2" style={{ fontFamily: 'Cinzel, serif', letterSpacing: '3px' }}>
+                          Certificado de Autenticidad
+                        </h2>
+                        <div className="w-32 h-0.5 bg-gold-500 mx-auto mb-4"></div>
+                        <p className="text-sm text-slate-600 mb-4">
+                          Por la presente se certifica que la obra de arte descrita a continuación
+                          es una creación original y auténtica de la artista:
+                        </p>
+                        <p className="text-xl font-bold text-gold-600 mb-4" style={{ fontFamily: 'Cinzel, serif' }}>
+                          MYRIAM ALCARAZ
+                        </p>
+                        <div className="bg-stone-100 p-3 inline-block mb-4">
+                          <img src={artwork?.image} alt={artwork?.title} className="max-h-32 mx-auto" />
+                        </div>
+                        <div className="text-left max-w-sm mx-auto space-y-2 text-sm">
+                          <p><span className="font-semibold">Título:</span> <span className="italic">{artwork?.title}</span></p>
+                          <p><span className="font-semibold">Técnica:</span> <span className="italic">{artwork?.technique}</span></p>
+                          <p><span className="font-semibold">Dimensiones:</span> <span className="italic">{artwork?.dimensions}</span></p>
+                          <p><span className="font-semibold">ID:</span> <span className="italic">MA-{artwork?.year || '2025'}-{artwork?.title?.substring(0,2).toUpperCase()}1/1</span></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Overlay con instrucciones */}
+                <div
+                  className={`absolute inset-0 flex flex-col items-center justify-center transition-opacity duration-500 ${
+                    showCertificatePreview ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                  }`}
+                >
+                  <div className="bg-slate-900/80 backdrop-blur-sm px-6 py-4 rounded-xl text-center">
+                    <Sparkles size={24} className="text-gold-400 mx-auto mb-2 animate-pulse" />
+                    <p className="text-white font-medium text-sm">Toca para revelar</p>
+                    <p className="text-gold-400 text-xs mt-1">Certificado Oficial Hahnemühle</p>
+                  </div>
+                </div>
+
+                {/* Badge de autenticidad cuando está revelado */}
+                {showCertificatePreview && (
+                  <div className="absolute bottom-3 right-3 bg-gold-500 text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 animate-fade-in">
+                    <Shield size={12} />
+                    <span>Holograma Verificado</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Texto informativo */}
+              <p className="text-center text-xs text-slate-500 mt-3 leading-relaxed">
+                Cada obra incluye <span className="text-gold-600 font-medium">Certificado Oficial Hahnemühle</span><br />
+                con holograma único y autenticación de la artista
+              </p>
+            </div>
+          )}
         </div>
 
         {/* PANEL DERECHO: INFORMACIÓN DE LA OBRA */}
