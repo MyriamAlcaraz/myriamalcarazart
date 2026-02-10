@@ -114,55 +114,57 @@ const ZonaPrivada: React.FC = () => {
       color: #2c3e50;
       max-width: 800px;
       margin: 0 auto;
-      padding: 60px 40px;
+      padding: 40px 30px;
       background: #fafafa;
     }
     
     .header {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
       border-bottom: 2px solid #d4af37;
-      padding-bottom: 20px;
+      padding-bottom: 15px;
     }
     
     .titulo {
       font-family: 'Playfair Display', serif;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 700;
       color: #1a1a1a;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     
     .subtitulo {
-      font-size: 18px;
+      font-size: 16px;
       color: #666;
       font-weight: 300;
     }
     
     .content {
-      margin-bottom: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
     }
     
     .info-section {
       background: white;
-      padding: 30px;
+      padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
     }
     
     .info-title {
       font-family: 'Playfair Display', serif;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 600;
       color: #d4af37;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       border-bottom: 1px solid #eee;
-      padding-bottom: 10px;
+      padding-bottom: 8px;
     }
     
     .info-item {
-      margin-bottom: 15px;
+      margin-bottom: 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -171,61 +173,114 @@ const ZonaPrivada: React.FC = () => {
     .info-label {
       font-weight: 600;
       color: #555;
-      font-size: 16px;
+      font-size: 14px;
     }
     
     .info-value {
       font-weight: 400;
       color: #2c3e50;
-      font-size: 16px;
+      font-size: 14px;
+    }
+    
+    .imagen-container {
+      text-align: center;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .imagen-placeholder {
+      width: 100%;
+      max-width: 180px;
+      height: 120px;
+      background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-style: italic;
+      font-size: 12px;
     }
     
     .legal {
       background: #f8f8f8;
-      padding: 25px;
+      padding: 20px;
       border-radius: 8px;
       border-left: 4px solid #d4af37;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+      grid-column: 1 / -1;
     }
     
     .legal-text {
-      font-size: 15px;
-      line-height: 1.7;
+      font-size: 13px;
+      line-height: 1.6;
       color: #555;
     }
     
     .firma {
       text-align: right;
-      margin-top: 40px;
+      margin-top: 20px;
+      grid-column: 1 / -1;
     }
     
     .firma-linea {
       border-bottom: 1px solid #999;
-      width: 250px;
+      width: 200px;
       margin-left: auto;
       margin-bottom: 5px;
     }
     
     .firma-texto {
-      font-size: 14px;
+      font-size: 12px;
       color: #666;
     }
     
     .numeracion {
       position: absolute;
-      top: 40px;
-      right: 40px;
+      top: 30px;
+      right: 30px;
       background: #d4af37;
       color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+    
+    .edicion-limitada {
+      background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 100%);
+      color: #1a1a1a;
       padding: 8px 16px;
       border-radius: 20px;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 12px;
+      text-align: center;
+      margin-bottom: 15px;
     }
     
     @media print {
-      body { padding: 20px; }
-      .numeracion { position: fixed; }
+      body { 
+        padding: 20px; 
+        font-size: 12px;
+      }
+      .numeracion { 
+        position: fixed; 
+        top: 20px;
+        right: 20px;
+      }
+      .content {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+      .imagen-placeholder {
+        max-width: 120px;
+        height: 80px;
+      }
     }
   </style>
 </head>
@@ -235,6 +290,10 @@ const ZonaPrivada: React.FC = () => {
   <div class="header">
     <div class="titulo">CERTIFICADO DE AUTENTICIDAD</div>
     <div class="subtitulo">Myriam Alcaraz - Artista Plástica</div>
+  </div>
+  
+  <div class="edicion-limitada">
+    EDICIÓN LIMITADA 1/10
   </div>
   
   <div class="content">
@@ -262,21 +321,27 @@ const ZonaPrivada: React.FC = () => {
       </div>
     </div>
     
+    <div class="imagen-container">
+      <div class="imagen-placeholder">
+        ${obra.titulo}
+      </div>
+    </div>
+    
     <div class="info-section">
       <div class="info-title">Especificaciones Técnicas</div>
       
       <div class="info-item">
-        <span class="info-label">Dimensiones Obra Original (Bastidor):</span>
+        <span class="info-label">Medida Original (Bastidor):</span>
         <span class="info-value">${obra.dimensionesBastidor} cm</span>
       </div>
       
       <div class="info-item">
-        <span class="info-label">Dimensiones Impresión (Papel):</span>
+        <span class="info-label">Medida Impresión (Raúl):</span>
         <span class="info-value">${obra.papelImpresion} cm</span>
       </div>
       
       <div class="info-item">
-        <span class="info-label">Holograma Hahnemühle Nº:</span>
+        <span class="info-label">Holograma Hahnemühle:</span>
         <span class="info-value">${obra.holograma}</span>
       </div>
       
@@ -297,9 +362,9 @@ const ZonaPrivada: React.FC = () => {
       <strong>Declaración de Autenticidad:</strong><br>
       Este certificado garantiza que la impresión Giclée "${obra.titulo}" es una reproducción 
       de calidad archivo sobre papel 100% algodón, realizada bajo la supervisión directa de la artista. 
-      La obra está numerada, firmada y limitada a ${obra.copiasTotales} copias en la serie ${obra.serie}, 
-      asegurando su valor como pieza de colección. El holograma Hahnemühle Nº${obra.holograma} 
-      certifica la autenticidad del papel y la procedencia de la impresión.
+      Esta es una EDICIÓN LIMITADA de 1/10 copias, numerada y firmada, asegurando su valor 
+      como pieza de colección. El holograma Hahnemühle Nº${obra.holograma} certifica la autenticidad 
+      del papel y la procedencia de la impresión según las especificaciones de Raúl.
     </div>
   </div>
   

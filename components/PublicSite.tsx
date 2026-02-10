@@ -85,7 +85,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                 <img
                   src={artwork.image}
                   alt={artwork.title}
-                  className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-72 object-contain transition-transform duration-500 group-hover:scale-105 bg-stone-100"
                 />
                 <div className="p-4">
                   <h3 className="font-serif text-lg font-semibold text-slate-800 truncate">{artwork.title}</h3>

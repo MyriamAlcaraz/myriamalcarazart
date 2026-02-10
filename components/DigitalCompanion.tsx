@@ -132,20 +132,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
             </div>
           </div>
 
-          {/* BOTONES DE ACCIÓN */}
-          <div className="flex gap-4 justify-center">
-            {showCertificateAccess && (
-              <button
-                onClick={() => setShowCertificate(true)}
-                className="flex-1 bg-gold-500 text-white py-3 px-6 rounded-xl font-bold hover:bg-gold-600 transition-all flex items-center justify-center gap-2 shadow-lg"
-              >
-                <Shield size={20} />
-                CERTIFICADO
-              </button>
-            )}
-            
-            
-          </div>
+          
         </div>
 
         {/* PANEL DERECHO: INFORMACIÓN DE LA OBRA */}
