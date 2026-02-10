@@ -212,7 +212,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               <div className="bg-white p-6 shadow-xl border-t-4 border-gold-500 flex flex-col items-center text-center">
                 <h3 className="font-serif text-2xl font-bold text-slate-900 mb-3">2. Reproducción Lujo Giclée</h3>
                 <p className="text-slate-600 mb-4 text-sm leading-relaxed">
-                  ¿Buscas una opción más accesible o un formato específico? Ofrezco copias de museo Giclée (impresión de altísima fidelidad). Cada reproducción incluye un **Certificado de Autenticidad** original, numerado y firmado.
+                  ¿Buscas una opción más accesible o un formato específico? Ofrezco copias de museo Giclée (impresión de altísima fidelidad) con calidad de galería y numeración limitada.
                 </p>
                 <button
                   onClick={() => handleTabChange('giclee')}
@@ -261,7 +261,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                 <h3 className="font-serif text-2xl text-white mb-2 italic">Commissions & Encargos</h3>
                 <p className="text-sm font-light leading-relaxed opacity-80 text-slate-200">
                   Realizo proyectos personalizados para coleccionistas privados.
-                  Toda obra es entregada con su Certificado de Autenticidad.
+                  Toda obra es entregada con documentación de procedencia.
                 </p>
               </div>
               <a

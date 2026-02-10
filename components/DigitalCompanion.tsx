@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Shield, ZoomIn, Printer, X } from 'lucide-react'; 
+import { Shield, ZoomIn, X } from 'lucide-react'; 
 import { ARTWORKS, ARTIST_INFO } from '../constants';
 import { Certificate } from './Certificate';
 
@@ -38,6 +38,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     if(y < 0) y = 0; if(y > height) y = height;
 
     const zoomFactor = 3.5;
+    const magnifierSize = 150;
     const backgroundPositionX = (x / width) * 100;
     const backgroundPositionY = (y / height) * 100;
 
@@ -45,8 +46,15 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
       backgroundImage: `url(${artwork.image})`,
       backgroundPosition: `${backgroundPositionX}% ${backgroundPositionY}%`,
       backgroundSize: `${width * zoomFactor}px ${height * zoomFactor}px`,
-      top: y + 20, 
-      left: x + 20,
+      backgroundRepeat: 'no-repeat',
+      width: `${magnifierSize}px`,
+      height: `${magnifierSize}px`,
+      top: y - magnifierSize / 2, 
+      left: x - magnifierSize / 2,
+      borderRadius: '50%',
+      border: '3px solid #d4af37',
+      boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+      pointerEvents: 'none',
     });
   };
 
@@ -117,7 +125,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
               {/* LUPA MAGICA */}
               {showZoom && (
                 <div 
-                  className="absolute w-32 h-32 border-4 border-gold-500 rounded-full shadow-2xl pointer-events-none z-50"
+                  className="absolute pointer-events-none z-50"
                   style={zoomStyle}
                 />
               )}
@@ -136,13 +144,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
               </button>
             )}
             
-            <button
-              onClick={() => window.print()}
-              className="flex-1 bg-slate-700 text-white py-3 px-6 rounded-xl font-bold hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-lg"
-            >
-              <Printer size={20} />
-              IMPRIMIR
-            </button>
+            
           </div>
         </div>
 
