@@ -1,10 +1,12 @@
 import React, { useState, useMemo, useRef } from 'react';
-import { ArrowLeft, Gift, Crown, Sparkles } from 'lucide-react';
+import { ArrowLeft, Gift, Crown, Sparkles, Eye, Palette } from 'lucide-react';
+import AtlasTransparencias from './AtlasTransparencias';
+import PaletasMaestros from './PaletasMaestros';
 
 // ============================================
 // TIPOS
 // ============================================
-type AppView = 'gallery' | 'composicion' | 'pigmentos' | 'analizador' | 'circuloCromatico' | 'proporciones' | 'valores';
+type AppView = 'gallery' | 'composicion' | 'pigmentos' | 'analizador' | 'circuloCromatico' | 'proporciones' | 'valores' | 'atlas' | 'maestros';
 
 // ============================================
 // COMPONENTE PRINCIPAL
@@ -21,6 +23,8 @@ const EstudioDigital: React.FC = () => {
       {currentView === 'circuloCromatico' && <CirculoCromatico onBack={() => setCurrentView('gallery')} />}
       {currentView === 'proporciones' && <CalculadoraProporciones onBack={() => setCurrentView('gallery')} />}
       {currentView === 'valores' && <SimuladorValores onBack={() => setCurrentView('gallery')} />}
+      {currentView === 'atlas' && <AtlasTransparencias onBack={() => setCurrentView('gallery')} />}
+      {currentView === 'maestros' && <PaletasMaestros onBack={() => setCurrentView('gallery')} />}
     </div>
   );
 };
@@ -49,7 +53,7 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
       <div className="inline-flex items-center gap-3 border border-gold-300 bg-gold-50/50 px-6 py-3">
         <Gift size={20} className="text-gold-600" />
         <p className="text-gold-700 text-sm tracking-wide">
-          Cinco herramientas gratuitas como <span className="font-medium">cortesía de Myriam Alcaraz</span> para la comunidad artística
+          Siete herramientas gratuitas como <span className="font-medium">cortesía de Myriam Alcaraz</span> para la comunidad artística
         </p>
       </div>
     </div>
@@ -218,7 +222,65 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
           </div>
         </button>
 
-        {/* APP 6: Analizador Premium - DE PAGO */}
+        {/* APP 6: Atlas de Transparencias - GRATIS */}
+        <button
+          onClick={() => onOpenApp('atlas')}
+          className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
+        >
+          <div className="text-center mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-sky-100 via-amber-100 to-slate-200 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
+              <Eye className="w-10 h-10 text-sky-600" />
+            </div>
+            <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-3 py-1">
+              <Gift size={12} /> Gratuito
+            </span>
+          </div>
+
+          <h3 className="font-serif text-2xl text-slate-900 text-center mb-3 leading-snug">
+            Atlas de Transparencias
+          </h3>
+
+          <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
+            Explora el comportamiento lumínico de cada pigmento. Opacidad, veladura y poder cubriente en las 3 marcas premium.
+          </p>
+
+          <div className="border-t border-stone-100 pt-6 text-center">
+            <span className="inline-block border border-gold-500 text-gold-600 py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-500 group-hover:text-white transition-all duration-300">
+              Explorar Atlas
+            </span>
+          </div>
+        </button>
+
+        {/* APP 7: Paletas de los Maestros - GRATIS */}
+        <button
+          onClick={() => onOpenApp('maestros')}
+          className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
+        >
+          <div className="text-center mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-amber-100 to-orange-200 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
+              <Palette className="w-10 h-10 text-amber-600" />
+            </div>
+            <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-3 py-1">
+              <Gift size={12} /> Gratuito
+            </span>
+          </div>
+
+          <h3 className="font-serif text-2xl text-slate-900 text-center mb-3 leading-snug">
+            Paletas de los Maestros
+          </h3>
+
+          <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
+            Las paletas reales de Velázquez, Rembrandt, Sorolla, Zorn, Vermeer y Sargent con equivalentes modernos.
+          </p>
+
+          <div className="border-t border-stone-100 pt-6 text-center">
+            <span className="inline-block border border-gold-500 text-gold-600 py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-500 group-hover:text-white transition-all duration-300">
+              Ver Paletas
+            </span>
+          </div>
+        </button>
+
+        {/* APP 8: Analizador Premium - DE PAGO */}
         <button
           onClick={() => onOpenApp('analizador')}
           className="group bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-8 flex flex-col hover:shadow-2xl transition-all duration-500 text-left relative overflow-hidden"
