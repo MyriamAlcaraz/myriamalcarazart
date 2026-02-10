@@ -65,10 +65,10 @@ const GICLEE_ARTWORKS = [
 
 // Información del papel certificado
 const PAPER_INFO = {
-  name: 'Hahnemühle William Turner',
+  name: 'Hahnemühle Textured',
   weight: '310g',
   type: '100% algodón',
-  texture: 'Textura mate moldeado en tina',
+  texture: 'Textura mate',
   certification: 'Sistema de Hologramas Hahnemühle',
   durability: '+100 años (calidad museo)',
   printPaper: 'Papel verjurado' // Para el certificado impreso
@@ -191,7 +191,29 @@ const getGicleeCertificateHtml = (
     day: 'numeric'
   });
 
+  // Parámetros de Estilo del Marco (IDÉNTICOS al original)
   const GOLD_COLOR = "#b8860b";
+  const OUTLINE_WIDTH = "12px";
+  const OUTLINE_OFFSET = "12px";
+  const MARGIN_SAFETY_CSS = "10mm auto 0 auto";
+
+  // Footer con iconos SVG
+  const contactFooterHtml = `
+    <div class="contact-footer">
+      <span class="contact-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 0 4 10 15.3 15.3 0 0 0-4 10zM22 12A15.3 15.3 0 0 0 18 8m-4-4a15.3 15.3 0 0 0-4 10 15.3 15.3 0 0 0 4 10"/></svg>
+        <a href="https://myriamalcaraz.com" target="_blank">myriamalcaraz.com</a>
+      </span>
+      <span class="contact-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <a href="mailto:myriamhotmail@hotmail.com">myriamhotmail@hotmail.com</a>
+      </span>
+      <span class="contact-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        @myriamalcaraz.artist
+      </span>
+    </div>
+  `;
 
   return `
     <!DOCTYPE html>
@@ -199,343 +221,320 @@ const getGicleeCertificateHtml = (
     <head>
       <title>Certificado Giclée - ${artwork.title} - ${code}</title>
       <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        /* ESTILOS IDÉNTICOS AL CERTIFICADO ORIGINAL */
         body {
-          font-family: 'Montserrat', sans-serif;
-          background: #f5f5f0;
-          padding: 20mm;
+          font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+          font-size: 12pt;
+          margin: 0mm;
+          padding: 0;
+          color: #111;
         }
 
-        .certificate {
-          width: 180mm;
-          margin: 0 auto;
-          background: linear-gradient(135deg, #fffdf8 0%, #fff 100%);
-          border: 2px solid #111;
-          outline: 10px solid ${GOLD_COLOR};
-          outline-offset: 8px;
-          padding: 25mm 20mm;
-          position: relative;
-        }
+        .cert-container {
+          margin: ${MARGIN_SAFETY_CSS} !important;
+          width: 178mm;
+          box-sizing: border-box;
 
-        .watermark {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%) rotate(-30deg);
-          font-size: 80pt;
-          font-family: 'Playfair Display', serif;
-          color: rgba(197, 160, 89, 0.05);
-          font-weight: 700;
-          letter-spacing: 10px;
-          white-space: nowrap;
-          pointer-events: none;
-          z-index: 0;
-        }
+          /* Borde fino (1px negro) + Outline grueso (12px dorado) */
+          border: 1px solid #000;
+          outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR};
+          outline-offset: ${OUTLINE_OFFSET};
 
-        .content { position: relative; z-index: 1; }
+          padding: 4mm 35px 4mm 35px;
+        }
 
         .header {
           text-align: center;
-          margin-bottom: 20px;
           padding-bottom: 15px;
           border-bottom: 1px solid #ddd;
+          margin-bottom: 12px;
         }
 
         .logo {
-          max-height: 60px;
-          margin-bottom: 10px;
+          max-height: 70px;
+          width: auto;
+          margin-bottom: 5px;
           opacity: 0.9;
         }
 
-        .badge {
-          display: inline-block;
-          background: linear-gradient(135deg, ${GOLD_COLOR}, #d4a84b);
-          color: white;
-          padding: 6px 20px;
-          border-radius: 20px;
-          font-size: 9pt;
-          font-weight: 600;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          margin-bottom: 15px;
-        }
-
-        .title {
-          font-family: 'Playfair Display', serif;
-          font-size: 22pt;
-          color: #111;
-          letter-spacing: 4px;
-          font-weight: 400;
-          text-transform: uppercase;
-        }
-
         .subtitle {
-          font-size: 9pt;
-          color: #666;
+          font-size: 10pt;
+          text-transform: uppercase;
           letter-spacing: 2px;
+          color: #555;
+          margin-top: 0;
+        }
+
+        h1 {
+          font-size: 24pt;
+          text-align: center;
+          margin: 0;
+          font-weight: 300;
+          letter-spacing: 5px;
+          color: ${GOLD_COLOR};
+          text-transform: uppercase;
+        }
+
+        .giclee-badge {
+          display: inline-block;
+          background: ${GOLD_COLOR};
+          color: white;
+          font-size: 8pt;
+          padding: 3px 12px;
+          border-radius: 12px;
+          letter-spacing: 1px;
+          margin-top: 8px;
+        }
+
+        .fixed-text {
+          text-align: center;
+          font-size: 10pt;
+          color: #333;
+          margin: 12px 0;
+          line-height: 1.5;
+        }
+
+        .fixed-text strong {
+          font-size: 14pt;
+          color: #000;
+          display: block;
           margin-top: 5px;
         }
 
-        .artwork-section {
-          display: flex;
-          gap: 20px;
-          margin: 25px 0;
-          align-items: flex-start;
+        .artwork-image-section {
+          width: 70%;
+          max-width: 140px;
+          max-height: 160px;
+          overflow: hidden;
+          margin: 8px auto;
+          border: 1px solid #ccc;
+          padding: 4px;
+          box-shadow: 0 0 8px rgba(0,0,0,0.1);
+          text-align: center;
         }
 
-        .artwork-image {
-          width: 120px;
-          flex-shrink: 0;
-        }
-
-        .artwork-image img {
+        .artwork-image-section img {
           width: 100%;
-          border: 1px solid #ddd;
-          padding: 5px;
-          background: white;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          height: auto;
+          display: block;
         }
 
-        .artwork-details {
-          flex: 1;
+        .details-grid {
+          width: 90%;
+          margin: 12px auto 20px auto;
+          font-size: 11pt;
         }
 
-        .detail-row {
+        .details-grid p {
+          margin: 8px 0;
           display: flex;
           justify-content: space-between;
-          padding: 8px 0;
-          border-bottom: 1px dotted #ccc;
-          font-size: 10pt;
+          border-bottom: 1px dashed #ccc;
+          padding-bottom: 4px;
         }
 
-        .detail-row:last-child { border-bottom: none; }
-
-        .detail-label {
-          color: #555;
-          font-weight: 500;
+        .details-grid strong {
+          font-weight: bold;
+          color: #000;
+          width: 160px;
         }
 
-        .detail-value {
-          color: #111;
-          font-weight: 600;
+        .details-grid span {
           text-align: right;
-        }
-
-        .edition-box {
-          background: linear-gradient(135deg, #f8f6f0, #fff);
-          border: 2px solid ${GOLD_COLOR};
-          border-radius: 12px;
-          padding: 20px;
-          text-align: center;
-          margin: 25px 0;
-        }
-
-        .edition-number {
-          font-family: 'Playfair Display', serif;
-          font-size: 36pt;
-          color: ${GOLD_COLOR};
-          font-weight: 700;
-          letter-spacing: 3px;
-        }
-
-        .edition-label {
-          font-size: 9pt;
-          color: #666;
-          text-transform: uppercase;
-          letter-spacing: 2px;
-          margin-top: 5px;
+          color: #333;
+          flex-grow: 1;
         }
 
         .code-display {
-          font-family: 'Courier New', monospace;
-          font-size: 11pt;
-          background: #f5f5f0;
-          padding: 8px 15px;
-          border-radius: 5px;
-          display: inline-block;
-          margin-top: 10px;
-          letter-spacing: 1px;
-        }
-
-        .paper-section {
-          background: #f9f9f6;
-          border-left: 3px solid ${GOLD_COLOR};
-          padding: 15px 20px;
-          margin: 20px 0;
-        }
-
-        .paper-title {
-          font-weight: 600;
+          font-weight: bold;
           color: #333;
-          margin-bottom: 8px;
-          font-size: 10pt;
+          padding: 0;
+          font-family: 'Courier New', monospace;
         }
 
-        .paper-details {
-          font-size: 9pt;
-          color: #555;
-          line-height: 1.6;
-        }
-
-        .signature-section {
+        .edition-row {
           display: flex;
           justify-content: space-between;
-          margin-top: 30px;
-          padding-top: 20px;
+          align-items: center;
+          margin: 8px 0;
+          padding-bottom: 4px;
+          border-bottom: 1px dashed #ccc;
+        }
+
+        .edition-row.no-border {
+          border-bottom: none;
+        }
+
+        .edition-number {
+          font-size: 16pt;
+          font-weight: bold;
+          color: ${GOLD_COLOR};
+        }
+
+        .hologram-line {
+          font-size: 9pt;
+          color: #666;
+          font-style: italic;
+        }
+
+        .hologram-code {
+          font-family: 'Courier New', monospace;
+          font-size: 9pt;
+          color: #444;
+          background: #f5f5f0;
+          padding: 2px 6px;
+          border-radius: 3px;
+        }
+
+        .contact-footer {
+          font-size: 9pt;
+          text-align: center;
+          color: #555;
+          margin-top: 15px;
+          padding-top: 12px;
+          border-top: 1px solid #eee;
+          display: flex;
+          justify-content: center;
+          gap: 15px;
+        }
+
+        .contact-item {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+
+        .contact-item a {
+          color: #555;
+          text-decoration: none;
+        }
+
+        .contact-item svg {
+          flex-shrink: 0;
+        }
+
+        .signature-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-top: 15px;
+          padding-top: 15px;
         }
 
         .date-col {
-          width: 40%;
+          flex-basis: 45%;
+          text-align: left;
+          font-size: 10pt;
+          color: #333;
         }
 
         .signature-col {
-          width: 50%;
+          flex-basis: 45%;
           text-align: right;
+          padding-top: 10px;
         }
 
         .signature-line {
-          border-top: 1px solid #333;
-          margin-top: 50px;
-          margin-bottom: 8px;
+          border-top: 1px solid #000;
+          display: block;
+          width: 100%;
+          margin-bottom: 5px;
         }
 
-        .signature-name {
-          font-family: 'Playfair Display', serif;
-          font-size: 12pt;
-          font-weight: 600;
+        .artist-title-style {
+          font-size: 10pt;
+          color: #333;
+          margin-top: 2px;
         }
-
-        .signature-title {
-          font-size: 9pt;
-          color: #555;
-        }
-
-        .footer {
-          text-align: center;
-          margin-top: 25px;
-          padding-top: 15px;
-          border-top: 1px solid #eee;
-          font-size: 8pt;
-          color: #888;
-          letter-spacing: 1px;
-        }
-
-        .footer a { color: #888; text-decoration: none; }
 
         @media print {
-          body {
-            padding: 0;
-            background: white;
+          body { margin: 0; padding: 0; }
+          .cert-container {
+            box-shadow: none;
+            margin: ${MARGIN_SAFETY_CSS} !important;
+            width: 178mm !important;
+            border: 1px solid #000 !important;
+            outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR} !important;
+            outline-offset: ${OUTLINE_OFFSET} !important;
+            padding: 4mm 35px 4mm 35px !important;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
-          }
-          .certificate {
-            box-shadow: none;
-            margin: 10mm auto;
           }
         }
       </style>
     </head>
     <body>
-      <div class="certificate">
-        <div class="watermark">GICLÉE</div>
+      <div class="cert-container">
+        <div class="header">
+          <img src="/logo-myriam.png" alt="Myriam Alcaraz Logo" class="logo"/>
+          <p class="subtitle">ARTE CON ALMA Y SOFISTICACIÓN</p>
+          <h1>CERTIFICADO DE AUTENTICIDAD</h1>
+          <span class="giclee-badge">EDICIÓN GICLÉE</span>
+        </div>
 
-        <div class="content">
-          <div class="header">
-            <img src="/logo-myriam.png" alt="Myriam Alcaraz" class="logo" />
-            <div class="badge">Edición Limitada Giclée</div>
-            <h1 class="title">Certificado de Autenticidad</h1>
-            <p class="subtitle">Reproducción de Alta Fidelidad sobre Papel Certificado</p>
+        <div class="fixed-text">
+          <p style="font-size: 10pt; color: #333; margin: 0; line-height: 1.5;">
+            Por la presente se certifica que la reproducción Giclée descrita a continuación es una impresión autorizada y numerada de la obra original. Todos los derechos de autor y reproducción están reservados por la artista:
+          </p>
+          <strong>Myriam Alcaraz</strong>
+          <span class="artist-title-style">Pintura Figurativa Contemporánea</span>
+        </div>
+
+        <div class="artwork-image-section">
+          <img src="${artwork.image}" alt="${artwork.title} - Foto de Obra"/>
+        </div>
+
+        <div class="details-grid">
+          <p>
+            <strong>Título de la Obra:</strong>
+            <span>${artwork.title}</span>
+          </p>
+          <p>
+            <strong>Técnica Original:</strong>
+            <span>${artwork.technique}</span>
+          </p>
+          <p>
+            <strong>Medidas Original:</strong>
+            <span>${artwork.originalDimensions}</span>
+          </p>
+          <p>
+            <strong>Medidas Impresión:</strong>
+            <span>${size.dimensions}${size.isOriginalSize ? ' (Tamaño Original)' : ''}</span>
+          </p>
+          <p>
+            <strong>Soporte:</strong>
+            <span>Hahnemühle Textured ${PAPER_INFO.weight}</span>
+          </p>
+          <p>
+            <strong>ID de Referencia:</strong>
+            <span class="code-display">${code}</span>
+          </p>
+          <div class="edition-row">
+            <strong>Edición:</strong>
+            <span class="edition-number">${copyNumber} / ${size.edition}</span>
           </div>
-
-          <div class="artwork-section">
-            <div class="artwork-image">
-              <img src="${artwork.image}" alt="${artwork.title}" />
-            </div>
-            <div class="artwork-details">
-              <div class="detail-row">
-                <span class="detail-label">Título de la Obra:</span>
-                <span class="detail-value">${artwork.title}</span>
-              </div>
-              <div class="detail-row">
-                <span class="detail-label">Técnica Original:</span>
-                <span class="detail-value">${artwork.technique}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- BLOQUE DE MEDIDAS DESTACADO -->
-          <div style="display: flex; gap: 15px; margin: 20px 0;">
-            <div style="flex: 1; background: linear-gradient(135deg, #f8f6f0, #fff); border: 2px solid #ddd; border-radius: 10px; padding: 15px; text-align: center;">
-              <p style="font-size: 8pt; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Medidas Obra Original</p>
-              <p style="font-size: 16pt; font-weight: 700; color: #333; font-family: 'Playfair Display', serif;">${artwork.originalDimensions}</p>
-            </div>
-            <div style="flex: 1; background: linear-gradient(135deg, #fffbeb, #fff); border: 2px solid ${GOLD_COLOR}; border-radius: 10px; padding: 15px; text-align: center;">
-              <p style="font-size: 8pt; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Medidas Impresión Giclée</p>
-              <p style="font-size: 16pt; font-weight: 700; color: ${GOLD_COLOR}; font-family: 'Playfair Display', serif;">${size.dimensions}</p>
-              ${size.isOriginalSize ? '<span style="display: inline-block; background: ' + GOLD_COLOR + '; color: white; font-size: 7pt; padding: 2px 8px; border-radius: 10px; margin-top: 5px;">TAMAÑO ORIGINAL</span>' : ''}
-            </div>
-          </div>
-
-          <div class="edition-box">
-            <div class="edition-number">${copyNumber} / ${size.edition}</div>
-            <div class="edition-label">Ejemplar Numerado de Edición Limitada</div>
-            <div class="code-display">${code}</div>
-          </div>
-
-          <div class="paper-section">
-            <div class="paper-title">Especificaciones del Soporte Certificado</div>
-            <div class="paper-details">
-              <strong>Papel:</strong> ${PAPER_INFO.name} ${PAPER_INFO.weight}<br/>
-              <strong>Composición:</strong> ${PAPER_INFO.type} - ${PAPER_INFO.texture}<br/>
-              <strong>Durabilidad:</strong> ${PAPER_INFO.durability}<br/>
-              ${hahnemuehleLot ? `<strong>N° Lote Hahnemühle:</strong> ${hahnemuehleLot}<br/>` : ''}
-            </div>
-          </div>
-
-          <!-- HOLOGRAMA HAHNEMÜHLE - DESTACADO -->
           ${hologramNumber ? `
-          <div style="background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 12px; padding: 18px; margin: 20px 0; text-align: center; position: relative; overflow: hidden;">
-            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.02) 10px, rgba(255,255,255,0.02) 20px);"></div>
-            <div style="position: relative; z-index: 1;">
-              <p style="font-size: 8pt; color: #aaa; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">
-                ✦ Holograma de Autenticidad Hahnemühle ✦
-              </p>
-              <p style="font-family: 'Courier New', monospace; font-size: 18pt; font-weight: bold; color: #e8d5b7; letter-spacing: 3px; text-shadow: 0 0 10px rgba(232,213,183,0.3);">
-                ${hologramNumber}
-              </p>
-              <p style="font-size: 7pt; color: #888; margin-top: 8px;">
-                Verificable en MyArtRegistry.com
-              </p>
-            </div>
+          <div class="edition-row no-border">
+            <span class="hologram-line">N° Holograma Hahnemühle:</span>
+            <span class="hologram-code">${hologramNumber}</span>
           </div>
           ` : ''}
+        </div>
 
-          <p style="font-size: 9pt; color: #555; text-align: center; line-height: 1.5; margin: 15px 0;">
-            Este certificado garantiza que la presente reproducción Giclée es una impresión autorizada,
-            numerada y limitada de la obra original de la artista. Todos los derechos de autor están reservados.
-          </p>
-
-          <div class="signature-section">
-            <div class="date-col">
-              <p style="font-size: 10pt; color: #333;">
-                Madrid, a ${today}
-              </p>
-            </div>
-            <div class="signature-col">
-              <div class="signature-line"></div>
-              <p class="signature-name">Myriam Alcaraz</p>
-              <p class="signature-title">Pintura Figurativa Contemporánea</p>
-            </div>
+        <div class="signature-row">
+          <div class="date-col">
+            <p>FECHA: ${today}</p>
           </div>
 
-          <div class="footer">
-            myriamalcaraz.com &nbsp;•&nbsp; myriamhotmail@hotmail.com &nbsp;•&nbsp; @myriamalcaraz.artist
+          <div class="signature-col">
+            <span class="signature-line"></span>
+            <p class="artist-name">Myriam Alcaraz</p>
+            <p class="artist-title-style">Pintura Figurativa Contemporánea</p>
           </div>
         </div>
+
+        ${contactFooterHtml}
+
       </div>
     </body>
     </html>
@@ -736,14 +735,14 @@ export const GicleeCertificateGenerator: React.FC<GicleeCertificateGeneratorProp
           </h4>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div><span className="text-slate-500">Obra:</span> <strong>{artwork.title}</strong></div>
-            <div><span className="text-slate-500">Original:</span> <strong>{artwork.originalDimensions}</strong></div>
-            <div><span className="text-slate-500">Tamaño Giclée:</span> <strong>{size.dimensions}</strong></div>
+            <div><span className="text-slate-500">Medidas Original:</span> <strong>{artwork.originalDimensions}</strong></div>
+            <div><span className="text-slate-500">Medidas Giclée:</span> <strong>{size.dimensions}</strong></div>
             <div><span className="text-slate-500">Edición:</span> <strong>{copyNumber}/{size.edition}</strong></div>
-            <div><span className="text-slate-500">Papel impresión:</span> <strong>{PAPER_INFO.name}</strong></div>
+            <div><span className="text-slate-500">Soporte:</span> <strong>{PAPER_INFO.name} {PAPER_INFO.weight}</strong></div>
             <div><span className="text-slate-500">Holograma:</span> <strong>{hologramNumber || '(pendiente)'}</strong></div>
           </div>
           <div className="mt-3 pt-3 border-t border-stone-200 text-xs text-slate-500">
-            <strong>Nota:</strong> Este certificado se imprimirá en papel verjurado para mayor autenticidad.
+            <strong>Nota:</strong> Este certificado se imprimirá en papel verjurado.
           </div>
         </div>
 
@@ -768,10 +767,13 @@ export const GicleeCertificateGenerator: React.FC<GicleeCertificateGeneratorProp
           <Palette className="text-amber-600 mt-0.5 flex-shrink-0" size={18} />
           <div className="text-sm text-amber-800">
             <p className="mb-2">
-              <strong>Papel Giclée:</strong> {PAPER_INFO.name} {PAPER_INFO.weight}, algodón con textura mate. Durabilidad: {PAPER_INFO.durability}.
+              <strong>Papel Giclée:</strong> {PAPER_INFO.name} {PAPER_INFO.weight}, {PAPER_INFO.type}. Durabilidad: {PAPER_INFO.durability}.
             </p>
-            <p>
+            <p className="mb-2">
               <strong>Sistema Holograma:</strong> Cada impresión incluye holograma oficial Hahnemühle verificable en MyArtRegistry.com
+            </p>
+            <p className="text-amber-600 text-xs">
+              <strong>Certificado:</strong> Se imprimirá en papel verjurado.
             </p>
           </div>
         </div>
