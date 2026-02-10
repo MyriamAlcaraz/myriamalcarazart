@@ -1103,157 +1103,274 @@ const ArtworkManagementForm: React.FC<ArtworkFormProps> = ({ onSave, artworkToMa
 
 
 // =========================================================
-// 📊 COMPONENTE: REPORTE DE VENTAS VISUAL (MODAL)
+// 🎨 COMPONENTE: PANEL GICLÉE - GENERADOR DE CERTIFICADOS
 // =========================================================
-const SalesReportModal: React.FC<{ artworks: Artwork[], onClose: () => void }> = ({ artworks, onClose }) => {
-    // DATOS MAESTROS DE GICLÉE (Costes Base Raúl & PVP Actualizados)
-    const GICLEE_DATA = [
-        { id: 'standard', name: 'Estándar (40cm)', pvp: 180, cost: 27, limit: 30 },
-        { id: 'intermediate', name: 'Intermedio (50cm)', pvp: 280, cost: 56, limit: 25 },
-        { id: 'medium', name: 'Mediano (70cm)', pvp: 450, cost: 104, limit: 15 },
-        { id: 'large', name: 'Grande (90cm)', pvp: 680, cost: 130, limit: 10 }, // Est. cost
-        { id: 'collection', name: 'Colección (100cm)', pvp: 950, cost: 200, limit: 5 }
-    ];
+const GICLEE_SIZES = [
+    { id: 'S', name: 'Pequeño', dimensions: '30 x 40 cm', price: 195 },
+    { id: 'M', name: 'Mediano', dimensions: '50 x 63 cm', price: 420 },
+    { id: 'L', name: 'Grande', dimensions: '60 x 93 cm', price: 780, isOriginal: true }
+];
 
-    const today = new Date().toLocaleDateString('es-ES');
+interface GicleePanelProps {
+    artworks: Artwork[];
+    settings: DocumentSettings;
+    onClose: () => void;
+}
 
-    // Generar datos procesados para la tabla
-    const reportData = artworks.flatMap(art => {
-        return GICLEE_DATA.map(size => {
-            // 🔮 SIMULACIÓN DE VENTAS (Determinista)
-            const pseudoRandom = (art.id * size.limit) % size.limit;
-            const soldCount = Math.floor(pseudoRandom * 0.8);
-            const remaining = size.limit - soldCount;
-            const nextEditionNum = soldCount + 1;
+const GicleePanel: React.FC<GicleePanelProps> = ({ artworks, settings, onClose }) => {
+    const [selectedArtworkId, setSelectedArtworkId] = useState<number | null>(null);
+    const [selectedSize, setSelectedSize] = useState<string>('M');
+    const [copyNumber, setCopyNumber] = useState<number>(1);
+    const [hologramNumber, setHologramNumber] = useState<string>('');
 
-            // CÓDIGO DE EDICIÓN FORMATO: MA-26-GC-[ID]-[Nº/Total]
-            // "26" por el año 2026.
-            const code = `MA-26-GC-${art.id}-${nextEditionNum}/${size.limit}`;
+    const selectedArtwork = artworks.find(a => a.id === selectedArtworkId);
+    const selectedSizeData = GICLEE_SIZES.find(s => s.id === selectedSize);
 
-            const profit = size.pvp - size.cost;
+    // Generar código Giclée
+    const generateGicleeCode = () => {
+        if (!selectedArtwork || !selectedSizeData) return '';
+        const year = new Date().getFullYear();
+        const initials = selectedArtwork.title.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+        return `MA-${year}-GC-${initials}-${String(copyNumber).padStart(2, '0')}/10-${selectedSize}`;
+    };
 
-            let status = 'OK';
-            let statusColor = 'text-green-600 bg-green-50';
-            if (remaining <= 3) {
-                status = 'CRÍTICO';
-                statusColor = 'text-red-700 bg-red-100 font-bold animate-pulse';
-            } else if (remaining <= 10) {
-                status = 'BAJO';
-                statusColor = 'text-orange-600 bg-orange-50';
-            }
+    // Generar e imprimir certificado
+    const handlePrintCertificate = () => {
+        if (!selectedArtwork || !selectedSizeData) return;
 
-            return {
-                id: `${art.id}-${size.id}`,
-                date: today,
-                title: art.title,
-                code,
-                sizeName: size.name,
-                pvp: size.pvp,
-                cost: size.cost,
-                profit,
-                remaining,
-                limit: size.limit,
-                status,
-                statusColor
-            };
-        });
-    });
+        const code = generateGicleeCode();
+        const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    const handleDownloadCSV = () => {
-        const csvRows = [
-            ["Fecha", "Obra", "Código Edición", "Tamaño", "PVP (€)", "Coste Raúl (€)", "Beneficio (€)", "Estado Stock", "Restantes"]
-        ];
-        reportData.forEach(row => {
-            csvRows.push([
-                row.date,
-                `"${row.title}"`,
-                row.code,
-                row.sizeName,
-                row.pvp.toString(),
-                row.cost.toString(),
-                row.profit.toString(),
-                row.status,
-                row.remaining.toString()
-            ]);
-        });
+        const GOLD_COLOR = "#b8860b";
+        const OUTLINE_WIDTH = "12px";
+        const OUTLINE_OFFSET = "12px";
 
-        const csvContent = "data:text/csv;charset=utf-8," + csvRows.map(e => e.join(",")).join("\n");
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `registro_ventas_giclee_${new Date().toISOString().slice(0, 10)}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const contactFooterHtml = `
+            <div class="contact-footer">
+                <span class="contact-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 0 4 10 15.3 15.3 0 0 0-4 10"/></svg>
+                    <a href="${settings.website}">${settings.website.replace('https://', '')}</a>
+                </span>
+                <span class="contact-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    <a href="mailto:${settings.email}">${settings.email}</a>
+                </span>
+                <span class="contact-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/></svg>
+                    ${settings.instagram}
+                </span>
+            </div>
+        `;
+
+        const certificateHtml = `
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <title>Certificado Giclée - ${selectedArtwork.title}</title>
+                <style>
+                    body { font-family: 'Palatino Linotype', Georgia, serif; font-size: 12pt; margin: 0; padding: 0; color: #111; }
+                    .cert-container {
+                        margin: 10mm auto; width: 178mm; box-sizing: border-box;
+                        border: 1px solid #000; outline: ${OUTLINE_WIDTH} solid ${GOLD_COLOR}; outline-offset: ${OUTLINE_OFFSET};
+                        padding: 4mm 35px;
+                    }
+                    .header { text-align: center; padding-bottom: 20px; border-bottom: 1px solid #ddd; margin-bottom: 15px; }
+                    .logo { max-height: 80px; width: auto; margin-bottom: 5px; opacity: 0.9; }
+                    .subtitle { font-size: 10pt; text-transform: uppercase; letter-spacing: 2px; color: #555; margin-top: 0; }
+                    h1 { font-size: 26pt; text-align: center; margin: 0; font-weight: 300; letter-spacing: 5px; color: ${GOLD_COLOR}; text-transform: uppercase; }
+                    .fixed-text { text-align: center; font-size: 10pt; color: #333; margin: 15px 0; line-height: 1.5; }
+                    .fixed-text strong { font-size: 14pt; color: #000; display: block; margin-top: 5px; }
+                    .artwork-image-section { width: 70%; max-width: 140px; max-height: 160px; overflow: hidden; margin: 10px auto; border: 1px solid #ccc; padding: 5px; box-shadow: 0 0 8px rgba(0,0,0,0.1); text-align: center; }
+                    .artwork-image-section img { width: 100%; height: auto; display: block; }
+                    .details-grid { width: 90%; margin: 15px auto 30px auto; font-size: 11pt; }
+                    .details-grid p { margin: 10px 0; display: flex; justify-content: space-between; border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
+                    .details-grid strong { font-weight: bold; color: #000; width: 150px; }
+                    .details-grid span { text-align: right; color: #333; flex-grow: 1; }
+                    .code-display { font-weight: bold; color: #333; font-family: 'Courier New', monospace; }
+                    .contact-footer { font-size: 9pt; text-align: center; color: #555; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; display: flex; justify-content: center; gap: 15px; }
+                    .contact-item { display: flex; align-items: center; gap: 4px; }
+                    .contact-item a { color: #555; text-decoration: none; }
+                    .signature-row { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 20px; padding-top: 20px; }
+                    .date-col { flex-basis: 45%; text-align: left; font-size: 10pt; color: #333; }
+                    .signature-col { flex-basis: 45%; text-align: right; padding-top: 15px; }
+                    .signature-line { border-top: 1px solid #000; display: block; width: 100%; margin-bottom: 5px; }
+                    .artist-title-style { font-size: 10pt; color: #333; margin-top: 2px; }
+                    @media print {
+                        body { margin: 0; padding: 0; }
+                        .cert-container { box-shadow: none; margin: 10mm auto !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="cert-container">
+                    <div class="header">
+                        <img src="/logo-myriam.png" alt="${settings.artistName} Logo" class="logo"/>
+                        <p class="subtitle">ARTE CON ALMA Y SOFISTICACIÓN</p>
+                        <h1>CERTIFICADO DE AUTENTICIDAD</h1>
+                    </div>
+                    <div class="fixed-text">
+                        <p>Por la presente se certifica que la reproducción Giclée descrita a continuación es una impresión autorizada y numerada. Todos los derechos de autor están reservados por la artista:</p>
+                        <strong>${settings.artistName}</strong>
+                        <span class="artist-title-style">${settings.artistTitle}</span>
+                    </div>
+                    <div class="artwork-image-section">
+                        <img src="${selectedArtwork.image}" alt="${selectedArtwork.title}"/>
+                    </div>
+                    <div class="details-grid">
+                        <p><strong>Título de la Obra:</strong><span>${selectedArtwork.title}</span></p>
+                        <p><strong>Técnica Original:</strong><span>${selectedArtwork.technique}</span></p>
+                        <p><strong>Medidas Original:</strong><span>${selectedArtwork.dimensions}</span></p>
+                        <p><strong>Medidas Impresión:</strong><span>${selectedSizeData.dimensions}</span></p>
+                        <p><strong>Soporte:</strong><span>Papel Hahnemühle Textured - William Turner</span></p>
+                        <p><strong>ID de Referencia:</strong><span class="code-display">${code}</span></p>
+                        <p style="${hologramNumber ? '' : 'border-bottom: none;'}"><strong>Edición:</strong><span>${copyNumber}/10</span></p>
+                        ${hologramNumber ? `<p style="border-bottom: none;"><strong style="font-size: 9pt; color: #666;">Nº Holograma:</strong><span style="font-size: 9pt; color: #666; font-family: monospace;">${hologramNumber}</span></p>` : ''}
+                    </div>
+                    <div class="signature-row">
+                        <div class="date-col"><p>FECHA: ${today}</p></div>
+                        <div class="signature-col">
+                            <span class="signature-line"></span>
+                            <p class="artist-name">${settings.artistName}</p>
+                            <p class="artist-title-style">${settings.artistTitle}</p>
+                        </div>
+                    </div>
+                    ${contactFooterHtml}
+                </div>
+            </body>
+            </html>
+        `;
+
+        const printWindow = window.open('', '_blank', 'width=800,height=600');
+        if (printWindow) {
+            printWindow.document.write(certificateHtml);
+            printWindow.document.close();
+            setTimeout(() => printWindow.print(), 500);
+        }
     };
 
     return (
-        <div className="fixed inset-0 bg-black/90 z-[80] flex items-center justify-center p-4">
-            <div className="bg-white w-full max-w-7xl h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        <div className="fixed inset-0 bg-black/80 z-[80] flex items-center justify-center p-4">
+            <div className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden">
+
                 {/* Header */}
-                <div className="p-6 border-b flex justify-between items-center bg-slate-50">
-                    <div>
-                        <h2 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
-                            <Briefcase className="text-green-600" /> INFORME DE VENTAS & STOCK
-                        </h2>
-                        <p className="text-sm text-slate-500 mt-1">
-                            Control de ediciones Giclée en tiempo real.
-                        </p>
+                <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-6 py-4 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <Printer size={24} />
+                        <div>
+                            <h2 className="text-xl font-bold">Certificados Giclée</h2>
+                            <p className="text-amber-100 text-sm">Genera certificados con el diseño elegante</p>
+                        </div>
                     </div>
-                    <div className="flex gap-4">
-                        <button
-                            onClick={handleDownloadCSV}
-                            className="flex items-center gap-2 bg-green-600 text-white px-5 py-2.5 rounded-lg hover:bg-green-700 transition font-bold shadow-lg"
-                        >
-                            <Printer size={18} /> DESCARGAR CSV
-                        </button>
-                        <button
-                            onClick={onClose}
-                            className="text-slate-400 hover:text-red-500 transition p-2"
-                        >
-                            <X size={28} />
-                        </button>
-                    </div>
+                    <button onClick={onClose} className="text-white/80 hover:text-white text-2xl">×</button>
                 </div>
 
-                {/* Tabla Scrolleable */}
-                <div className="flex-1 overflow-auto p-6 bg-slate-100">
-                    <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
-                        <table className="w-full text-left border-collapse">
-                            <thead className="bg-slate-800 text-white sticky top-0 z-10">
-                                <tr>
-                                    <th className="p-4 font-semibold text-sm tracking-wider w-24">FECHA</th>
-                                    <th className="p-4 font-semibold text-sm tracking-wider">OBRA</th>
-                                    <th className="p-4 font-semibold text-sm tracking-wider">CÓDIGO (Next)</th>
-                                    <th className="p-4 font-semibold text-sm tracking-wider">TAMAÑO</th>
-                                    <th className="p-4 font-semibold text-sm tracking-wider text-right">PVP</th>
-                                    <th className="p-4 font-semibold text-sm tracking-wider text-right text-orange-300">COSTE RAÚL</th>
-                                    <th className="p-4 font-semibold text-sm tracking-wider text-right text-green-300">BENEFICIO</th>
-                                    <th className="p-4 font-semibold text-sm tracking-wider text-center">STOCK</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100">
-                                {reportData.map((row) => (
-                                    <tr key={row.id} className="hover:bg-slate-50 transition-colors group">
-                                        <td className="p-4 text-sm text-slate-500">{row.date}</td>
-                                        <td className="p-4 font-medium text-slate-800">{row.title}</td>
-                                        <td className="p-4 font-mono text-xs text-blue-600 bg-blue-50/50 rounded px-2 w-fit">{row.code}</td>
-                                        <td className="p-4 text-sm text-slate-600">{row.sizeName}</td>
-                                        <td className="p-4 text-right font-bold text-slate-700">{row.pvp}€</td>
-                                        <td className="p-4 text-right text-sm text-slate-500">{row.cost}€</td>
-                                        <td className="p-4 text-right font-bold text-green-600 text-lg group-hover:scale-110 transition-transform origin-right">
-                                            +{row.profit}€
-                                        </td>
-                                        <td className="p-4 text-center">
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${row.statusColor}`}>
-                                                {row.status === 'CRÍTICO' && <AlertTriangle size={12} className="mr-1" />}
-                                                {row.status} ({row.remaining})
-                                            </span>
-                                        </td>
-                                    </tr>
+                <div className="p-6 grid grid-cols-2 gap-6">
+
+                    {/* Columna izquierda: Selección de obra */}
+                    <div>
+                        <label className="block text-sm font-semibold text-slate-700 mb-3">1. Selecciona la obra</label>
+                        <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto p-1">
+                            {artworks.slice(0, 23).map(art => (
+                                <button
+                                    key={art.id}
+                                    onClick={() => setSelectedArtworkId(art.id)}
+                                    className={`relative rounded-lg overflow-hidden border-2 transition-all ${
+                                        selectedArtworkId === art.id
+                                            ? 'border-amber-500 ring-2 ring-amber-200'
+                                            : 'border-transparent hover:border-slate-300'
+                                    }`}
+                                >
+                                    <img src={art.image} alt={art.title} className="w-full h-16 object-cover" />
+                                    {selectedArtworkId === art.id && (
+                                        <div className="absolute inset-0 bg-amber-500/20 flex items-center justify-center">
+                                            <Check size={20} className="text-amber-600 bg-white rounded-full p-1" />
+                                        </div>
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                        {selectedArtwork && (
+                            <p className="mt-2 text-sm text-slate-600 font-medium">{selectedArtwork.title}</p>
+                        )}
+                    </div>
+
+                    {/* Columna derecha: Opciones */}
+                    <div className="space-y-5">
+
+                        {/* Tamaño */}
+                        <div>
+                            <label className="block text-sm font-semibold text-slate-700 mb-2">2. Tamaño de impresión</label>
+                            <div className="space-y-2">
+                                {GICLEE_SIZES.map(size => (
+                                    <button
+                                        key={size.id}
+                                        onClick={() => setSelectedSize(size.id)}
+                                        className={`w-full p-3 rounded-lg border-2 flex justify-between items-center transition-all ${
+                                            selectedSize === size.id
+                                                ? 'border-amber-500 bg-amber-50'
+                                                : 'border-slate-200 hover:border-slate-300'
+                                        }`}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className={`w-4 h-4 rounded-full border-2 ${selectedSize === size.id ? 'border-amber-500 bg-amber-500' : 'border-slate-300'}`}>
+                                                {selectedSize === size.id && <Check size={10} className="text-white m-0.5" />}
+                                            </div>
+                                            <div className="text-left">
+                                                <span className="font-medium text-slate-700">{size.name}</span>
+                                                <span className="text-slate-500 text-sm ml-2">{size.dimensions}</span>
+                                                {size.isOriginal && <span className="ml-2 text-xs bg-amber-200 text-amber-700 px-2 py-0.5 rounded-full">= Original</span>}
+                                            </div>
+                                        </div>
+                                        <span className="font-bold text-slate-700">{size.price}€</span>
+                                    </button>
                                 ))}
-                            </tbody>
-                        </table>
+                            </div>
+                        </div>
+
+                        {/* Número de copia y holograma */}
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-700 mb-2">3. Nº de copia</label>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="number"
+                                        min={1}
+                                        max={10}
+                                        value={copyNumber}
+                                        onChange={(e) => setCopyNumber(Math.min(10, Math.max(1, Number(e.target.value))))}
+                                        className="w-20 p-3 border-2 border-slate-200 rounded-lg text-xl font-bold text-center focus:border-amber-500"
+                                    />
+                                    <span className="text-xl text-slate-400">/ 10</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-700 mb-2">4. Nº Holograma</label>
+                                <input
+                                    type="text"
+                                    value={hologramNumber}
+                                    onChange={(e) => setHologramNumber(e.target.value.toUpperCase())}
+                                    placeholder="HAH-XXXXXX"
+                                    className="w-full p-3 border-2 border-slate-200 rounded-lg font-mono focus:border-amber-500"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Vista previa del código */}
+                        {selectedArtwork && (
+                            <div className="bg-slate-100 rounded-lg p-4">
+                                <p className="text-xs text-slate-500 mb-1">Código del certificado:</p>
+                                <p className="font-mono text-lg text-slate-800">{generateGicleeCode()}</p>
+                            </div>
+                        )}
+
+                        {/* Botón generar */}
+                        <button
+                            onClick={handlePrintCertificate}
+                            disabled={!selectedArtwork}
+                            className="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl font-bold text-lg hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                            <Printer size={20} /> GENERAR CERTIFICADO
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1550,28 +1667,8 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     // 🛑 CAMBIADO: artworkToManage se inicializa en null, pero en el botón se le asigna NEW_WORK_PLACEHOLDER (id: 0)
     const [artworkToManage, setArtworkToManage] = useState<Artwork | null>(null);
 
-    // 📊 Estado para el modal de Reporte de Ventas
-    const [showReport, setShowReport] = useState(false);
-
-    // 🔢 Estado para el modal de Ajuste Manual de Edición
-    const [showEditionAdjust, setShowEditionAdjust] = useState(false);
-
-    // 🔢 Handler para ajustar manualmente el índice de edición de una obra
-    const handleAdjustEdition = (artworkId: number, newSeriesIndex: number) => {
-        setArtworks(prevArtworks => prevArtworks.map(artwork => {
-            if (artwork.id === artworkId) {
-                // Regenerar el código con el nuevo índice
-                const updatedArtwork = { ...artwork, seriesIndex: newSeriesIndex };
-                const newCode = generateSmartCode(updatedArtwork);
-                return {
-                    ...updatedArtwork,
-                    code: newCode,
-                    status: 'GENERADO' as const
-                };
-            }
-            return artwork;
-        }));
-    };
+    // 🎨 Estado para el Panel Giclée
+    const [showGicleePanel, setShowGicleePanel] = useState(false);
 
     // 🛑 Handler para añadir o editar obra (Acepta ahora code y status)
     const handleSaveArtwork = (artworkData: Omit<Artwork, 'id' | 'originalIndex'>, idToUpdate: number | null) => {
@@ -1662,33 +1759,22 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                         <Layout size={28} className="text-gold-500" /> TALLER / ESTUDIO
                     </h1>
 
-                    {/* BOTÓN PERMANENTE DE NUEVA OBRA */}
-                    <div className="flex gap-4">
-                        {/* 🛑 FIX BOTÓN NUEVA OBRA: Usar el placeholder (id: 0) para forzar la apertura del modal */}
+                    {/* BOTONES DE ACCIÓN */}
+                    <div className="flex gap-3">
                         <button
-                            onClick={() => setArtworkToManage(NEW_WORK_PLACEHOLDER)} // Abre el formulario en modo 'Añadir Nueva'
+                            onClick={() => setArtworkToManage(NEW_WORK_PLACEHOLDER)}
                             className="flex items-center gap-2 text-sm font-bold text-white bg-gold-500 hover:bg-gold-600 transition-colors py-3 px-4 rounded-lg shadow-md"
                             title="Añadir una nueva obra a tu catálogo"
                         >
                             <Plus size={16} /> NUEVA OBRA
                         </button>
 
-                        {/* 📊 BOTÓN REPORTE HACIENDA (SECRET) - VISUAL */}
                         <button
-                            onClick={() => setShowReport(true)}
-                            className="flex items-center gap-2 text-sm font-bold text-white bg-green-600 hover:bg-green-700 transition-colors py-3 px-6 rounded-lg shadow-md border border-green-700 transform hover:scale-105"
-                            title="Ver Informe Visual y Descargar"
+                            onClick={() => setShowGicleePanel(true)}
+                            className="flex items-center gap-2 text-sm font-bold text-slate-700 bg-gradient-to-r from-amber-100 to-amber-200 hover:from-amber-200 hover:to-amber-300 transition-all py-3 px-5 rounded-lg shadow-md border border-amber-300"
+                            title="Generar certificados Giclée"
                         >
-                            <Briefcase size={18} /> INFORME VENTAS
-                        </button>
-
-                        {/* 🔢 BOTÓN AJUSTE MANUAL DE EDICIÓN */}
-                        <button
-                            onClick={() => setShowEditionAdjust(true)}
-                            className="flex items-center gap-2 text-sm font-bold text-white bg-purple-600 hover:bg-purple-700 transition-colors py-3 px-4 rounded-lg shadow-md"
-                            title="Ajustar número de edición para ventas externas"
-                        >
-                            <Hash size={16} /> AJUSTE EDICIÓN
+                            <Printer size={16} /> GICLÉE
                         </button>
 
                         <button
@@ -1744,24 +1830,12 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                 />
             )}
 
-            {/* 📊 MODAL DE REPORTE VISUAL (Solo en área protegida) */}
-            {showReport && (
-                <SalesReportModal
+            {/* 🎨 PANEL GICLÉE */}
+            {showGicleePanel && (
+                <GicleePanel
                     artworks={artworks}
-                    onClose={() => setShowReport(false)}
-                />
-            )}
-
-            {/* 🔢 MODAL DE AJUSTE MANUAL DE EDICIÓN */}
-            {showEditionAdjust && (
-                <EditionAdjustModal
-                    artworks={artworks}
-                    onAdjust={handleAdjustEdition}
-                    onClose={() => setShowEditionAdjust(false)}
-                    onConfigureSeries={(artwork) => {
-                        setShowEditionAdjust(false);
-                        setArtworkToManage(artwork);
-                    }}
+                    settings={documentSettings}
+                    onClose={() => setShowGicleePanel(false)}
                 />
             )}
 
