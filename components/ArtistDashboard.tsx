@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, AlertTriangle, Hash, Save } from 'lucide-react';
+import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, AlertTriangle, Hash, Save, Crown } from 'lucide-react';
+import { GicleeCertificateGenerator } from './GicleeCertificateGenerator';
 
 
 // ---------------------------------------------------------
@@ -1477,6 +1478,9 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     // 🔢 Estado para el modal de Ajuste Manual de Edición
     const [showEditionAdjust, setShowEditionAdjust] = useState(false);
 
+    // 🎨 Estado para el generador de certificados Giclée
+    const [showGicleeGenerator, setShowGicleeGenerator] = useState(false);
+
     // 🔢 Handler para ajustar manualmente el índice de edición de una obra
     const handleAdjustEdition = (artworkId: number, newSeriesIndex: number) => {
         setArtworks(prevArtworks => prevArtworks.map(artwork => {
@@ -1603,6 +1607,15 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                             <Briefcase size={18} /> INFORME VENTAS
                         </button>
 
+                        {/* 🎨 BOTÓN GENERADOR GICLÉE - DESTACADO */}
+                        <button
+                            onClick={() => setShowGicleeGenerator(true)}
+                            className="flex items-center gap-2 text-sm font-bold text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 transition-all py-3 px-5 rounded-lg shadow-lg shadow-amber-200 border border-amber-400"
+                            title="Generar certificados Giclée profesionales"
+                        >
+                            <Crown size={18} /> CERTIFICADO GICLÉE
+                        </button>
+
                         {/* 🔢 BOTÓN AJUSTE MANUAL DE EDICIÓN */}
                         <button
                             onClick={() => setShowEditionAdjust(true)}
@@ -1684,6 +1697,15 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                         setArtworkToManage(artwork);
                     }}
                 />
+            )}
+
+            {/* 🎨 MODAL DEL GENERADOR DE CERTIFICADOS GICLÉE */}
+            {showGicleeGenerator && (
+                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[80] flex items-center justify-center p-4 overflow-auto">
+                    <div className="w-full max-w-2xl my-8">
+                        <GicleeCertificateGenerator onClose={() => setShowGicleeGenerator(false)} />
+                    </div>
+                </div>
             )}
 
         </div>
