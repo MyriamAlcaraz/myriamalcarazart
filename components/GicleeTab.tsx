@@ -1,39 +1,18 @@
 import React, { useState, useMemo } from 'react';
 import { Check, Shield, Award, Crown } from 'lucide-react';
+import { ARTWORKS } from '../constants';
 
-// Obras específicas según la tabla de referencia
-const GICLEE_ARTWORKS = [
-  {
-    id: 'sara-farola',
-    title: 'Sara bajo la farola',
-    dimensions: { original: '92 x 60 cm', mediano: '69 x 45 cm', pequeno: '46 x 30 cm' }
-  },
-  {
-    id: 'laura-crepusculo',
-    title: 'Laura en el Crepúsculo',
-    dimensions: { original: '100 x 81 cm', mediano: '75 x 61 cm', pequeno: '50 x 40 cm' }
-  },
-  {
-    id: 'joven-vela',
-    title: 'Joven con vela...',
-    dimensions: { original: '100 x 73 cm', mediano: '75 x 55 cm', pequeno: '50 x 36 cm' }
-  },
-  {
-    id: 'sara-marquesina',
-    title: 'Sara en la marquesina',
-    dimensions: { original: '100 x 81 cm', mediano: '75 x 61 cm', pequeno: '50 x 40 cm' }
-  },
-  {
-    id: 'ninos-playa',
-    title: 'Niños en playa valenciana',
-    dimensions: { original: '80 x 60 cm', mediano: '60 x 45 cm', pequeno: '40 x 30 cm' }
-  },
-  {
-    id: 'jilguero-charca',
-    title: 'Jilguero en la charca',
-    dimensions: { original: '46 x 38 cm', mediano: '34 x 28 cm', pequeno: '23 x 19 cm' }
+// Función para extraer dimensiones del string "92x60 cm"
+const parseDimensions = (dimensions: string) => {
+  const match = dimensions.match(/(\d+)x(\d+)/);
+  if (match) {
+    return {
+      width: parseInt(match[1]),
+      height: parseInt(match[2])
+    };
   }
-];
+  return { width: 100, height: 81 };
+};
 
 const GicleeTab: React.FC = () => {
   const [selectedSize, setSelectedSize] = useState<string>('');
@@ -69,7 +48,7 @@ const GicleeTab: React.FC = () => {
       }));
     }
 
-    const artwork = GICLEE_ARTWORKS.find(a => a.id === selectedArtwork);
+    const artwork = ARTWORKS.find(a => a.id === selectedArtwork);
     if (!artwork) {
       return sizes.map(size => ({
         ...size,
@@ -78,24 +57,14 @@ const GicleeTab: React.FC = () => {
       }));
     }
 
+    const originalDims = parseDimensions(artwork.dimensions);
+    
     return sizes.map(size => {
-      let dimensions = '';
-      switch (size.id) {
-        case 'pequeno':
-          dimensions = artwork.dimensions.pequeno;
-          break;
-        case 'mediano':
-          dimensions = artwork.dimensions.mediano;
-          break;
-        case 'grande':
-          dimensions = artwork.dimensions.original;
-          break;
-        default:
-          dimensions = artwork.dimensions.original;
-      }
+      const scaledWidth = Math.round(originalDims.width * size.scale);
+      const scaledHeight = Math.round(originalDims.height * size.scale);
       return {
         ...size,
-        dimensions,
+        dimensions: `${scaledWidth} x ${scaledHeight} cm`,
         displayName: size.name
       };
     });
@@ -134,9 +103,9 @@ const GicleeTab: React.FC = () => {
               <option value="" disabled>
                 — Selecciona una Obra para ver Formatos —
               </option>
-              {GICLEE_ARTWORKS.map(artwork => (
+              {ARTWORKS.map(artwork => (
                 <option key={artwork.id} value={artwork.id}>
-                  {artwork.title} (Original: {artwork.dimensions.original})
+                  {artwork.title} (Original: {artwork.dimensions})
                 </option>
               ))}
             </select>
@@ -247,7 +216,7 @@ const GicleeTab: React.FC = () => {
             <button
               onClick={() => {
                 const selectedFormat = sizesWithDimensions.find(s => s.id === selectedSize);
-                const artwork = GICLEE_ARTWORKS.find(a => a.id === selectedArtwork);
+                const artwork = ARTWORKS.find(a => a.id === selectedArtwork);
                 const subject = encodeURIComponent(`Solicitud de adquisición: Edición Giclée - ${artwork?.title}`);
                 const body = encodeURIComponent(
                   `Estimada Myriam Alcaraz,
