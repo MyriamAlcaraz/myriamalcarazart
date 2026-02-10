@@ -309,11 +309,11 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
             <div className="flex flex-wrap justify-center gap-4 mb-12">
               <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-stone-100">
                 <Shield size={16} className="text-gold-600" />
-                <span className="text-xs text-slate-700 font-medium">Certificado Hahnemühle con Holograma</span>
+                <span className="text-xs text-slate-700 font-medium">Certificado Oficial con Holograma</span>
               </div>
               <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-stone-100">
                 <Award size={16} className="text-gold-600" />
-                <span className="text-xs text-slate-700 font-medium">Firmado y Numerado por la Artista</span>
+                <span className="text-xs text-slate-700 font-medium">Numerado y Autenticado</span>
               </div>
               <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-stone-100">
                 <Sparkles size={16} className="text-gold-600" />
@@ -536,18 +536,18 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                   <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gold-50 flex items-center justify-center">
                     <span className="text-2xl">2</span>
                   </div>
-                  <h4 className="font-serif text-lg text-slate-800 mb-2">Doble Certificación</h4>
+                  <h4 className="font-serif text-lg text-slate-800 mb-2">Certificado Oficial</h4>
                   <p className="text-sm text-stone-500">
-                    Certificado Hahnemühle con holograma único + Certificado de Artista con sello seco y firma autógrafa.
+                    Certificado Hahnemühle con holograma único, número de serie y autenticación de la artista integrados.
                   </p>
                 </div>
                 <div>
                   <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gold-50 flex items-center justify-center">
                     <span className="text-2xl">3</span>
                   </div>
-                  <h4 className="font-serif text-lg text-slate-800 mb-2">Envío Premium</h4>
+                  <h4 className="font-serif text-lg text-slate-800 mb-2">Envío Protegido</h4>
                   <p className="text-sm text-stone-500">
-                    Obra en tubo rígido protector + carta de lujo con certificados originales enviados por separado.
+                    La obra se entrega en tubo rígido de alta protección, garantizando su llegada en perfectas condiciones.
                   </p>
                 </div>
               </div>
