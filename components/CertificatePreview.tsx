@@ -1,6 +1,6 @@
 // ============================================
 // VISTA PREVIA DEL CERTIFICADO DE AUTENTICIDAD
-// Versión compacta y elegante para web
+// Diseño elegante basado en el certificado real
 // ============================================
 
 import React from 'react';
@@ -16,6 +16,8 @@ interface CertificatePreviewProps {
   dimensionesOriginal?: string;
   dimensionesImpresion?: string;
   hologramNumber?: string | null;
+  edicion?: string; // ej: "1/10"
+  soporte?: string; // ej: "Papel Hahnemühle Textured - William Turner"
 }
 
 export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
@@ -27,271 +29,254 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
   codigoSerie,
   dimensionesOriginal,
   dimensionesImpresion,
-  hologramNumber
+  hologramNumber,
+  edicion,
+  soporte = 'Papel Hahnemühle Textured - William Turner'
 }) => {
-  // Usar código de serie si existe, sino generar ID parcialmente oculto
-  const titleInitials = titulo.split(' ')[0].substring(0, 2).toUpperCase();
-  const certificateIdVisible = codigoSerie || `MA-${año}-${titleInitials}`;
-  const certificateIdHidden = codigoSerie ? '' : '••/•';
+  // Es un Giclée si tiene número de holograma o dimensiones de impresión
+  const isGiclee = !!hologramNumber || !!dimensionesImpresion;
 
-  // Es un Giclée si tiene dimensiones de impresión o número de holograma
-  const isGiclee = !!dimensionesImpresion || !!hologramNumber;
+  // Generar ID si no existe
+  const idReferencia = codigoSerie || `MA-${año}-XX-01/1`;
 
   return (
     <div
       className="relative rounded-lg overflow-hidden shadow-2xl"
       style={{
-        backgroundColor: '#fffdf8',
+        backgroundColor: '#ffffff',
         fontFamily: "'Montserrat', sans-serif"
       }}
     >
-      {/* Marco dorado exterior */}
+      {/* Barra dorada lateral izquierda */}
       <div
-        className="p-4"
-        style={{ border: '6px solid #c5a059' }}
-      >
-        {/* Marco interior decorativo */}
-        <div
-          className="relative p-4"
+        className="absolute left-0 top-0 bottom-0"
+        style={{
+          width: '12px',
+          backgroundColor: '#c5a059'
+        }}
+      />
+
+      {/* Contenido del certificado */}
+      <div className="pl-6 pr-4 py-5">
+
+        {/* Logo */}
+        <div className="text-center mb-2">
+          <img
+            src="/logo-myriam.png"
+            alt="Myriam Alcaraz"
+            className="mx-auto"
+            style={{ maxWidth: '45px', height: 'auto' }}
+          />
+        </div>
+
+        {/* Tagline */}
+        <p
+          className="text-center mb-2"
           style={{
-            border: '1px solid rgba(197, 160, 89, 0.4)'
+            fontSize: '6px',
+            letterSpacing: '3px',
+            color: '#888',
+            fontWeight: 400
           }}
         >
-          {/* Logo */}
+          ARTE CON ALMA Y SOFISTICACIÓN
+        </p>
+
+        {/* Título principal */}
+        <h2
+          className="text-center mb-3"
+          style={{
+            fontFamily: "'Cinzel', serif",
+            fontSize: '14px',
+            letterSpacing: '3px',
+            fontWeight: 400,
+            color: '#333',
+            lineHeight: 1.3
+          }}
+        >
+          CERTIFICADO DE<br />AUTENTICIDAD
+        </h2>
+
+        {/* Línea decorativa */}
+        <div
+          className="mx-auto mb-3"
+          style={{
+            width: '80%',
+            height: '1px',
+            backgroundColor: '#c5a059'
+          }}
+        />
+
+        {/* Texto introductorio */}
+        <p
+          className="text-center mb-2"
+          style={{
+            fontSize: '7px',
+            lineHeight: 1.5,
+            color: '#555'
+          }}
+        >
+          {isGiclee ? (
+            <>Por la presente se certifica que la reproducción Giclée descrita a continuación es una impresión autorizada y numerada. Todos los derechos de autor están reservados por la artista:</>
+          ) : (
+            <>Por la presente se certifica que la obra descrita a continuación es una creación original y auténtica de la artista:</>
+          )}
+        </p>
+
+        {/* Nombre de la artista */}
+        <p
+          className="text-center mb-0"
+          style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: '13px',
+            fontWeight: 600,
+            color: '#333'
+          }}
+        >
+          Myriam Alcaraz
+        </p>
+        <p
+          className="text-center mb-3"
+          style={{
+            fontSize: '7px',
+            color: '#666',
+            fontStyle: 'italic'
+          }}
+        >
+          Pintura Figurativa Contemporánea
+        </p>
+
+        {/* Imagen de la obra */}
+        {imagen && (
           <div className="text-center mb-3">
-            <img
-              src="/logo-myriam.png"
-              alt="Myriam Alcaraz"
-              className="mx-auto"
-              style={{ maxWidth: '50px', height: 'auto' }}
-            />
+            <div
+              className="mx-auto inline-block p-1"
+              style={{
+                backgroundColor: '#f5f5f5',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+              }}
+            >
+              <img
+                src={imagen}
+                alt={titulo}
+                className="mx-auto"
+                style={{ maxHeight: '70px', width: 'auto', objectFit: 'contain' }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Tabla de datos */}
+        <div className="space-y-1 mb-3" style={{ fontSize: '8px' }}>
+          {/* Título de la Obra */}
+          <div className="flex items-baseline" style={{ borderBottom: '1px dotted #ccc', paddingBottom: '2px' }}>
+            <span style={{ fontWeight: 600, color: '#333', width: '45%' }}>Título de la Obra:</span>
+            <span style={{ color: '#555', textAlign: 'right', flex: 1 }}>{titulo}</span>
           </div>
 
-          {/* Título del certificado */}
-          <h3
-            className="text-center mb-3"
-            style={{
-              fontFamily: "'Cinzel', serif",
-              fontSize: '11px',
-              letterSpacing: '2px',
-              fontWeight: 400,
-              color: '#1a1a1a',
-              borderBottom: '1px solid #c5a059',
-              paddingBottom: '4px',
-              display: 'inline-block',
-              width: '100%'
-            }}
-          >
-            CERTIFICADO DE AUTENTICIDAD
-          </h3>
+          {/* Técnica Original */}
+          <div className="flex items-baseline" style={{ borderBottom: '1px dotted #ccc', paddingBottom: '2px' }}>
+            <span style={{ fontWeight: 600, color: '#333', width: '45%' }}>Técnica Original:</span>
+            <span style={{ color: '#555', textAlign: 'right', flex: 1 }}>{tecnica}</span>
+          </div>
 
-          {/* Texto introductorio */}
-          <p
-            className="text-center mb-3"
-            style={{
-              fontSize: '8px',
-              lineHeight: '1.4',
-              color: '#555'
-            }}
-          >
-            Creación original y auténtica de
-          </p>
-          <p
-            className="text-center mb-3"
-            style={{
-              fontFamily: "'Cinzel', serif",
-              fontSize: '12px',
-              fontWeight: 600,
-              letterSpacing: '1px',
-              color: '#c5a059'
-            }}
-          >
-            MYRIAM ALCARAZ
-          </p>
+          {/* Medidas Original */}
+          <div className="flex items-baseline" style={{ borderBottom: '1px dotted #ccc', paddingBottom: '2px' }}>
+            <span style={{ fontWeight: 600, color: '#333', width: '45%' }}>Medidas Original:</span>
+            <span style={{ color: '#555', textAlign: 'right', flex: 1 }}>{dimensionesOriginal || dimensiones}</span>
+          </div>
 
-          {/* Miniatura de la obra */}
-          {imagen && (
-            <div className="text-center mb-3">
-              <div
-                className="mx-auto p-1 inline-block"
-                style={{
-                  backgroundColor: '#f5f5f0',
-                  boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)'
-                }}
-              >
-                <img
-                  src={imagen}
-                  alt={titulo}
-                  className="mx-auto"
-                  style={{ maxHeight: '80px', width: 'auto', objectFit: 'contain' }}
-                />
-              </div>
+          {/* Medidas Impresión (solo Giclée) */}
+          {isGiclee && (
+            <div className="flex items-baseline" style={{ borderBottom: '1px dotted #ccc', paddingBottom: '2px' }}>
+              <span style={{ fontWeight: 600, color: '#333', width: '45%' }}>Medidas Impresión:</span>
+              <span style={{ color: '#555', textAlign: 'right', flex: 1 }}>
+                {dimensionesImpresion || 'Tamaño original'}
+              </span>
             </div>
           )}
 
-          {/* Detalles de la obra */}
-          <div className="space-y-1 mb-3" style={{ fontSize: '9px' }}>
-            <div className="flex justify-between">
-              <span style={{ color: '#666', fontWeight: 500 }}>Título:</span>
-              <span style={{ color: '#1a1a1a', fontStyle: 'italic' }}>{titulo}</span>
+          {/* Soporte (solo Giclée) */}
+          {isGiclee && (
+            <div className="flex items-baseline" style={{ borderBottom: '1px dotted #ccc', paddingBottom: '2px' }}>
+              <span style={{ fontWeight: 600, color: '#333', width: '45%' }}>Soporte:</span>
+              <span style={{ color: '#555', textAlign: 'right', flex: 1, fontSize: '7px' }}>{soporte}</span>
             </div>
-            {isGiclee ? (
-              <>
-                <div className="flex justify-between">
-                  <span style={{ color: '#666', fontWeight: 500 }}>Original:</span>
-                  <span style={{ color: '#1a1a1a' }}>{dimensionesOriginal || dimensiones}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span style={{ color: '#666', fontWeight: 500 }}>Impresión:</span>
-                  <span style={{ color: '#1a1a1a' }}>{dimensionesImpresion}</span>
-                </div>
-              </>
-            ) : (
-              <div className="flex justify-between">
-                <span style={{ color: '#666', fontWeight: 500 }}>Dimensiones:</span>
-                <span style={{ color: '#1a1a1a' }}>{dimensiones}</span>
-              </div>
-            )}
-            <div className="flex justify-between">
-              <span style={{ color: '#666', fontWeight: 500 }}>Técnica:</span>
-              <span style={{ color: '#1a1a1a' }}>{isGiclee ? 'Giclée Fine Art' : tecnica}</span>
-            </div>
-            <div className="flex justify-between">
-              <span style={{ color: '#666', fontWeight: 500 }}>Año:</span>
-              <span style={{ color: '#1a1a1a' }}>{año}</span>
-            </div>
-          </div>
+          )}
 
-          {/* ID de referencia - parcialmente oculto */}
-          <div
-            className="text-center py-2 mb-3 rounded"
-            style={{
-              backgroundColor: 'rgba(197, 160, 89, 0.1)',
-              border: '1px dashed rgba(197, 160, 89, 0.3)'
-            }}
-          >
-            <span style={{ fontSize: '7px', color: '#888', display: 'block', marginBottom: '2px' }}>
-              ID REFERENCIA
-            </span>
-            <span style={{ fontSize: '10px', color: '#c5a059', fontWeight: 600, letterSpacing: '1px' }}>
-              {certificateIdVisible}
-              <span className="blur-[2px] select-none">{certificateIdHidden}</span>
+          {/* ID de Referencia */}
+          <div className="flex items-baseline" style={{ borderBottom: '1px dotted #ccc', paddingBottom: '2px' }}>
+            <span style={{ fontWeight: 600, color: '#333', width: '45%' }}>ID de Referencia:</span>
+            <span style={{ color: '#555', textAlign: 'right', flex: 1, fontFamily: 'monospace', fontSize: '7px', letterSpacing: '0.5px' }}>
+              {codigoSerie ? (
+                <span className="blur-[2px] select-none">{idReferencia}</span>
+              ) : (
+                <span className="blur-[2px] select-none">MA-20XX-XX-XX/X</span>
+              )}
             </span>
           </div>
 
-          {/* Zona de firma - pixelada */}
-          <div className="relative">
-            <div
-              className="flex justify-between items-end px-2"
-              style={{ fontSize: '8px' }}
-            >
-              {/* Fecha */}
-              <div className="text-left">
-                <span style={{ color: '#888' }}>FECHA:</span>
-                <span className="blur-[3px] select-none ml-1" style={{ color: '#333' }}>
-                  ••/••/••••
-                </span>
-              </div>
-
-              {/* Firma */}
-              <div className="text-right">
-                <div
-                  className="blur-[3px] select-none"
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    fontStyle: 'italic',
-                    fontSize: '14px',
-                    color: '#333',
-                    marginBottom: '2px'
-                  }}
-                >
-                  Myriam Alcaraz
-                </div>
-                <div
-                  style={{
-                    borderTop: '1px solid #999',
-                    width: '80px',
-                    marginLeft: 'auto'
-                  }}
-                />
-              </div>
+          {/* Edición (solo si existe) */}
+          {(edicion || isGiclee) && (
+            <div className="flex items-baseline" style={{ borderBottom: '1px dotted #ccc', paddingBottom: '2px' }}>
+              <span style={{ fontWeight: 600, color: '#333', width: '45%' }}>Edición:</span>
+              <span style={{ color: '#555', textAlign: 'right', flex: 1 }}>
+                <span className="blur-[2px] select-none">{edicion || 'X/10'}</span>
+              </span>
             </div>
+          )}
 
-            {/* Overlay de protección */}
+          {/* Nº Holograma (solo Giclée) */}
+          {isGiclee && (
+            <div className="flex items-baseline" style={{ paddingBottom: '2px' }}>
+              <span style={{ fontWeight: 600, color: '#c5a059', width: '45%' }}>Nº Holograma:</span>
+              <span style={{ color: '#c5a059', textAlign: 'right', flex: 1, fontWeight: 600 }}>
+                {hologramNumber || <span className="blur-[2px] select-none">XXXXXX</span>}
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Fecha y Firma */}
+        <div className="flex justify-between items-end mt-4 pt-2" style={{ fontSize: '7px' }}>
+          {/* Fecha */}
+          <div>
+            <span style={{ color: '#333', fontWeight: 500 }}>FECHA: </span>
+            <span className="blur-[2px] select-none" style={{ color: '#555' }}>
+              XX de XXXX de 20XX
+            </span>
+          </div>
+
+          {/* Firma */}
+          <div className="text-right">
             <div
-              className="absolute inset-0 pointer-events-none"
               style={{
-                background: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(197, 160, 89, 0.03) 2px, rgba(197, 160, 89, 0.03) 4px)'
+                width: '70px',
+                borderTop: '1px solid #333',
+                marginBottom: '3px'
               }}
             />
-          </div>
-
-          {/* Sello de verificación con número de holograma */}
-          <div className="text-center mt-3 pt-2" style={{ borderTop: '1px solid #eee' }}>
-            {hologramNumber ? (
-              // Mostrar número de holograma real
-              <div className="space-y-1">
-                <div
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg"
-                  style={{
-                    backgroundColor: 'rgba(197, 160, 89, 0.2)',
-                    border: '1px solid rgba(197, 160, 89, 0.4)'
-                  }}
-                >
-                  <svg className="w-4 h-4" fill="#c5a059" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <div className="text-left">
-                    <span style={{ fontSize: '6px', color: '#888', display: 'block', letterSpacing: '0.5px' }}>
-                      Nº HOLOGRAMA HAHNEMÜHLE
-                    </span>
-                    <span style={{ fontSize: '11px', color: '#c5a059', fontWeight: 700, letterSpacing: '1px', fontFamily: 'monospace' }}>
-                      {hologramNumber}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              // Mostrar badge genérico
-              <div
-                className="inline-flex items-center gap-1 px-2 py-1 rounded-full"
-                style={{
-                  backgroundColor: 'rgba(197, 160, 89, 0.15)',
-                  fontSize: '7px',
-                  color: '#c5a059',
-                  fontWeight: 500,
-                  letterSpacing: '0.5px'
-                }}
-              >
-                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                HOLOGRAMA VERIFICADO
-              </div>
-            )}
-          </div>
-
-          {/* Contacto */}
-          <div
-            className="text-center mt-2 uppercase"
-            style={{
-              fontSize: '6px',
-              letterSpacing: '0.5px',
-              color: '#aaa'
-            }}
-          >
-            myriamalcaraz.com
+            <p style={{ fontWeight: 600, color: '#333', fontSize: '8px', margin: 0 }}>Myriam Alcaraz</p>
+            <p style={{ color: '#666', fontSize: '6px', fontStyle: 'italic', margin: 0 }}>Pintura Figurativa Contemporánea</p>
           </div>
         </div>
-      </div>
 
-      {/* Efecto de brillo sutil */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(197, 160, 89, 0.05) 100%)'
-        }}
-      />
+        {/* Footer con contacto */}
+        <div
+          className="flex justify-center items-center gap-3 mt-3 pt-2"
+          style={{
+            borderTop: '1px solid #eee',
+            fontSize: '6px',
+            color: '#888'
+          }}
+        >
+          <span>myriamalcaraz.com</span>
+          <span>•</span>
+          <span>myriamhotmail@hotmail.com</span>
+          <span>•</span>
+          <span>@myriamalcaraz.artist</span>
+        </div>
+      </div>
     </div>
   );
 };
