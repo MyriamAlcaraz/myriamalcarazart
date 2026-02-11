@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, AlertTriangle, Hash, Save } from 'lucide-react';
+import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, AlertTriangle, Hash, Save, Eye } from 'lucide-react';
+import { CertificatePreview } from './CertificatePreview';
 
 
 // ---------------------------------------------------------
@@ -2031,6 +2032,9 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     // 🎨 Estado para el Panel Giclée
     const [showGicleePanel, setShowGicleePanel] = useState(false);
 
+    // 👁️ Estado para la vista previa del certificado
+    const [previewArtwork, setPreviewArtwork] = useState<Artwork | null>(null);
+
     // 🛑 Handler para añadir o editar obra (Acepta ahora code y status)
     const handleSaveArtwork = (artworkData: Omit<Artwork, 'id' | 'originalIndex'>, idToUpdate: number | null) => {
 
@@ -2280,6 +2284,14 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                                             </td>
                                             <td className="py-3 px-4 text-right">
                                                 <div className="flex gap-1 justify-end">
+                                                    {/* Botón Ver Certificado */}
+                                                    <button
+                                                        onClick={() => setPreviewArtwork(artwork)}
+                                                        className="p-1.5 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded transition-colors"
+                                                        title="Ver certificado"
+                                                    >
+                                                        <Eye size={16} />
+                                                    </button>
                                                     <button
                                                         onClick={() => setArtworkToManage(artwork)}
                                                         className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors"
@@ -2331,6 +2343,46 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                     settings={documentSettings}
                     onClose={() => setShowGicleePanel(false)}
                 />
+            )}
+
+            {/* 👁️ MODAL VISTA PREVIA DEL CERTIFICADO */}
+            {previewArtwork && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
+                    onClick={() => setPreviewArtwork(null)}
+                >
+                    <div
+                        className="relative max-w-sm w-full mx-4"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Botón cerrar */}
+                        <button
+                            onClick={() => setPreviewArtwork(null)}
+                            className="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-10"
+                        >
+                            <X size={20} className="text-white" />
+                        </button>
+
+                        {/* Título */}
+                        <h3 className="text-white text-center mb-4 font-serif text-lg">
+                            Vista Previa del Certificado
+                        </h3>
+
+                        {/* Vista previa del certificado */}
+                        <CertificatePreview
+                            titulo={previewArtwork.title}
+                            dimensiones={previewArtwork.dimensions}
+                            tecnica={previewArtwork.technique}
+                            año={parseInt(previewArtwork.certificationDate.split('-')[0]) || 2025}
+                            imagen={previewArtwork.image}
+                        />
+
+                        {/* Nota */}
+                        <p className="text-stone-400 text-xs text-center mt-4">
+                            Los datos sensibles aparecen pixelados para proteger la autenticidad
+                        </p>
+                    </div>
+                </div>
             )}
 
         </div>

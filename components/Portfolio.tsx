@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ZoomIn, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { CertificatePreview } from './CertificatePreview';
 
 // ============================================
 // GALERÍA PÚBLICA - PORTFOLIO DE MYRIAM ALCARAZ
@@ -343,10 +344,10 @@ const Portfolio: React.FC = () => {
         </div>
       </main>
 
-      {/* Modal de Vista Detallada */}
+      {/* Modal de Vista Detallada - Diseño Elegante */}
       {selectedObra && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 animate-fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 animate-fade-in overflow-y-auto py-8"
           onClick={() => setSelectedObra(null)}
         >
           {/* Botón cerrar */}
@@ -373,51 +374,70 @@ const Portfolio: React.FC = () => {
             <ChevronRight size={28} className="text-white" />
           </button>
 
-          {/* Contenido del modal */}
+          {/* Contenido del modal - Nueva estructura */}
           <div
-            className="max-w-5xl w-full mx-4 flex flex-col md:flex-row gap-8 items-center"
+            className="max-w-6xl w-full mx-4 flex flex-col lg:flex-row gap-6 items-start"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Imagen principal */}
-            <div className="flex-1 max-h-[75vh] flex items-center justify-center">
-              <img
-                src={selectedObra.imagen}
-                alt={selectedObra.titulo}
-                className="max-w-full max-h-[75vh] object-contain rounded-lg shadow-2xl"
-              />
+            {/* Columna izquierda: Imagen + Ficha Técnica */}
+            <div className="flex-1 flex flex-col gap-4">
+              {/* Imagen principal de la obra */}
+              <div className="flex items-center justify-center">
+                <img
+                  src={selectedObra.imagen}
+                  alt={selectedObra.titulo}
+                  className="max-w-full max-h-[55vh] object-contain rounded-lg shadow-2xl"
+                />
+              </div>
+
+              {/* Ficha Técnica - Debajo de la imagen */}
+              <div className="bg-white/5 backdrop-blur-md rounded-xl p-6 text-white">
+                <h3 className="text-xs tracking-[0.3em] text-amber-400 uppercase mb-3">Ficha Técnica</h3>
+                <h2 className="font-serif text-2xl md:text-3xl mb-4 text-white">{selectedObra.titulo}</h2>
+
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="text-stone-400 block text-xs uppercase tracking-wider mb-1">Dimensiones</span>
+                    <span className="font-medium text-white">{selectedObra.dimensiones}</span>
+                  </div>
+                  <div>
+                    <span className="text-stone-400 block text-xs uppercase tracking-wider mb-1">Técnica</span>
+                    <span className="font-medium text-white">{selectedObra.tecnica}</span>
+                  </div>
+                  <div>
+                    <span className="text-stone-400 block text-xs uppercase tracking-wider mb-1">Año</span>
+                    <span className="font-medium text-white">{selectedObra.año}</span>
+                  </div>
+                  <div>
+                    <span className="text-stone-400 block text-xs uppercase tracking-wider mb-1">Estado</span>
+                    <span className={`font-medium ${selectedObra.disponible ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {selectedObra.disponible ? 'Disponible' : 'Vendida'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Contador de posición */}
+                <div className="mt-4 pt-4 border-t border-white/10 text-center text-stone-500 text-sm">
+                  Obra {OBRAS_GALERIA.findIndex(o => o.id === selectedObra.id) + 1} de {OBRAS_GALERIA.length}
+                </div>
+              </div>
             </div>
 
-            {/* Panel de información */}
-            <div className="md:w-72 bg-white/5 backdrop-blur-md rounded-xl p-6 text-white">
-              <h2 className="font-serif text-3xl mb-4">{selectedObra.titulo}</h2>
+            {/* Columna derecha: Certificado de Autenticidad Dinámico */}
+            <div className="lg:w-72 w-full">
+              {/* Vista previa del certificado con datos de la obra */}
+              <CertificatePreview
+                titulo={selectedObra.titulo}
+                dimensiones={selectedObra.dimensiones}
+                tecnica={selectedObra.tecnica}
+                año={selectedObra.año}
+                imagen={selectedObra.imagen}
+              />
 
-              <div className="space-y-3 mb-6">
-                <div className="flex justify-between">
-                  <span className="text-stone-400">Dimensiones</span>
-                  <span className="font-medium">{selectedObra.dimensiones}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-stone-400">Técnica</span>
-                  <span className="font-medium">{selectedObra.tecnica}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-stone-400">Año</span>
-                  <span className="font-medium">{selectedObra.año}</span>
-                </div>
-              </div>
-
-              <div className={`text-center py-3 rounded-lg font-medium ${
-                selectedObra.disponible
-                  ? 'bg-emerald-500/20 text-emerald-400'
-                  : 'bg-red-500/20 text-red-400'
-              }`}>
-                {selectedObra.disponible ? 'Disponible para adquisición' : 'Obra vendida'}
-              </div>
-
-              {/* Contador de posición */}
-              <div className="mt-6 text-center text-stone-500 text-sm">
-                {OBRAS_GALERIA.findIndex(o => o.id === selectedObra.id) + 1} / {OBRAS_GALERIA.length}
-              </div>
+              {/* Nota informativa */}
+              <p className="text-stone-500 text-xs text-center mt-4 leading-relaxed">
+                Cada obra incluye un certificado de autenticidad firmado por la artista con holograma de seguridad
+              </p>
             </div>
           </div>
         </div>
