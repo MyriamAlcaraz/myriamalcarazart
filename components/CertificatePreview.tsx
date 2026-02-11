@@ -197,19 +197,19 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
                 </span>
               </div>
 
-              {/* 8. Nº Holograma (CAMPO CRÍTICO - SIEMPRE VISIBLE SI EXISTE) */}
-              <div className="flex py-1.5" style={{ backgroundColor: 'rgba(197, 160, 89, 0.1)', borderRadius: '4px', marginTop: '4px', padding: '6px 8px' }}>
-                <span style={{ fontWeight: 700, color: '#c5a059', width: '45%' }}>Nº Holograma:</span>
+              {/* 8. Nº Ref. Holograma (CAMPO CRÍTICO - SIEMPRE VISIBLE) */}
+              <div className="flex py-1.5" style={{ backgroundColor: 'rgba(197, 160, 89, 0.15)', borderRadius: '4px', marginTop: '4px', padding: '6px 8px' }}>
+                <span style={{ fontWeight: 700, color: '#c5a059', width: '45%', fontSize: '8px' }}>Nº Ref. Holograma:</span>
                 <span style={{
-                  color: '#c5a059',
+                  color: hologramNumber ? '#c5a059' : '#999',
                   textAlign: 'right',
                   flex: 1,
-                  fontWeight: 700,
-                  fontSize: '10px',
+                  fontWeight: hologramNumber ? 700 : 400,
+                  fontSize: hologramNumber ? '11px' : '7px',
                   fontFamily: 'monospace',
-                  letterSpacing: '1px'
+                  letterSpacing: hologramNumber ? '1px' : '0'
                 }}>
-                  {hologramNumber || <span className="blur-[2px] select-none text-gray-400" style={{ fontWeight: 400, fontSize: '8px' }}>XXXXXX</span>}
+                  {hologramNumber || 'Pendiente de asignación'}
                 </span>
               </div>
             </>
@@ -266,6 +266,20 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
               <div className="flex py-1" style={{ borderBottom: '1px dotted #ccc' }}>
                 <span style={{ fontWeight: 600, color: '#333', width: '45%' }}>Edición:</span>
                 <span style={{ color: '#555', textAlign: 'right', flex: 1 }}>Obra Única Original</span>
+              </div>
+
+              {/* 7. Nº Ref. Holograma (SIEMPRE VISIBLE - Para obras originales) */}
+              <div className="flex py-1.5" style={{ backgroundColor: 'rgba(197, 160, 89, 0.15)', borderRadius: '4px', marginTop: '4px', padding: '6px 8px' }}>
+                <span style={{ fontWeight: 700, color: '#c5a059', width: '45%', fontSize: '8px' }}>Nº Ref. Holograma:</span>
+                <span style={{
+                  color: '#999',
+                  textAlign: 'right',
+                  flex: 1,
+                  fontWeight: 400,
+                  fontSize: '7px'
+                }}>
+                  Incluido con la obra
+                </span>
               </div>
             </>
           )}

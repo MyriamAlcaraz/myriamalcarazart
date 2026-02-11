@@ -2400,50 +2400,125 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                 />
             )}
 
-            {/* 👁️ MODAL VISTA PREVIA DEL CERTIFICADO */}
+            {/* ============================================
+                MODAL VISTA PREVIA - ESTRUCTURA DE 2 BLOQUES
+                Idéntico al Portfolio para consistencia
+                ============================================ */}
             {previewArtwork && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 animate-in fade-in duration-200 overflow-y-auto py-6"
                     onClick={() => setPreviewArtwork(null)}
                 >
+                    {/* Botón cerrar */}
+                    <button
+                        onClick={() => setPreviewArtwork(null)}
+                        className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-50"
+                    >
+                        <X size={20} className="text-white" />
+                    </button>
+
+                    {/* Contenido del modal - DOS BLOQUES */}
                     <div
-                        className="relative max-w-sm w-full mx-4"
+                        className="max-w-5xl w-full mx-8 flex flex-col lg:flex-row gap-8 items-stretch"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {/* Botón cerrar */}
-                        <button
-                            onClick={() => setPreviewArtwork(null)}
-                            className="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-10"
-                        >
-                            <X size={20} className="text-white" />
-                        </button>
+                        {/* ========================================
+                            BLOQUE IZQUIERDO: Imagen + Ficha Técnica
+                            ======================================== */}
+                        <div className="flex-1 flex flex-col gap-4">
+                            {/* Imagen de la obra */}
+                            <div className="flex items-center justify-center bg-black/20 rounded-xl p-4">
+                                <img
+                                    src={previewArtwork.image}
+                                    alt={previewArtwork.title}
+                                    className="max-w-full max-h-[50vh] object-contain rounded-lg shadow-2xl"
+                                />
+                            </div>
 
-                        {/* Título */}
-                        <h3 className="text-white text-center mb-4 font-serif text-lg">
-                            Vista Previa del Certificado
-                        </h3>
+                            {/* Ficha Técnica - DEBAJO de la imagen */}
+                            <div className="bg-white/5 backdrop-blur-md rounded-xl p-5 text-white">
+                                <h3 className="text-[10px] tracking-[0.3em] text-amber-400 uppercase mb-4">Ficha Técnica</h3>
+                                <h2 className="font-serif text-xl md:text-2xl mb-4 text-white leading-tight">{previewArtwork.title}</h2>
 
-                        {/* Vista previa del certificado */}
-                        <CertificatePreview
-                            titulo={previewArtwork.title}
-                            imagen={previewArtwork.image}
-                            año={parseInt(previewArtwork.certificationDate.split('-')[0]) || 2026}
-                            dimensiones={previewArtwork.dimensions}
-                            tecnica={previewArtwork.technique}
-                            // Campos para Giclée
-                            isGiclee={!!previewArtwork.hologramNumber || !!previewArtwork.gicleeDimensions}
-                            tecnicaOriginal={previewArtwork.technique}
-                            medidasOriginal={previewArtwork.originalDimensions || previewArtwork.dimensions}
-                            medidasImpresion={previewArtwork.gicleeDimensions}
-                            idReferencia={previewArtwork.code}
-                            edicion={previewArtwork.seriesIndex && previewArtwork.seriesTotal ? `${previewArtwork.seriesIndex}/${previewArtwork.seriesTotal}` : undefined}
-                            hologramNumber={previewArtwork.hologramNumber}
-                        />
+                                <div className="grid grid-cols-2 gap-3 text-sm">
+                                    <div className="bg-white/5 rounded-lg p-3">
+                                        <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Dimensiones</span>
+                                        <span className="font-medium text-white text-sm">{previewArtwork.dimensions}</span>
+                                    </div>
+                                    <div className="bg-white/5 rounded-lg p-3">
+                                        <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Técnica</span>
+                                        <span className="font-medium text-white text-sm">{previewArtwork.technique}</span>
+                                    </div>
+                                    <div className="bg-white/5 rounded-lg p-3">
+                                        <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Año</span>
+                                        <span className="font-medium text-white text-sm">{previewArtwork.certificationDate.split('-')[0]}</span>
+                                    </div>
+                                    <div className="bg-white/5 rounded-lg p-3">
+                                        <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Estado</span>
+                                        <span className={`font-medium text-sm ${previewArtwork.code ? 'text-emerald-400' : 'text-amber-400'}`}>
+                                            {previewArtwork.code ? 'Certificado' : 'Pendiente'}
+                                        </span>
+                                    </div>
+                                </div>
 
-                        {/* Nota */}
-                        <p className="text-stone-400 text-xs text-center mt-4">
-                            Los datos sensibles aparecen pixelados para proteger la autenticidad
-                        </p>
+                                {/* Info adicional para Giclée */}
+                                {previewArtwork.hologramNumber && (
+                                    <div className="mt-3 pt-3 border-t border-white/10">
+                                        <div className="flex items-center justify-between text-sm">
+                                            <span className="text-amber-400">Nº Holograma:</span>
+                                            <span className="font-mono font-bold text-amber-300">{previewArtwork.hologramNumber}</span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* ========================================
+                            BLOQUE DERECHO: Certificado de Autenticidad
+                            Con filtro de blur para seguridad
+                            ======================================== */}
+                        <div className="lg:w-64 w-full flex flex-col">
+                            <h3 className="text-[10px] tracking-[0.3em] text-amber-400 uppercase mb-3 text-center">
+                                Certificado de Autenticidad
+                            </h3>
+
+                            {/* Contenedor del certificado con BLUR de seguridad */}
+                            <div className="relative flex-1">
+                                {/* Certificado con filtro de desenfoque */}
+                                <div className="filter blur-[1.5px] hover:blur-[0.5px] transition-all duration-300">
+                                    <CertificatePreview
+                                        titulo={previewArtwork.title}
+                                        imagen={previewArtwork.image}
+                                        año={parseInt(previewArtwork.certificationDate.split('-')[0]) || 2026}
+                                        dimensiones={previewArtwork.dimensions}
+                                        tecnica={previewArtwork.technique}
+                                        isGiclee={!!previewArtwork.hologramNumber || !!previewArtwork.gicleeDimensions}
+                                        tecnicaOriginal={previewArtwork.technique}
+                                        medidasOriginal={previewArtwork.originalDimensions || previewArtwork.dimensions}
+                                        medidasImpresion={previewArtwork.gicleeDimensions}
+                                        idReferencia={previewArtwork.code}
+                                        edicion={previewArtwork.seriesIndex && previewArtwork.seriesTotal ? `${previewArtwork.seriesIndex}/${previewArtwork.seriesTotal}` : undefined}
+                                        hologramNumber={previewArtwork.hologramNumber}
+                                    />
+                                </div>
+
+                                {/* Overlay de protección */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none rounded-lg" />
+
+                                {/* Badge de seguridad */}
+                                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-amber-500/90 text-white text-[10px] px-3 py-1.5 rounded-full font-medium backdrop-blur-sm flex items-center gap-1.5 shadow-lg">
+                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                    </svg>
+                                    Documento Protegido
+                                </div>
+                            </div>
+
+                            {/* Nota informativa */}
+                            <p className="text-stone-500 text-[10px] text-center mt-3 leading-relaxed">
+                                Vista previa protegida. El certificado original incluye holograma de seguridad.
+                            </p>
+                        </div>
                     </div>
                 </div>
             )}

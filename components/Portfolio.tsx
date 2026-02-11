@@ -199,6 +199,10 @@ const Portfolio: React.FC = () => {
   const [lupaPosition, setLupaPosition] = useState({ x: 0, y: 0, visible: false });
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
+  // Estado para zoom en el modal
+  const [modalZoom, setModalZoom] = useState(false);
+  const [zoomPosition, setZoomPosition] = useState({ x: 50, y: 50 });
+
   // Navegar entre obras en el modal
   const navegarObra = (direccion: 'prev' | 'next') => {
     if (!selectedObra) return;
@@ -233,6 +237,14 @@ const Portfolio: React.FC = () => {
   const handleMouseLeave = () => {
     setHoveredCard(null);
     setLupaPosition({ x: 0, y: 0, visible: false });
+  };
+
+  // Manejar zoom en el modal
+  const handleModalImageMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setZoomPosition({ x, y });
   };
 
   // Cerrar modal con tecla Escape
@@ -344,100 +356,165 @@ const Portfolio: React.FC = () => {
         </div>
       </main>
 
-      {/* Modal de Vista Detallada - Diseño Elegante */}
+      {/* ============================================
+          MODAL DE VISTA DETALLADA - ESTRUCTURA DE 2 BLOQUES
+          Bloque Izquierdo: Imagen + Ficha Técnica (debajo)
+          Bloque Derecho: Certificado con blur de seguridad
+          ============================================ */}
       {selectedObra && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 animate-fade-in overflow-y-auto py-8"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 animate-fade-in overflow-y-auto py-6"
           onClick={() => setSelectedObra(null)}
         >
           {/* Botón cerrar */}
           <button
             onClick={() => setSelectedObra(null)}
-            className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-50"
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-50"
           >
-            <X size={24} className="text-white" />
+            <X size={20} className="text-white" />
           </button>
 
           {/* Navegación anterior */}
           <button
             onClick={(e) => { e.stopPropagation(); navegarObra('prev'); }}
-            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-50"
+            className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-50"
           >
-            <ChevronLeft size={28} className="text-white" />
+            <ChevronLeft size={24} className="text-white" />
           </button>
 
           {/* Navegación siguiente */}
           <button
             onClick={(e) => { e.stopPropagation(); navegarObra('next'); }}
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-50"
+            className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-50"
           >
-            <ChevronRight size={28} className="text-white" />
+            <ChevronRight size={24} className="text-white" />
           </button>
 
-          {/* Contenido del modal - Nueva estructura */}
+          {/* Contenido del modal - DOS BLOQUES */}
           <div
-            className="max-w-6xl w-full mx-4 flex flex-col lg:flex-row gap-6 items-start"
+            className="max-w-5xl w-full mx-12 flex flex-col lg:flex-row gap-8 items-stretch"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Columna izquierda: Imagen + Ficha Técnica */}
+            {/* ========================================
+                BLOQUE IZQUIERDO: Imagen + Ficha Técnica
+                ======================================== */}
             <div className="flex-1 flex flex-col gap-4">
-              {/* Imagen principal de la obra */}
-              <div className="flex items-center justify-center">
-                <img
-                  src={selectedObra.imagen}
-                  alt={selectedObra.titulo}
-                  className="max-w-full max-h-[55vh] object-contain rounded-lg shadow-2xl"
-                />
+              {/* Imagen de la obra con ZOOM interactivo */}
+              <div
+                className="relative flex items-center justify-center bg-black/20 rounded-xl p-4 cursor-zoom-in group"
+                onClick={() => setModalZoom(!modalZoom)}
+                onMouseMove={modalZoom ? handleModalImageMove : undefined}
+                onMouseLeave={() => modalZoom && setModalZoom(false)}
+              >
+                {/* Imagen normal o con zoom */}
+                <div
+                  className="relative overflow-hidden rounded-lg shadow-2xl"
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: modalZoom ? '60vh' : '50vh'
+                  }}
+                >
+                  <img
+                    src={selectedObra.imagen}
+                    alt={selectedObra.titulo}
+                    className="w-full h-full object-contain transition-transform duration-200"
+                    style={modalZoom ? {
+                      transform: 'scale(2.5)',
+                      transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                      cursor: 'zoom-out'
+                    } : {
+                      cursor: 'zoom-in'
+                    }}
+                  />
+                </div>
+
+                {/* Indicador de zoom (lupita) */}
+                {!modalZoom && (
+                  <div className="absolute bottom-6 right-6 bg-white/20 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ZoomIn size={20} className="text-white" />
+                  </div>
+                )}
+
+                {/* Instrucción de zoom */}
+                {!modalZoom && (
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-white/60 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">
+                    Clic para ampliar
+                  </div>
+                )}
               </div>
 
-              {/* Ficha Técnica - Debajo de la imagen */}
-              <div className="bg-white/5 backdrop-blur-md rounded-xl p-6 text-white">
-                <h3 className="text-xs tracking-[0.3em] text-amber-400 uppercase mb-3">Ficha Técnica</h3>
-                <h2 className="font-serif text-2xl md:text-3xl mb-4 text-white">{selectedObra.titulo}</h2>
+              {/* Ficha Técnica - DEBAJO de la imagen */}
+              <div className="bg-white/5 backdrop-blur-md rounded-xl p-5 text-white">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-[10px] tracking-[0.3em] text-amber-400 uppercase">Ficha Técnica</h3>
+                  <span className="text-stone-500 text-xs">
+                    {OBRAS_GALERIA.findIndex(o => o.id === selectedObra.id) + 1} / {OBRAS_GALERIA.length}
+                  </span>
+                </div>
 
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="text-stone-400 block text-xs uppercase tracking-wider mb-1">Dimensiones</span>
-                    <span className="font-medium text-white">{selectedObra.dimensiones}</span>
+                <h2 className="font-serif text-xl md:text-2xl mb-4 text-white leading-tight">{selectedObra.titulo}</h2>
+
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Dimensiones</span>
+                    <span className="font-medium text-white text-sm">{selectedObra.dimensiones}</span>
                   </div>
-                  <div>
-                    <span className="text-stone-400 block text-xs uppercase tracking-wider mb-1">Técnica</span>
-                    <span className="font-medium text-white">{selectedObra.tecnica}</span>
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Técnica</span>
+                    <span className="font-medium text-white text-sm">{selectedObra.tecnica}</span>
                   </div>
-                  <div>
-                    <span className="text-stone-400 block text-xs uppercase tracking-wider mb-1">Año</span>
-                    <span className="font-medium text-white">{selectedObra.año}</span>
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Año</span>
+                    <span className="font-medium text-white text-sm">{selectedObra.año}</span>
                   </div>
-                  <div>
-                    <span className="text-stone-400 block text-xs uppercase tracking-wider mb-1">Estado</span>
-                    <span className={`font-medium ${selectedObra.disponible ? 'text-emerald-400' : 'text-red-400'}`}>
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Estado</span>
+                    <span className={`font-medium text-sm ${selectedObra.disponible ? 'text-emerald-400' : 'text-red-400'}`}>
                       {selectedObra.disponible ? 'Disponible' : 'Vendida'}
                     </span>
                   </div>
                 </div>
-
-                {/* Contador de posición */}
-                <div className="mt-4 pt-4 border-t border-white/10 text-center text-stone-500 text-sm">
-                  Obra {OBRAS_GALERIA.findIndex(o => o.id === selectedObra.id) + 1} de {OBRAS_GALERIA.length}
-                </div>
               </div>
             </div>
 
-            {/* Columna derecha: Certificado de Autenticidad Dinámico */}
-            <div className="lg:w-72 w-full">
-              {/* Vista previa del certificado con datos de la obra */}
-              <CertificatePreview
-                titulo={selectedObra.titulo}
-                imagen={selectedObra.imagen}
-                año={selectedObra.año}
-                dimensiones={selectedObra.dimensiones}
-                tecnica={selectedObra.tecnica}
-                isGiclee={false}
-              />
+            {/* ========================================
+                BLOQUE DERECHO: Certificado de Autenticidad
+                Con filtro de blur para seguridad
+                ======================================== */}
+            <div className="lg:w-64 w-full flex flex-col">
+              <h3 className="text-[10px] tracking-[0.3em] text-amber-400 uppercase mb-3 text-center">
+                Certificado de Autenticidad
+              </h3>
+
+              {/* Contenedor del certificado con BLUR de seguridad */}
+              <div className="relative flex-1">
+                {/* Certificado con filtro de desenfoque */}
+                <div className="filter blur-[2px] hover:blur-[1px] transition-all duration-300">
+                  <CertificatePreview
+                    titulo={selectedObra.titulo}
+                    imagen={selectedObra.imagen}
+                    año={selectedObra.año}
+                    dimensiones={selectedObra.dimensiones}
+                    tecnica={selectedObra.tecnica}
+                    isGiclee={false}
+                  />
+                </div>
+
+                {/* Overlay de protección */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none rounded-lg" />
+
+                {/* Badge de seguridad */}
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-amber-500/90 text-white text-[10px] px-3 py-1.5 rounded-full font-medium backdrop-blur-sm flex items-center gap-1.5 shadow-lg">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Documento Protegido
+                </div>
+              </div>
 
               {/* Nota informativa */}
-              <p className="text-stone-500 text-xs text-center mt-4 leading-relaxed">
-                Cada obra incluye un certificado de autenticidad firmado por la artista con holograma de seguridad
+              <p className="text-stone-500 text-[10px] text-center mt-3 leading-relaxed">
+                Cada obra incluye certificado firmado con holograma de seguridad Hahnemühle
               </p>
             </div>
           </div>
