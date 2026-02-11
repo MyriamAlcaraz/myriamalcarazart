@@ -2401,122 +2401,41 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
             )}
 
             {/* ============================================
-                MODAL VISTA PREVIA - ESTRUCTURA DE 2 BLOQUES
-                Idéntico al Portfolio para consistencia
+                MODAL VISTA PREVIA - TALLER/ESTUDIO
+                SOLO EL CERTIFICADO NÍTIDO A TAMAÑO REAL
                 ============================================ */}
             {previewArtwork && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 animate-in fade-in duration-200 overflow-y-auto py-6"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
                     onClick={() => setPreviewArtwork(null)}
                 >
                     {/* Botón cerrar */}
                     <button
                         onClick={() => setPreviewArtwork(null)}
-                        className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-50"
+                        className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-50"
                     >
-                        <X size={20} className="text-white" />
+                        <X size={24} className="text-white" />
                     </button>
 
-                    {/* Contenido del modal - DOS BLOQUES */}
+                    {/* CERTIFICADO NÍTIDO - TAMAÑO REAL */}
                     <div
-                        className="max-w-5xl w-full mx-8 flex flex-col lg:flex-row gap-8 items-stretch"
+                        className="w-[320px] shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {/* ========================================
-                            BLOQUE IZQUIERDO: Imagen + Ficha Técnica
-                            ======================================== */}
-                        <div className="flex-1 flex flex-col gap-4">
-                            {/* Imagen de la obra */}
-                            <div className="flex items-center justify-center bg-black/20 rounded-xl p-4">
-                                <img
-                                    src={previewArtwork.image}
-                                    alt={previewArtwork.title}
-                                    className="max-w-full max-h-[50vh] object-contain rounded-lg shadow-2xl"
-                                />
-                            </div>
-
-                            {/* Ficha Técnica - DEBAJO de la imagen */}
-                            <div className="bg-white/5 backdrop-blur-md rounded-xl p-5 text-white">
-                                <h3 className="text-[10px] tracking-[0.3em] text-amber-400 uppercase mb-4">Ficha Técnica</h3>
-                                <h2 className="font-serif text-xl md:text-2xl mb-4 text-white leading-tight">{previewArtwork.title}</h2>
-
-                                <div className="grid grid-cols-2 gap-3 text-sm">
-                                    <div className="bg-white/5 rounded-lg p-3">
-                                        <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Dimensiones</span>
-                                        <span className="font-medium text-white text-sm">{previewArtwork.dimensions}</span>
-                                    </div>
-                                    <div className="bg-white/5 rounded-lg p-3">
-                                        <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Técnica</span>
-                                        <span className="font-medium text-white text-sm">{previewArtwork.technique}</span>
-                                    </div>
-                                    <div className="bg-white/5 rounded-lg p-3">
-                                        <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Año</span>
-                                        <span className="font-medium text-white text-sm">{previewArtwork.certificationDate.split('-')[0]}</span>
-                                    </div>
-                                    <div className="bg-white/5 rounded-lg p-3">
-                                        <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Estado</span>
-                                        <span className={`font-medium text-sm ${previewArtwork.code ? 'text-emerald-400' : 'text-amber-400'}`}>
-                                            {previewArtwork.code ? 'Certificado' : 'Pendiente'}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* Info adicional para Giclée */}
-                                {previewArtwork.hologramNumber && (
-                                    <div className="mt-3 pt-3 border-t border-white/10">
-                                        <div className="flex items-center justify-between text-sm">
-                                            <span className="text-amber-400">Nº Holograma:</span>
-                                            <span className="font-mono font-bold text-amber-300">{previewArtwork.hologramNumber}</span>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* ========================================
-                            BLOQUE DERECHO: Certificado de Autenticidad
-                            TALLER/ESTUDIO: 100% NÍTIDO - Réplica del PDF
-                            Proporción A4 EXACTA - No estirar
-                            ======================================== */}
-                        <div className="lg:w-60 w-full flex flex-col items-center">
-                            <h3 className="text-[10px] tracking-[0.3em] text-emerald-400 uppercase mb-3 text-center">
-                                Certificado de Autenticidad
-                            </h3>
-
-                            {/* Contenedor del certificado - NÍTIDO (uso interno) */}
-                            <div className="relative w-full max-w-[220px]">
-                                {/* Certificado 100% NÍTIDO - Réplica exacta del PDF */}
-                                <div className="rounded-lg overflow-hidden shadow-2xl border border-white/10">
-                                    <CertificatePreview
-                                        titulo={previewArtwork.title}
-                                        imagen={previewArtwork.image}
-                                        año={parseInt(previewArtwork.certificationDate.split('-')[0]) || 2026}
-                                        dimensiones={previewArtwork.dimensions}
-                                        tecnica={previewArtwork.technique}
-                                        isGiclee={!!previewArtwork.hologramNumber || !!previewArtwork.gicleeDimensions}
-                                        tecnicaOriginal={previewArtwork.technique}
-                                        medidasOriginal={previewArtwork.originalDimensions || previewArtwork.dimensions}
-                                        medidasImpresion={previewArtwork.gicleeDimensions}
-                                        idReferencia={previewArtwork.code}
-                                        edicion={previewArtwork.seriesIndex && previewArtwork.seriesTotal ? `${previewArtwork.seriesIndex}/${previewArtwork.seriesTotal}` : undefined}
-                                        hologramNumber={previewArtwork.hologramNumber}
-                                    />
-                                </div>
-
-                                {/* Badge de verificación (uso interno) */}
-                                <div className="absolute -top-2 -right-2 bg-emerald-500 text-white text-[7px] px-2 py-1 rounded-full font-bold flex items-center gap-1 shadow-lg">
-                                    <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                    </svg>
-                                    USO INTERNO
-                                </div>
-                            </div>
-
-                            {/* Nota informativa */}
-                            <p className="text-emerald-400/80 text-[9px] text-center mt-3 leading-relaxed max-w-[200px]">
-                                Vista previa real. Así quedará el documento del cliente.
-                            </p>
-                        </div>
+                        <CertificatePreview
+                            titulo={previewArtwork.title}
+                            imagen={previewArtwork.image}
+                            año={parseInt(previewArtwork.certificationDate.split('-')[0]) || 2026}
+                            dimensiones={previewArtwork.dimensions}
+                            tecnica={previewArtwork.technique}
+                            isGiclee={!!previewArtwork.hologramNumber || !!previewArtwork.gicleeDimensions}
+                            tecnicaOriginal={previewArtwork.technique}
+                            medidasOriginal={previewArtwork.originalDimensions || previewArtwork.dimensions}
+                            medidasImpresion={previewArtwork.gicleeDimensions}
+                            idReferencia={previewArtwork.code}
+                            edicion={previewArtwork.seriesIndex && previewArtwork.seriesTotal ? `${previewArtwork.seriesIndex}/${previewArtwork.seriesTotal}` : undefined}
+                            hologramNumber={previewArtwork.hologramNumber}
+                        />
                     </div>
                 </div>
             )}
