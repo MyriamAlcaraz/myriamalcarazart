@@ -2371,13 +2371,17 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                         {/* Vista previa del certificado */}
                         <CertificatePreview
                             titulo={previewArtwork.title}
+                            imagen={previewArtwork.image}
+                            año={parseInt(previewArtwork.certificationDate.split('-')[0]) || 2026}
                             dimensiones={previewArtwork.dimensions}
                             tecnica={previewArtwork.technique}
-                            año={parseInt(previewArtwork.certificationDate.split('-')[0]) || 2025}
-                            imagen={previewArtwork.image}
-                            codigoSerie={previewArtwork.code}
-                            dimensionesOriginal={previewArtwork.originalDimensions}
-                            dimensionesImpresion={previewArtwork.gicleeDimensions}
+                            // Campos para Giclée
+                            isGiclee={!!previewArtwork.hologramNumber || !!previewArtwork.gicleeDimensions}
+                            tecnicaOriginal={previewArtwork.technique}
+                            medidasOriginal={previewArtwork.originalDimensions || previewArtwork.dimensions}
+                            medidasImpresion={previewArtwork.gicleeDimensions}
+                            idReferencia={previewArtwork.code}
+                            edicion={previewArtwork.seriesIndex && previewArtwork.seriesTotal ? `${previewArtwork.seriesIndex}/${previewArtwork.seriesTotal}` : undefined}
                             hologramNumber={previewArtwork.hologramNumber}
                         />
 

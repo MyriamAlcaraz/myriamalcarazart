@@ -428,10 +428,11 @@ const Portfolio: React.FC = () => {
               {/* Vista previa del certificado con datos de la obra */}
               <CertificatePreview
                 titulo={selectedObra.titulo}
+                imagen={selectedObra.imagen}
+                año={selectedObra.año}
                 dimensiones={selectedObra.dimensiones}
                 tecnica={selectedObra.tecnica}
-                año={selectedObra.año}
-                imagen={selectedObra.imagen}
+                isGiclee={false}
               />
 
               {/* Nota informativa */}
