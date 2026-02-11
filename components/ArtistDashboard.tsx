@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, AlertTriangle, Hash, Save } from 'lucide-react';
+import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, AlertTriangle, Hash, Save, Eye } from 'lucide-react';
+import { CertificatePreview } from './CertificatePreview';
 
 
 // ---------------------------------------------------------
@@ -89,21 +90,76 @@ const EXISTING_ARTWORKS = [
 // Combinación final: Nuevas obras primero, luego las existentes
 const ARTWORKS_FOR_INITIALIZATION = [...NEW_ARTWORKS, ...EXISTING_ARTWORKS];
 
-const REAL_ARTWORKS: Artwork[] = ARTWORKS_FOR_INITIALIZATION.map((art, index) => ({
-    id: art.id,
-    title: art.title,
-    certificationDate: '2025-12-10', // Fecha inicial de ejemplo
-    type: 'PT', // Pintura por defecto
-    seriesIndex: null, // Obra única por defecto
-    seriesTotal: null,
-    code: null,
-    status: 'PENDIENTE',
-    image: art.image,
-    dimensions: art.dimensions,
-    technique: art.technique,
-    originalIndex: index, // Mantiene el orden de constants.ts
-    isOpenSeries: false, // 🛑 NUEVO: Por defecto no es serie abierta
-}));
+// 🎨 DATOS MAESTROS DE GICLÉES YA GENERADOS (4 certificados reales)
+const GICLEE_DATA: Record<number, {
+    code: string;
+    hologramNumber: string;
+    originalDimensions: string;
+    gicleeDimensions: string;
+    seriesIndex: number;
+    seriesTotal: number;
+}> = {
+    // Pequeño (30x40): Joven con vela en la bruma - ID 22
+    22: {
+        code: 'MA-2026-GC-JC-01/10-S',
+        hologramNumber: '287213',
+        originalDimensions: '100x73 cm',
+        gicleeDimensions: '30x40 cm',
+        seriesIndex: 1,
+        seriesTotal: 10
+    },
+    // Mediano (50x63): Sara en Marquesina - ID 4
+    4: {
+        code: 'MA-2026-GC-SE-01/10-M',
+        hologramNumber: '287214',
+        originalDimensions: '100x81 cm',
+        gicleeDimensions: '50x63 cm',
+        seriesIndex: 1,
+        seriesTotal: 10
+    },
+    // Mediano (50x61.5): Laura en el crepúsculo - ID 2
+    2: {
+        code: 'MA-2026-GC-LE-01/10-M',
+        hologramNumber: '287215',
+        originalDimensions: '100x81 cm',
+        gicleeDimensions: '50x61,5 cm',
+        seriesIndex: 1,
+        seriesTotal: 10
+    },
+    // Grande (60x93.3): Sara bajo la farola - ID 3
+    3: {
+        code: 'MA-2026-GC-SB-01/10-L',
+        hologramNumber: '287216',
+        originalDimensions: '92x60 cm',
+        gicleeDimensions: '60x93,3 cm',
+        seriesIndex: 1,
+        seriesTotal: 10
+    }
+};
+
+const REAL_ARTWORKS: Artwork[] = ARTWORKS_FOR_INITIALIZATION.map((art, index) => {
+    const gicleeInfo = GICLEE_DATA[art.id];
+
+    return {
+        id: art.id,
+        title: art.title,
+        certificationDate: gicleeInfo ? '2026-02-10' : '2025-12-10',
+        type: 'PT' as const,
+        seriesIndex: gicleeInfo?.seriesIndex || null,
+        seriesTotal: gicleeInfo?.seriesTotal || null,
+        code: gicleeInfo?.code || null,
+        status: gicleeInfo ? 'GENERADO' as const : 'PENDIENTE' as const,
+        image: art.image,
+        dimensions: art.dimensions,
+        technique: art.technique,
+        originalIndex: index,
+        isOpenSeries: !!gicleeInfo,
+        // Campos Giclée (solo si tiene datos)
+        originalDimensions: gicleeInfo?.originalDimensions,
+        gicleeDimensions: gicleeInfo?.gicleeDimensions,
+        hologramNumber: gicleeInfo?.hologramNumber,
+    };
+});
 
 // 🛑 FIX: Constante para representar una obra nueva (ID 0)
 const NEW_WORK_PLACEHOLDER: Artwork = {
@@ -2031,6 +2087,9 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     // 🎨 Estado para el Panel Giclée
     const [showGicleePanel, setShowGicleePanel] = useState(false);
 
+    // 👁️ Estado para la vista previa del certificado
+    const [previewArtwork, setPreviewArtwork] = useState<Artwork | null>(null);
+
     // 🛑 Handler para añadir o editar obra (Acepta ahora code y status)
     const handleSaveArtwork = (artworkData: Omit<Artwork, 'id' | 'originalIndex'>, idToUpdate: number | null) => {
 
@@ -2280,6 +2339,14 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                                             </td>
                                             <td className="py-3 px-4 text-right">
                                                 <div className="flex gap-1 justify-end">
+                                                    {/* Botón Ver Certificado */}
+                                                    <button
+                                                        onClick={() => setPreviewArtwork(artwork)}
+                                                        className="p-1.5 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded transition-colors"
+                                                        title="Ver certificado"
+                                                    >
+                                                        <Eye size={16} />
+                                                    </button>
                                                     <button
                                                         onClick={() => setArtworkToManage(artwork)}
                                                         className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors"
@@ -2331,6 +2398,46 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                     settings={documentSettings}
                     onClose={() => setShowGicleePanel(false)}
                 />
+            )}
+
+            {/* ============================================
+                MODAL VISTA PREVIA - TALLER/ESTUDIO
+                SOLO EL CERTIFICADO NÍTIDO A TAMAÑO REAL
+                ============================================ */}
+            {previewArtwork && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
+                    onClick={() => setPreviewArtwork(null)}
+                >
+                    {/* Botón cerrar */}
+                    <button
+                        onClick={() => setPreviewArtwork(null)}
+                        className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-50"
+                    >
+                        <X size={24} className="text-white" />
+                    </button>
+
+                    {/* CERTIFICADO NÍTIDO - TAMAÑO REAL */}
+                    <div
+                        className="w-[320px] shadow-2xl"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <CertificatePreview
+                            titulo={previewArtwork.title}
+                            imagen={previewArtwork.image}
+                            año={parseInt(previewArtwork.certificationDate.split('-')[0]) || 2026}
+                            dimensiones={previewArtwork.dimensions}
+                            tecnica={previewArtwork.technique}
+                            isGiclee={!!previewArtwork.hologramNumber || !!previewArtwork.gicleeDimensions}
+                            tecnicaOriginal={previewArtwork.technique}
+                            medidasOriginal={previewArtwork.originalDimensions || previewArtwork.dimensions}
+                            medidasImpresion={previewArtwork.gicleeDimensions}
+                            idReferencia={previewArtwork.code}
+                            edicion={previewArtwork.seriesIndex && previewArtwork.seriesTotal ? `${previewArtwork.seriesIndex}/${previewArtwork.seriesTotal}` : undefined}
+                            hologramNumber={previewArtwork.hologramNumber}
+                        />
+                    </div>
+                </div>
             )}
 
         </div>
