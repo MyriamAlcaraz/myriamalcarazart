@@ -90,21 +90,76 @@ const EXISTING_ARTWORKS = [
 // Combinación final: Nuevas obras primero, luego las existentes
 const ARTWORKS_FOR_INITIALIZATION = [...NEW_ARTWORKS, ...EXISTING_ARTWORKS];
 
-const REAL_ARTWORKS: Artwork[] = ARTWORKS_FOR_INITIALIZATION.map((art, index) => ({
-    id: art.id,
-    title: art.title,
-    certificationDate: '2025-12-10', // Fecha inicial de ejemplo
-    type: 'PT', // Pintura por defecto
-    seriesIndex: null, // Obra única por defecto
-    seriesTotal: null,
-    code: null,
-    status: 'PENDIENTE',
-    image: art.image,
-    dimensions: art.dimensions,
-    technique: art.technique,
-    originalIndex: index, // Mantiene el orden de constants.ts
-    isOpenSeries: false, // 🛑 NUEVO: Por defecto no es serie abierta
-}));
+// 🎨 DATOS MAESTROS DE GICLÉES YA GENERADOS (4 certificados reales)
+const GICLEE_DATA: Record<number, {
+    code: string;
+    hologramNumber: string;
+    originalDimensions: string;
+    gicleeDimensions: string;
+    seriesIndex: number;
+    seriesTotal: number;
+}> = {
+    // Pequeño (30x40): Joven con vela en la bruma - ID 22
+    22: {
+        code: 'MA-2026-GC-JC-01/10-S',
+        hologramNumber: '287213',
+        originalDimensions: '100x73 cm',
+        gicleeDimensions: '30x40 cm',
+        seriesIndex: 1,
+        seriesTotal: 10
+    },
+    // Mediano (50x63): Sara en Marquesina - ID 4
+    4: {
+        code: 'MA-2026-GC-SE-01/10-M',
+        hologramNumber: '287214',
+        originalDimensions: '100x81 cm',
+        gicleeDimensions: '50x63 cm',
+        seriesIndex: 1,
+        seriesTotal: 10
+    },
+    // Mediano (50x61.5): Laura en el crepúsculo - ID 2
+    2: {
+        code: 'MA-2026-GC-LE-01/10-M',
+        hologramNumber: '287215',
+        originalDimensions: '100x81 cm',
+        gicleeDimensions: '50x61,5 cm',
+        seriesIndex: 1,
+        seriesTotal: 10
+    },
+    // Grande (60x93.3): Sara bajo la farola - ID 3
+    3: {
+        code: 'MA-2026-GC-SB-01/10-L',
+        hologramNumber: '287216',
+        originalDimensions: '92x60 cm',
+        gicleeDimensions: '60x93,3 cm',
+        seriesIndex: 1,
+        seriesTotal: 10
+    }
+};
+
+const REAL_ARTWORKS: Artwork[] = ARTWORKS_FOR_INITIALIZATION.map((art, index) => {
+    const gicleeInfo = GICLEE_DATA[art.id];
+
+    return {
+        id: art.id,
+        title: art.title,
+        certificationDate: gicleeInfo ? '2026-02-10' : '2025-12-10',
+        type: 'PT' as const,
+        seriesIndex: gicleeInfo?.seriesIndex || null,
+        seriesTotal: gicleeInfo?.seriesTotal || null,
+        code: gicleeInfo?.code || null,
+        status: gicleeInfo ? 'GENERADO' as const : 'PENDIENTE' as const,
+        image: art.image,
+        dimensions: art.dimensions,
+        technique: art.technique,
+        originalIndex: index,
+        isOpenSeries: !!gicleeInfo,
+        // Campos Giclée (solo si tiene datos)
+        originalDimensions: gicleeInfo?.originalDimensions,
+        gicleeDimensions: gicleeInfo?.gicleeDimensions,
+        hologramNumber: gicleeInfo?.hologramNumber,
+    };
+});
 
 // 🛑 FIX: Constante para representar una obra nueva (ID 0)
 const NEW_WORK_PLACEHOLDER: Artwork = {
