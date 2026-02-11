@@ -2375,6 +2375,10 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                             tecnica={previewArtwork.technique}
                             año={parseInt(previewArtwork.certificationDate.split('-')[0]) || 2025}
                             imagen={previewArtwork.image}
+                            codigoSerie={previewArtwork.code}
+                            dimensionesOriginal={previewArtwork.originalDimensions}
+                            dimensionesImpresion={previewArtwork.gicleeDimensions}
+                            hologramNumber={previewArtwork.hologramNumber}
                         />
 
                         {/* Nota */}

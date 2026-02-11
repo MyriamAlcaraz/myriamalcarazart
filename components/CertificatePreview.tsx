@@ -11,6 +11,11 @@ interface CertificatePreviewProps {
   tecnica: string;
   año: number;
   imagen?: string;
+  // Campos específicos para Giclée
+  codigoSerie?: string | null;
+  dimensionesOriginal?: string;
+  dimensionesImpresion?: string;
+  hologramNumber?: string | null;
 }
 
 export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
@@ -18,12 +23,19 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
   dimensiones,
   tecnica,
   año,
-  imagen
+  imagen,
+  codigoSerie,
+  dimensionesOriginal,
+  dimensionesImpresion,
+  hologramNumber
 }) => {
-  // Generar ID parcialmente oculto
+  // Usar código de serie si existe, sino generar ID parcialmente oculto
   const titleInitials = titulo.split(' ')[0].substring(0, 2).toUpperCase();
-  const certificateIdVisible = `MA-${año}-${titleInitials}`;
-  const certificateIdHidden = '••/•';
+  const certificateIdVisible = codigoSerie || `MA-${año}-${titleInitials}`;
+  const certificateIdHidden = codigoSerie ? '' : '••/•';
+
+  // Es un Giclée si tiene dimensiones de impresión o número de holograma
+  const isGiclee = !!dimensionesImpresion || !!hologramNumber;
 
   return (
     <div
@@ -123,13 +135,26 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
               <span style={{ color: '#666', fontWeight: 500 }}>Título:</span>
               <span style={{ color: '#1a1a1a', fontStyle: 'italic' }}>{titulo}</span>
             </div>
-            <div className="flex justify-between">
-              <span style={{ color: '#666', fontWeight: 500 }}>Dimensiones:</span>
-              <span style={{ color: '#1a1a1a' }}>{dimensiones}</span>
-            </div>
+            {isGiclee ? (
+              <>
+                <div className="flex justify-between">
+                  <span style={{ color: '#666', fontWeight: 500 }}>Original:</span>
+                  <span style={{ color: '#1a1a1a' }}>{dimensionesOriginal || dimensiones}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span style={{ color: '#666', fontWeight: 500 }}>Impresión:</span>
+                  <span style={{ color: '#1a1a1a' }}>{dimensionesImpresion}</span>
+                </div>
+              </>
+            ) : (
+              <div className="flex justify-between">
+                <span style={{ color: '#666', fontWeight: 500 }}>Dimensiones:</span>
+                <span style={{ color: '#1a1a1a' }}>{dimensiones}</span>
+              </div>
+            )}
             <div className="flex justify-between">
               <span style={{ color: '#666', fontWeight: 500 }}>Técnica:</span>
-              <span style={{ color: '#1a1a1a' }}>{tecnica}</span>
+              <span style={{ color: '#1a1a1a' }}>{isGiclee ? 'Giclée Fine Art' : tecnica}</span>
             </div>
             <div className="flex justify-between">
               <span style={{ color: '#666', fontWeight: 500 }}>Año:</span>
@@ -201,23 +226,49 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
             />
           </div>
 
-          {/* Sello de verificación */}
+          {/* Sello de verificación con número de holograma */}
           <div className="text-center mt-3 pt-2" style={{ borderTop: '1px solid #eee' }}>
-            <div
-              className="inline-flex items-center gap-1 px-2 py-1 rounded-full"
-              style={{
-                backgroundColor: 'rgba(197, 160, 89, 0.15)',
-                fontSize: '7px',
-                color: '#c5a059',
-                fontWeight: 500,
-                letterSpacing: '0.5px'
-              }}
-            >
-              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              HOLOGRAMA VERIFICADO
-            </div>
+            {hologramNumber ? (
+              // Mostrar número de holograma real
+              <div className="space-y-1">
+                <div
+                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg"
+                  style={{
+                    backgroundColor: 'rgba(197, 160, 89, 0.2)',
+                    border: '1px solid rgba(197, 160, 89, 0.4)'
+                  }}
+                >
+                  <svg className="w-4 h-4" fill="#c5a059" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <div className="text-left">
+                    <span style={{ fontSize: '6px', color: '#888', display: 'block', letterSpacing: '0.5px' }}>
+                      Nº HOLOGRAMA HAHNEMÜHLE
+                    </span>
+                    <span style={{ fontSize: '11px', color: '#c5a059', fontWeight: 700, letterSpacing: '1px', fontFamily: 'monospace' }}>
+                      {hologramNumber}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              // Mostrar badge genérico
+              <div
+                className="inline-flex items-center gap-1 px-2 py-1 rounded-full"
+                style={{
+                  backgroundColor: 'rgba(197, 160, 89, 0.15)',
+                  fontSize: '7px',
+                  color: '#c5a059',
+                  fontWeight: 500,
+                  letterSpacing: '0.5px'
+                }}
+              >
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                HOLOGRAMA VERIFICADO
+              </div>
+            )}
           </div>
 
           {/* Contacto */}
