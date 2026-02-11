@@ -1,6 +1,7 @@
 // ============================================
-// CERTIFICADO DE AUTENTICIDAD - RÉPLICA EXACTA DEL PDF
-// Basado en: 287216 Certificado Giclée GRANDE - Sara bajo la farola.pdf
+// CERTIFICADO DE AUTENTICIDAD
+// RÉPLICA EXACTA de los PDFs 287213-287216
+// Marco dorado, tipografía elegante, proporción A4
 // ============================================
 
 import React from 'react';
@@ -11,7 +12,6 @@ interface CertificatePreviewProps {
   año?: number;
   dimensiones?: string;
   tecnica?: string;
-  // Giclée
   isGiclee?: boolean;
   tecnicaOriginal?: string;
   medidasOriginal?: string;
@@ -36,239 +36,226 @@ export const CertificatePreview: React.FC<CertificatePreviewProps> = ({
   hologramNumber
 }) => {
   const esGiclee = isGiclee || !!hologramNumber || !!medidasImpresion;
-  const fechaActual = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
     <div
-      className="bg-white relative"
       style={{
         aspectRatio: '210 / 297',
-        fontFamily: "'Montserrat', sans-serif",
-        fontSize: '10px'
+        backgroundColor: '#fff',
+        position: 'relative',
+        overflow: 'hidden',
+        fontFamily: "'Montserrat', sans-serif"
       }}
     >
-      {/* BARRA DORADA LATERAL IZQUIERDA */}
+      {/* MARCO DORADO LATERAL IZQUIERDO */}
       <div
-        className="absolute left-0 top-0 bottom-0"
-        style={{ width: '4%', backgroundColor: '#c5a059' }}
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: '5%',
+          backgroundColor: '#c5a059'
+        }}
       />
 
-      {/* CONTENIDO PRINCIPAL */}
-      <div className="absolute inset-0 pl-[8%] pr-[5%] py-[5%] flex flex-col">
-
+      {/* CONTENIDO */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '4%',
+          bottom: '3%',
+          left: '8%',
+          right: '5%',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
         {/* LOGO */}
-        <div className="text-center mb-[2%]">
+        <div style={{ textAlign: 'center', marginBottom: '2%' }}>
           <img
             src="/logo-myriam.png"
             alt="Myriam Alcaraz"
-            className="mx-auto"
-            style={{ height: '8%', width: 'auto', maxHeight: '40px' }}
+            style={{ height: '32px', width: 'auto' }}
           />
         </div>
 
         {/* LEMA */}
-        <p
-          className="text-center"
-          style={{
-            fontSize: '0.5em',
-            letterSpacing: '0.3em',
-            color: '#666',
-            marginBottom: '3%'
-          }}
-        >
+        <p style={{
+          textAlign: 'center',
+          fontSize: '5px',
+          letterSpacing: '2.5px',
+          color: '#777',
+          marginBottom: '3%'
+        }}>
           ARTE CON ALMA Y SOFISTICACIÓN
         </p>
 
         {/* TÍTULO PRINCIPAL */}
-        <h1
-          className="text-center"
-          style={{
-            fontFamily: "'Cinzel', serif",
-            fontSize: '1.8em',
-            letterSpacing: '0.15em',
-            color: '#222',
-            lineHeight: 1.2,
-            marginBottom: '2%'
-          }}
-        >
-          CERTIFICADO DE<br />AUTENTICIDAD
+        <h1 style={{
+          textAlign: 'center',
+          fontFamily: "'Cinzel', serif",
+          fontSize: '13px',
+          fontWeight: 400,
+          letterSpacing: '4px',
+          color: '#1a1a1a',
+          lineHeight: 1.3,
+          marginBottom: '2%'
+        }}>
+          CERTIFICADO DE<br/>AUTENTICIDAD
         </h1>
 
         {/* LÍNEA DORADA */}
-        <div
-          className="mx-auto"
-          style={{
-            width: '80%',
-            height: '1px',
-            backgroundColor: '#c5a059',
-            marginBottom: '3%'
-          }}
-        />
+        <div style={{
+          width: '75%',
+          height: '1px',
+          backgroundColor: '#c5a059',
+          margin: '0 auto 3%'
+        }} />
 
         {/* TEXTO LEGAL */}
-        <p
-          className="text-center"
-          style={{
-            fontSize: '0.7em',
-            lineHeight: 1.6,
-            color: '#444',
-            marginBottom: '2%',
-            padding: '0 5%'
-          }}
-        >
+        <p style={{
+          textAlign: 'center',
+          fontSize: '5.5px',
+          lineHeight: 1.7,
+          color: '#555',
+          marginBottom: '2%',
+          padding: '0 5%'
+        }}>
           {esGiclee
             ? 'Por la presente se certifica que la reproducción Giclée descrita a continuación es una impresión autorizada y numerada. Todos los derechos de autor están reservados por la artista:'
             : 'Por la presente se certifica que la obra de arte descrita a continuación es una creación original y auténtica. Todos los derechos de autor están reservados por la artista:'
           }
         </p>
 
-        {/* NOMBRE DE LA ARTISTA */}
-        <p
-          className="text-center"
-          style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: '1.4em',
-            fontWeight: 600,
-            color: '#222',
-            marginBottom: '0.5%'
-          }}
-        >
+        {/* NOMBRE ARTISTA */}
+        <p style={{
+          textAlign: 'center',
+          fontFamily: "'Playfair Display', serif",
+          fontSize: '12px',
+          fontWeight: 600,
+          color: '#1a1a1a',
+          marginBottom: '1px'
+        }}>
           Myriam Alcaraz
         </p>
-        <p
-          className="text-center"
-          style={{
-            fontSize: '0.65em',
-            color: '#666',
-            fontStyle: 'italic',
-            marginBottom: '3%'
-          }}
-        >
+        <p style={{
+          textAlign: 'center',
+          fontSize: '5px',
+          color: '#777',
+          fontStyle: 'italic',
+          marginBottom: '3%'
+        }}>
           Pintura Figurativa Contemporánea
         </p>
 
         {/* IMAGEN DE LA OBRA */}
         {imagen && (
-          <div className="text-center" style={{ marginBottom: '3%' }}>
-            <div
-              className="inline-block p-[2px]"
-              style={{ backgroundColor: '#f0f0f0', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
-            >
+          <div style={{ textAlign: 'center', marginBottom: '3%' }}>
+            <div style={{
+              display: 'inline-block',
+              padding: '2px',
+              backgroundColor: '#f5f5f5',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.12)'
+            }}>
               <img
                 src={imagen}
                 alt={titulo}
-                style={{ height: '60px', width: 'auto', display: 'block' }}
+                style={{ height: '50px', width: 'auto', display: 'block' }}
               />
             </div>
           </div>
         )}
 
-        {/* TABLA DE DATOS TÉCNICOS */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
-          <div style={{ padding: '0 8%' }}>
-            {esGiclee ? (
-              // GICLÉE - 8 filas exactas
-              <>
-                <DataRow label="Título de la Obra:" value={titulo} />
-                <DataRow label="Técnica Original:" value={tecnicaOriginal || tecnica || 'Óleo sobre tela'} />
-                <DataRow label="Medidas Original:" value={medidasOriginal || dimensiones || '—'} />
-                <DataRow label="Medidas Impresión:" value={medidasImpresion || 'Tamaño original'} />
-                <DataRow label="Soporte:" value="Papel Hahnemühle Textured - William Turner" />
-                <DataRow label="ID de Referencia:" value={idReferencia || 'MA-2026-GC-XX-01/10'} mono />
-                <DataRow label="Edición:" value={edicion || '1/10'} />
-                <DataRow label="Nº Holograma:" value={hologramNumber || 'Pendiente'} highlight />
-              </>
-            ) : (
-              // OBRA ORIGINAL - 6 filas
-              <>
-                <DataRow label="Título:" value={titulo} />
-                <DataRow label="Año de Creación:" value={String(año)} />
-                <DataRow label="Medidas:" value={dimensiones || '—'} />
-                <DataRow label="Técnica/Medio:" value={tecnica || 'Óleo sobre lienzo'} />
-                <DataRow label="ID de Referencia:" value={`MA-${año}-${titulo.substring(0,2).toUpperCase()}1/1`} mono />
-                <DataRow label="Edición:" value="Obra Única Original" />
-                <DataRow label="Nº Holograma:" value="Incluido con la obra" highlight />
-              </>
-            )}
-          </div>
+        {/* TABLA DE DATOS */}
+        <div style={{ flex: 1, padding: '0 3%' }}>
+          {esGiclee ? (
+            <>
+              <DataRow label="Título de la Obra:" value={titulo} />
+              <DataRow label="Técnica Original:" value={tecnicaOriginal || tecnica || 'Óleo sobre tela'} />
+              <DataRow label="Medidas Original:" value={medidasOriginal || dimensiones || '—'} />
+              <DataRow label="Medidas Impresión:" value={medidasImpresion || 'Tamaño original'} />
+              <DataRow label="Soporte:" value="Papel Hahnemühle Textured - William Turner" small />
+              <DataRow label="ID de Referencia:" value={idReferencia || 'MA-2026-GC-XX-01/10'} mono />
+              <DataRow label="Edición:" value={edicion || '1/10'} />
+              <DataRow label="Nº Holograma:" value={hologramNumber || 'Pendiente'} gold />
+            </>
+          ) : (
+            <>
+              <DataRow label="Título:" value={titulo} />
+              <DataRow label="Año de Creación:" value={String(año)} />
+              <DataRow label="Medidas:" value={dimensiones || '—'} />
+              <DataRow label="Técnica/Medio:" value={tecnica || 'Óleo sobre lienzo'} />
+              <DataRow label="ID de Referencia:" value={`MA-${año}-${titulo.substring(0,2).toUpperCase()}1/1`} mono />
+              <DataRow label="Edición:" value="Obra Única Original" />
+              <DataRow label="Nº Holograma:" value="Incluido con la obra" gold />
+            </>
+          )}
         </div>
 
         {/* FECHA Y FIRMA */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            padding: '0 8%',
-            marginTop: 'auto',
-            marginBottom: '3%'
-          }}
-        >
-          {/* Fecha */}
-          <div style={{ fontSize: '0.7em', color: '#333' }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+          marginTop: 'auto',
+          padding: '0 3%'
+        }}>
+          <div style={{ fontSize: '5px', color: '#333' }}>
             <span style={{ fontWeight: 600 }}>FECHA: </span>
-            <span>{fechaActual}</span>
+            <span>10 de febrero de 2026</span>
           </div>
-
-          {/* Firma */}
           <div style={{ textAlign: 'right' }}>
-            <div style={{ width: '80px', borderTop: '1px solid #333', marginBottom: '4px' }} />
-            <p style={{ fontSize: '0.8em', fontWeight: 600, color: '#222', margin: 0 }}>Myriam Alcaraz</p>
-            <p style={{ fontSize: '0.55em', color: '#666', fontStyle: 'italic', margin: 0 }}>Pintura Figurativa Contemporánea</p>
+            <div style={{ width: '55px', borderTop: '1px solid #333', marginBottom: '2px' }} />
+            <p style={{ fontSize: '6px', fontWeight: 600, color: '#1a1a1a', margin: 0 }}>Myriam Alcaraz</p>
+            <p style={{ fontSize: '4px', color: '#777', fontStyle: 'italic', margin: 0 }}>Pintura Figurativa Contemporánea</p>
           </div>
         </div>
 
-        {/* FOOTER CON CONTACTO */}
-        <div
-          style={{
-            textAlign: 'center',
-            fontSize: '0.5em',
-            color: '#888',
-            borderTop: '1px solid #eee',
-            paddingTop: '2%'
-          }}
-        >
-          <span>myriamalcaraz.com</span>
-          <span style={{ margin: '0 8px' }}>•</span>
-          <span>myriamhotmail@hotmail.com</span>
-          <span style={{ margin: '0 8px' }}>•</span>
-          <span>@myriamalcaraz.artist</span>
+        {/* FOOTER */}
+        <div style={{
+          textAlign: 'center',
+          fontSize: '4px',
+          color: '#999',
+          marginTop: '2%',
+          paddingTop: '2%',
+          borderTop: '1px solid #eee'
+        }}>
+          myriamalcaraz.com &nbsp;•&nbsp; myriamhotmail@hotmail.com &nbsp;•&nbsp; @myriamalcaraz.artist
         </div>
       </div>
     </div>
   );
 };
 
-// Componente para cada fila de datos
+// Fila de datos con estilo elegante
 const DataRow: React.FC<{
   label: string;
   value: string;
   mono?: boolean;
-  highlight?: boolean;
-}> = ({ label, value, mono, highlight }) => (
-  <div
-    style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'baseline',
-      borderBottom: '1px dotted #ccc',
-      padding: '4px 0',
-      fontSize: '0.75em'
-    }}
-  >
+  small?: boolean;
+  gold?: boolean;
+}> = ({ label, value, mono, small, gold }) => (
+  <div style={{
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    borderBottom: '1px dotted #ccc',
+    padding: '2.5px 0',
+    fontSize: small ? '5px' : '6px'
+  }}>
     <span style={{
       fontWeight: 600,
-      color: highlight ? '#c5a059' : '#333',
-      flexShrink: 0
+      color: gold ? '#c5a059' : '#333'
     }}>
       {label}
     </span>
     <span style={{
-      color: highlight ? '#c5a059' : '#555',
-      textAlign: 'right',
-      fontFamily: mono ? 'monospace' : 'inherit',
-      fontWeight: highlight ? 600 : 400,
-      fontSize: mono ? '0.9em' : '1em'
+      color: gold ? '#c5a059' : '#444',
+      fontFamily: mono ? "'Courier New', monospace" : 'inherit',
+      fontSize: mono ? '5px' : (small ? '5px' : '6px'),
+      fontWeight: gold ? 600 : 400,
+      textAlign: 'right'
     }}>
       {value}
     </span>
