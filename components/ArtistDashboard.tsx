@@ -2475,21 +2475,18 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
 
                         {/* ========================================
                             BLOQUE DERECHO: Certificado de Autenticidad
-                            TALLER/ESTUDIO: Vista NÍTIDA (sin blur)
-                            Proporción vertical real de documento A4
+                            TALLER/ESTUDIO: 100% NÍTIDO - Réplica del PDF
+                            Proporción A4 EXACTA - No estirar
                             ======================================== */}
-                        <div className="lg:w-72 w-full flex flex-col">
-                            <h3 className="text-[10px] tracking-[0.3em] text-amber-400 uppercase mb-3 text-center">
+                        <div className="lg:w-60 w-full flex flex-col items-center">
+                            <h3 className="text-[10px] tracking-[0.3em] text-emerald-400 uppercase mb-3 text-center">
                                 Certificado de Autenticidad
                             </h3>
 
-                            {/* Contenedor del certificado - SIN BLUR (uso interno) */}
-                            <div
-                                className="relative bg-white/5 rounded-xl p-3"
-                                style={{ aspectRatio: '210 / 297' }} /* Proporción A4 */
-                            >
-                                {/* Certificado NÍTIDO - todos los datos reales visibles */}
-                                <div className="h-full overflow-hidden rounded-lg shadow-2xl">
+                            {/* Contenedor del certificado - NÍTIDO (uso interno) */}
+                            <div className="relative w-full max-w-[220px]">
+                                {/* Certificado 100% NÍTIDO - Réplica exacta del PDF */}
+                                <div className="rounded-lg overflow-hidden shadow-2xl border border-white/10">
                                     <CertificatePreview
                                         titulo={previewArtwork.title}
                                         imagen={previewArtwork.image}
@@ -2507,17 +2504,17 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                                 </div>
 
                                 {/* Badge de verificación (uso interno) */}
-                                <div className="absolute top-1 right-1 bg-emerald-500/90 text-white text-[8px] px-2 py-1 rounded-full font-medium flex items-center gap-1">
+                                <div className="absolute -top-2 -right-2 bg-emerald-500 text-white text-[7px] px-2 py-1 rounded-full font-bold flex items-center gap-1 shadow-lg">
                                     <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                     </svg>
-                                    Uso Interno
+                                    USO INTERNO
                                 </div>
                             </div>
 
                             {/* Nota informativa */}
-                            <p className="text-emerald-400/70 text-[10px] text-center mt-3 leading-relaxed">
-                                Vista previa real del certificado. Este es el documento que recibirá el cliente.
+                            <p className="text-emerald-400/80 text-[9px] text-center mt-3 leading-relaxed max-w-[200px]">
+                                Vista previa real. Así quedará el documento del cliente.
                             </p>
                         </div>
                     </div>
