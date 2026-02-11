@@ -479,17 +479,21 @@ const Portfolio: React.FC = () => {
 
             {/* ========================================
                 BLOQUE DERECHO: Certificado de Autenticidad
-                Con filtro de blur para seguridad
+                PORTFOLIO: Vista PIXELADA (seguridad cliente)
+                Proporción vertical real de documento A4
                 ======================================== */}
-            <div className="lg:w-64 w-full flex flex-col">
+            <div className="lg:w-56 w-full flex flex-col">
               <h3 className="text-[10px] tracking-[0.3em] text-amber-400 uppercase mb-3 text-center">
                 Certificado de Autenticidad
               </h3>
 
-              {/* Contenedor del certificado con BLUR de seguridad */}
-              <div className="relative flex-1">
-                {/* Certificado con filtro de desenfoque */}
-                <div className="filter blur-[2px] hover:blur-[1px] transition-all duration-300">
+              {/* Contenedor del certificado - Proporción A4 con BLUR */}
+              <div
+                className="relative bg-white/5 rounded-xl p-2"
+                style={{ aspectRatio: '210 / 297' }} /* Proporción A4 */
+              >
+                {/* Certificado con filtro de desenfoque (seguridad) */}
+                <div className="h-full overflow-hidden rounded-lg filter blur-[2px] hover:blur-[1.5px] transition-all duration-300">
                   <CertificatePreview
                     titulo={selectedObra.titulo}
                     imagen={selectedObra.imagen}
@@ -501,10 +505,10 @@ const Portfolio: React.FC = () => {
                 </div>
 
                 {/* Overlay de protección */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none rounded-lg" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none rounded-xl" />
 
                 {/* Badge de seguridad */}
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-amber-500/90 text-white text-[10px] px-3 py-1.5 rounded-full font-medium backdrop-blur-sm flex items-center gap-1.5 shadow-lg">
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-amber-500/90 text-white text-[9px] px-3 py-1.5 rounded-full font-medium backdrop-blur-sm flex items-center gap-1.5 shadow-lg">
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
