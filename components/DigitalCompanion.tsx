@@ -233,31 +233,61 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                   className="relative cursor-pointer group"
                   onClick={() => setCertificateRevealed(!certificateRevealed)}
                 >
+                  {/* Marco dorado completo */}
                   <div
                     className="rounded-lg overflow-hidden transition-all duration-700 mx-auto"
                     style={{
                       maxWidth: '340px',
+                      padding: '4px',
+                      background: 'linear-gradient(135deg, #c5a059 0%, #e8d5a3 25%, #c5a059 50%, #a8863d 75%, #c5a059 100%)',
                       boxShadow: certificateRevealed
-                        ? '0 25px 60px rgba(0,0,0,0.5), 0 0 40px rgba(197,160,89,0.15)'
-                        : '0 15px 40px rgba(0,0,0,0.4)',
-                      filter: certificateRevealed ? 'none' : 'blur(4px)',
+                        ? '0 25px 60px rgba(0,0,0,0.5), 0 0 50px rgba(197,160,89,0.25)'
+                        : '0 15px 40px rgba(0,0,0,0.4), 0 0 20px rgba(197,160,89,0.1)',
                       transform: certificateRevealed ? 'scale(1)' : 'scale(0.97)',
                     }}
                   >
-                    <CertificatePreview
-                      titulo={artwork?.title || 'Sin titulo'}
-                      imagen={artwork?.image}
-                      año={parseInt(displayYear)}
-                      dimensiones={artwork?.dimensions}
-                      tecnica={artwork?.technique}
-                      isGiclee={!!gicleeData}
-                      tecnicaOriginal={artwork?.technique}
-                      medidasOriginal={artwork?.dimensions}
-                      medidasImpresion={gicleeData?.medidasImpresion || 'Tamano original'}
-                      idReferencia={gicleeData?.id || `MA-${displayYear}-${(artwork?.title || 'XX').substring(0,2).toUpperCase()}1/1`}
-                      edicion={gicleeData?.edicion || 'Obra Unica Original'}
-                      hologramNumber={gicleeData?.hologram || null}
-                    />
+                    <div className="relative rounded overflow-hidden bg-white">
+                      <CertificatePreview
+                        titulo={artwork?.title || 'Sin t\u00edtulo'}
+                        imagen={artwork?.image}
+                        año={parseInt(displayYear)}
+                        dimensiones={artwork?.dimensions}
+                        tecnica={artwork?.technique}
+                        isGiclee={!!gicleeData}
+                        tecnicaOriginal={artwork?.technique}
+                        medidasOriginal={artwork?.dimensions}
+                        medidasImpresion={gicleeData?.medidasImpresion || 'Tama\u00f1o original'}
+                        idReferencia={gicleeData?.id || `MA-${displayYear}-${(artwork?.title || 'XX').substring(0,2).toUpperCase()}1/1`}
+                        edicion={gicleeData?.edicion || 'Obra \u00danica Original'}
+                        hologramNumber={gicleeData?.hologram || null}
+                      />
+                      {/* Blur selectivo: solo datos sensibles */}
+                      <div
+                        className="absolute left-0 right-0 transition-all duration-700"
+                        style={{
+                          top: '62%',
+                          bottom: '12%',
+                          backdropFilter: certificateRevealed ? 'blur(3px)' : 'blur(8px)',
+                          WebkitBackdropFilter: certificateRevealed ? 'blur(3px)' : 'blur(8px)',
+                          background: certificateRevealed
+                            ? 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 30%, rgba(255,255,255,0.15) 70%, rgba(255,255,255,0) 100%)'
+                            : 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 30%, rgba(255,255,255,0.3) 70%, rgba(255,255,255,0) 100%)',
+                        }}
+                      />
+                      <div
+                        className="absolute flex items-center gap-1 transition-all duration-500"
+                        style={{
+                          right: '8%',
+                          top: '70%',
+                          opacity: certificateRevealed ? 0.6 : 0.9,
+                        }}
+                      >
+                        <Shield size={8} style={{ color: '#c5a059' }} />
+                        <span style={{ fontSize: '4px', color: '#c5a059', letterSpacing: '1px', fontWeight: 600 }}>
+                          DATOS PROTEGIDOS
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
                   <div
