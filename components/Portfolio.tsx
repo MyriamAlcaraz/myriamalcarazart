@@ -487,30 +487,33 @@ const Portfolio: React.FC = () => {
                 Certificado de Autenticidad
               </h3>
 
-              {/* Contenedor del certificado - Tu certificado REAL con borde dorado */}
+              {/* Contenedor del certificado - CERTIFICADO REAL con borde dorado nítido */}
               <div className="relative w-full max-w-[200px]">
-                {/* Marco dorado exterior visible */}
+                {/* Borde dorado NÍTIDO (fuera del blur) */}
                 <div
-                  className="rounded-lg overflow-hidden shadow-2xl"
+                  className="rounded-lg overflow-hidden"
                   style={{
-                    boxShadow: '0 0 0 2px #c5a059, 0 8px 32px rgba(197, 160, 89, 0.3), 0 4px 16px rgba(0,0,0,0.2)'
+                    boxShadow: '0 0 0 3px #c5a059, 0 8px 32px rgba(197, 160, 89, 0.4), 0 4px 16px rgba(0,0,0,0.3)'
                   }}
                 >
-                  {/* Certificado real con efecto de protección elegante */}
-                  <div style={{ filter: 'blur(1px) saturate(0.9)', transform: 'scale(1.01)' }}>
+                  {/* Certificado REAL con blur(4px) de protección */}
+                  <div style={{ filter: 'blur(4px)' }}>
                     <CertificatePreview
-                      titulo={selectedObra.titulo}
+                      titulo="Joven con vela en la bruma"
                       imagen={selectedObra.imagen}
-                      año={selectedObra.año}
-                      dimensiones={selectedObra.dimensiones}
-                      tecnica={selectedObra.tecnica}
-                      isGiclee={false}
+                      año={2026}
+                      dimensiones="100x73 cm"
+                      tecnica="Óleo sobre tela"
+                      isGiclee={true}
+                      tecnicaOriginal="Óleo sobre tela"
+                      medidasOriginal="100x73 cm"
+                      medidasImpresion="30 x 40 cm"
+                      idReferencia="MA-2026-GC-JC-01/10-S"
+                      edicion="1/10"
+                      hologramNumber="287213"
                     />
                   </div>
                 </div>
-
-                {/* Overlay sutil de prestigio */}
-                <div className="absolute inset-0 bg-gradient-to-t from-amber-900/20 via-transparent to-amber-100/10 pointer-events-none rounded-lg" />
 
                 {/* Badge de seguridad */}
                 <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-amber-500/90 text-white text-[8px] px-2 py-1 rounded-full font-medium backdrop-blur-sm flex items-center gap-1 shadow-lg whitespace-nowrap">
