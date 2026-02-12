@@ -487,22 +487,30 @@ const Portfolio: React.FC = () => {
                 Certificado de Autenticidad
               </h3>
 
-              {/* Contenedor del certificado - Ancho fijo, proporción A4 natural */}
+              {/* Contenedor del certificado - Tu certificado REAL con borde dorado */}
               <div className="relative w-full max-w-[200px]">
-                {/* Certificado con BLUR (seguridad) */}
-                <div className="filter blur-[2px] hover:blur-[1px] transition-all duration-300 rounded-lg overflow-hidden shadow-xl">
-                  <CertificatePreview
-                    titulo={selectedObra.titulo}
-                    imagen={selectedObra.imagen}
-                    año={selectedObra.año}
-                    dimensiones={selectedObra.dimensiones}
-                    tecnica={selectedObra.tecnica}
-                    isGiclee={false}
-                  />
+                {/* Marco dorado exterior visible */}
+                <div
+                  className="rounded-lg overflow-hidden shadow-2xl"
+                  style={{
+                    boxShadow: '0 0 0 2px #c5a059, 0 8px 32px rgba(197, 160, 89, 0.3), 0 4px 16px rgba(0,0,0,0.2)'
+                  }}
+                >
+                  {/* Certificado real con efecto de protección elegante */}
+                  <div style={{ filter: 'blur(1px) saturate(0.9)', transform: 'scale(1.01)' }}>
+                    <CertificatePreview
+                      titulo={selectedObra.titulo}
+                      imagen={selectedObra.imagen}
+                      año={selectedObra.año}
+                      dimensiones={selectedObra.dimensiones}
+                      tecnica={selectedObra.tecnica}
+                      isGiclee={false}
+                    />
+                  </div>
                 </div>
 
-                {/* Overlay de protección */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none rounded-lg" />
+                {/* Overlay sutil de prestigio */}
+                <div className="absolute inset-0 bg-gradient-to-t from-amber-900/20 via-transparent to-amber-100/10 pointer-events-none rounded-lg" />
 
                 {/* Badge de seguridad */}
                 <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-amber-500/90 text-white text-[8px] px-2 py-1 rounded-full font-medium backdrop-blur-sm flex items-center gap-1 shadow-lg whitespace-nowrap">

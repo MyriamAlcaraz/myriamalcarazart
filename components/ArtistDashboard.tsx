@@ -2417,9 +2417,10 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                         <X size={24} className="text-white" />
                     </button>
 
-                    {/* CERTIFICADO NÍTIDO - TAMAÑO REAL */}
+                    {/* CERTIFICADO NÍTIDO - TAMAÑO REAL 85vh CENTRADO */}
                     <div
-                        className="w-[320px] shadow-2xl"
+                        className="h-[85vh] shadow-2xl mx-auto"
+                        style={{ aspectRatio: '210 / 297' }}
                         onClick={(e) => e.stopPropagation()}
                     >
                         <CertificatePreview
