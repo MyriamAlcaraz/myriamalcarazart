@@ -468,36 +468,43 @@ const Portfolio: React.FC = () => {
                   <div className="h-px flex-1 bg-gradient-to-l from-transparent to-amber-500/50"></div>
                 </div>
 
-                {/* CERTIFICADO REAL con datos de la obra seleccionada */}
-                <div className="relative">
-                  {/* Borde dorado NÍTIDO */}
+                {/* CERTIFICADO REAL - Datos PDF 287213 */}
+                <div className="relative transform hover:scale-[1.02] transition-transform duration-300">
+                  {/* Borde dorado #c5a059 NÍTIDO */}
                   <div
                     className="rounded-xl overflow-hidden"
                     style={{
-                      boxShadow: '0 0 0 3px #c5a059, 0 20px 50px rgba(197, 160, 89, 0.25), 0 10px 30px rgba(0,0,0,0.4)'
+                      border: '4px solid #c5a059',
+                      boxShadow: '0 25px 60px rgba(197, 160, 89, 0.35), 0 15px 40px rgba(0,0,0,0.5)'
                     }}
                   >
-                    {/* Certificado con blur de protección */}
-                    <div style={{ filter: 'blur(3px)' }}>
+                    {/* CertificatePreview REAL con datos del PDF 287213 */}
+                    <div style={{ filter: 'blur(2.5px)' }}>
                       <CertificatePreview
-                        titulo={selectedObra.titulo}
-                        imagen={selectedObra.imagen}
-                        año={selectedObra.año}
-                        dimensiones={selectedObra.dimensiones}
-                        tecnica={selectedObra.tecnica}
-                        isGiclee={false}
-                        idReferencia={`MA-${selectedObra.año}-${selectedObra.titulo.substring(0,2).toUpperCase()}-1/1`}
-                        edicion="Obra Única Original"
+                        titulo="Joven con vela en la bruma"
+                        imagen="/obras/OBRA_01.jpg"
+                        año={2026}
+                        dimensiones="100x73 cm"
+                        tecnica="Óleo sobre tela"
+                        isGiclee={true}
+                        tecnicaOriginal="Óleo sobre tela"
+                        medidasOriginal="100x73 cm"
+                        medidasImpresion="30 x 40 cm"
+                        idReferencia="MA-2026-GC-JC-01/10-S"
+                        edicion="1/10"
+                        hologramNumber="287213"
                       />
                     </div>
                   </div>
 
-                  {/* Sello de autenticidad superpuesto */}
-                  <div className="absolute -bottom-3 -right-3 w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 shadow-xl flex items-center justify-center transform rotate-12">
-                    <div className="text-center">
-                      <div className="text-[6px] text-white/80 font-medium">MYRIAM</div>
-                      <div className="text-[7px] text-white font-bold tracking-wider">ALCARAZ</div>
-                      <div className="text-[5px] text-white/70">AUTÉNTICO</div>
+                  {/* Sello MYRIAM ALCARAZ */}
+                  <div className="absolute -bottom-4 -right-4 w-20 h-20 rounded-full shadow-2xl flex items-center justify-center transform rotate-12"
+                       style={{ background: 'linear-gradient(135deg, #c5a059 0%, #8b6914 100%)' }}>
+                    <div className="text-center leading-tight">
+                      <div className="text-[8px] text-white font-bold tracking-widest">MYRIAM</div>
+                      <div className="text-[9px] text-white font-black tracking-wider">ALCARAZ</div>
+                      <div className="w-8 h-px bg-white/50 mx-auto my-0.5"></div>
+                      <div className="text-[6px] text-white/90 tracking-wide">AUTÉNTICO</div>
                     </div>
                   </div>
                 </div>
