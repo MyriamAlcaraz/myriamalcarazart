@@ -390,144 +390,131 @@ const Portfolio: React.FC = () => {
             <ChevronRight size={24} className="text-white" />
           </button>
 
-          {/* Contenido del modal - DOS BLOQUES */}
+          {/* ============================================
+              LAYOUT SORPRENDENTE: Imagen protagonista + Certificado flotante
+              ============================================ */}
           <div
-            className="max-w-5xl w-full mx-12 flex flex-col lg:flex-row gap-8 items-stretch"
+            className="max-w-6xl w-full mx-4 md:mx-12 relative"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* ========================================
-                BLOQUE IZQUIERDO: Imagen + Ficha Técnica
-                ======================================== */}
-            <div className="flex-1 flex flex-col gap-4">
-              {/* Imagen de la obra con ZOOM interactivo */}
-              <div
-                className="relative flex items-center justify-center bg-black/20 rounded-xl p-4 cursor-zoom-in group"
-                onClick={() => setModalZoom(!modalZoom)}
-                onMouseMove={modalZoom ? handleModalImageMove : undefined}
-                onMouseLeave={() => modalZoom && setModalZoom(false)}
-              >
-                {/* Imagen normal o con zoom */}
-                <div
-                  className="relative overflow-hidden rounded-lg shadow-2xl"
-                  style={{
-                    maxWidth: '100%',
-                    maxHeight: modalZoom ? '60vh' : '50vh'
-                  }}
-                >
-                  <img
-                    src={selectedObra.imagen}
-                    alt={selectedObra.titulo}
-                    className="w-full h-full object-contain transition-transform duration-200"
-                    style={modalZoom ? {
-                      transform: 'scale(2.5)',
-                      transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
-                      cursor: 'zoom-out'
-                    } : {
-                      cursor: 'zoom-in'
-                    }}
-                  />
-                </div>
-
-                {/* Indicador de zoom (lupita) */}
-                {!modalZoom && (
-                  <div className="absolute bottom-6 right-6 bg-white/20 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ZoomIn size={20} className="text-white" />
-                  </div>
-                )}
-
-                {/* Instrucción de zoom */}
-                {!modalZoom && (
-                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-white/60 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">
-                    Clic para ampliar
-                  </div>
-                )}
-              </div>
-
-              {/* Ficha Técnica - DEBAJO de la imagen */}
-              <div className="bg-white/5 backdrop-blur-md rounded-xl p-5 text-white">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-[10px] tracking-[0.3em] text-amber-400 uppercase">Ficha Técnica</h3>
-                  <span className="text-stone-500 text-xs">
-                    {OBRAS_GALERIA.findIndex(o => o.id === selectedObra.id) + 1} / {OBRAS_GALERIA.length}
-                  </span>
-                </div>
-
-                <h2 className="font-serif text-xl md:text-2xl mb-4 text-white leading-tight">{selectedObra.titulo}</h2>
-
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div className="bg-white/5 rounded-lg p-3">
-                    <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Dimensiones</span>
-                    <span className="font-medium text-white text-sm">{selectedObra.dimensiones}</span>
-                  </div>
-                  <div className="bg-white/5 rounded-lg p-3">
-                    <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Técnica</span>
-                    <span className="font-medium text-white text-sm">{selectedObra.tecnica}</span>
-                  </div>
-                  <div className="bg-white/5 rounded-lg p-3">
-                    <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Año</span>
-                    <span className="font-medium text-white text-sm">{selectedObra.año}</span>
-                  </div>
-                  <div className="bg-white/5 rounded-lg p-3">
-                    <span className="text-stone-400 block text-[10px] uppercase tracking-wider mb-1">Estado</span>
-                    <span className={`font-medium text-sm ${selectedObra.disponible ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {selectedObra.disponible ? 'Disponible' : 'Vendida'}
-                    </span>
-                  </div>
-                </div>
+            {/* TÍTULO DE LA OBRA - Prominente arriba */}
+            <div className="text-center mb-6">
+              <span className="text-stone-500 text-xs">
+                {OBRAS_GALERIA.findIndex(o => o.id === selectedObra.id) + 1} / {OBRAS_GALERIA.length}
+              </span>
+              <h2 className="font-serif text-2xl md:text-4xl text-white mt-1">{selectedObra.titulo}</h2>
+              <div className="flex items-center justify-center gap-4 mt-2 text-stone-400 text-sm">
+                <span>{selectedObra.tecnica}</span>
+                <span className="text-amber-500">•</span>
+                <span>{selectedObra.dimensiones}</span>
+                <span className="text-amber-500">•</span>
+                <span>{selectedObra.año}</span>
               </div>
             </div>
 
-            {/* ========================================
-                BLOQUE DERECHO: Certificado de Autenticidad
-                PORTFOLIO: Vista PIXELADA (seguridad cliente)
-                Proporción A4 EXACTA - No estirar
-                ======================================== */}
-            <div className="lg:w-52 w-full flex flex-col items-center">
-              <h3 className="text-[10px] tracking-[0.3em] text-amber-400 uppercase mb-3 text-center">
-                Certificado de Autenticidad
-              </h3>
+            {/* COMPOSICIÓN PRINCIPAL */}
+            <div className="flex flex-col lg:flex-row gap-6 items-start">
 
-              {/* Contenedor del certificado - CERTIFICADO REAL con borde dorado nítido */}
-              <div className="relative w-full max-w-[200px]">
-                {/* Borde dorado NÍTIDO (fuera del blur) */}
+              {/* IMAGEN PROTAGONISTA con zoom */}
+              <div className="flex-1 relative">
                 <div
-                  className="rounded-lg overflow-hidden"
-                  style={{
-                    boxShadow: '0 0 0 3px #c5a059, 0 8px 32px rgba(197, 160, 89, 0.4), 0 4px 16px rgba(0,0,0,0.3)'
-                  }}
+                  className="relative flex items-center justify-center bg-gradient-to-br from-stone-900/50 to-black/50 rounded-2xl p-6 cursor-zoom-in group"
+                  onClick={() => setModalZoom(!modalZoom)}
+                  onMouseMove={modalZoom ? handleModalImageMove : undefined}
+                  onMouseLeave={() => modalZoom && setModalZoom(false)}
                 >
-                  {/* Certificado REAL con blur(4px) de protección */}
-                  <div style={{ filter: 'blur(4px)' }}>
-                    <CertificatePreview
-                      titulo="Joven con vela en la bruma"
-                      imagen={selectedObra.imagen}
-                      año={2026}
-                      dimensiones="100x73 cm"
-                      tecnica="Óleo sobre tela"
-                      isGiclee={true}
-                      tecnicaOriginal="Óleo sobre tela"
-                      medidasOriginal="100x73 cm"
-                      medidasImpresion="30 x 40 cm"
-                      idReferencia="MA-2026-GC-JC-01/10-S"
-                      edicion="1/10"
-                      hologramNumber="287213"
+                  <div
+                    className="relative overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10"
+                    style={{ maxHeight: modalZoom ? '70vh' : '60vh' }}
+                  >
+                    <img
+                      src={selectedObra.imagen}
+                      alt={selectedObra.titulo}
+                      className="w-full h-full object-contain transition-transform duration-200"
+                      style={modalZoom ? {
+                        transform: 'scale(2.5)',
+                        transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                        cursor: 'zoom-out'
+                      } : { cursor: 'zoom-in' }}
                     />
                   </div>
+
+                  {/* Lupita */}
+                  {!modalZoom && (
+                    <div className="absolute bottom-8 right-8 bg-amber-500/80 backdrop-blur-sm rounded-full p-3 opacity-0 group-hover:opacity-100 transition-all shadow-lg">
+                      <ZoomIn size={20} className="text-white" />
+                    </div>
+                  )}
                 </div>
 
-                {/* Badge de seguridad */}
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-amber-500/90 text-white text-[8px] px-2 py-1 rounded-full font-medium backdrop-blur-sm flex items-center gap-1 shadow-lg whitespace-nowrap">
-                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  Protegido
+                {/* ESTADO - Badge flotante sobre la imagen */}
+                <div className={`absolute top-8 left-8 px-4 py-2 rounded-full text-sm font-medium shadow-lg ${
+                  selectedObra.disponible
+                    ? 'bg-emerald-500/90 text-white'
+                    : 'bg-red-500/90 text-white'
+                }`}>
+                  {selectedObra.disponible ? '● Disponible' : '● Vendida'}
                 </div>
               </div>
 
-              {/* Nota informativa */}
-              <p className="text-stone-500 text-[9px] text-center mt-3 leading-relaxed max-w-[180px]">
-                Incluye certificado firmado con holograma Hahnemühle
-              </p>
+              {/* CERTIFICADO DE AUTENTICIDAD - Columna derecha elegante */}
+              <div className="lg:w-72 w-full flex flex-col">
+                {/* Encabezado con línea dorada */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent to-amber-500/50"></div>
+                  <h3 className="text-[11px] tracking-[0.25em] text-amber-400 uppercase whitespace-nowrap">
+                    Certificado de Autenticidad
+                  </h3>
+                  <div className="h-px flex-1 bg-gradient-to-l from-transparent to-amber-500/50"></div>
+                </div>
+
+                {/* CERTIFICADO REAL con datos de la obra seleccionada */}
+                <div className="relative">
+                  {/* Borde dorado NÍTIDO */}
+                  <div
+                    className="rounded-xl overflow-hidden"
+                    style={{
+                      boxShadow: '0 0 0 3px #c5a059, 0 20px 50px rgba(197, 160, 89, 0.25), 0 10px 30px rgba(0,0,0,0.4)'
+                    }}
+                  >
+                    {/* Certificado con blur de protección */}
+                    <div style={{ filter: 'blur(3px)' }}>
+                      <CertificatePreview
+                        titulo={selectedObra.titulo}
+                        imagen={selectedObra.imagen}
+                        año={selectedObra.año}
+                        dimensiones={selectedObra.dimensiones}
+                        tecnica={selectedObra.tecnica}
+                        isGiclee={false}
+                        idReferencia={`MA-${selectedObra.año}-${selectedObra.titulo.substring(0,2).toUpperCase()}-1/1`}
+                        edicion="Obra Única Original"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Sello de autenticidad superpuesto */}
+                  <div className="absolute -bottom-3 -right-3 w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 shadow-xl flex items-center justify-center transform rotate-12">
+                    <div className="text-center">
+                      <div className="text-[6px] text-white/80 font-medium">MYRIAM</div>
+                      <div className="text-[7px] text-white font-bold tracking-wider">ALCARAZ</div>
+                      <div className="text-[5px] text-white/70">AUTÉNTICO</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Información adicional */}
+                <div className="mt-6 p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-amber-500/20">
+                  <div className="flex items-center gap-2 text-amber-400 mb-2">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-xs font-medium">Garantía de autenticidad</span>
+                  </div>
+                  <p className="text-stone-400 text-[10px] leading-relaxed">
+                    Cada obra incluye certificado firmado por la artista con holograma de seguridad Hahnemühle.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
