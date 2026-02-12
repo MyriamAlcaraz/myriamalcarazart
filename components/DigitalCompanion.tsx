@@ -69,11 +69,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
     return (
       <div className="fixed inset-0 z-[110] bg-gradient-to-br from-slate-900 to-slate-800 p-4 md:p-8 overflow-y-auto">
         <Certificate
-          onClose={() => setShowCertificate(false)}
-          artworkId={artworkId}
-          artistInfo={ARTIST_INFO}
           artwork={artwork}
-          showStudioAccess={showCertificateAccess}
         />
         <button
           onClick={onClose}
@@ -109,7 +105,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                 </div>
                 <div>
                   <h3 className="font-bold text-slate-900 text-lg">{artwork?.title || 'Obra de Arte'}</h3>
-                  <p className="text-sm text-slate-600">by {ARTIST_INFO.name} &bull; {displayYear}</p>
+                  <p className="text-sm text-slate-600">by {ARTIST_INFO.name} · {displayYear}</p>
                 </div>
               </div>
 
@@ -153,11 +149,11 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
           {/* PANEL DERECHO: FICHA TECNICA */}
           <div className="lg:w-96 bg-white rounded-2xl shadow-2xl p-6">
             <h3 className="font-serif text-xl text-slate-900 mb-4 pb-2 border-b border-slate-200">
-              Ficha T&eacute;cnica
+              Ficha Técnica
             </h3>
             <div className="space-y-3">
               <div className="flex justify-between py-2 border-b border-slate-100">
-                <span className="font-medium text-slate-700">T&iacute;tulo:</span>
+                <span className="font-medium text-slate-700">Título:</span>
                 <span className="text-slate-900">{artwork?.title || 'Sin titulo'}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-slate-100">
@@ -165,11 +161,11 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                 <span className="text-slate-900">{ARTIST_INFO.name}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-slate-100">
-                <span className="font-medium text-slate-700">A&ntilde;o:</span>
+                <span className="font-medium text-slate-700">Año:</span>
                 <span className="text-slate-900">{displayYear}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-slate-100">
-                <span className="font-medium text-slate-700">T&eacute;cnica:</span>
+                <span className="font-medium text-slate-700">Técnica:</span>
                 <span className="text-slate-900">{artwork?.technique || 'Oleo sobre lienzo'}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-slate-100">
@@ -178,20 +174,21 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
               </div>
               {artwork?.description && (
                 <div className="pt-4">
-                  <h4 className="font-medium text-slate-700 mb-2">Descripci&oacute;n:</h4>
+                  <h4 className="font-medium text-slate-700 mb-2">Descripción:</h4>
                   <p className="text-slate-600 text-sm leading-relaxed">{artwork.description}</p>
                 </div>
               )}
             </div>
             <div className="mt-6 pt-6 border-t border-slate-100">
               <p className="text-xs text-slate-500 text-center mb-3">
-                &iquest;Te gustar&iacute;a saber m&aacute;s sobre esta obra?
+                ¿Te gustaría saber más sobre esta obra?
               </p>
               
+              <a
                 href={`mailto:${ARTIST_INFO.email}?subject=Consulta sobre "${artwork?.title}"&body=Estimada Myriam,%0A%0AHe descubierto tu obra "${artwork?.title}" y me ha cautivado profundamente.%0A%0AMe gustar%C3%ADa conocer m%C3%A1s detalles sobre esta pieza: disponibilidad, opciones de env%C3%ADo y cualquier informaci%C3%B3n adicional que puedas compartirme.%0A%0AQuedo a la espera de tu respuesta.%0A%0AUn cordial saludo.`}
                 className="block w-full bg-gradient-to-r from-slate-800 to-slate-700 text-white py-3 px-4 rounded-xl font-medium hover:from-gold-600 hover:to-gold-500 transition-all text-center text-sm shadow-lg hover:shadow-xl"
               >
-                Solicitar Informaci&oacute;n
+                Solicitar Información
               </a>
             </div>
           </div>
@@ -227,7 +224,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                       Certificado de Autenticidad
                     </p>
                     <p className="text-white/50 text-xs">
-                      Cada obra incluye certificaci&oacute;n oficial con holograma &uacute;nico
+                      Cada obra incluye certificación oficial con holograma único
                     </p>
                   </div>
                 </div>
@@ -250,7 +247,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                     <CertificatePreview
                       titulo={artwork?.title || 'Sin titulo'}
                       imagen={artwork?.image}
-                      ano={parseInt(displayYear)}
+                      año={parseInt(displayYear)}
                       dimensiones={artwork?.dimensions}
                       tecnica={artwork?.technique}
                       isGiclee={!!gicleeData}
@@ -306,7 +303,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                     <Shield size={24} className="text-white" />
                   </div>
                   <h3 className="font-serif text-2xl text-white mb-2">
-                    Garant&iacute;a de<br/>Autenticidad
+                    Garantía de<br/>Autenticidad
                   </h3>
                   <div className="w-12 h-px mt-3" style={{ backgroundColor: '#c5a059' }} />
                 </div>
@@ -320,8 +317,8 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                       <Award size={10} style={{ color: '#c5a059' }} />
                     </div>
                     <div>
-                      <p className="text-white text-sm font-medium">Holograma Hahnem&uuml;hle</p>
-                      <p className="text-white/40 text-xs mt-0.5">N&uacute;mero de serie &uacute;nico e irrepetible</p>
+                      <p className="text-white text-sm font-medium">Holograma Hahnemühle</p>
+                      <p className="text-white/40 text-xs mt-0.5">Número de serie único e irrepetible</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -344,8 +341,8 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                       <Award size={10} style={{ color: '#c5a059' }} />
                     </div>
                     <div>
-                      <p className="text-white text-sm font-medium">Edici&oacute;n Limitada Numerada</p>
-                      <p className="text-white/40 text-xs mt-0.5">M&aacute;ximo 10 reproducciones por obra</p>
+                      <p className="text-white text-sm font-medium">Edición Limitada Numerada</p>
+                      <p className="text-white/40 text-xs mt-0.5">Máximo 10 reproducciones por obra</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -356,8 +353,8 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                       <Award size={10} style={{ color: '#c5a059' }} />
                     </div>
                     <div>
-                      <p className="text-white text-sm font-medium">Papel 100% Algod&oacute;n</p>
-                      <p className="text-white/40 text-xs mt-0.5">Hahnem&uuml;hle William Turner 310g</p>
+                      <p className="text-white text-sm font-medium">Papel 100% Algodón</p>
+                      <p className="text-white/40 text-xs mt-0.5">Hahnemühle William Turner 310g</p>
                     </div>
                   </div>
                 </div>
@@ -371,7 +368,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                     />
                     <div>
                       <p className="text-white/70 text-xs font-medium tracking-wider uppercase">Myriam Alcaraz</p>
-                      <p className="text-white/30 text-[10px]">Pintura Figurativa Contempor&aacute;nea</p>
+                      <p className="text-white/30 text-[10px]">Pintura Figurativa Contemporánea</p>
                     </div>
                   </div>
                 </div>
