@@ -53,7 +53,7 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
       <div className="inline-flex items-center gap-3 border border-gold-300 bg-gold-50/50 px-6 py-3">
         <Gift size={20} className="text-gold-600" />
         <p className="text-gold-700 text-sm tracking-wide">
-          Siete herramientas gratuitas como <span className="font-medium">cortesía de Myriam Alcaraz</span> para la comunidad artística
+          Nueve herramientas gratuitas como <span className="font-medium">cortesía de Myriam Alcaraz</span> para la comunidad artística
         </p>
       </div>
     </div>
@@ -280,7 +280,74 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
           </div>
         </button>
 
-        {/* APP 8: Analizador Premium - DE PAGO */}
+        {/* APP 8: La Paleta de Sorolla - GRATIS */}
+        <a
+          href="/apps/sorolla-paleta.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
+        >
+          <div className="text-center mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-amber-200 via-orange-100 to-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
+              <svg className="w-10 h-10 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-3 py-1">
+              <Gift size={12} /> Gratuito
+            </span>
+          </div>
+
+          <h3 className="font-serif text-2xl text-slate-900 text-center mb-3 leading-snug">
+            La Paleta de Sorolla
+          </h3>
+
+          <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
+            Analiza las obras maestras de Sorolla. Extrae su paleta cromática y descubre los pigmentos exactos que utilizó.
+          </p>
+
+          <div className="border-t border-stone-100 pt-6 text-center">
+            <span className="inline-block border border-gold-500 text-gold-600 py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-500 group-hover:text-white transition-all duration-300">
+              Explorar Obras
+            </span>
+          </div>
+        </a>
+
+        {/* APP 9: El Sol de Sorolla - GRATIS */}
+        <a
+          href="/apps/sol-sorolla.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
+        >
+          <div className="text-center mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-yellow-200 via-orange-200 to-rose-200 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
+              <svg className="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="5" strokeWidth="1.5" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+              </svg>
+            </div>
+            <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-3 py-1">
+              <Gift size={12} /> Gratuito
+            </span>
+          </div>
+
+          <h3 className="font-serif text-2xl text-slate-900 text-center mb-3 leading-snug">
+            El Sol de Sorolla
+          </h3>
+
+          <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
+            Simula la luz mediterránea sobre tus obras. Ajusta la hora del día y observa cómo cambia el volumen y el color.
+          </p>
+
+          <div className="border-t border-stone-100 pt-6 text-center">
+            <span className="inline-block border border-gold-500 text-gold-600 py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-500 group-hover:text-white transition-all duration-300">
+              Simular Luz
+            </span>
+          </div>
+        </a>
+
+        {/* APP 10: Analizador Premium - DE PAGO */}
         <button
           onClick={() => onOpenApp('analizador')}
           className="group bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-8 flex flex-col hover:shadow-2xl transition-all duration-500 text-left relative overflow-hidden"
