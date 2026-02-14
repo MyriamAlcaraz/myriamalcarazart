@@ -282,7 +282,7 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
 
         {/* APP 8: La Paleta de Sorolla - GRATIS */}
         <a
-          href="/apps/sorolla-paleta.html"
+          href="/apps/SOROLLA/index.html"
           target="_blank"
           rel="noopener noreferrer"
           className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
@@ -315,7 +315,7 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
 
         {/* APP 9: El Sol de Sorolla - GRATIS */}
         <a
-          href="/apps/sol-sorolla.html"
+          href="/apps/SOL%20DE%20SOROLLA/index.html"
           target="_blank"
           rel="noopener noreferrer"
           className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
