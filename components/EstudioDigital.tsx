@@ -57,7 +57,7 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
       <div className="inline-flex items-center gap-3 border border-gold-300 bg-gold-50/50 px-6 py-3">
         <Gift size={20} className="text-gold-600" />
         <p className="text-gold-700 text-sm tracking-wide">
-          Cinco herramientas como <span className="font-medium">cortesía de Myriam Alcaraz</span> para la comunidad artística
+          Cuatro herramientas gratuitas + una profesional como <span className="font-medium">cortesía de Myriam Alcaraz</span>
         </p>
       </div>
     </div>
@@ -66,16 +66,14 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
     <section className="max-w-5xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-        {/* APP 1: Composición Áurea - gratis */}
+        {/* APP 1: Atlas de Transparencias - gratis */}
         <button
-          onClick={() => onOpenApp('composicion')}
+          onClick={() => onOpenApp('atlas')}
           className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
         >
           <div className="text-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-amber-100 to-gold-200 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
-              <svg className="w-10 h-10 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
-              </svg>
+            <div className="w-20 h-20 bg-gradient-to-br from-sky-100 via-amber-100 to-slate-200 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
+              <Eye className="w-10 h-10 text-sky-600" />
             </div>
             <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-3 py-1">
               <Gift size={12} /> Gratuito
@@ -83,30 +81,60 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
           </div>
 
           <h3 className="font-serif text-2xl text-slate-900 text-center mb-3 leading-snug">
-            Master de Composición Áurea
+            Atlas de Transparencias
           </h3>
 
-<p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
-             Aplica la Regla de los Tercios a cualquier formato de lienzo.
-             Encuentra los puntos de fuerza para una composición equilibrada.
-           </p>
+          <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
+            Explora el comportamiento lumínico de cada pigmento. Opacidad, veladura y poder cubriente en las 3 marcas premium.
+          </p>
 
           <div className="border-t border-stone-100 pt-6 text-center">
             <span className="inline-block border border-gold-500 text-gold-600 py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-500 group-hover:text-white transition-all duration-300">
-              Abrir herramienta
+              Explorar Atlas
             </span>
           </div>
         </button>
 
-        {/* APP 2: Diccionario de Pigmentos - gratis */}
+        {/* APP 2: Paletas de los Maestros - gratis */}
         <button
-          onClick={() => onOpenApp('pigmentos')}
+          onClick={() => onOpenApp('maestros')}
           className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
         >
           <div className="text-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-rose-100 to-amber-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
+            <div className="w-20 h-20 bg-gradient-to-br from-amber-100 to-orange-200 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
+              <Palette className="w-10 h-10 text-amber-600" />
+            </div>
+            <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-3 py-1">
+              <Gift size={12} /> Gratuito
+            </span>
+          </div>
+
+          <h3 className="font-serif text-2xl text-slate-900 text-center mb-3 leading-snug">
+            Paletas de los Maestros
+          </h3>
+
+          <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
+            Las paletas reales de Velázquez, Rembrandt, Sorolla, Zorn, Vermeer y Sargent con equivalentes modernos.
+          </p>
+
+          <div className="border-t border-stone-100 pt-6 text-center">
+            <span className="inline-block border border-gold-500 text-gold-600 py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-500 group-hover:text-white transition-all duration-300">
+              Ver Paletas
+            </span>
+          </div>
+        </button>
+
+        {/* APP 3: La Paleta de Sorolla - gratis */}
+        <a
+          href="/SOROLLA/index.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
+        >
+          <div className="text-center mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-amber-200 via-orange-100 to-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
               <svg className="w-10 h-10 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
             <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-3 py-1">
@@ -115,31 +143,32 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
           </div>
 
           <h3 className="font-serif text-2xl text-slate-900 text-center mb-3 leading-snug">
-            Diccionario de Pigmentos
+            La Paleta de Sorolla
           </h3>
 
           <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
-            Consulta la opacidad, permanencia y comportamiento histórico de los pigmentos clásicos.
-            Cadmios, Cobaltos, Tierras y más.
+            Analiza las obras maestras de Sorolla. Extrae su paleta cromática y descubre los pigmentos exactos que utilizó.
           </p>
 
           <div className="border-t border-stone-100 pt-6 text-center">
             <span className="inline-block border border-gold-500 text-gold-600 py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-500 group-hover:text-white transition-all duration-300">
-              Abrir herramienta
+              Explorar Obras
             </span>
           </div>
-        </button>
+        </a>
 
-        {/* APP 3: Círculo Cromático - gratis */}
-        <button
-          onClick={() => onOpenApp('circuloCromatico')}
+        {/* APP 4: El Sol de Sorolla - gratis */}
+        <a
+          href="/SOL%20DE%20SOROLLA/index.html"
+          target="_blank"
+          rel="noopener noreferrer"
           className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
         >
           <div className="text-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-red-100 via-blue-100 to-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
-              <svg className="w-10 h-10 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="9" strokeWidth="1.5" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v3m0 12v3M3 12h3m12 0h3M5.636 5.636l2.122 2.122m8.484 8.484l2.122 2.122M5.636 18.364l2.122-2.122m8.484-8.484l2.122-2.122" />
+            <div className="w-20 h-20 bg-gradient-to-br from-yellow-200 via-orange-200 to-rose-200 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
+              <svg className="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="5" strokeWidth="1.5" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
               </svg>
             </div>
             <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-3 py-1">
@@ -148,117 +177,19 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
           </div>
 
           <h3 className="font-serif text-2xl text-slate-900 text-center mb-3 leading-snug">
-            Círculo Cromático
+            El Sol de Sorolla
           </h3>
 
           <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
-             Aplica la Regla de los Tercios a cualquier formato de lienzo.
-             Encuentra los puntos de fuerza para una composición equilibrada.
-           </p>
-
-          <div className="border-t border-stone-100 pt-6 text-center">
-            <span className="inline-block border border-gold-500 text-gold-600 py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-500 group-hover:text-white transition-all duration-300">
-              Abrir herramienta
-            </span>
-          </div>
-        </button>
-
-        {/* APP 2: Diccionario de Pigmentos - GRATIS */}
-        <button
-          onClick={() => onOpenApp('pigmentos')}
-          className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
-        >
-          <div className="text-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-rose-100 to-amber-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
-              <svg className="w-10 h-10 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-              </svg>
-            </div>
-            <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-3 py-1">
-              <Gift size={12} /> Gratuito
-            </span>
-          </div>
-
-          <h3 className="font-serif text-2xl text-slate-900 text-center mb-3 leading-snug">
-            Diccionario de Pigmentos
-          </h3>
-
-          <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
-            Consulta la opacidad, permanencia y comportamiento histórico de los pigmentos clásicos.
-            Cadmios, Cobaltos, Tierras y más.
+            Simula la luz mediterránea sobre tus obras. Ajusta la hora del día y observa cómo cambia el volumen y el color.
           </p>
 
           <div className="border-t border-stone-100 pt-6 text-center">
             <span className="inline-block border border-gold-500 text-gold-600 py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-500 group-hover:text-white transition-all duration-300">
-              Abrir herramienta
+              Simular Luz
             </span>
           </div>
-        </button>
-
-        {/* APP 3: Círculo Cromático - GRATIS */}
-        <button
-          onClick={() => onOpenApp('circuloCromatico')}
-          className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
-        >
-          <div className="text-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-red-100 via-blue-100 to-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
-              <svg className="w-10 h-10 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="9" strokeWidth="1.5" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v3m0 12v3M3 12h3m12 0h3M5.636 5.636l2.122 2.122m8.484 8.484l2.122 2.122M5.636 18.364l2.122-2.122m8.484-8.484l2.122-2.122" />
-              </svg>
-            </div>
-            <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-3 py-1">
-              <Gift size={12} /> Gratuito
-            </span>
-          </div>
-
-          <h3 className="font-serif text-2xl text-slate-900 text-center mb-3 leading-snug">
-            Círculo Cromático
-          </h3>
-
-          <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
-            Explora armonías de color: complementarios, análogos, triádicos y más.
-            Visualiza las relaciones entre colores.
-          </p>
-
-          <div className="border-t border-stone-100 pt-6 text-center">
-            <span className="inline-block border border-gold-500 text-gold-600 py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-500 group-hover:text-white transition-all duration-300">
-              Abrir herramienta
-            </span>
-          </div>
-        </button>
-
-        {/* APP 4: Calculadora de Proporciones - GRATIS */}
-        <button
-          onClick={() => onOpenApp('proporciones')}
-          className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
-        >
-          <div className="text-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
-              <svg className="w-10 h-10 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 5h16M4 8h16M4 11h16M4 14h10M4 17h6" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 14l-4 4m0-4l4 4" />
-              </svg>
-            </div>
-            <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-3 py-1">
-              <Gift size={12} /> Gratuito
-            </span>
-          </div>
-
-          <h3 className="font-serif text-2xl text-slate-900 text-center mb-3 leading-snug">
-            Calculadora de Proporciones
-          </h3>
-
-          <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
-            Calcula formatos de lienzo, sección áurea y proporciones armónicas para tus composiciones.
-          </p>
-
-          <div className="border-t border-stone-100 pt-6 text-center">
-            <span className="inline-block border border-gold-500 text-gold-600 py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-500 group-hover:text-white transition-all duration-300">
-              Abrir herramienta
-            </span>
-          </div>
-        </button>
+        </a>
 
         {/* APP 5: Analizador Premium - DE PAGO */}
         <button
