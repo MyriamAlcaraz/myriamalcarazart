@@ -2,11 +2,13 @@ import React, { useState, useMemo, useRef } from 'react';
 import { ArrowLeft, Gift, Crown, Sparkles, Eye, Palette } from 'lucide-react';
 import AtlasTransparencias from './AtlasTransparencias';
 import PaletasMaestros from './PaletasMaestros';
+import PaletaSorolla from './PaletaSorolla';
+import SolDeSorolla from './SolDeSorolla';
 
 // ============================================
 // TIPOS
 // ============================================
-type AppView = 'gallery' | 'composicion' | 'pigmentos' | 'analizador' | 'circuloCromatico' | 'proporciones' | 'valores' | 'atlas' | 'maestros';
+type AppView = 'gallery' | 'composicion' | 'pigmentos' | 'analizador' | 'circuloCromatico' | 'proporciones' | 'valores' | 'atlas' | 'maestros' | 'paletaSorolla' | 'solDeSorolla';
 
 // ============================================
 // COMPONENTE PRINCIPAL
@@ -25,6 +27,8 @@ const EstudioDigital: React.FC = () => {
       {currentView === 'valores' && <SimuladorValores onBack={() => setCurrentView('gallery')} />}
       {currentView === 'atlas' && <AtlasTransparencias onBack={() => setCurrentView('gallery')} />}
       {currentView === 'maestros' && <PaletasMaestros onBack={() => setCurrentView('gallery')} />}
+      {currentView === 'paletaSorolla' && <PaletaSorolla onBack={() => setCurrentView('gallery')} />}
+      {currentView === 'solDeSorolla' && <SolDeSorolla onBack={() => setCurrentView('gallery')} />}
     </div>
   );
 };
@@ -53,7 +57,7 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
       <div className="inline-flex items-center gap-3 border border-gold-300 bg-gold-50/50 px-6 py-3">
         <Gift size={20} className="text-gold-600" />
         <p className="text-gold-700 text-sm tracking-wide">
-          Nueve herramientas gratuitas como <span className="font-medium">cortesía de Myriam Alcaraz</span> para la comunidad artística
+          Cinco herramientas como <span className="font-medium">cortesía de Myriam Alcaraz</span> para la comunidad artística
         </p>
       </div>
     </div>
@@ -62,7 +66,7 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
     <section className="max-w-5xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-        {/* APP 1: Composición Áurea - GRATIS */}
+        {/* APP 1: Composición Áurea - gratis */}
         <button
           onClick={() => onOpenApp('composicion')}
           className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
@@ -83,6 +87,71 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
           </h3>
 
 <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
+             Aplica la Regla de los Tercios a cualquier formato de lienzo.
+             Encuentra los puntos de fuerza para una composición equilibrada.
+           </p>
+
+          <div className="border-t border-stone-100 pt-6 text-center">
+            <span className="inline-block border border-gold-500 text-gold-600 py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-500 group-hover:text-white transition-all duration-300">
+              Abrir herramienta
+            </span>
+          </div>
+        </button>
+
+        {/* APP 2: Diccionario de Pigmentos - gratis */}
+        <button
+          onClick={() => onOpenApp('pigmentos')}
+          className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
+        >
+          <div className="text-center mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-rose-100 to-amber-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
+              <svg className="w-10 h-10 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+              </svg>
+            </div>
+            <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-3 py-1">
+              <Gift size={12} /> Gratuito
+            </span>
+          </div>
+
+          <h3 className="font-serif text-2xl text-slate-900 text-center mb-3 leading-snug">
+            Diccionario de Pigmentos
+          </h3>
+
+          <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
+            Consulta la opacidad, permanencia y comportamiento histórico de los pigmentos clásicos.
+            Cadmios, Cobaltos, Tierras y más.
+          </p>
+
+          <div className="border-t border-stone-100 pt-6 text-center">
+            <span className="inline-block border border-gold-500 text-gold-600 py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-500 group-hover:text-white transition-all duration-300">
+              Abrir herramienta
+            </span>
+          </div>
+        </button>
+
+        {/* APP 3: Círculo Cromático - gratis */}
+        <button
+          onClick={() => onOpenApp('circuloCromatico')}
+          className="group bg-white border border-stone-200 p-8 flex flex-col hover:border-gold-400 hover:shadow-xl transition-all duration-500 text-left"
+        >
+          <div className="text-center mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-red-100 via-blue-100 to-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500">
+              <svg className="w-10 h-10 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="9" strokeWidth="1.5" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v3m0 12v3M3 12h3m12 0h3M5.636 5.636l2.122 2.122m8.484 8.484l2.122 2.122M5.636 18.364l2.122-2.122m8.484-8.484l2.122-2.122" />
+              </svg>
+            </div>
+            <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-emerald-600 uppercase font-medium bg-emerald-50 px-3 py-1">
+              <Gift size={12} /> Gratuito
+            </span>
+          </div>
+
+          <h3 className="font-serif text-2xl text-slate-900 text-center mb-3 leading-snug">
+            Círculo Cromático
+          </h3>
+
+          <p className="text-stone-500 text-base leading-relaxed text-center flex-grow mb-6">
              Aplica la Regla de los Tercios a cualquier formato de lienzo.
              Encuentra los puntos de fuerza para una composición equilibrada.
            </p>
@@ -375,7 +444,7 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
           </p>
 
           <div className="border-t border-slate-700 pt-6 text-center relative">
-            <p className="text-2xl text-gold-400 font-light mb-4">47 <span className="text-base text-slate-500">EUR</span></p>
+            <p className="text-2xl text-gold-400 font-light mb-4">46,99 <span className="text-base text-slate-500">EUR</span></p>
             <span className="inline-block bg-gold-500 text-white py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-400 transition-all duration-300">
               Acceder
             </span>
@@ -978,7 +1047,7 @@ const AnalizadorPremium: React.FC<{ onBack: () => void }> = ({ onBack }) => (
         </div>
 
         <div className="border-t border-slate-700 pt-10">
-          <p className="text-3xl text-gold-400 font-light mb-2">47 <span className="text-lg text-slate-500">EUR</span></p>
+          <p className="text-3xl text-gold-400 font-light mb-2">46,99 <span className="text-lg text-slate-500">EUR</span></p>
           <p className="text-slate-500 text-sm mb-6">Pago único · Acceso ilimitado</p>
           <a
             href="https://payhip.com/ARTEFIGURATIVO"
