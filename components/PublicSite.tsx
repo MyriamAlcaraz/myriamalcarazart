@@ -693,20 +693,10 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
 
             </div>
 
-            {/* Nota sobre las marcas */}
-            <div className="text-center mb-8">
-              <p className="text-xs text-stone-400 tracking-wide">
-                Todas las herramientas incluyen las denominaciones exactas de
-              </p>
-              <p className="text-sm text-stone-600 font-medium mt-1">
-                Old Holland · Williamsburg · Winsor & Newton
-              </p>
-            </div>
-
             {/* Firma */}
             <div className="text-center border-t border-stone-100 pt-8">
               <p className="text-stone-400 text-sm italic">
-                Desarrollado por Myriam Alcaraz · Artista e Investigadora
+                Desarrollado por Myriam Alcaraz · Artista y Creadora Digital
               </p>
             </div>
 
