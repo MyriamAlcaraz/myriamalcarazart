@@ -3,6 +3,7 @@ import { ARTIST_INFO, ARTWORKS } from '../constants';
 import { Eye, Lock, Layout, ArrowLeft, Award, Shield, Sparkles, ChevronDown, Check } from 'lucide-react';
 import AtlasTransparencias from './AtlasTransparencias';
 import PaletasMaestros from './PaletasMaestros';
+import SolSorolla from './SolSorolla';
 
 interface PublicSiteProps {
   onOpenCompanion: (id: string) => void;
@@ -578,22 +579,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
         )}
 
         {activeTab === 'app' && activeDigitalTool === 'sorolla' && (
-          <div className="max-w-5xl mx-auto py-8 text-center">
-            <button
-              onClick={() => setActiveDigitalTool('none')}
-              className="mb-8 flex items-center gap-2 text-stone-600 hover:text-gold-600 transition-colors"
-            >
-              <ArrowLeft size={20} />
-              Volver al Estudio Digital
-            </button>
-            <div className="bg-white rounded-lg p-12 shadow-lg">
-              <h2 className="font-serif text-3xl text-slate-900 mb-4">El Sol de Sorolla</h2>
-              <p className="text-stone-400 italic mb-6">La Luz de la Malvarrosa</p>
-              <p className="text-stone-600">
-                Esta herramienta estará disponible próximamente. Aquí se cargará la aplicación para estudiar la luz natural.
-              </p>
-            </div>
-          </div>
+          <SolSorolla onBack={() => setActiveDigitalTool('none')} />
         )}
 
         {activeTab === 'app' && activeDigitalTool === 'none' && (
