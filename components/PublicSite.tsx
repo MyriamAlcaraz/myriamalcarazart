@@ -40,7 +40,7 @@ const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
 
 const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin, onOpenGiclee, onTabChange }) => {
   const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices' | 'giclee' | 'app'>('portfolio');
-  const [activeDigitalTool, setActiveDigitalTool] = useState<'none' | 'atlas' | 'maestros'>('none');
+  const [activeDigitalTool, setActiveDigitalTool] = useState<'none' | 'atlas' | 'maestros' | 'sorolla'>('none');
 
   // Estado para Giclée
   const [selectedObra, setSelectedObra] = useState<string | null>(null);
@@ -577,6 +577,25 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
           <PaletasMaestros onBack={() => setActiveDigitalTool('none')} />
         )}
 
+        {activeTab === 'app' && activeDigitalTool === 'sorolla' && (
+          <div className="max-w-5xl mx-auto py-8 text-center">
+            <button
+              onClick={() => setActiveDigitalTool('none')}
+              className="mb-8 flex items-center gap-2 text-stone-600 hover:text-gold-600 transition-colors"
+            >
+              <ArrowLeft size={20} />
+              Volver al Estudio Digital
+            </button>
+            <div className="bg-white rounded-lg p-12 shadow-lg">
+              <h2 className="font-serif text-3xl text-slate-900 mb-4">El Sol de Sorolla</h2>
+              <p className="text-stone-400 italic mb-6">La Luz de la Malvarrosa</p>
+              <p className="text-stone-600">
+                Esta herramienta estará disponible próximamente. Aquí se cargará la aplicación para estudiar la luz natural.
+              </p>
+            </div>
+          </div>
+        )}
+
         {activeTab === 'app' && activeDigitalTool === 'none' && (
           <div className="max-w-5xl mx-auto py-8">
 
@@ -592,8 +611,8 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               </p>
             </div>
 
-            {/* Grid de 3 herramientas */}
-            <div className="grid md:grid-cols-3 gap-6 mb-16">
+            {/* Grid de 4 herramientas */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
 
               {/* ============================================ */}
               {/* HERRAMIENTA 1: ATLAS DE TRANSPARENCIAS (GRATIS) */}
@@ -660,7 +679,39 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               </div>
 
               {/* ============================================ */}
-              {/* HERRAMIENTA 3: ANALIZADOR TÉCNICO (DE PAGO) */}
+              {/* HERRAMIENTA 3: EL SOL DE SOROLLA (GRATIS) */}
+              {/* ============================================ */}
+              <div className="bg-white border border-stone-200 rounded-lg overflow-hidden group hover:shadow-xl transition-shadow">
+                <div className="bg-gradient-to-br from-yellow-50 to-orange-50 p-6 text-center border-b border-stone-100">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white shadow-inner flex items-center justify-center">
+                    <svg className="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                  </div>
+                  <span className="text-[10px] tracking-[0.3em] text-yellow-700 uppercase font-medium">Acceso Libre</span>
+                </div>
+                <div className="p-6">
+                  <h3 className="font-serif text-xl text-slate-900 mb-2 text-center">El Sol de Sorolla</h3>
+                  <p className="text-xs text-stone-400 text-center mb-2 italic">La Luz de la Malvarrosa</p>
+                  <p className="text-sm text-stone-500 text-center mb-4 leading-relaxed">
+                    Simula la luz natural de diferentes horas del día sobre tus obras. Estudio de volumen, sombras y recomendaciones de pigmentos según la hora.
+                  </p>
+                  <div className="flex flex-wrap gap-2 justify-center mb-4">
+                    <span className="text-[10px] bg-stone-100 text-stone-600 px-2 py-1 rounded">Amanecer</span>
+                    <span className="text-[10px] bg-stone-100 text-stone-600 px-2 py-1 rounded">Mediodía</span>
+                    <span className="text-[10px] bg-stone-100 text-stone-600 px-2 py-1 rounded">Atardecer</span>
+                  </div>
+                  <button
+                    onClick={() => setActiveDigitalTool('sorolla')}
+                    className="w-full py-2 text-sm text-yellow-700 border border-yellow-200 rounded hover:bg-yellow-50 transition-colors"
+                  >
+                    Explorar Luz
+                  </button>
+                </div>
+              </div>
+
+              {/* ============================================ */}
+              {/* HERRAMIENTA 4: ANALIZADOR TÉCNICO (DE PAGO) */}
               {/* ============================================ */}
               <div className="bg-white border-2 border-gold-500 rounded-lg overflow-hidden shadow-lg">
                 <div className="bg-slate-900 p-6 text-center">
