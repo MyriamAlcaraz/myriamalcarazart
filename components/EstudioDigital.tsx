@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from 'react';
-import { ArrowLeft, Gift, Crown, Sparkles, Eye, Palette } from 'lucide-react';
+import { ArrowLeft, Gift, Crown, Sparkles, Eye, Palette, Brush } from 'lucide-react';
 import AtlasTransparencias from './AtlasTransparencias';
 import PaletasMaestros from './PaletasMaestros';
 import PaletaSorolla from './PaletaSorolla';
@@ -57,7 +57,7 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
       <div className="inline-flex items-center gap-3 border border-gold-300 bg-gold-50/50 px-6 py-3">
         <Gift size={20} className="text-gold-600" />
         <p className="text-gold-700 text-sm tracking-wide">
-          Cuatro herramientas gratuitas + una profesional como <span className="font-medium">cortesía de Myriam Alcaraz</span>
+          Cuatro herramientas gratuitas + dos profesionales como <span className="font-medium">cortesía de Myriam Alcaraz</span>
         </p>
       </div>
     </div>
@@ -225,6 +225,43 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
             </span>
           </div>
         </button>
+
+        {/* APP 6: Atelier Pro - DE PAGO (Payhip) */}
+        <a
+          href="https://payhip.com/ARTEFIGURATIVO"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700 p-8 flex flex-col hover:shadow-2xl transition-all duration-500 text-left relative overflow-hidden"
+        >
+          {/* Efecto de brillo */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+
+          <div className="text-center mb-6 relative">
+            <div className="w-20 h-20 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-500 shadow-lg shadow-gold-500/30">
+              <Brush className="w-10 h-10 text-white" />
+            </div>
+            <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.3em] text-gold-400 uppercase font-medium bg-gold-500/20 px-3 py-1">
+              <Sparkles size={12} /> Profesional
+            </span>
+          </div>
+
+          <h3 className="font-serif text-2xl text-white text-center mb-3 leading-snug">
+            Atelier Pro
+          </h3>
+
+          <p className="text-slate-400 text-base leading-relaxed text-center flex-grow mb-6">
+            Estudio de Valores y Color.
+            Transforma fotografías en carboncillo orgánico y óleo con definición facial.
+            Herramienta de escritorio para Mac y Windows.
+          </p>
+
+          <div className="border-t border-slate-700 pt-6 text-center relative">
+            <p className="text-2xl text-gold-400 font-light mb-4">9,00 <span className="text-base text-slate-500">EUR</span></p>
+            <span className="inline-block bg-gold-500 text-white py-3 px-8 text-sm tracking-[0.2em] uppercase group-hover:bg-gold-400 transition-all duration-300">
+              Comprar
+            </span>
+          </div>
+        </a>
 
       </div>
     </section>
