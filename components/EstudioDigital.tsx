@@ -2289,3 +2289,4 @@ const SimuladorValores: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 };
 
 export default EstudioDigital;
+// deploy-trigger: 2026-02-23T01:30
