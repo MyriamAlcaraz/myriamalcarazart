@@ -743,7 +743,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                 <div className="p-6">
                   <h3 className="font-serif text-xl text-slate-900 mb-2 text-center">Atelier Pro</h3>
                   <p className="text-sm text-stone-500 text-center mb-4 leading-relaxed">
-                    Estudio de Valores y Color. Transforma fotografías en carboncillo y óleo con definición facial. App de escritorio para Mac y Windows.
+                    Estudio de Valores (Carboncillo) y Color (Óleo). Compatible con Windows, Mac Silicon y Mac Intel.
                   </p>
                   <div className="text-center mb-4">
                     <span className="text-2xl font-serif text-slate-900">9,00 €</span>
