@@ -598,7 +598,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
             </div>
 
             {/* Grid de 4 herramientas */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 mb-16">
 
               {/* ============================================ */}
               {/* HERRAMIENTA 1: ATLAS DE TRANSPARENCIAS (GRATIS) */}
@@ -724,6 +724,38 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                     className="block w-full py-2 text-sm text-white bg-slate-900 rounded hover:bg-slate-800 transition-colors text-center"
                   >
                     Obtener Acceso
+                  </a>
+                </div>
+              </div>
+
+              {/* ============================================ */}
+              {/* HERRAMIENTA 5: ATELIER PRO (DE PAGO) */}
+              {/* ============================================ */}
+              <div className="bg-white border-2 border-gold-500 rounded-lg overflow-hidden shadow-lg">
+                <div className="bg-slate-900 p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gold-500 flex items-center justify-center">
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </div>
+                  <span className="text-[10px] tracking-[0.3em] text-gold-400 uppercase font-medium">Herramienta Pro</span>
+                </div>
+                <div className="p-6">
+                  <h3 className="font-serif text-xl text-slate-900 mb-2 text-center">Atelier Pro</h3>
+                  <p className="text-sm text-stone-500 text-center mb-4 leading-relaxed">
+                    Estudio de Valores y Color. Transforma fotografías en carboncillo y óleo con definición facial. App de escritorio para Mac y Windows.
+                  </p>
+                  <div className="text-center mb-4">
+                    <span className="text-2xl font-serif text-slate-900">9,00 €</span>
+                    <p className="text-xs text-stone-400 mt-1">Acceso único</p>
+                  </div>
+                  <a
+                    href="https://payhip.com/ARTEFIGURATIVO"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full py-2 text-sm text-white bg-slate-900 rounded hover:bg-slate-800 transition-colors text-center"
+                  >
+                    Comprar
                   </a>
                 </div>
               </div>
