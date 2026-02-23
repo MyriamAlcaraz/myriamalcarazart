@@ -226,7 +226,7 @@ const GalleryView: React.FC<{ onOpenApp: (app: AppView) => void }> = ({ onOpenAp
           </div>
         </button>
 
-        {/* APP 6: Atelier Pro - DE PAGO (Payhip) */}
+        {/* APP 6: Atelier Pro — Estudio de Valores y Color · v1.0.0 */}
         <a
           href="https://payhip.com/ARTEFIGURATIVO"
           target="_blank"
