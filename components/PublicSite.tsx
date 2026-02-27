@@ -768,6 +768,28 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
 
             </div>
 
+            {/* Colaboradores — espacio publicitario */}
+            <div className="border-t border-stone-100 pt-8 mb-10">
+              <p className="text-center text-xs text-stone-300 italic tracking-[0.22em] mb-5">
+                Colaboradores de confianza
+              </p>
+              <div
+                style={{
+                  minHeight: '90px',
+                  border: '1px solid #e7e5e4',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: '#fafaf9',
+                }}
+              >
+                {/* Reemplazar con bloque AdSense cuando esté aprobado */}
+                <span style={{ fontSize: '0.58rem', color: '#d6d3d1', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                  Espacio publicitario · Google AdSense
+                </span>
+              </div>
+            </div>
+
             {/* Firma */}
             <div className="text-center border-t border-stone-100 pt-8">
               <p className="text-stone-400 text-sm italic">
