@@ -970,7 +970,7 @@
             <div id="upload-prompt">
                 <label for="file-input" id="upload-btn">CARGAR OBRA PARA ANALIZAR</label>
             </div>
-            <div id="canvas-wrapper"><canvas id="main-canvas"></canvas></div>
+            <div id="canvas-wrapper" style="display:none;"><canvas id="main-canvas"></canvas></div>
             <div id="zoom-badge">ZOOM 100%</div>
             <div id="pin-indicator">FIJADO</div>
         </main>
@@ -1553,6 +1553,7 @@ document.getElementById('file-input').onchange = (e) => {
     reader.onload = (ev) => {
         img.onload = () => {
             document.getElementById('upload-prompt').style.display = 'none';
+            wrapper.style.display = 'block';
             canvas.width  = img.width;
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0);
