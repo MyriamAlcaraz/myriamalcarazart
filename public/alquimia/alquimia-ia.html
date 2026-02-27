@@ -466,15 +466,6 @@
 
     canvas { display: block; box-shadow: 0 20px 60px rgba(0,0,0,0.9); border: 1px solid #1a1a20; }
 
-    #empty-state {
-        position: absolute;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1.2rem;
-        pointer-events: all;
-        cursor: pointer;
-    }
 
 
     #zoom-badge {
@@ -930,7 +921,7 @@
         <div class="analyzer-controls">
             <span class="analyzer-hint">Rueda = zoom · Doble clic = fijar · Espacio = desplazar</span>
             <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="display:none;">
-            <label for="file-input" class="btn-codes" style="cursor:pointer;">Cargar Obra</label>
+            <label for="file-input" class="btn-codes" style="cursor:pointer; pointer-events:auto;">CARGAR OBRA</label>
             <button class="btn-codes" id="codes-btn">Códigos</button>
         </div>
     </div>
@@ -940,7 +931,6 @@
 
         <!-- Canvas -->
         <main id="canvas-area">
-            <div id="empty-state"></div>
             <div id="canvas-wrapper"><canvas id="main-canvas"></canvas></div>
             <div id="zoom-badge">ZOOM 100%</div>
             <div id="pin-indicator">FIJADO</div>
@@ -1523,7 +1513,7 @@ document.getElementById('file-input').onchange = (e) => {
     const reader = new FileReader();
     reader.onload = (ev) => {
         img.onload = () => {
-            document.getElementById('empty-state').style.display = 'none';
+            // empty-state eliminado — canvas siempre visible
             canvas.width  = img.width;
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0);
