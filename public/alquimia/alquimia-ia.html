@@ -718,6 +718,24 @@
     .code-desc { font-family: 'Montserrat', sans-serif; font-size: 0.55rem; color: #5a5060; }
 
     /* ═══════════════════════════════════════════════════════════
+       ADSENSE STRIP — Solo versión web
+       ═══════════════════════════════════════════════════════════ */
+    #adsense-panel {
+        display: none;   /* JS activa esto en modo web */
+        border-top: 1px solid var(--app-border);
+        padding: 0.9rem 1.25rem;
+    }
+
+    #adsense-slot {
+        min-height: 90px;
+        background: var(--app-elevated);
+        border: 1px dashed var(--app-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
        MODAL PRO UPGRADE — PANTALLA COMPLETA
        ═══════════════════════════════════════════════════════════ */
     #upgrade-modal {
@@ -1020,9 +1038,38 @@
                 <div class="brand-row"><span class="brand-lbl c-oh">Old Holland</span><div id="oh-tube" class="brand-val">—</div></div>
                 <div class="brand-row"><span class="brand-lbl c-wb">Williamsburg</span><div id="wb-tube" class="brand-val">—</div></div>
                 <div class="catalog-grid">
-                    <button class="catalog-btn" onclick="window.open('winsor_newton.pdf','_blank')">W&amp;N PDF</button>
-                    <button class="catalog-btn" onclick="window.open('old_holland.pdf','_blank')">Old Holland</button>
-                    <button class="catalog-btn" onclick="window.open('williamsburg.pdf','_blank')">Williamsburg</button>
+                    <button class="catalog-btn" onclick="openPDF('winsor_newton.pdf')">W&amp;N PDF</button>
+                    <button class="catalog-btn" onclick="openPDF('old_holland.pdf')">Old Holland</button>
+                    <button class="catalog-btn" onclick="openPDF('williamsburg.pdf')">Williamsburg</button>
+                </div>
+            </div>
+
+            <!-- ADSENSE — Solo visible en modo web (activado por JS) -->
+            <div id="adsense-panel">
+                <div class="panel-title" style="margin-bottom:0.6rem; opacity:0.6;">Publicidad</div>
+                <div id="adsense-slot">
+                    <!--
+                    ╔══════════════════════════════════════════════════════════╗
+                    ║  INSTRUCCIONES DE ACTIVACIÓN DE ADSENSE                 ║
+                    ║                                                          ║
+                    ║  1. Añade en el <head>:                                 ║
+                    ║     <script async src="https://pagead2.google           ║
+                    ║     syndication.com/pagead/js/adsbygoogle.js?           ║
+                    ║     client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin=        ║
+                    ║     "anonymous"></script>                                ║
+                    ║                                                          ║
+                    ║  2. Reemplaza el interior de #adsense-slot con:         ║
+                    ║     <ins class="adsbygoogle"                            ║
+                    ║          style="display:block;"                         ║
+                    ║          data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"      ║
+                    ║          data-ad-slot="XXXXXXXXXX"                      ║
+                    ║          data-ad-format="auto"                          ║
+                    ║          data-full-width-responsive="true"></ins>        ║
+                    ║     <script>(adsbygoogle=window.adsbygoogle||[])        ║
+                    ║     .push({});</script>                                  ║
+                    ╚══════════════════════════════════════════════════════════╝
+                    -->
+                    <span style="font-size:0.52rem; color:var(--cream-muted); letter-spacing:0.12em; text-transform:uppercase; opacity:0.5;">Espacio publicitario · Google AdSense</span>
                 </div>
             </div>
 
@@ -1133,10 +1180,20 @@
 <script>
 'use strict';
 
-// ── Límite web ──
-const MAX_FREE = 1;
-let uploadCount = 0;
+// ════════════════════════════════════════════════
+// DETECCIÓN DE VERSIÓN — siempre web para esta página
+// ════════════════════════════════════════════════
+const IS_PRO           = false;
+const MAX_FREE_UPLOADS = 1;   // Máximo 1 foto gratis por sesión
+let uploadCount        = 0;
 
+// Inicializar UI — mostrar panel AdSense en versión web
+(function initVersionUI() {
+    const adsPanel = document.getElementById('adsense-panel');
+    if (adsPanel) adsPanel.style.display = 'block';
+})();
+
+// ── Modal Pro ──
 function showUpgradeModal()  { document.getElementById('upgrade-modal').classList.add('open'); }
 function closeUpgradeModal() { document.getElementById('upgrade-modal').classList.remove('open'); }
 
@@ -1144,11 +1201,14 @@ document.getElementById('upgrade-modal').addEventListener('click', function(e) {
     if (e.target === this) closeUpgradeModal();
 });
 
+function openURL(url)      { window.open(url, '_blank', 'noopener'); }
+function openPDF(filename) { window.open('./' + filename, '_blank'); }
+
 // ── Nombres de hue para la rueda ──
 const HUE_NAMES = [
-    'Rojo','Naranja-Rojo','Amarillo-Naranja','Amarillo-Verde',
-    'Verde','Verde Esmeralda','Cian','Azul-Cian',
-    'Azul','Azul-Violeta','Violeta','Rosa-Rojo'
+    'Rojo', 'Naranja-Rojo', 'Amarillo-Naranja', 'Amarillo-Verde',
+    'Verde', 'Verde Esmeralda', 'Cian', 'Azul-Cian',
+    'Azul', 'Azul-Violeta', 'Violeta', 'Rosa-Rojo'
 ];
 
 // ════════════════════════════════════════════════
@@ -1183,177 +1243,411 @@ const basePigmentos = [
     { check:(r,g,b)=>r>30&&r<60&&g>30&&g<60&&b>40&&b<70&&Math.abs(r-g)<10&&Math.abs(g-b)<15, nombre:"Negro Hueso", codigos:["PBk31"], mezcla:"Negro Hueso puro", wn_tube:"Bone Black", oh_tube:"Bone Black", wb_tube:"Bone Black", rgb:{r:40,g:40,b:50}, transparencia:"semi-opaco", poderTintado:"medio", densidad:2.9 }
 ];
 
-// ── Funciones de color ──
-function rgbToHsl(r,g,b){r/=255;g/=255;b/=255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b);let h,s,l=(mx+mn)/2;if(mx===mn){h=s=0;}else{const d=mx-mn;s=l>0.5?d/(2-mx-mn):d/(mx+mn);switch(mx){case r:h=((g-b)/d+(g<b?6:0))/6;break;case g:h=((b-r)/d+2)/6;break;case b:h=((r-g)/d+4)/6;break;}}return{h:Math.round(h*360),s:Math.round(s*100),l:Math.round(l*100)};}
+// ════════════════════════════════════════════════
+// FUNCIONES DE COLOR
+// ════════════════════════════════════════════════
+function rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r,g,b), min = Math.min(r,g,b);
+    let h, s, l = (max + min) / 2;
+    if (max === min) {
+        h = s = 0;
+    } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r: h = ((g-b)/d + (g<b?6:0)) / 6; break;
+            case g: h = ((b-r)/d + 2) / 6; break;
+            case b: h = ((r-g)/d + 4) / 6; break;
+        }
+    }
+    return { h: Math.round(h*360), s: Math.round(s*100), l: Math.round(l*100) };
+}
 
-function rgbToLab(r,g,b){let rn=r/255,gn=g/255,bn=b/255;rn=rn>0.04045?Math.pow((rn+0.055)/1.055,2.4):rn/12.92;gn=gn>0.04045?Math.pow((gn+0.055)/1.055,2.4):gn/12.92;bn=bn>0.04045?Math.pow((bn+0.055)/1.055,2.4):bn/12.92;rn*=100;gn*=100;bn*=100;const x=rn*0.4124+gn*0.3576+bn*0.1805,y=rn*0.2126+gn*0.7152+bn*0.0722,z=rn*0.0193+gn*0.1192+bn*0.9505;let xn=x/95.047,yn=y/100,zn=z/108.883;xn=xn>0.008856?Math.pow(xn,1/3):(7.787*xn+16/116);yn=yn>0.008856?Math.pow(yn,1/3):(7.787*yn+16/116);zn=zn>0.008856?Math.pow(zn,1/3):(7.787*zn+16/116);return{l:Math.round(116*yn-16),a:Math.round(500*(xn-yn)),b:Math.round(200*(yn-zn))};}
+function rgbToLab(r, g, b) {
+    let rn = r/255, gn = g/255, bn = b/255;
+    rn = rn > 0.04045 ? Math.pow((rn+0.055)/1.055, 2.4) : rn/12.92;
+    gn = gn > 0.04045 ? Math.pow((gn+0.055)/1.055, 2.4) : gn/12.92;
+    bn = bn > 0.04045 ? Math.pow((bn+0.055)/1.055, 2.4) : bn/12.92;
+    rn *= 100; gn *= 100; bn *= 100;
+    const x = rn*0.4124 + gn*0.3576 + bn*0.1805;
+    const y = rn*0.2126 + gn*0.7152 + bn*0.0722;
+    const z = rn*0.0193 + gn*0.1192 + bn*0.9505;
+    let xn = x/95.047, yn = y/100, zn = z/108.883;
+    xn = xn > 0.008856 ? Math.pow(xn,1/3) : (7.787*xn + 16/116);
+    yn = yn > 0.008856 ? Math.pow(yn,1/3) : (7.787*yn + 16/116);
+    zn = zn > 0.008856 ? Math.pow(zn,1/3) : (7.787*zn + 16/116);
+    return { l: Math.round(116*yn-16), a: Math.round(500*(xn-yn)), b: Math.round(200*(yn-zn)) };
+}
 
-function getPT(p){return{'bajo':0.3,'medio':0.6,'alto':0.8,'muy-alto':1.0}[p]||0.5;}
-function getTN(t){return{'opaco':0.1,'semi-opaco':0.4,'semi-transparente':0.7,'transparente':0.9}[t]||0.5;}
+function getPoderTintadoNum(p) {
+    return { 'bajo':0.3, 'medio':0.6, 'alto':0.8, 'muy-alto':1.0 }[p] || 0.5;
+}
 
-// ── Rueda cromática ──
+function getTransparenciaNum(t) {
+    return { 'opaco':0.1, 'semi-opaco':0.4, 'semi-transparente':0.7, 'transparente':0.9 }[t] || 0.5;
+}
+
+// ════════════════════════════════════════════════
+// RUEDA CROMÁTICA — INTERACTIVIDAD
+// ════════════════════════════════════════════════
 const wheelSvg = document.getElementById('color-wheel-svg');
 const hueLabel = document.getElementById('wheel-hue-label');
-const segs = Array.from({length:12},(_,i)=>document.getElementById('seg-'+i));
+const segments = Array.from({ length: 12 }, (_,i) => document.getElementById('seg-'+i));
 
-function updateWheel(r,g,b){
-    const hsl=rgbToHsl(r,g,b);
+function getSegmentFromHue(hue) {
+    return Math.floor(((hue + 15) % 360) / 30);
+}
+
+function updateColorWheel(r, g, b) {
+    const hsl = rgbToHsl(r, g, b);
     wheelSvg.classList.remove('wheel-active');
-    segs.forEach(s=>s.classList.remove('seg-lit'));
-    hueLabel.textContent='—';
-    if(hsl.s<12||hsl.l<4||hsl.l>96){
-        hueLabel.textContent=hsl.l<30?'Oscuro / Negro':hsl.l>70?'Claro / Blanco':'Neutro / Gris';
+    segments.forEach(s => s.classList.remove('seg-lit'));
+    hueLabel.textContent = '—';
+    if (hsl.s < 12 || hsl.l < 4 || hsl.l > 96) {
+        hueLabel.textContent = hsl.l < 30 ? 'Oscuro / Negro' : hsl.l > 70 ? 'Claro / Blanco' : 'Neutro / Gris';
         return;
     }
-    const idx=Math.floor(((hsl.h+15)%360)/30);
+    const idx = getSegmentFromHue(hsl.h);
     wheelSvg.classList.add('wheel-active');
-    if(segs[idx]) segs[idx].classList.add('seg-lit');
-    hueLabel.textContent=HUE_NAMES[idx]+' · '+hsl.h+'°';
+    if (segments[idx]) segments[idx].classList.add('seg-lit');
+    hueLabel.textContent = HUE_NAMES[idx] + '  ·  ' + hsl.h + '°';
 }
 
-// ── Mezcla matemática ──
-function simMezcla2(c1,c2,p1,p2){
-    const t1=getPT(c1.poderTintado),t2=getPT(c2.poderTintado),tot=t1*p1+t2*p2;
-    const a1=(t1*p1)/tot,a2=(t2*p2)/tot;
-    const rF=Math.round(c1.rgb.r*a1+c2.rgb.r*a2),gF=Math.round(c1.rgb.g*a1+c2.rgb.g*a2),bF=Math.round(c1.rgb.b*a1+c2.rgb.b*a2);
-    return{r:rF,g:gF,b:bF,hsl:rgbToHsl(rF,gF,bF),lab:rgbToLab(rF,gF,bF)};
+// ════════════════════════════════════════════════
+// ANÁLISIS — MEZCLA MATEMÁTICA
+// ════════════════════════════════════════════════
+function simularMezclaFisicaExacta(c1, c2, p1, p2) {
+    const pt1 = getPoderTintadoNum(c1.poderTintado);
+    const pt2 = getPoderTintadoNum(c2.poderTintado);
+    const total = pt1*p1 + pt2*p2;
+    const a1 = (pt1*p1)/total, a2 = (pt2*p2)/total;
+    const rF = Math.round(c1.rgb.r*a1 + c2.rgb.r*a2);
+    const gF = Math.round(c1.rgb.g*a1 + c2.rgb.g*a2);
+    const bF = Math.round(c1.rgb.b*a1 + c2.rgb.b*a2);
+    const transp = getTransparenciaNum(c1.transparencia)*p1 + getTransparenciaNum(c2.transparencia)*p2;
+    return {
+        r: rF, g: gF, b: bF,
+        hsl: rgbToHsl(rF,gF,bF),
+        lab: rgbToLab(rF,gF,bF),
+        transparencia: transp < 0.3 ? 'opaco' : transp < 0.6 ? 'semi-opaco' : transp < 0.8 ? 'semi-transparente' : 'transparente'
+    };
 }
-function simMezcla3(c1,c2,c3,p1,p2,p3){
-    const t1=getPT(c1.poderTintado),t2=getPT(c2.poderTintado),t3=getPT(c3.poderTintado),tot=t1*p1+t2*p2+t3*p3;
-    const a1=(t1*p1)/tot,a2=(t2*p2)/tot,a3=(t3*p3)/tot;
-    const rF=Math.round(c1.rgb.r*a1+c2.rgb.r*a2+c3.rgb.r*a3),gF=Math.round(c1.rgb.g*a1+c2.rgb.g*a2+c3.rgb.g*a3),bF=Math.round(c1.rgb.b*a1+c2.rgb.b*a2+c3.rgb.b*a3);
-    return{r:rF,g:gF,b:bF,hsl:rgbToHsl(rF,gF,bF),lab:rgbToLab(rF,gF,bF)};
-}
-function errDE(m,o){const dE=Math.sqrt(Math.pow(m.lab.l-o.lab.l,2)+Math.pow(m.lab.a-o.lab.a,2)+Math.pow(m.lab.b-o.lab.b,2));return dE+Math.abs(m.hsl.s-o.hsl.s)*0.3+Math.abs(m.hsl.l-o.hsl.l)*0.2;}
 
-function buscarMezcla(r,g,b){
-    const hsl=rgbToHsl(r,g,b),lab=rgbToLab(r,g,b),obj={r,g,b,hsl,lab};
-    let best=[];
-    for(let i=0;i<basePigmentos.length;i++){for(let j=i+1;j<basePigmentos.length;j++){
-        let me=Infinity,mp=0.5;
-        for(let p=0.02;p<=0.98;p+=0.02){const m=simMezcla2(basePigmentos[i],basePigmentos[j],p,1-p);const e=errDE(m,obj);if(e<me){me=e;mp=p;}}
-        if(me<12) best.push({colores:[basePigmentos[i],basePigmentos[j]],props:[mp,1-mp],error:me});
-    }}
-    if(best.length===0){
-        for(let i=0;i<basePigmentos.length;i++){for(let j=i+1;j<basePigmentos.length;j++){for(let k=j+1;k<basePigmentos.length;k++){
-            let me=Infinity,mps=[0.33,0.33,0.34];
-            for(let p1=0.1;p1<=0.8;p1+=0.1){for(let p2=0.1;p2<=0.8-p1;p2+=0.1){const p3=1-p1-p2;if(p3>0.05){const m=simMezcla3(basePigmentos[i],basePigmentos[j],basePigmentos[k],p1,p2,p3);const e=errDE(m,obj);if(e<me){me=e;mps=[p1,p2,p3];}}}}
-            if(me<18) best.push({colores:[basePigmentos[i],basePigmentos[j],basePigmentos[k]],props:mps,error:me});
-        }}}
+function simularMezclaFisicaTres(c1, c2, c3, p1, p2, p3) {
+    const pt1 = getPoderTintadoNum(c1.poderTintado);
+    const pt2 = getPoderTintadoNum(c2.poderTintado);
+    const pt3 = getPoderTintadoNum(c3.poderTintado);
+    const total = pt1*p1 + pt2*p2 + pt3*p3;
+    const a1=(pt1*p1)/total, a2=(pt2*p2)/total, a3=(pt3*p3)/total;
+    const rF = Math.round(c1.rgb.r*a1 + c2.rgb.r*a2 + c3.rgb.r*a3);
+    const gF = Math.round(c1.rgb.g*a1 + c2.rgb.g*a2 + c3.rgb.g*a3);
+    const bF = Math.round(c1.rgb.b*a1 + c2.rgb.b*a2 + c3.rgb.b*a3);
+    return { r:rF, g:gF, b:bF, hsl:rgbToHsl(rF,gF,bF), lab:rgbToLab(rF,gF,bF) };
+}
+
+function calcularErrorDeltaE(mezcla, obj) {
+    const dE = Math.sqrt(
+        Math.pow(mezcla.lab.l - obj.lab.l, 2) +
+        Math.pow(mezcla.lab.a - obj.lab.a, 2) +
+        Math.pow(mezcla.lab.b - obj.lab.b, 2)
+    );
+    const dS = Math.abs(mezcla.hsl.s - obj.hsl.s);
+    const dL = Math.abs(mezcla.hsl.l - obj.hsl.l);
+    return dE + dS*0.3 + dL*0.2;
+}
+
+function buscarMezclaOptima(r, g, b) {
+    const hsl = rgbToHsl(r,g,b);
+    const lab = rgbToLab(r,g,b);
+    const obj = {r,g,b,hsl,lab};
+    let mejores = [];
+
+    // Búsqueda de pares
+    for (let i = 0; i < basePigmentos.length; i++) {
+        for (let j = i+1; j < basePigmentos.length; j++) {
+            let mejorErr = Infinity, mejorProp = 0.5;
+            for (let p = 0.02; p <= 0.98; p += 0.02) {
+                const m = simularMezclaFisicaExacta(basePigmentos[i], basePigmentos[j], p, 1-p);
+                const e = calcularErrorDeltaE(m, obj);
+                if (e < mejorErr) { mejorErr = e; mejorProp = p; }
+            }
+            if (mejorErr < 12) {
+                mejores.push({ colores:[basePigmentos[i],basePigmentos[j]], props:[mejorProp,1-mejorProp], error:mejorErr });
+            }
+        }
     }
-    if(!best.length) return null;
-    best.sort((a,b)=>a.error-b.error);
-    return best[0];
+
+    // Si no hay pares, búsqueda de tríos
+    if (mejores.length === 0) {
+        for (let i = 0; i < basePigmentos.length; i++) {
+            for (let j = i+1; j < basePigmentos.length; j++) {
+                for (let k = j+1; k < basePigmentos.length; k++) {
+                    let mejorErr = Infinity;
+                    let mejoresP = [0.33, 0.33, 0.34];
+                    for (let p1 = 0.1; p1 <= 0.8; p1 += 0.1) {
+                        for (let p2 = 0.1; p2 <= 0.8-p1; p2 += 0.1) {
+                            const p3 = 1 - p1 - p2;
+                            if (p3 > 0.05) {
+                                const m = simularMezclaFisicaTres(basePigmentos[i],basePigmentos[j],basePigmentos[k],p1,p2,p3);
+                                const e = calcularErrorDeltaE(m, obj);
+                                if (e < mejorErr) { mejorErr = e; mejoresP = [p1,p2,p3]; }
+                            }
+                        }
+                    }
+                    if (mejorErr < 18) {
+                        mejores.push({ colores:[basePigmentos[i],basePigmentos[j],basePigmentos[k]], props:mejoresP, error:mejorErr });
+                    }
+                }
+            }
+        }
+    }
+
+    if (mejores.length === 0) return null;
+    mejores.sort((a,b) => a.error - b.error);
+    return mejores[0];
 }
 
-function buildResultado(comb){
-    const {colores,props}=comb;
-    const partes=colores.map((c,i)=>`${Math.round(props[i]*100)}% ${c.nombre}`);
-    const codigos=[...new Set(colores.flatMap(c=>c.codigos))];
-    return{nombre:'Mezcla · '+colores.map(c=>c.nombre).join(' + '),codigos,mezcla:partes.join(' + '),wn_tube:colores.map(c=>c.wn_tube).join(' + '),oh_tube:colores.map(c=>c.oh_tube).join(' + '),wb_tube:colores.map(c=>c.wb_tube).join(' + '),componentes:colores.map((c,i)=>({nombre:c.nombre,porcentaje:Math.round(props[i]*100),rgb:c.rgb,codigos:c.codigos}))};
+function construirResultadoMezcla(comb) {
+    const { colores, props } = comb;
+    const nombresPartes = colores.map((c,i) => `${Math.round(props[i]*100)}% ${c.nombre}`);
+    const codigos = [...new Set(colores.flatMap(c => c.codigos))];
+    const transp = colores.map((c,i) => getTransparenciaNum(c.transparencia)*props[i]).reduce((a,b)=>a+b,0);
+    const transpLabel = transp < 0.3 ? 'opaco' : transp < 0.6 ? 'semi-opaco' : transp < 0.8 ? 'semi-transparente' : 'transparente';
+    return {
+        nombre: 'Mezcla · ' + colores.map(c => c.nombre).join(' + '),
+        codigos,
+        mezcla: nombresPartes.join(' + '),
+        wn_tube: colores.map(c => c.wn_tube).join(' + '),
+        oh_tube: colores.map(c => c.oh_tube).join(' + '),
+        wb_tube: colores.map(c => c.wb_tube).join(' + '),
+        transparencia: transpLabel,
+        componentes: colores.map((c,i) => ({
+            nombre: c.nombre,
+            porcentaje: Math.round(props[i]*100),
+            codigos: c.codigos,
+            rgb: c.rgb
+        }))
+    };
 }
 
-function fallback(r,g,b){
-    const t=r+g+b||1,rP=Math.round(r/t*100),gP=Math.round(g/t*100),bP=Math.round(b/t*100);
-    if(rP>30&&(gP>30||bP>30)) return{nombre:'Combinación cromática compleja',codigos:['MEZCLA'],mezcla:`R${rP}% · G${gP}% · B${bP}%`,wn_tube:'Mezcla base',oh_tube:'Mezcla base',wb_tube:'Mezcla base',componentes:[]};
-    return{nombre:'Color complejo',codigos:['—'],mezcla:`RGB(${r}, ${g}, ${b})`,wn_tube:'—',oh_tube:'—',wb_tube:'—',componentes:[]};
+function analizarComponentesPrincipales(r, g, b) {
+    const total = r + g + b || 1;
+    const rP = Math.round((r/total)*100);
+    const gP = Math.round((g/total)*100);
+    const bP = Math.round((b/total)*100);
+    const partes = [];
+    if (rP > 30) partes.push(`Rojo ${rP}%`);
+    if (gP > 30) partes.push(`Amarillo/Verde ${gP}%`);
+    if (bP > 30) partes.push(`Azul ${bP}%`);
+    if (partes.length >= 2) {
+        return {
+            nombre: 'Combinación cromática compleja',
+            codigos: ['MEZCLA'],
+            mezcla: `Componentes RGB — R${rP}% · G${gP}% · B${bP}%`,
+            wn_tube: 'Mezcla de pigmentos base',
+            oh_tube: 'Mezcla de pigmentos base',
+            wb_tube: 'Mezcla de pigmentos base',
+            transparencia: 'variable',
+            componentes: []
+        };
+    }
+    if (r > 100 && g > 80 && b < 70) {
+        return {
+            nombre: 'Tierra / Ocre',
+            codigos: ['PY42', 'PBr7'],
+            mezcla: 'Ocre Amarillo + Siena Tostada',
+            wn_tube: 'Yellow Ochre + Raw Sienna',
+            oh_tube: 'Yellow Ochre + Raw Sienna',
+            wb_tube: 'Yellow Ochre + Raw Sienna',
+            transparencia: 'semi-transparente',
+            componentes: []
+        };
+    }
+    return {
+        nombre: 'Color complejo',
+        codigos: ['—'],
+        mezcla: `RGB(${r}, ${g}, ${b}) — Análisis visual recomendado`,
+        wn_tube: '—', oh_tube: '—', wb_tube: '—',
+        transparencia: 'variable',
+        componentes: []
+    };
 }
 
-// ── Render receta ──
-function renderRecipe(comps){
-    const el=document.getElementById('recipe-bars');
-    if(!comps||!comps.length){el.innerHTML='';return;}
-    el.innerHTML=comps.map(c=>{
-        const rgb=c.rgb||{r:128,g:128,b:128};
-        const lum=(rgb.r*0.299+rgb.g*0.587+rgb.b*0.114)/255;
-        return`<div class="recipe-comp"><div class="recipe-comp-hdr"><span class="recipe-comp-name">${c.nombre}</span><span class="recipe-comp-pct">${c.porcentaje}%</span></div><div class="recipe-bar-track"><div class="recipe-bar-fill" style="width:${c.porcentaje}%;background:rgb(${rgb.r},${rgb.g},${rgb.b})"></div></div></div>`;
+// ── Render barras de receta ──
+function renderRecipeBars(componentes) {
+    const container = document.getElementById('recipe-bars');
+    if (!componentes || componentes.length === 0) { container.innerHTML = ''; return; }
+    container.innerHTML = componentes.map(comp => {
+        const rgb = comp.rgb || {r:128,g:128,b:128};
+        return `<div class="recipe-comp"><div class="recipe-comp-hdr"><span class="recipe-comp-name">${comp.nombre}</span><span class="recipe-comp-pct">${comp.porcentaje}%</span></div><div class="recipe-bar-track"><div class="recipe-bar-fill" style="width:${comp.porcentaje}%;background:rgb(${rgb.r},${rgb.g},${rgb.b})"></div></div></div>`;
     }).join('');
 }
 
-// ── Update display ──
-function updateDisplay(p){
-    const r=p[0],g=p[1],b=p[2];
-    const hsl=rgbToHsl(r,g,b);
-    document.getElementById('color-preview').style.backgroundColor=`rgb(${r},${g},${b})`;
-    document.getElementById('rgb-label').textContent=`RGB(${r}, ${g}, ${b})`;
-    document.getElementById('hsl-label').textContent=`HSL(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)`;
-    document.getElementById('bar-r').style.width=(r/255*100)+'%';
-    document.getElementById('bar-g').style.width=(g/255*100)+'%';
-    document.getElementById('bar-b').style.width=(b/255*100)+'%';
-    updateWheel(r,g,b);
+// ── Actualizar display ──
+function updateColorDisplay(p) {
+    const r = p[0], g = p[1], b = p[2];
+    const hsl = rgbToHsl(r, g, b);
+    document.getElementById('color-preview').style.backgroundColor = `rgb(${r},${g},${b})`;
+    document.getElementById('rgb-label').textContent = `RGB(${r}, ${g}, ${b})`;
+    document.getElementById('hsl-label').textContent = `HSL(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)`;
+    document.getElementById('bar-r').style.width = (r/255*100) + '%';
+    document.getElementById('bar-g').style.width = (g/255*100) + '%';
+    document.getElementById('bar-b').style.width = (b/255*100) + '%';
+    updateColorWheel(r, g, b);
 
-    let info=basePigmentos.find(l=>l.check(r,g,b));
-    if(info){
-        if(!info.componentes) info=Object.assign({},info,{componentes:[{nombre:info.nombre,porcentaje:100,codigos:info.codigos,rgb:info.rgb}]});
+    let info = basePigmentos.find(l => l.check(r, g, b));
+    if (info) {
+        if (!info.componentes) {
+            info = Object.assign({}, info, {
+                componentes: [{ nombre: info.nombre, porcentaje: 100, codigos: info.codigos, rgb: info.rgb }]
+            });
+        }
     } else {
-        const comb=buscarMezcla(r,g,b);
-        info=comb?buildResultado(comb):fallback(r,g,b);
+        const comb = buscarMezclaOptima(r, g, b);
+        info = comb ? construirResultadoMezcla(comb) : analizarComponentesPrincipales(r, g, b);
     }
 
-    document.getElementById('pigment-name').textContent=info.nombre;
-    document.getElementById('mix-recipe').textContent=info.mezcla;
-    document.getElementById('wn-tube').textContent=info.wn_tube||'—';
-    document.getElementById('oh-tube').textContent=info.oh_tube||'—';
-    document.getElementById('wb-tube').textContent=info.wb_tube||'—';
+    document.getElementById('pigment-name').textContent = info.nombre;
+    document.getElementById('mix-recipe').textContent = info.mezcla;
+    document.getElementById('wn-tube').textContent = info.wn_tube || '—';
+    document.getElementById('oh-tube').textContent = info.oh_tube || '—';
+    document.getElementById('wb-tube').textContent = info.wb_tube || '—';
 
-    const cc=document.getElementById('pigment-codes-container');
-    cc.innerHTML='';
-    (info.codigos||[]).forEach(c=>{const s=document.createElement('span');s.className='pigment-code';s.textContent=c;cc.appendChild(s);});
-    renderRecipe(info.componentes);
+    const codesEl = document.getElementById('pigment-codes-container');
+    codesEl.innerHTML = '';
+    (info.codigos || []).forEach(code => {
+        const span = document.createElement('span');
+        span.className = 'pigment-code';
+        span.textContent = code;
+        codesEl.appendChild(span);
+    });
+    renderRecipeBars(info.componentes);
 }
 
-// ── Canvas ──
-const canvas=document.getElementById('main-canvas');
-const wrapper=document.getElementById('canvas-wrapper');
-const area=document.getElementById('canvas-area');
-const ctx=canvas.getContext('2d',{willReadFrequently:true});
-const img=new Image();
-let scale=1,cursorFixed=false,fixedColor=null,isDragging=false,dragX=0,dragY=0,offX=0,offY=0,spaceDown=false;
+// ════════════════════════════════════════════════
+// CANVAS — CARGA Y ZOOM
+// ════════════════════════════════════════════════
+const canvas  = document.getElementById('main-canvas');
+const wrapper = document.getElementById('canvas-wrapper');
+const area    = document.getElementById('canvas-area');
+const ctx     = canvas.getContext('2d', { willReadFrequently: true });
+const img     = new Image();
+let scale = 1, cursorFixed = false, fixedColor = null, isDragging = false;
+let dragStartX = 0, dragStartY = 0, canvasOffX = 0, canvasOffY = 0, spacePressed = false;
 
-document.getElementById('file-input').onchange=(e)=>{
-    const file=e.target.files[0];if(!file) return;
-    if(uploadCount>=MAX_FREE){e.target.value='';showUpgradeModal();return;}
+document.getElementById('file-input').onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!IS_PRO && uploadCount >= MAX_FREE_UPLOADS) {
+        e.target.value = '';
+        showUpgradeModal();
+        return;
+    }
     uploadCount++;
-    const reader=new FileReader();
-    reader.onload=(ev)=>{img.onload=()=>{document.getElementById('empty-state').style.display='none';canvas.width=img.width;canvas.height=img.height;ctx.drawImage(img,0,0);offX=0;offY=0;resetZoom();};img.src=ev.target.result;};
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        img.onload = () => {
+            document.getElementById('empty-state').style.display = 'none';
+            canvas.width  = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            canvasOffX = 0; canvasOffY = 0;
+            resetZoom();
+        };
+        img.src = ev.target.result;
+    };
     reader.readAsDataURL(file);
 };
 
-function resetZoom(){const cw=area.clientWidth-60,ch=area.clientHeight-60;scale=Math.min(cw/img.width,ch/img.height,1);updateTransform();}
-function updateTransform(){wrapper.style.transform=`translate(${offX}px,${offY}px) scale(${scale})`;document.getElementById('zoom-badge').textContent='ZOOM  '+Math.round(scale*100)+'%';}
+function resetZoom() {
+    const cw = area.clientWidth - 60;
+    const ch = area.clientHeight - 60;
+    scale = Math.min(cw / img.width, ch / img.height, 1);
+    updateTransform();
+}
 
-area.addEventListener('wheel',(e)=>{if(!img.src)return;e.preventDefault();scale*=e.deltaY>0?0.9:1.1;scale=Math.min(Math.max(0.04,scale),20);updateTransform();},{passive:false});
+function updateTransform() {
+    wrapper.style.transform = `translate(${canvasOffX}px, ${canvasOffY}px) scale(${scale})`;
+    document.getElementById('zoom-badge').textContent = 'ZOOM  ' + Math.round(scale * 100) + '%';
+}
 
-document.addEventListener('keydown',(e)=>{if(e.code==='Space'&&!spaceDown){e.preventDefault();spaceDown=true;area.style.cursor='grab';}});
-document.addEventListener('keyup',(e)=>{if(e.code==='Space'){e.preventDefault();spaceDown=false;area.style.cursor='crosshair';isDragging=false;}});
+area.addEventListener('wheel', (e) => {
+    if (!img.src) return;
+    e.preventDefault();
+    scale *= e.deltaY > 0 ? 0.9 : 1.1;
+    scale = Math.min(Math.max(0.04, scale), 20);
+    updateTransform();
+}, { passive: false });
 
-area.addEventListener('mousedown',(e)=>{if(spaceDown&&img.src){isDragging=true;dragX=e.clientX-offX;dragY=e.clientY-offY;area.style.cursor='grabbing';e.preventDefault();}});
-area.addEventListener('mousemove',(e)=>{
-    if(!img.src)return;
-    if(isDragging&&spaceDown){offX=e.clientX-dragX;offY=e.clientY-dragY;updateTransform();return;}
-    if(cursorFixed&&fixedColor){updateDisplay(fixedColor);return;}
-    const rect=canvas.getBoundingClientRect();
-    const x=(e.clientX-rect.left)*(canvas.width/rect.width),y=(e.clientY-rect.top)*(canvas.height/rect.height);
-    if(x>=0&&x<canvas.width&&y>=0&&y<canvas.height) updateDisplay(ctx.getImageData(Math.floor(x),Math.floor(y),1,1).data);
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && !spacePressed) {
+        e.preventDefault(); spacePressed = true;
+        area.style.cursor = 'grab';
+    }
 });
-area.addEventListener('mouseup',()=>{isDragging=false;if(spaceDown)area.style.cursor='grab';});
-area.addEventListener('mouseleave',()=>{isDragging=false;});
+document.addEventListener('keyup', (e) => {
+    if (e.code === 'Space') {
+        e.preventDefault(); spacePressed = false;
+        area.style.cursor = 'crosshair';
+        isDragging = false;
+    }
+});
 
-area.addEventListener('dblclick',(e)=>{
-    if(!img.src)return;
-    cursorFixed=!cursorFixed;
-    const pin=document.getElementById('pin-indicator');
-    if(cursorFixed){
-        const rect=canvas.getBoundingClientRect();
-        const x=(e.clientX-rect.left)*(canvas.width/rect.width),y=(e.clientY-rect.top)*(canvas.height/rect.height);
-        if(x>=0&&x<canvas.width&&y>=0&&y<canvas.height){fixedColor=ctx.getImageData(Math.floor(x),Math.floor(y),1,1).data;pin.style.display='block';}
-    } else {fixedColor=null;pin.style.display='none';}
+area.addEventListener('mousedown', (e) => {
+    if (spacePressed && img.src) {
+        isDragging = true;
+        dragStartX = e.clientX - canvasOffX;
+        dragStartY = e.clientY - canvasOffY;
+        area.style.cursor = 'grabbing';
+        e.preventDefault();
+    }
+});
+
+area.addEventListener('mousemove', (e) => {
+    if (!img.src) return;
+    if (isDragging && spacePressed) {
+        canvasOffX = e.clientX - dragStartX;
+        canvasOffY = e.clientY - dragStartY;
+        updateTransform();
+        return;
+    }
+    if (cursorFixed && fixedColor) { updateColorDisplay(fixedColor); return; }
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const y = (e.clientY - rect.top)  * (canvas.height / rect.height);
+    if (x >= 0 && x < canvas.width && y >= 0 && y < canvas.height) {
+        updateColorDisplay(ctx.getImageData(Math.floor(x), Math.floor(y), 1, 1).data);
+    }
+});
+
+area.addEventListener('mouseup',    () => { isDragging = false; if (spacePressed) area.style.cursor = 'grab'; });
+area.addEventListener('mouseleave', () => { isDragging = false; });
+
+area.addEventListener('dblclick', (e) => {
+    if (!img.src) return;
+    cursorFixed = !cursorFixed;
+    const pin = document.getElementById('pin-indicator');
+    if (cursorFixed) {
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (e.clientY - rect.top)  * (canvas.height / rect.height);
+        if (x >= 0 && x < canvas.width && y >= 0 && y < canvas.height) {
+            fixedColor = ctx.getImageData(Math.floor(x), Math.floor(y), 1, 1).data;
+            pin.style.display = 'block';
+            document.getElementById('zoom-badge').style.borderColor = 'var(--gold)';
+        }
+    } else {
+        fixedColor = null;
+        pin.style.display = 'none';
+        document.getElementById('zoom-badge').style.borderColor = 'var(--app-border)';
+    }
 });
 
 // ── Modal códigos ──
-document.getElementById('codes-btn').addEventListener('click',()=>document.getElementById('codes-guide').classList.toggle('open'));
-document.getElementById('codes-close-btn').addEventListener('click',()=>document.getElementById('codes-guide').classList.remove('open'));
-document.getElementById('codes-guide').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+document.getElementById('codes-btn').addEventListener('click', () => document.getElementById('codes-guide').classList.toggle('open'));
+document.getElementById('codes-close-btn').addEventListener('click', () => document.getElementById('codes-guide').classList.remove('open'));
+document.getElementById('codes-guide').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); });
 </script>
 </body>
 </html>
