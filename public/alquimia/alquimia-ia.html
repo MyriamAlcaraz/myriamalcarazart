@@ -486,17 +486,36 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.8rem;
-        pointer-events: none;
+        gap: 1.2rem;
+        pointer-events: all;
+        cursor: pointer;
     }
 
-    .empty-icon { width: 50px; height: 50px; opacity: 0.12; }
+    .empty-icon { width: 56px; height: 56px; opacity: 0.22; }
+
+    .btn-upload-main {
+        background: var(--gold);
+        color: #08070a;
+        padding: 15px 36px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.15s;
+        display: inline-block;
+        text-align: center;
+        border: none;
+        outline: none;
+    }
+    .btn-upload-main:hover { background: var(--gold-light); transform: translateY(-2px); }
 
     .empty-text {
         font-family: 'Montserrat', sans-serif;
-        font-size: 0.6rem;
+        font-size: 0.58rem;
         font-weight: 500;
-        letter-spacing: 0.4em;
+        letter-spacing: 0.3em;
         color: #5a5060;
         text-transform: uppercase;
     }
@@ -944,7 +963,7 @@
             <button class="btn-codes" id="codes-btn">Códigos</button>
             <label class="btn-load" style="cursor:pointer;">
                 Cargar Obra
-                <input type="file" id="file-input" accept="image/*" style="position:absolute;opacity:0;width:0;height:0;">
+                <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="position:absolute;opacity:0;width:0;height:0;">
             </label>
         </div>
     </div>
@@ -967,7 +986,8 @@
                     <path d="M256,256 L111,111 A230,230 0 0,1 256,26 z" fill="#FF007F" opacity="0.4"/>
                     <circle cx="256" cy="256" r="72" fill="#06060a"/>
                 </svg>
-                <span class="empty-text">Cargar imagen para analizar</span>
+                <label for="file-input" class="btn-upload-main">📸 SELECCIONAR FOTO PARA ANALIZAR</label>
+                <span class="empty-text">JPG · PNG · WEBP · 1 análisis gratuito incluido</span>
             </div>
             <div id="canvas-wrapper"><canvas id="main-canvas"></canvas></div>
             <div id="zoom-badge">ZOOM 100%</div>
@@ -1183,9 +1203,13 @@
 // ════════════════════════════════════════════════
 // DETECCIÓN DE VERSIÓN — siempre web para esta página
 // ════════════════════════════════════════════════
+
+// RESET temporal para verificar la prueba gratuita
+localStorage.removeItem('alquimia_uploads');
+
 const IS_PRO           = false;
 const MAX_FREE_UPLOADS = 1;   // Máximo 1 foto gratis por sesión
-let uploadCount        = 0;
+let uploadCount        = parseInt(localStorage.getItem('alquimia_uploads') || '0', 10);
 
 // Inicializar UI — mostrar panel AdSense en versión web
 (function initVersionUI() {
@@ -1544,7 +1568,6 @@ document.getElementById('file-input').onchange = (e) => {
         showUpgradeModal();
         return;
     }
-    uploadCount++;
     const reader = new FileReader();
     reader.onload = (ev) => {
         img.onload = () => {
@@ -1554,6 +1577,9 @@ document.getElementById('file-input').onchange = (e) => {
             ctx.drawImage(img, 0, 0);
             canvasOffX = 0; canvasOffY = 0;
             resetZoom();
+            // Contador solo se activa cuando el análisis está visible en pantalla
+            uploadCount++;
+            localStorage.setItem('alquimia_uploads', uploadCount);
         };
         img.src = ev.target.result;
     };
