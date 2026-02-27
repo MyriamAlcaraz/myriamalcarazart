@@ -466,6 +466,46 @@
 
     canvas { display: block; box-shadow: 0 20px 60px rgba(0,0,0,0.9); border: 1px solid #1a1a20; }
 
+    #upload-prompt {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        pointer-events: none;
+        z-index: 10;
+    }
+    #upload-btn {
+        pointer-events: auto;
+        cursor: pointer;
+        background: transparent;
+        color: #c4a035;
+        border: 1px solid rgba(196,160,53,0.5);
+        padding: 16px 48px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        transition: border-color 0.3s, color 0.3s, background 0.3s;
+        display: inline-block;
+    }
+    #upload-btn:hover {
+        border-color: #c4a035;
+        background: rgba(196,160,53,0.08);
+        color: #e8c84a;
+    }
+    #upload-hint {
+        pointer-events: none;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.55rem;
+        letter-spacing: 0.25em;
+        color: #3a3640;
+        text-transform: uppercase;
+    }
+
 
 
     #zoom-badge {
@@ -917,8 +957,6 @@
         </div>
         <div class="analyzer-controls">
             <span class="analyzer-hint">Rueda = zoom · Doble clic = fijar · Espacio = desplazar</span>
-            <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="display:none;">
-            <label for="file-input" class="btn-codes" style="cursor:pointer; pointer-events:auto;">CARGAR OBRA</label>
             <button class="btn-codes" id="codes-btn">Códigos</button>
         </div>
     </div>
@@ -928,6 +966,11 @@
 
         <!-- Canvas -->
         <main id="canvas-area">
+            <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="display:none;">
+            <div id="upload-prompt">
+                <label for="file-input" id="upload-btn">CARGAR OBRA PARA ANALIZAR</label>
+                <span id="upload-hint">JPG · PNG · WEBP</span>
+            </div>
             <div id="canvas-wrapper"><canvas id="main-canvas"></canvas></div>
             <div id="zoom-badge">ZOOM 100%</div>
             <div id="pin-indicator">FIJADO</div>
@@ -1510,7 +1553,7 @@ document.getElementById('file-input').onchange = (e) => {
     const reader = new FileReader();
     reader.onload = (ev) => {
         img.onload = () => {
-            // empty-state eliminado — canvas siempre visible
+            document.getElementById('upload-prompt').style.display = 'none';
             canvas.width  = img.width;
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0);
