@@ -113,6 +113,12 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
             >
               ESTUDIO DIGITAL
             </button>
+            <a
+              href="/alquimia/alquimia-ia.html"
+              className="px-3 py-1 md:px-4 md:py-2 transition-colors text-slate-500 hover:text-slate-800"
+            >
+              ALQUIMIA IA
+            </a>
           </div>
         </div>
       </nav>
