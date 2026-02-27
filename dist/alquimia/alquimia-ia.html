@@ -53,6 +53,10 @@
     }
     </script>
 
+    <!-- ═══ GOOGLE ADSENSE ═══ -->
+    <!-- ACTIVACIÓN: reemplaza ca-pub-XXXXXXXXXXXXXXXX con tu Publisher ID real -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
     <!-- ═══ FUENTES ═══ -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -758,6 +762,45 @@
     }
 
     /* ═══════════════════════════════════════════════════════════
+       BANNERS DE PATROCINADOR
+       ═══════════════════════════════════════════════════════════ */
+    .sponsor-strip {
+        padding: 2.5rem var(--section-px, 2rem);
+        background: var(--bg-dark);
+        border-top: 1px solid var(--border-sub);
+        text-align: center;
+    }
+    .sponsor-label {
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+        font-size: 0.58rem;
+        letter-spacing: 0.22em;
+        color: var(--cream-muted);
+        opacity: 0.55;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+        display: block;
+    }
+    .sponsor-slot {
+        max-width: 728px;
+        margin: 0 auto;
+        min-height: 90px;
+        border: 1px solid rgba(196,160,53,0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(196,160,53,0.02);
+    }
+    .sponsor-text {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.55rem;
+        letter-spacing: 0.2em;
+        color: var(--gold-muted);
+        text-transform: uppercase;
+        opacity: 0.6;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
        MODAL PRO UPGRADE — PANTALLA COMPLETA
        ═══════════════════════════════════════════════════════════ */
     #upgrade-modal {
@@ -945,6 +988,18 @@
             <p class="feature-desc">Acceso directo a las cartas de color en PDF de las tres casas para consultar disponibilidad y tonalidades exactas.</p>
         </div>
     </div>
+
+    <!-- Banner patrocinador — Herramienta -->
+    <div class="sponsor-strip">
+        <span class="sponsor-label">Patrocinadores Artísticos</span>
+        <div class="sponsor-slot">
+            <ins class="adsbygoogle"
+                 style="display:block;width:728px;height:90px;"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                 data-ad-slot="XXXXXXXXXX"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -1050,30 +1105,15 @@
 
             <!-- ADSENSE — Solo visible en modo web (activado por JS) -->
             <div id="adsense-panel">
-                <span id="adsense-panel-label">Material recomendado para artistas</span>
+                <span id="adsense-panel-label">Patrocinadores Artísticos</span>
                 <div id="adsense-slot">
-                    <!--
-                    ╔══════════════════════════════════════════════════════════╗
-                    ║  INSTRUCCIONES DE ACTIVACIÓN DE ADSENSE                 ║
-                    ║                                                          ║
-                    ║  1. Añade en el <head>:                                 ║
-                    ║     <script async src="https://pagead2.google           ║
-                    ║     syndication.com/pagead/js/adsbygoogle.js?           ║
-                    ║     client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin=        ║
-                    ║     "anonymous"></script>                                ║
-                    ║                                                          ║
-                    ║  2. Reemplaza el interior de #adsense-slot con:         ║
-                    ║     <ins class="adsbygoogle"                            ║
-                    ║          style="display:block;"                         ║
-                    ║          data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"      ║
-                    ║          data-ad-slot="XXXXXXXXXX"                      ║
-                    ║          data-ad-format="auto"                          ║
-                    ║          data-full-width-responsive="true"></ins>        ║
-                    ║     <script>(adsbygoogle=window.adsbygoogle||[])        ║
-                    ║     .push({});</script>                                  ║
-                    ╚══════════════════════════════════════════════════════════╝
-                    -->
-                    <span style="font-size:0.52rem; color:var(--cream-muted); letter-spacing:0.12em; text-transform:uppercase; opacity:0.5;">Espacio publicitario · Google AdSense</span>
+                    <ins class="adsbygoogle"
+                         style="display:block;"
+                         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                         data-ad-slot="XXXXXXXXXX"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
                 </div>
             </div>
 
@@ -1100,7 +1140,8 @@
     <span class="footer-copy">
         Desarrollado por
         <a class="footer-link" href="https://myriamalcaraz.com" target="_blank" rel="noopener">Myriam Alcaraz</a>
-        · © 2024 · Todos los derechos reservados
+        · © 2025 · Todos los derechos reservados
+        · <a class="footer-link" href="politica-de-privacidad.html">Política de Privacidad</a>
     </span>
 </footer>
 
