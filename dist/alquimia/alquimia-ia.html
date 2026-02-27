@@ -476,42 +476,6 @@
         cursor: pointer;
     }
 
-    .empty-icon { width: 56px; height: 56px; opacity: 0.22; }
-
-    .btn-upload-main {
-        background: transparent;
-        color: var(--cream-dim);
-        border: 1px solid rgba(196,160,53,0.32);
-        padding: 18px 54px;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.65rem;
-        font-weight: 500;
-        letter-spacing: 0.28em;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: border-color 0.35s, color 0.35s, transform 0.2s;
-        display: inline-block;
-        text-align: center;
-        outline: none;
-    }
-    .btn-upload-main:hover {
-        border-color: rgba(196,160,53,0.72);
-        color: var(--gold);
-        transform: translateY(-2px);
-    }
-    #empty-state label {
-        cursor: pointer;
-        pointer-events: auto;
-    }
-
-    .empty-text {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.58rem;
-        font-weight: 500;
-        letter-spacing: 0.3em;
-        color: #5a5060;
-        text-transform: uppercase;
-    }
 
     #zoom-badge {
         position: absolute;
@@ -965,6 +929,8 @@
         </div>
         <div class="analyzer-controls">
             <span class="analyzer-hint">Rueda = zoom · Doble clic = fijar · Espacio = desplazar</span>
+            <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="display:none;">
+            <label for="file-input" class="btn-codes" style="cursor:pointer;">Cargar Obra</label>
             <button class="btn-codes" id="codes-btn">Códigos</button>
         </div>
     </div>
@@ -974,23 +940,7 @@
 
         <!-- Canvas -->
         <main id="canvas-area">
-            <div id="empty-state">
-                <svg class="empty-icon" viewBox="0 0 512 512" fill="none">
-                    <circle cx="256" cy="256" r="230" stroke="#d4af37" stroke-width="4" opacity="0.25"/>
-                    <path d="M256,256 L256,26 A230,230 0 0,1 401,111 z" fill="#FF2400" opacity="0.4"/>
-                    <path d="M256,256 L401,111 A230,230 0 0,1 450,256 z" fill="#FF8C00" opacity="0.4"/>
-                    <path d="M256,256 L450,256 A230,230 0 0,1 401,401 z" fill="#FFD700" opacity="0.4"/>
-                    <path d="M256,256 L401,401 A230,230 0 0,1 256,480 z" fill="#00C050" opacity="0.4"/>
-                    <path d="M256,256 L256,480 A230,230 0 0,1 111,401 z" fill="#00BFFF" opacity="0.4"/>
-                    <path d="M256,256 L111,401 A230,230 0 0,1 62,256 z" fill="#0038A8" opacity="0.4"/>
-                    <path d="M256,256 L62,256 A230,230 0 0,1 111,111 z" fill="#8000FF" opacity="0.4"/>
-                    <path d="M256,256 L111,111 A230,230 0 0,1 256,26 z" fill="#FF007F" opacity="0.4"/>
-                    <circle cx="256" cy="256" r="72" fill="#06060a"/>
-                </svg>
-                <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="display:none;">
-                <label for="file-input" class="btn-upload-main">CARGAR OBRA PARA ANALIZAR</label>
-                <span class="empty-text">JPG · PNG · WEBP · 1 análisis gratuito incluido</span>
-            </div>
+            <div id="empty-state"></div>
             <div id="canvas-wrapper"><canvas id="main-canvas"></canvas></div>
             <div id="zoom-badge">ZOOM 100%</div>
             <div id="pin-indicator">FIJADO</div>
