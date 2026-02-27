@@ -1185,9 +1185,6 @@
 // DETECCIÓN DE VERSIÓN — siempre web para esta página
 // ════════════════════════════════════════════════
 
-// RESET temporal para verificar la prueba gratuita
-localStorage.removeItem('alquimia_uploads');
-
 const IS_PRO           = false;
 const MAX_FREE_UPLOADS = 1;   // Máximo 1 foto gratis por sesión
 let uploadCount        = parseInt(localStorage.getItem('alquimia_uploads') || '0', 10);
@@ -1205,6 +1202,22 @@ function closeUpgradeModal() { document.getElementById('upgrade-modal').classLis
 document.getElementById('upgrade-modal').addEventListener('click', function(e) {
     if (e.target === this) closeUpgradeModal();
 });
+
+// ── Bloqueo del botón de carga ──
+function blockUploadButton() {
+    const btn = document.getElementById('upload-btn');
+    if (!btn) return;
+    btn.removeAttribute('for');          // desvincula del input — ya no abre el diálogo
+    btn.style.opacity   = '0.35';
+    btn.style.cursor    = 'pointer';
+    btn.style.borderColor = 'rgba(196,160,53,0.15)';
+    btn.onclick = (e) => { e.preventDefault(); showUpgradeModal(); };
+}
+
+// Comprobar límite al arrancar — bloquear el botón si ya se usó el análisis gratuito
+if (!IS_PRO && uploadCount >= MAX_FREE_UPLOADS) {
+    blockUploadButton();
+}
 
 function openURL(url)      { window.open(url, '_blank', 'noopener'); }
 function openPDF(filename) { window.open('./' + filename, '_blank'); }
@@ -1549,6 +1562,10 @@ document.getElementById('file-input').onchange = (e) => {
         showUpgradeModal();
         return;
     }
+    // Registrar uso INMEDIATAMENTE — antes de cargar la imagen
+    uploadCount++;
+    localStorage.setItem('alquimia_uploads', uploadCount);
+    blockUploadButton();   // bloquear ya para el resto de la sesión
     const reader = new FileReader();
     reader.onload = (ev) => {
         img.onload = () => {
@@ -1559,9 +1576,6 @@ document.getElementById('file-input').onchange = (e) => {
             ctx.drawImage(img, 0, 0);
             canvasOffX = 0; canvasOffY = 0;
             resetZoom();
-            // Contador solo se activa cuando el análisis está visible en pantalla
-            uploadCount++;
-            localStorage.setItem('alquimia_uploads', uploadCount);
         };
         img.src = ev.target.result;
     };
