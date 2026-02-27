@@ -1185,9 +1185,6 @@
 // DETECCIÓN DE VERSIÓN — siempre web para esta página
 // ════════════════════════════════════════════════
 
-// RESET temporal para verificar la prueba gratuita
-localStorage.removeItem('alquimia_uploads');
-
 const IS_PRO           = false;
 const MAX_FREE_UPLOADS = 1;   // Máximo 1 foto gratis por sesión
 let uploadCount        = parseInt(localStorage.getItem('alquimia_uploads') || '0', 10);
