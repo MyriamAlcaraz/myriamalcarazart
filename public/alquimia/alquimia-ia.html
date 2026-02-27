@@ -439,21 +439,6 @@
     }
     .btn-codes:hover { border-color: var(--app-gold); color: var(--app-gold); }
 
-    .btn-load {
-        background: var(--app-gold);
-        border: none;
-        color: #08070a;
-        padding: 6px 16px;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 0.6rem;
-        font-weight: 700;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-    .btn-load:hover { background: #d4a820; }
-
     /* ── App body container ── */
     .analyzer-body {
         display: flex;
@@ -977,10 +962,6 @@
         <div class="analyzer-controls">
             <span class="analyzer-hint">Rueda = zoom · Doble clic = fijar · Espacio = desplazar</span>
             <button class="btn-codes" id="codes-btn">Códigos</button>
-            <label class="btn-load" style="cursor:pointer;">
-                Cargar Obra
-                <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="position:absolute;opacity:0;width:0;height:0;">
-            </label>
         </div>
     </div>
 
@@ -989,6 +970,7 @@
 
         <!-- Canvas -->
         <main id="canvas-area">
+            <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="position:absolute;opacity:0;width:0;height:0;">
             <div id="empty-state">
                 <svg class="empty-icon" viewBox="0 0 512 512" fill="none">
                     <circle cx="256" cy="256" r="230" stroke="#d4af37" stroke-width="4" opacity="0.25"/>
