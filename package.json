@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy:alquimia": "bash deploy-alquimia.sh"
   },
   "dependencies": {
     "lucide-react": "^0.344.0",
