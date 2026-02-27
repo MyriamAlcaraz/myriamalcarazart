@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ═══ SEO PRIMARIO ═══ -->
+    <title>Alquimia IA | Análisis Técnico de Pigmentos al Óleo</title>
+    <meta name="description" content="Herramienta profesional de IA para el análisis de mezclas y composición de pigmentos en la pintura al óleo de alta maestría.">
+    <meta name="keywords" content="análisis de pigmentos óleo, composición de pigmentos, mezcla de pinturas, Winsor Newton, Old Holland, Williamsburg, círculo cromático, analizador de color, pintura al óleo profesional">
+    <meta name="author" content="Myriam Alcaraz">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://myriamalcaraz.com/alquimia/alquimia-ia.html">
+
+    <!-- ═══ OPEN GRAPH ═══ -->
+    <meta property="og:title" content="Alquimia IA | Análisis Técnico de Pigmentos al Óleo">
+    <meta property="og:description" content="Herramienta profesional de IA para el análisis de mezclas y composición de pigmentos en la pintura al óleo de alta maestría.">
+    <meta property="og:image" content="https://myriamalcaraz.com/alquimia/portada-alquimia.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://myriamalcaraz.com/alquimia/alquimia-ia.html">
+    <meta property="og:site_name" content="Myriam Alcaraz Art & Studio">
+
+    <!-- ═══ TWITTER CARD ═══ -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Alquimia IA | Análisis Técnico de Pigmentos al Óleo">
+    <meta name="twitter:description" content="Herramienta profesional de IA para el análisis de mezclas y composición de pigmentos en la pintura al óleo.">
+    <meta name="twitter:image" content="https://myriamalcaraz.com/alquimia/portada-alquimia.png">
+
+    <!-- ═══ SCHEMA.ORG STRUCTURED DATA ═══ -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Alquimia IA — Analizador Técnico de Pigmentos al Óleo",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web, macOS, Windows",
+        "offers": {
+            "@type": "Offer",
+            "price": "46.99",
+            "priceCurrency": "EUR",
+            "url": "https://payhip.com/b/CZF8r"
+        },
+        "description": "Herramienta profesional para el análisis técnico de pigmentos, mezclas y composición de color en pintura al óleo de alta maestría.",
+        "author": {
+            "@type": "Person",
+            "name": "Myriam Alcaraz",
+            "url": "https://myriamalcaraz.com"
+        },
+        "image": "https://myriamalcaraz.com/alquimia/portada-alquimia.png"
+    }
+    </script>
+
+    <!-- ═══ FUENTES ═══ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+    /* ═══════════════════════════════════════════════════════════
+       TOKENS DE DISEÑO — ALQUIMIA IA LANDING PAGE
+       ═══════════════════════════════════════════════════════════ */
+    :root {
+        --bg:           #1a1a1a;
+        --bg-dark:      #111111;
+        --bg-card:      #212121;
+        --bg-elevated:  #2a2a2a;
+        --border:       #333333;
+        --border-sub:   #282828;
+        --gold:         #d4af37;
+        --gold-light:   #e8c84a;
+        --gold-muted:   #8a7040;
+        --gold-dim:     #4a3c1e;
+        --cream:        #f5f0e8;
+        --cream-dim:    #c5bdb0;
+        --cream-muted:  #7a7068;
+        --app-bg:       #08070a;
+        --app-surface:  #100f12;
+        --app-card:     #141318;
+        --app-elevated: #1c1a20;
+        --app-border:   #231f28;
+        --app-gold:     #c4a035;
+        --app-amber:    #d4a373;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+        background: var(--bg-dark);
+        color: var(--cream);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 15px;
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-muted); border-radius: 2px; }
+
+    /* ─── TIPOGRAFÍA GLOBAL ─── */
+    h1, h2, h3 { font-family: 'Cinzel', serif; font-weight: 700; line-height: 1.2; }
+    em, .editorial { font-family: 'Playfair Display', serif; font-style: italic; }
+
+    /* ═══════════════════════════════════════════════════════════
+       NAVEGACIÓN
+       ═══════════════════════════════════════════════════════════ */
+    #site-nav {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 50;
+        height: 60px;
+        background: rgba(17,17,17,0.92);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(212,175,55,0.15);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2.5rem;
+    }
+
+    .nav-brand {
+        font-family: 'Cinzel', serif;
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0.25em;
+        color: var(--gold);
+        text-decoration: none;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+        align-items: center;
+    }
+
+    .nav-links a {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--cream-muted);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    .nav-cta {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--bg-dark) !important;
+        background: var(--gold);
+        padding: 7px 20px;
+        text-decoration: none;
+        transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--gold-light) !important; color: var(--bg-dark) !important; }
+
+    /* ═══════════════════════════════════════════════════════════
+       HERO
+       ═══════════════════════════════════════════════════════════ */
+    #hero {
+        position: relative;
+        width: 100%;
+        height: 90vh;
+        min-height: 560px;
+        max-height: 860px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #hero-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 30%;
+        filter: brightness(0.38);
+    }
+
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            180deg,
+            rgba(17,17,17,0.25) 0%,
+            rgba(17,17,17,0.05) 40%,
+            rgba(17,17,17,0.6) 85%,
+            rgba(17,17,17,1) 100%
+        );
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        max-width: 860px;
+        padding: 0 2rem;
+    }
+
+    .hero-eyebrow {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.6rem;
+        font-weight: 600;
+        letter-spacing: 0.45em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+        content: '';
+        display: block;
+        width: 40px;
+        height: 1px;
+        background: var(--gold);
+        opacity: 0.5;
+    }
+
+    #hero h1 {
+        font-size: clamp(1.8rem, 4vw, 3rem);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--cream);
+        margin-bottom: 1.4rem;
+        text-shadow: 0 2px 30px rgba(0,0,0,0.6);
+    }
+
+    .hero-sub {
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+        font-size: clamp(1rem, 1.8vw, 1.2rem);
+        color: var(--cream-dim);
+        margin-bottom: 2.5rem;
+        line-height: 1.7;
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-hero-primary {
+        background: var(--gold);
+        color: #0f0f0f;
+        padding: 13px 34px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: background 0.2s, transform 0.2s;
+        display: inline-block;
+    }
+    .btn-hero-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    .btn-hero-ghost {
+        border: 1px solid rgba(212,175,55,0.4);
+        color: var(--cream-dim);
+        padding: 13px 34px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: border-color 0.2s, color 0.2s;
+        display: inline-block;
+    }
+    .btn-hero-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ═══════════════════════════════════════════════════════════
+       FEATURES STRIP
+       ═══════════════════════════════════════════════════════════ */
+    #features {
+        background: var(--bg-dark);
+        padding: 5rem 2rem;
+    }
+
+    .section-label {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.58rem;
+        font-weight: 600;
+        letter-spacing: 0.38em;
+        text-transform: uppercase;
+        color: var(--gold-muted);
+        text-align: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+        font-family: 'Cinzel', serif;
+        font-size: clamp(1.4rem, 3vw, 1.9rem);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        color: var(--cream);
+        text-align: center;
+        margin-bottom: 0.9rem;
+    }
+
+    .section-sub {
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+        font-size: 1rem;
+        color: var(--cream-muted);
+        text-align: center;
+        max-width: 560px;
+        margin: 0 auto 3.5rem;
+        line-height: 1.7;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5px;
+        max-width: 1100px;
+        margin: 0 auto;
+        border: 1px solid var(--border);
+    }
+
+    .feature-card {
+        background: var(--bg-card);
+        padding: 2.2rem 1.8rem;
+        border: none;
+        transition: background 0.25s;
+    }
+    .feature-card:hover { background: var(--bg-elevated); }
+
+    .feature-icon {
+        width: 36px;
+        height: 1px;
+        background: var(--gold);
+        margin-bottom: 1.2rem;
+    }
+
+    .feature-title {
+        font-family: 'Cinzel', serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--cream);
+        margin-bottom: 0.6rem;
+    }
+
+    .feature-desc {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 400;
+        color: var(--cream-muted);
+        line-height: 1.7;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       SECCIÓN ANALIZADOR
+       ═══════════════════════════════════════════════════════════ */
+    #analizador {
+        background: var(--app-bg);
+        padding: 0;
+    }
+
+    .analyzer-header {
+        background: #0a0908;
+        border-bottom: 1px solid #1c1820;
+        padding: 0 1.5rem;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        z-index: 10;
+    }
+
+    .analyzer-brand {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+    }
+
+    .analyzer-name {
+        font-family: 'Cinzel', serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        color: var(--app-gold);
+        line-height: 1;
+    }
+
+    .analyzer-sub {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.5rem;
+        font-weight: 500;
+        letter-spacing: 0.28em;
+        color: #5a5060;
+        text-transform: uppercase;
+    }
+
+    .analyzer-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+    }
+
+    .analyzer-hint {
+        font-size: 0.6rem;
+        color: #5a5060;
+        letter-spacing: 0.04em;
+    }
+
+    .btn-codes {
+        background: transparent;
+        border: 1px solid #2e2834;
+        color: #b8b3ac;
+        padding: 5px 12px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.6rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-codes:hover { border-color: var(--app-gold); color: var(--app-gold); }
+
+    /* ── App body container ── */
+    .analyzer-body {
+        display: flex;
+        height: 700px;
+        overflow: hidden;
+    }
+
+    /* Canvas area */
+    #canvas-area {
+        flex: 1;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        cursor: crosshair;
+    }
+
+    #canvas-wrapper {
+        position: relative;
+        transform-origin: center;
+        transition: transform 0.05s linear;
+    }
+
+    canvas { display: block; box-shadow: 0 20px 60px rgba(0,0,0,0.9); border: 1px solid #1a1a20; }
+
+    #empty-state {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2rem;
+        pointer-events: all;
+        cursor: pointer;
+    }
+
+    .empty-icon { width: 56px; height: 56px; opacity: 0.22; }
+
+    .btn-upload-main {
+        background: transparent;
+        color: var(--cream-dim);
+        border: 1px solid rgba(196,160,53,0.32);
+        padding: 18px 54px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.65rem;
+        font-weight: 500;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: border-color 0.35s, color 0.35s, transform 0.2s;
+        display: inline-block;
+        text-align: center;
+        outline: none;
+    }
+    .btn-upload-main:hover {
+        border-color: rgba(196,160,53,0.72);
+        color: var(--gold);
+        transform: translateY(-2px);
+    }
+
+    .empty-text {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.58rem;
+        font-weight: 500;
+        letter-spacing: 0.3em;
+        color: #5a5060;
+        text-transform: uppercase;
+    }
+
+    #zoom-badge {
+        position: absolute;
+        bottom: 14px; left: 14px;
+        background: rgba(8,7,10,0.9);
+        border: 1px solid #2e2834;
+        padding: 4px 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.58rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: var(--app-gold);
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    #pin-indicator {
+        position: absolute;
+        top: 14px; left: 14px;
+        background: var(--app-gold);
+        color: #08070a;
+        padding: 3px 10px;
+        font-size: 0.56rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        display: none;
+        z-index: 10;
+    }
+
+    /* Sidebar */
+    #app-sidebar {
+        width: 320px;
+        min-width: 320px;
+        background: var(--app-surface);
+        border-left: 1px solid var(--app-border);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    #app-sidebar::-webkit-scrollbar { width: 3px; }
+    #app-sidebar::-webkit-scrollbar-thumb { background: #2e2834; }
+
+    .s-panel { padding: 1rem 1.1rem; border-bottom: 1px solid var(--app-border); }
+
+    .s-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.54rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #5a5060;
+        margin-bottom: 0.65rem;
+    }
+
+    /* Color wheel */
+    .wheel-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+
+    #color-wheel-svg { width: 170px; height: 170px; filter: drop-shadow(0 4px 16px rgba(0,0,0,0.6)); }
+
+    .wheel-segment { opacity: 0.55; stroke: #000; stroke-width: 1.5; transition: opacity 0.3s, filter 0.3s, stroke-width 0.3s; }
+    .wheel-active .wheel-segment { opacity: 0.22; }
+    .wheel-active .wheel-segment.seg-lit { opacity: 1; filter: brightness(1.5) drop-shadow(0 0 5px rgba(255,255,255,0.35)); stroke: rgba(255,255,255,0.45); stroke-width: 2.5; }
+
+    #wheel-hue-label {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.56rem; font-weight: 500;
+        letter-spacing: 0.14em; color: #5a5060;
+        text-transform: uppercase; text-align: center; min-height: 1em;
+    }
+
+    /* Color probe */
+    .color-probe { display: flex; gap: 0.8rem; align-items: flex-start; }
+
+    #color-preview { width: 48px; height: 48px; border: 1px solid #2e2834; background: #100f12; flex-shrink: 0; }
+
+    .color-vals { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+
+    #rgb-label { font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 600; color: #f0ede6; }
+    #hsl-label { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; color: #5a5060; }
+
+    .rgb-bars { display: flex; gap: 2px; margin-top: 5px; height: 3px; background: #1c1a20; border-radius: 2px; overflow: hidden; }
+    .rgb-bar { height: 100%; transition: width 0.15s; }
+    #bar-r { background: #c04040; } #bar-g { background: #40a040; } #bar-b { background: #4060c0; }
+
+    /* Identification */
+    #pigment-name { font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.95rem; color: #f0ede6; margin-bottom: 0.5rem; line-height: 1.3; }
+
+    .codes-row { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 0.5rem; }
+
+    .pigment-code { background: #1c1a20; border: 1px solid #8a6e22; color: var(--app-gold); padding: 2px 6px; font-family: 'Montserrat', sans-serif; font-size: 0.58rem; font-weight: 600; }
+
+    .recipe-section { margin-top: 0.65rem; padding-top: 0.65rem; border-top: 1px solid var(--app-border); }
+
+    .recipe-label { font-family: 'Montserrat', sans-serif; font-size: 0.52rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #5a5060; margin-bottom: 0.5rem; }
+
+    .recipe-comp { margin-bottom: 0.55rem; }
+    .recipe-comp-hdr { display: flex; justify-content: space-between; margin-bottom: 3px; }
+    .recipe-comp-name { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; color: #b8b3ac; }
+    .recipe-comp-pct { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 600; color: var(--app-gold); }
+    .recipe-bar-track { height: 3px; background: #1c1a20; border-radius: 2px; overflow: hidden; }
+    .recipe-bar-fill { height: 100%; border-radius: 2px; transition: width 0.4s; }
+    .recipe-text { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: var(--app-amber); line-height: 1.5; font-style: italic; margin-top: 0.4rem; }
+
+    /* Brand rows */
+    .brand-row { padding: 0.45rem 0; border-bottom: 1px solid var(--app-border); }
+    .brand-row:last-child { border-bottom: none; }
+    .brand-lbl { font-family: 'Montserrat', sans-serif; font-size: 0.52rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+    .brand-val { font-family: 'Montserrat', sans-serif; font-size: 0.66rem; color: #b8b3ac; font-style: italic; }
+    .c-wn { color: #c4a035; } .c-oh { color: #a05028; } .c-wb { color: #3d5a80; }
+
+    .catalog-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; margin-top: 0.65rem; }
+    .catalog-btn { background: #1c1a20; border: 1px solid #2e2834; color: #5a5060; padding: 4px; font-family: 'Montserrat', sans-serif; font-size: 0.5rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; text-align: center; transition: all 0.2s; }
+    .catalog-btn:hover { border-color: #8a6e22; color: var(--app-gold); }
+
+    /* ═══════════════════════════════════════════════════════════
+       CTA SECTION (después del analizador)
+       ═══════════════════════════════════════════════════════════ */
+    #cta-section {
+        background: var(--bg-card);
+        border-top: 1px solid var(--gold-dim);
+        border-bottom: 1px solid var(--gold-dim);
+        padding: 5rem 2rem;
+        text-align: center;
+    }
+
+    .cta-ornament { width: 50px; height: 1px; background: var(--gold); margin: 0 auto 1.5rem; }
+
+    .cta-title {
+        font-family: 'Cinzel', serif;
+        font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--cream);
+        margin-bottom: 1rem;
+    }
+
+    .cta-sub {
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+        font-size: 1rem;
+        color: var(--cream-muted);
+        max-width: 480px;
+        margin: 0 auto 2.5rem;
+        line-height: 1.7;
+    }
+
+    .cta-price {
+        font-family: 'Cinzel', serif;
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        color: var(--cream-muted);
+        margin-bottom: 2rem;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════════════════════ */
+    #site-footer {
+        background: var(--bg-dark);
+        border-top: 1px solid var(--border-sub);
+        padding: 2rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .footer-brand {
+        font-family: 'Cinzel', serif;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.25em;
+        color: var(--gold-muted);
+    }
+
+    .footer-copy {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.58rem;
+        color: var(--cream-muted);
+        letter-spacing: 0.04em;
+    }
+
+    .footer-link { color: var(--gold-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-link:hover { color: var(--gold); }
+
+    /* ═══════════════════════════════════════════════════════════
+       MODAL CÓDIGOS
+       ═══════════════════════════════════════════════════════════ */
+    #codes-guide {
+        display: none;
+        position: fixed; inset: 0;
+        background: rgba(8,7,10,0.96);
+        z-index: 200;
+        align-items: center;
+        justify-content: center;
+    }
+    #codes-guide.open { display: flex; }
+
+    .codes-modal {
+        background: #141318; border: 1px solid #2e2834;
+        padding: 2rem; max-width: 680px; width: 92%; max-height: 80vh; overflow-y: auto;
+    }
+    .codes-modal-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding-bottom: 0.9rem; border-bottom: 1px solid #231f28; }
+    .codes-modal-title { font-family: 'Cinzel', serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.18em; color: var(--app-gold); text-transform: uppercase; }
+    .codes-close-btn { background: none; border: none; color: #5a5060; font-size: 1.3rem; cursor: pointer; }
+    .codes-close-btn:hover { color: #f0ede6; }
+    .codes-grid-2 { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.6rem; }
+    .codes-grp { background: #1c1a20; border: 1px solid #231f28; padding: 0.65rem; }
+    .codes-grp-title { font-family: 'Montserrat', sans-serif; font-size: 0.55rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.45rem; }
+    .code-item { display: flex; gap: 5px; margin-bottom: 2px; }
+    .code-tag { font-family: 'Montserrat', sans-serif; font-size: 0.55rem; font-weight: 600; color: #b8b3ac; min-width: 38px; }
+    .code-desc { font-family: 'Montserrat', sans-serif; font-size: 0.55rem; color: #5a5060; }
+
+    /* ═══════════════════════════════════════════════════════════
+       ADSENSE STRIP — Solo versión web
+       ═══════════════════════════════════════════════════════════ */
+    #adsense-panel {
+        display: none;   /* JS activa esto en modo web */
+        border-top: 1px solid rgba(35,31,40,0.9);
+        padding: 1.4rem 1.25rem 1rem;
+    }
+
+    #adsense-panel-label {
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+        font-size: 0.58rem;
+        letter-spacing: 0.18em;
+        color: var(--cream-muted);
+        text-align: center;
+        opacity: 0.5;
+        margin-bottom: 0.75rem;
+        display: block;
+    }
+
+    #adsense-slot {
+        min-height: 90px;
+        background: rgba(20,19,24,0.5);
+        border: 1px solid rgba(35,31,40,0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       MODAL PRO UPGRADE — PANTALLA COMPLETA
+       ═══════════════════════════════════════════════════════════ */
+    #upgrade-modal {
+        display: none;
+        position: fixed; inset: 0;
+        z-index: 300;
+        align-items: center;
+        justify-content: center;
+    }
+    #upgrade-modal.open { display: flex; }
+
+    .upgrade-bg {
+        position: absolute; inset: 0;
+        background-image: url('portada-alquimia.jpg');
+        background-size: cover;
+        background-position: center;
+        filter: brightness(0.22);
+    }
+
+    .upgrade-panel {
+        position: relative;
+        z-index: 2;
+        max-width: 520px;
+        width: 92%;
+        background: rgba(14,12,18,0.97);
+        border: 1px solid var(--gold-muted);
+        padding: 3.5rem 3rem 3rem;
+        text-align: center;
+        backdrop-filter: blur(4px);
+    }
+
+    .upgrade-ornament { width: 50px; height: 1px; background: var(--gold); margin: 0 auto 1.8rem; }
+
+    .upgrade-eyebrow {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.52rem; font-weight: 600;
+        letter-spacing: 0.38em; text-transform: uppercase;
+        color: var(--cream-muted); margin-bottom: 1rem;
+    }
+
+    .upgrade-title {
+        font-family: 'Cinzel', serif;
+        font-size: 2rem; font-weight: 700;
+        letter-spacing: 0.12em; color: var(--gold);
+        line-height: 1.15; margin-bottom: 1.3rem;
+    }
+
+    .upgrade-title em { font-style: normal; color: var(--cream); font-size: 0.75em; }
+
+    .upgrade-body {
+        font-family: 'Playfair Display', serif;
+        font-style: italic; font-size: 1rem;
+        color: var(--cream-dim); line-height: 1.65;
+        margin-bottom: 1.8rem;
+    }
+
+    .upgrade-feats {
+        list-style: none; padding: 0;
+        margin: 0 0 1.8rem;
+        text-align: left;
+        display: flex; flex-direction: column; gap: 0.55rem;
+    }
+
+    .upgrade-feats li {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.7rem; color: var(--cream-dim);
+        display: flex; align-items: center; gap: 0.6rem;
+    }
+
+    .upgrade-feats li::before {
+        content: ''; display: inline-block;
+        width: 18px; height: 1px;
+        background: var(--gold); flex-shrink: 0;
+    }
+
+    .upgrade-price-tag {
+        font-family: 'Cinzel', serif;
+        font-size: 0.78rem; font-weight: 700;
+        letter-spacing: 0.1em; color: var(--cream-muted);
+        margin-bottom: 2rem;
+    }
+
+    .upgrade-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+
+    .btn-upgrade-primary {
+        background: var(--gold); color: #0a0a0a;
+        padding: 11px 28px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.65rem; font-weight: 700;
+        letter-spacing: 0.14em; text-transform: uppercase;
+        text-decoration: none; display: inline-block;
+        transition: background 0.2s;
+    }
+    .btn-upgrade-primary:hover { background: var(--gold-light); }
+
+    .btn-upgrade-ghost {
+        border: 1px solid #3a3530; color: var(--cream-muted);
+        padding: 11px 22px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.62rem; font-weight: 600;
+        letter-spacing: 0.1em; text-transform: uppercase;
+        background: none; cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-upgrade-ghost:hover { border-color: #5a5060; color: var(--cream); }
+
+    .upgrade-close-x {
+        position: absolute; top: 1rem; right: 1.2rem;
+        background: none; border: none;
+        color: #5a5060; font-size: 1.4rem;
+        cursor: pointer; line-height: 1;
+    }
+    .upgrade-close-x:hover { color: var(--cream); }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     NAVEGACIÓN
+     ═══════════════════════════════════════════════════════════ -->
+<nav id="site-nav">
+    <a class="nav-brand" href="https://myriamalcaraz.com">MYRIAM ALCARAZ</a>
+    <ul class="nav-links">
+        <li><a href="https://myriamalcaraz.com">Inicio</a></li>
+        <li><a href="#features">La herramienta</a></li>
+        <li><a href="#analizador">Analizador</a></li>
+        <li><a href="https://payhip.com/b/CZF8r" target="_blank" rel="noopener" class="nav-cta">Obtener Pro</a></li>
+    </ul>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════════════ -->
+<section id="hero">
+    <img id="hero-img" src="portada-alquimia.png" alt="Alquimia IA — Analizador Técnico de Pintura al Óleo">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <p class="hero-eyebrow">Myriam Alcaraz · Herramienta Profesional</p>
+        <h1>Alquimia: Análisis Técnico de Pintura al Óleo y Composición de Pigmentos</h1>
+        <p class="hero-sub">
+            Identifica cualquier color con su código de pigmento internacional,<br>
+            receta de mezcla y equivalentes en las tres marcas de óleo de alta maestría.
+        </p>
+        <div class="hero-actions">
+            <a href="#analizador" class="btn-hero-primary">Analizar ahora</a>
+            <a href="https://payhip.com/b/CZF8r" target="_blank" rel="noopener" class="btn-hero-ghost">Obtener Pro — €46.99</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FEATURES
+     ═══════════════════════════════════════════════════════════ -->
+<section id="features">
+    <p class="section-label">Capacidades</p>
+    <h2 class="section-title">Una Herramienta. Precisión sin Límites.</h2>
+    <p class="section-sub">Desarrollada desde el estudio y la práctica real de la pintura al óleo de alta maestría.</p>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon"></div>
+            <div class="feature-title">25 Pigmentos Profesionales</div>
+            <p class="feature-desc">Base de datos con las propiedades físicas exactas de cada pigmento: densidad, índice de refracción, poder de tintado y absorción de aceite.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"></div>
+            <div class="feature-title">Rueda Cromática Interactiva</div>
+            <p class="feature-desc">El sector correspondiente al color analizado se ilumina en tiempo real, orientándote dentro del espectro con precisión técnica.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"></div>
+            <div class="feature-title">3 Marcas Premium</div>
+            <p class="feature-desc">Equivalencias cruzadas entre Winsor &amp; Newton, Old Holland Classic Colours y Williamsburg Handmade Oil Colors.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"></div>
+            <div class="feature-title">Recetas de Mezcla</div>
+            <p class="feature-desc">Proporciones calculadas mediante algoritmo Delta E CIE76, ajustadas por poder de tintado y densidad de cada pigmento.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"></div>
+            <div class="feature-title">Análisis RGB + HSL</div>
+            <p class="feature-desc">Lectura de valores en tiempo real al mover el cursor. Bloquea un color con doble clic para estudiarlo en detalle.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"></div>
+            <div class="feature-title">Catálogos Técnicos</div>
+            <p class="feature-desc">Acceso directo a las cartas de color en PDF de las tres casas para consultar disponibilidad y tonalidades exactas.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ANALIZADOR EMBEBIDO
+     ═══════════════════════════════════════════════════════════ -->
+<section id="analizador">
+
+    <!-- Cabecera del analizador -->
+    <div class="analyzer-header">
+        <div class="analyzer-brand">
+            <span class="analyzer-name">ALQUIMIA</span>
+            <span class="analyzer-sub">Analizador Técnico · Versión Web Gratuita</span>
+        </div>
+        <div class="analyzer-controls">
+            <span class="analyzer-hint">Rueda = zoom · Doble clic = fijar · Espacio = desplazar</span>
+            <button class="btn-codes" id="codes-btn">Códigos</button>
+        </div>
+    </div>
+
+    <!-- Cuerpo: canvas + sidebar -->
+    <div class="analyzer-body">
+
+        <!-- Canvas -->
+        <main id="canvas-area">
+            <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="position:absolute;opacity:0;width:0;height:0;">
+            <div id="empty-state">
+                <svg class="empty-icon" viewBox="0 0 512 512" fill="none">
+                    <circle cx="256" cy="256" r="230" stroke="#d4af37" stroke-width="4" opacity="0.25"/>
+                    <path d="M256,256 L256,26 A230,230 0 0,1 401,111 z" fill="#FF2400" opacity="0.4"/>
+                    <path d="M256,256 L401,111 A230,230 0 0,1 450,256 z" fill="#FF8C00" opacity="0.4"/>
+                    <path d="M256,256 L450,256 A230,230 0 0,1 401,401 z" fill="#FFD700" opacity="0.4"/>
+                    <path d="M256,256 L401,401 A230,230 0 0,1 256,480 z" fill="#00C050" opacity="0.4"/>
+                    <path d="M256,256 L256,480 A230,230 0 0,1 111,401 z" fill="#00BFFF" opacity="0.4"/>
+                    <path d="M256,256 L111,401 A230,230 0 0,1 62,256 z" fill="#0038A8" opacity="0.4"/>
+                    <path d="M256,256 L62,256 A230,230 0 0,1 111,111 z" fill="#8000FF" opacity="0.4"/>
+                    <path d="M256,256 L111,111 A230,230 0 0,1 256,26 z" fill="#FF007F" opacity="0.4"/>
+                    <circle cx="256" cy="256" r="72" fill="#06060a"/>
+                </svg>
+                <label for="file-input" class="btn-upload-main">CARGAR OBRA PARA ANALIZAR</label>
+                <span class="empty-text">JPG · PNG · WEBP · 1 análisis gratuito incluido</span>
+            </div>
+            <div id="canvas-wrapper"><canvas id="main-canvas"></canvas></div>
+            <div id="zoom-badge">ZOOM 100%</div>
+            <div id="pin-indicator">FIJADO</div>
+        </main>
+
+        <!-- Sidebar -->
+        <aside id="app-sidebar">
+
+            <!-- Rueda -->
+            <div class="s-panel">
+                <div class="s-title">Rueda Cromática</div>
+                <div class="wheel-wrap">
+                    <svg id="color-wheel-svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="256" cy="256" r="240" fill="#0a0908" stroke="#1c1820" stroke-width="3"/>
+                        <path id="seg-0"  class="wheel-segment" d="M 256,256 L 256,16 A 240,240 0 0,1 416,116 z" fill="#FF2400"/>
+                        <path id="seg-1"  class="wheel-segment" d="M 256,256 L 416,116 A 240,240 0 0,1 468,256 z" fill="#FF8C00"/>
+                        <path id="seg-2"  class="wheel-segment" d="M 256,256 L 468,256 A 240,240 0 0,1 416,396 z" fill="#FFD700"/>
+                        <path id="seg-3"  class="wheel-segment" d="M 256,256 L 416,396 A 240,240 0 0,1 336,476 z" fill="#90C020"/>
+                        <path id="seg-4"  class="wheel-segment" d="M 256,256 L 336,476 A 240,240 0 0,1 256,496 z" fill="#00B050"/>
+                        <path id="seg-5"  class="wheel-segment" d="M 256,256 L 256,496 A 240,240 0 0,1 176,476 z" fill="#00C888"/>
+                        <path id="seg-6"  class="wheel-segment" d="M 256,256 L 176,476 A 240,240 0 0,1 96,396 z" fill="#00CED1"/>
+                        <path id="seg-7"  class="wheel-segment" d="M 256,256 L 96,396 A 240,240 0 0,1 44,256 z" fill="#1E90FF"/>
+                        <path id="seg-8"  class="wheel-segment" d="M 256,256 L 44,256 A 240,240 0 0,1 96,116 z" fill="#0038A8"/>
+                        <path id="seg-9"  class="wheel-segment" d="M 256,256 L 96,116 A 240,240 0 0,1 176,36 z" fill="#7030D0"/>
+                        <path id="seg-10" class="wheel-segment" d="M 256,256 L 176,36 A 240,240 0 0,1 256,16 z" fill="#D020C0"/>
+                        <path id="seg-11" class="wheel-segment" d="M 256,256 L 256,16 A 240,240 0 0,1 336,36 z" fill="#FF007F"/>
+                        <circle cx="256" cy="256" r="82" fill="#08070a" stroke="#1c1820" stroke-width="2"/>
+                        <circle cx="256" cy="256" r="238" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1.5"/>
+                    </svg>
+                    <div id="wheel-hue-label">—</div>
+                </div>
+            </div>
+
+            <!-- Pixel -->
+            <div class="s-panel">
+                <div class="s-title">Análisis de Píxel</div>
+                <div class="color-probe">
+                    <div id="color-preview"></div>
+                    <div class="color-vals">
+                        <span id="rgb-label">RGB(—, —, —)</span>
+                        <span id="hsl-label">HSL(—°, —%, —%)</span>
+                        <div class="rgb-bars">
+                            <div id="bar-r" class="rgb-bar" style="width:0%"></div>
+                            <div id="bar-g" class="rgb-bar" style="width:0%"></div>
+                            <div id="bar-b" class="rgb-bar" style="width:0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Identificación -->
+            <div class="s-panel">
+                <div class="s-title">Identificación</div>
+                <div id="pigment-name">Detectando…</div>
+                <div class="codes-row" id="pigment-codes-container"></div>
+                <div class="recipe-section">
+                    <div class="recipe-label">Receta Sugerida</div>
+                    <div id="recipe-bars"></div>
+                    <div id="mix-recipe" class="recipe-text">Pase el cursor sobre la imagen…</div>
+                </div>
+            </div>
+
+            <!-- Marcas -->
+            <div class="s-panel">
+                <div class="s-title">Equivalentes por Marca</div>
+                <div class="brand-row"><span class="brand-lbl c-wn">Winsor &amp; Newton</span><div id="wn-tube" class="brand-val">—</div></div>
+                <div class="brand-row"><span class="brand-lbl c-oh">Old Holland</span><div id="oh-tube" class="brand-val">—</div></div>
+                <div class="brand-row"><span class="brand-lbl c-wb">Williamsburg</span><div id="wb-tube" class="brand-val">—</div></div>
+                <div class="catalog-grid">
+                    <button class="catalog-btn" onclick="openPDF('winsor_newton.pdf')">W&amp;N PDF</button>
+                    <button class="catalog-btn" onclick="openPDF('old_holland.pdf')">Old Holland</button>
+                    <button class="catalog-btn" onclick="openPDF('williamsburg.pdf')">Williamsburg</button>
+                </div>
+            </div>
+
+            <!-- ADSENSE — Solo visible en modo web (activado por JS) -->
+            <div id="adsense-panel">
+                <span id="adsense-panel-label">Material recomendado para artistas</span>
+                <div id="adsense-slot">
+                    <!--
+                    ╔══════════════════════════════════════════════════════════╗
+                    ║  INSTRUCCIONES DE ACTIVACIÓN DE ADSENSE                 ║
+                    ║                                                          ║
+                    ║  1. Añade en el <head>:                                 ║
+                    ║     <script async src="https://pagead2.google           ║
+                    ║     syndication.com/pagead/js/adsbygoogle.js?           ║
+                    ║     client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin=        ║
+                    ║     "anonymous"></script>                                ║
+                    ║                                                          ║
+                    ║  2. Reemplaza el interior de #adsense-slot con:         ║
+                    ║     <ins class="adsbygoogle"                            ║
+                    ║          style="display:block;"                         ║
+                    ║          data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"      ║
+                    ║          data-ad-slot="XXXXXXXXXX"                      ║
+                    ║          data-ad-format="auto"                          ║
+                    ║          data-full-width-responsive="true"></ins>        ║
+                    ║     <script>(adsbygoogle=window.adsbygoogle||[])        ║
+                    ║     .push({});</script>                                  ║
+                    ╚══════════════════════════════════════════════════════════╝
+                    -->
+                    <span style="font-size:0.52rem; color:var(--cream-muted); letter-spacing:0.12em; text-transform:uppercase; opacity:0.5;">Espacio publicitario · Google AdSense</span>
+                </div>
+            </div>
+
+        </aside>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CTA SECTION
+     ═══════════════════════════════════════════════════════════ -->
+<section id="cta-section">
+    <div class="cta-ornament"></div>
+    <h2 class="cta-title">Experiencia Completa, Sin Límites</h2>
+    <p class="cta-sub">La versión Pro incluye análisis ilimitados, aplicación nativa para Mac y Windows, y acceso a futuras actualizaciones.</p>
+    <p class="cta-price">€46.99 — Pago único · Sin suscripción · Actualizaciones incluidas</p>
+    <a href="https://payhip.com/b/CZF8r" target="_blank" rel="noopener" class="btn-hero-primary">Desbloquear Alquimia Pro</a>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════════════ -->
+<footer id="site-footer">
+    <span class="footer-brand">ALQUIMIA PRO</span>
+    <span class="footer-copy">
+        Desarrollado por
+        <a class="footer-link" href="https://myriamalcaraz.com" target="_blank" rel="noopener">Myriam Alcaraz</a>
+        · © 2024 · Todos los derechos reservados
+    </span>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODAL CÓDIGOS
+     ═══════════════════════════════════════════════════════════ -->
+<div id="codes-guide">
+    <div class="codes-modal">
+        <div class="codes-modal-hdr">
+            <span class="codes-modal-title">Guía de Códigos de Pigmentos</span>
+            <button class="codes-close-btn" id="codes-close-btn">×</button>
+        </div>
+        <div class="codes-grid-2">
+            <div class="codes-grp"><div class="codes-grp-title" style="color:#e8e8d8">Blancos</div>
+                <div class="code-item"><span class="code-tag">PW6</span><span class="code-desc">Titanio</span></div>
+                <div class="code-item"><span class="code-tag">PW4</span><span class="code-desc">Zinc</span></div>
+            </div>
+            <div class="codes-grp"><div class="codes-grp-title" style="color:#d06060">Rojos</div>
+                <div class="code-item"><span class="code-tag">PR101</span><span class="code-desc">Óxido</span></div>
+                <div class="code-item"><span class="code-tag">PR108</span><span class="code-desc">Cadmio</span></div>
+                <div class="code-item"><span class="code-tag">PR83</span><span class="code-desc">Alizarina</span></div>
+                <div class="code-item"><span class="code-tag">PR122</span><span class="code-desc">Quinacridona</span></div>
+            </div>
+            <div class="codes-grp"><div class="codes-grp-title" style="color:#c4a035">Amarillos</div>
+                <div class="code-item"><span class="code-tag">PY3</span><span class="code-desc">Limón</span></div>
+                <div class="code-item"><span class="code-tag">PY35</span><span class="code-desc">Cadmio</span></div>
+                <div class="code-item"><span class="code-tag">PY42</span><span class="code-desc">Ocre</span></div>
+                <div class="code-item"><span class="code-tag">PY53</span><span class="code-desc">Nápoles</span></div>
+            </div>
+            <div class="codes-grp"><div class="codes-grp-title" style="color:#6080c0">Azules</div>
+                <div class="code-item"><span class="code-tag">PB15</span><span class="code-desc">Ftalo</span></div>
+                <div class="code-item"><span class="code-tag">PB28</span><span class="code-desc">Cobalto</span></div>
+                <div class="code-item"><span class="code-tag">PB29</span><span class="code-desc">Ultramar</span></div>
+                <div class="code-item"><span class="code-tag">PB60</span><span class="code-desc">Índigo</span></div>
+            </div>
+            <div class="codes-grp"><div class="codes-grp-title" style="color:#60a070">Verdes</div>
+                <div class="code-item"><span class="code-tag">PG7</span><span class="code-desc">Ftalo</span></div>
+                <div class="code-item"><span class="code-tag">PG18</span><span class="code-desc">Vejiga</span></div>
+                <div class="code-item"><span class="code-tag">PG36</span><span class="code-desc">Esmeralda</span></div>
+            </div>
+            <div class="codes-grp"><div class="codes-grp-title" style="color:#909090">Negros/Tierras</div>
+                <div class="code-item"><span class="code-tag">PBk7</span><span class="code-desc">Carbon</span></div>
+                <div class="code-item"><span class="code-tag">PBk9</span><span class="code-desc">Marfil</span></div>
+                <div class="code-item"><span class="code-tag">PBr7</span><span class="code-desc">Siena</span></div>
+                <div class="code-item"><span class="code-tag">PO20</span><span class="code-desc">Naranja Cd</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MODAL PRO (PANTALLA COMPLETA, fondo = portada-alquimia.jpg)
+     ═══════════════════════════════════════════════════════════ -->
+<div id="upgrade-modal">
+    <div class="upgrade-bg"></div>
+    <div class="upgrade-panel">
+        <button class="upgrade-close-x" onclick="closeUpgradeModal()">×</button>
+        <div class="upgrade-ornament"></div>
+        <p class="upgrade-eyebrow">Has completado tu análisis gratuito</p>
+        <h2 class="upgrade-title">ALQUIMIA<br><em>Pro</em></h2>
+        <p class="upgrade-body">
+            Desbloquea análisis ilimitados y la base de datos completa de pigmentos con Alquimia Pro.
+        </p>
+        <ul class="upgrade-feats">
+            <li>Imágenes ilimitadas, sin restricciones</li>
+            <li>Aplicación nativa — Mac Apple Silicon, Intel &amp; Windows</li>
+            <li>Sin publicidad — experiencia limpia y enfocada</li>
+            <li>Actualizaciones gratuitas incluidas</li>
+        </ul>
+        <div class="upgrade-price-tag">€46.99 — Pago único · Sin suscripción</div>
+        <div class="upgrade-actions">
+            <button class="btn-upgrade-ghost" onclick="closeUpgradeModal()">Volver al análisis actual</button>
+            <a class="btn-upgrade-primary" href="https://payhip.com/b/CZF8r" target="_blank" rel="noopener">Desbloquear Alquimia Pro</a>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ════════════════════════════════════════════════
+// DETECCIÓN DE VERSIÓN — siempre web para esta página
+// ════════════════════════════════════════════════
+
+// RESET temporal para verificar la prueba gratuita
+localStorage.removeItem('alquimia_uploads');
+
+const IS_PRO           = false;
+const MAX_FREE_UPLOADS = 1;   // Máximo 1 foto gratis por sesión
+let uploadCount        = parseInt(localStorage.getItem('alquimia_uploads') || '0', 10);
+
+// Inicializar UI — mostrar panel AdSense en versión web
+(function initVersionUI() {
+    const adsPanel = document.getElementById('adsense-panel');
+    if (adsPanel) adsPanel.style.display = 'block';
+})();
+
+// ── Modal Pro ──
+function showUpgradeModal()  { document.getElementById('upgrade-modal').classList.add('open'); }
+function closeUpgradeModal() { document.getElementById('upgrade-modal').classList.remove('open'); }
+
+document.getElementById('upgrade-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeUpgradeModal();
+});
+
+function openURL(url)      { window.open(url, '_blank', 'noopener'); }
+function openPDF(filename) { window.open('./' + filename, '_blank'); }
+
+// ── Nombres de hue para la rueda ──
+const HUE_NAMES = [
+    'Rojo', 'Naranja-Rojo', 'Amarillo-Naranja', 'Amarillo-Verde',
+    'Verde', 'Verde Esmeralda', 'Cian', 'Azul-Cian',
+    'Azul', 'Azul-Violeta', 'Violeta', 'Rosa-Rojo'
+];
+
+// ════════════════════════════════════════════════
+// BASE DE DATOS DE PIGMENTOS
+// ════════════════════════════════════════════════
+const basePigmentos = [
+    { check:(r,g,b)=>r>240&&g>240&&b>240, nombre:"Blanco de Titanio", codigos:["PW6"], mezcla:"Blanco de Titanio puro", wn_tube:"Titanium White", oh_tube:"Titanium White", wb_tube:"Titanium White", rgb:{r:245,g:245,b:245}, transparencia:"opaco", poderTintado:"bajo", densidad:4.23 },
+    { check:(r,g,b)=>r>180&&g>180&&b>180&&Math.abs(r-g)<15&&Math.abs(g-b)<15, nombre:"Gris Claro", codigos:["PW6","PBk7"], mezcla:"Blanco Titanio + Carbon Negro", wn_tube:"Titanium White + Ivory Black", oh_tube:"Titanium White + Ivory Black", wb_tube:"Titanium White + Ivory Black", rgb:{r:185,g:185,b:185}, transparencia:"opaco", poderTintado:"medio", densidad:2.8 },
+    { check:(r,g,b)=>r>200&&g>170&&b>80&&g>b&&r>g, nombre:"Oro Renacimiento", codigos:["PY42","PR101"], mezcla:"Ocre Oro + Rojo Óxido", wn_tube:"Yellow Ochre + Burnt Sienna", oh_tube:"Yellow Ochre + Burnt Umber", wb_tube:"Yellow Ochre + Burnt Sienna", rgb:{r:210,g:180,b:90}, transparencia:"semi-opaco", poderTintado:"medio", densidad:3.5 },
+    { check:(r,g,b)=>r>180&&g>140&&b<100&&g>b&&r>g, nombre:"Oro", codigos:["PY42","PY53"], mezcla:"Ocre Oro + Amarillo Nápoles", wn_tube:"Yellow Ochre + Naples Yellow", oh_tube:"Yellow Ochre + Naples Yellow Light", wb_tube:"Yellow Ochre + Naples Yellow", rgb:{r:200,g:160,b:80}, transparencia:"semi-opaco", poderTintado:"medio", densidad:3.8 },
+    { check:(r,g,b)=>r>160&&g>90&&b<60&&r>g, nombre:"Cobre", codigos:["PR102","PY42"], mezcla:"Siena Tostada + Ocre Oro", wn_tube:"Burnt Sienna + Yellow Ochre", oh_tube:"Burnt Umber + Yellow Ochre", wb_tube:"Burnt Sienna + Yellow Ochre", rgb:{r:170,g:90,b:50}, transparencia:"semi-transparente", poderTintado:"alto", densidad:4.1 },
+    { check:(r,g,b)=>r>230&&g>200&&b<100&&r>g, nombre:"Amarillo Cadmio", codigos:["PY35"], mezcla:"Amarillo Cadmio puro", wn_tube:"Cadmium Yellow", oh_tube:"Cadmium Yellow Deep", wb_tube:"Cadmium Yellow Medium", rgb:{r:250,g:210,b:50}, transparencia:"opaco", poderTintado:"alto", densidad:4.8 },
+    { check:(r,g,b)=>r>220&&g>190&&b<120&&g>b, nombre:"Amarillo Nápoles", codigos:["PY53"], mezcla:"Amarillo Nápoles puro", wn_tube:"Naples Yellow", oh_tube:"Naples Yellow Light", wb_tube:"Naples Yellow", rgb:{r:240,g:200,b:100}, transparencia:"semi-opaco", poderTintado:"medio", densidad:3.2 },
+    { check:(r,g,b)=>r>240&&g>230&&b<150&&g>b, nombre:"Amarillo Limón", codigos:["PY3"], mezcla:"Amarillo Limón puro", wn_tube:"Lemon Yellow", oh_tube:"Lemon Yellow", wb_tube:"Lemon Yellow", rgb:{r:255,g:240,b:120}, transparencia:"semi-transparente", poderTintado:"medio", densidad:3.6 },
+    { check:(r,g,b)=>r>180&&g>140&&b<80&&g>b, nombre:"Amarillo Óxido Transparente", codigos:["PY42","PY43"], mezcla:"Ocre Amarillo + Siena Nativa", wn_tube:"Yellow Ochre + Raw Sienna", oh_tube:"Yellow Ochre + Raw Sienna", wb_tube:"Yellow Ochre + Raw Sienna", rgb:{r:190,g:150,b:70}, transparencia:"transparente", poderTintado:"alto", densidad:3.9 },
+    { check:(r,g,b)=>r>220&&g>120&&b<80&&r>g, nombre:"Naranja Cadmio", codigos:["PO20"], mezcla:"Naranja Cadmio puro", wn_tube:"Cadmium Orange", oh_tube:"Cadmium Orange", wb_tube:"Cadmium Orange", rgb:{r:240,g:120,b:40}, transparencia:"opaco", poderTintado:"alto", densidad:4.5 },
+    { check:(r,g,b)=>r>200&&g>80&&b<60&&r>g, nombre:"Rojo Cadmio", codigos:["PR108"], mezcla:"Rojo Cadmio puro", wn_tube:"Cadmium Red", oh_tube:"Cadmium Red Deep", wb_tube:"Cadmium Red", rgb:{r:220,g:50,b:40}, transparencia:"opaco", poderTintado:"alto", densidad:4.7 },
+    { check:(r,g,b)=>r>150&&g<80&&b<80&&r>g, nombre:"Alizarina Crimson", codigos:["PR83"], mezcla:"Alizarina Crimson puro", wn_tube:"Alizarin Crimson", oh_tube:"Alizarin Crimson", wb_tube:"Alizarin Crimson", rgb:{r:150,g:40,b:60}, transparencia:"transparente", poderTintado:"muy-alto", densidad:3.8 },
+    { check:(r,g,b)=>r>180&&g<100&&b<80&&r>g, nombre:"Rojo Óxido Transparente", codigos:["PR101"], mezcla:"Rojo Óxido Transparente puro", wn_tube:"Burnt Sienna", oh_tube:"Burnt Umber", wb_tube:"Burnt Sienna", rgb:{r:180,g:60,b:40}, transparencia:"semi-transparente", poderTintado:"alto", densidad:4.1 },
+    { check:(r,g,b)=>r>200&&g>100&&b>120&&r>g&&r>b, nombre:"Opera Rose", codigos:["PR122"], mezcla:"Opera Rose puro", wn_tube:"Permanent Rose", oh_tube:"Permanent Rose", wb_tube:"Permanent Rose", rgb:{r:210,g:110,b:130}, transparencia:"transparente", poderTintado:"alto", densidad:3.4 },
+    { check:(r,g,b)=>r>180&&g>80&&b>100&&r>g&&r>b, nombre:"Rosa Quinacridona", codigos:["PV19"], mezcla:"Rosa Quinacridona puro", wn_tube:"Quinacridone Rose", oh_tube:"Quinacridone Rose", wb_tube:"Quinacridone Rose", rgb:{r:190,g:90,b:110}, transparencia:"transparente", poderTintado:"alto", densidad:3.2 },
+    { check:(r,g,b)=>r>160&&g>100&&b>80&&r>g&&r>b, nombre:"Magenta", codigos:["PR122"], mezcla:"Magenta Quinacridona puro", wn_tube:"Quinacridone Magenta", oh_tube:"Quinacridone Magenta", wb_tube:"Quinacridone Magenta", rgb:{r:170,g:100,b:90}, transparencia:"transparente", poderTintado:"muy-alto", densidad:3.5 },
+    { check:(r,g,b)=>r>110&&r<150&&g>70&&g<100&&b>40&&b<70&&r>g&&g>b, nombre:"Pardo Óxido Transparente", codigos:["PBr7"], mezcla:"Pardo Óxido Transparente puro", wn_tube:"Raw Umber", oh_tube:"Raw Umber", wb_tube:"Raw Umber", rgb:{r:130,g:85,b:50}, transparencia:"transparente", poderTintado:"alto", densidad:3.9 },
+    { check:(r,g,b)=>r>170&&r<200&&g>160&&g<185&&b>140&&b<170&&r>g&&g>b, nombre:"Negro Marfil · Siena", codigos:["PBk9","PY43"], mezcla:"Negro Marfil + Siena Nativa", wn_tube:"Ivory Black + Raw Sienna", oh_tube:"Ivory Black + Raw Sienna", wb_tube:"Ivory Black + Raw Sienna", rgb:{r:185,g:175,b:160}, transparencia:"semi-opaco", poderTintado:"medio", densidad:2.6 },
+    { check:(r,g,b)=>r<80&&g<120&&b>180&&b>r&&b>g, nombre:"Azul Cobalto", codigos:["PB28"], mezcla:"Azul Cobalto puro", wn_tube:"Cobalt Blue", oh_tube:"Cobalt Blue", wb_tube:"Cobalt Blue", rgb:{r:40,g:80,b:180}, transparencia:"semi-opaco", poderTintado:"medio", densidad:4.2 },
+    { check:(r,g,b)=>r<60&&g<80&&b>160&&b>r&&b>g, nombre:"Azul Ultramar Francés", codigos:["PB29"], mezcla:"Azul Ultramar Francés puro", wn_tube:"French Ultramarine", oh_tube:"Ultramarine Blue", wb_tube:"Ultramarine Blue", rgb:{r:30,g:50,b:160}, transparencia:"semi-transparente", poderTintado:"alto", densidad:3.8 },
+    { check:(r,g,b)=>r<40&&g<100&&b>180&&b>r&&b>g, nombre:"Azul Phthalocyanina", codigos:["PB15"], mezcla:"Azul Phthalocyanina puro", wn_tube:"Phthalo Blue", oh_tube:"Phthalo Blue", wb_tube:"Phthalo Blue", rgb:{r:10,g:60,b:180}, transparencia:"transparente", poderTintado:"muy-alto", densidad:3.3 },
+    { check:(r,g,b)=>r>15&&r<40&&g>35&&g<60&&b>130&&b<160&&b>r&&b>g&&r<g, nombre:"Azul Índigo", codigos:["PB60","PB29"], mezcla:"Azul Índigo + Ultramar", wn_tube:"Indigo + French Ultramarine", oh_tube:"Indigo + Ultramarine Blue", wb_tube:"Indigo + Ultramarine Blue", rgb:{r:25,g:45,b:145}, transparencia:"transparente", poderTintado:"alto", densidad:3.6 },
+    { check:(r,g,b)=>r<60&&g<90&&b>170&&b>r&&b>g, nombre:"Azul Real", codigos:["PB29","PW6"], mezcla:"Azul Ultramar + Blanco Titanio", wn_tube:"French Ultramarine + Titanium White", oh_tube:"Ultramarine Blue + Titanium White", wb_tube:"Ultramarine Blue + Titanium White", rgb:{r:50,g:70,b:175}, transparencia:"opaco", poderTintado:"medio", densidad:3.0 },
+    { check:(r,g,b)=>r<80&&g>140&&b<100&&g>r&&g>b, nombre:"Verde Vejiga", codigos:["PG18"], mezcla:"Verde Vejiga puro", wn_tube:"Sap Green", oh_tube:"Sap Green", wb_tube:"Sap Green", rgb:{r:40,g:140,b:60}, transparencia:"semi-transparente", poderTintado:"medio", densidad:3.7 },
+    { check:(r,g,b)=>r<40&&g>140&&b<80&&g>r&&g>b, nombre:"Verde Phthalocyanina", codigos:["PG7"], mezcla:"Verde Phthalocyanina puro", wn_tube:"Phthalo Green", oh_tube:"Phthalo Green", wb_tube:"Phthalo Green", rgb:{r:20,g:140,b:40}, transparencia:"transparente", poderTintado:"muy-alto", densidad:3.4 },
+    { check:(r,g,b)=>r>30&&r<60&&g>30&&g<60&&b>40&&b<70&&Math.abs(r-g)<10&&Math.abs(g-b)<15, nombre:"Negro Hueso", codigos:["PBk31"], mezcla:"Negro Hueso puro", wn_tube:"Bone Black", oh_tube:"Bone Black", wb_tube:"Bone Black", rgb:{r:40,g:40,b:50}, transparencia:"semi-opaco", poderTintado:"medio", densidad:2.9 }
+];
+
+// ════════════════════════════════════════════════
+// FUNCIONES DE COLOR
+// ════════════════════════════════════════════════
+function rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r,g,b), min = Math.min(r,g,b);
+    let h, s, l = (max + min) / 2;
+    if (max === min) {
+        h = s = 0;
+    } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r: h = ((g-b)/d + (g<b?6:0)) / 6; break;
+            case g: h = ((b-r)/d + 2) / 6; break;
+            case b: h = ((r-g)/d + 4) / 6; break;
+        }
+    }
+    return { h: Math.round(h*360), s: Math.round(s*100), l: Math.round(l*100) };
+}
+
+function rgbToLab(r, g, b) {
+    let rn = r/255, gn = g/255, bn = b/255;
+    rn = rn > 0.04045 ? Math.pow((rn+0.055)/1.055, 2.4) : rn/12.92;
+    gn = gn > 0.04045 ? Math.pow((gn+0.055)/1.055, 2.4) : gn/12.92;
+    bn = bn > 0.04045 ? Math.pow((bn+0.055)/1.055, 2.4) : bn/12.92;
+    rn *= 100; gn *= 100; bn *= 100;
+    const x = rn*0.4124 + gn*0.3576 + bn*0.1805;
+    const y = rn*0.2126 + gn*0.7152 + bn*0.0722;
+    const z = rn*0.0193 + gn*0.1192 + bn*0.9505;
+    let xn = x/95.047, yn = y/100, zn = z/108.883;
+    xn = xn > 0.008856 ? Math.pow(xn,1/3) : (7.787*xn + 16/116);
+    yn = yn > 0.008856 ? Math.pow(yn,1/3) : (7.787*yn + 16/116);
+    zn = zn > 0.008856 ? Math.pow(zn,1/3) : (7.787*zn + 16/116);
+    return { l: Math.round(116*yn-16), a: Math.round(500*(xn-yn)), b: Math.round(200*(yn-zn)) };
+}
+
+function getPoderTintadoNum(p) {
+    return { 'bajo':0.3, 'medio':0.6, 'alto':0.8, 'muy-alto':1.0 }[p] || 0.5;
+}
+
+function getTransparenciaNum(t) {
+    return { 'opaco':0.1, 'semi-opaco':0.4, 'semi-transparente':0.7, 'transparente':0.9 }[t] || 0.5;
+}
+
+// ════════════════════════════════════════════════
+// RUEDA CROMÁTICA — INTERACTIVIDAD
+// ════════════════════════════════════════════════
+const wheelSvg = document.getElementById('color-wheel-svg');
+const hueLabel = document.getElementById('wheel-hue-label');
+const segments = Array.from({ length: 12 }, (_,i) => document.getElementById('seg-'+i));
+
+function getSegmentFromHue(hue) {
+    return Math.floor(((hue + 15) % 360) / 30);
+}
+
+function updateColorWheel(r, g, b) {
+    const hsl = rgbToHsl(r, g, b);
+    wheelSvg.classList.remove('wheel-active');
+    segments.forEach(s => s.classList.remove('seg-lit'));
+    hueLabel.textContent = '—';
+    if (hsl.s < 12 || hsl.l < 4 || hsl.l > 96) {
+        hueLabel.textContent = hsl.l < 30 ? 'Oscuro / Negro' : hsl.l > 70 ? 'Claro / Blanco' : 'Neutro / Gris';
+        return;
+    }
+    const idx = getSegmentFromHue(hsl.h);
+    wheelSvg.classList.add('wheel-active');
+    if (segments[idx]) segments[idx].classList.add('seg-lit');
+    hueLabel.textContent = HUE_NAMES[idx] + '  ·  ' + hsl.h + '°';
+}
+
+// ════════════════════════════════════════════════
+// ANÁLISIS — MEZCLA MATEMÁTICA
+// ════════════════════════════════════════════════
+function simularMezclaFisicaExacta(c1, c2, p1, p2) {
+    const pt1 = getPoderTintadoNum(c1.poderTintado);
+    const pt2 = getPoderTintadoNum(c2.poderTintado);
+    const total = pt1*p1 + pt2*p2;
+    const a1 = (pt1*p1)/total, a2 = (pt2*p2)/total;
+    const rF = Math.round(c1.rgb.r*a1 + c2.rgb.r*a2);
+    const gF = Math.round(c1.rgb.g*a1 + c2.rgb.g*a2);
+    const bF = Math.round(c1.rgb.b*a1 + c2.rgb.b*a2);
+    const transp = getTransparenciaNum(c1.transparencia)*p1 + getTransparenciaNum(c2.transparencia)*p2;
+    return {
+        r: rF, g: gF, b: bF,
+        hsl: rgbToHsl(rF,gF,bF),
+        lab: rgbToLab(rF,gF,bF),
+        transparencia: transp < 0.3 ? 'opaco' : transp < 0.6 ? 'semi-opaco' : transp < 0.8 ? 'semi-transparente' : 'transparente'
+    };
+}
+
+function simularMezclaFisicaTres(c1, c2, c3, p1, p2, p3) {
+    const pt1 = getPoderTintadoNum(c1.poderTintado);
+    const pt2 = getPoderTintadoNum(c2.poderTintado);
+    const pt3 = getPoderTintadoNum(c3.poderTintado);
+    const total = pt1*p1 + pt2*p2 + pt3*p3;
+    const a1=(pt1*p1)/total, a2=(pt2*p2)/total, a3=(pt3*p3)/total;
+    const rF = Math.round(c1.rgb.r*a1 + c2.rgb.r*a2 + c3.rgb.r*a3);
+    const gF = Math.round(c1.rgb.g*a1 + c2.rgb.g*a2 + c3.rgb.g*a3);
+    const bF = Math.round(c1.rgb.b*a1 + c2.rgb.b*a2 + c3.rgb.b*a3);
+    return { r:rF, g:gF, b:bF, hsl:rgbToHsl(rF,gF,bF), lab:rgbToLab(rF,gF,bF) };
+}
+
+function calcularErrorDeltaE(mezcla, obj) {
+    const dE = Math.sqrt(
+        Math.pow(mezcla.lab.l - obj.lab.l, 2) +
+        Math.pow(mezcla.lab.a - obj.lab.a, 2) +
+        Math.pow(mezcla.lab.b - obj.lab.b, 2)
+    );
+    const dS = Math.abs(mezcla.hsl.s - obj.hsl.s);
+    const dL = Math.abs(mezcla.hsl.l - obj.hsl.l);
+    return dE + dS*0.3 + dL*0.2;
+}
+
+function buscarMezclaOptima(r, g, b) {
+    const hsl = rgbToHsl(r,g,b);
+    const lab = rgbToLab(r,g,b);
+    const obj = {r,g,b,hsl,lab};
+    let mejores = [];
+
+    // Búsqueda de pares
+    for (let i = 0; i < basePigmentos.length; i++) {
+        for (let j = i+1; j < basePigmentos.length; j++) {
+            let mejorErr = Infinity, mejorProp = 0.5;
+            for (let p = 0.02; p <= 0.98; p += 0.02) {
+                const m = simularMezclaFisicaExacta(basePigmentos[i], basePigmentos[j], p, 1-p);
+                const e = calcularErrorDeltaE(m, obj);
+                if (e < mejorErr) { mejorErr = e; mejorProp = p; }
+            }
+            if (mejorErr < 12) {
+                mejores.push({ colores:[basePigmentos[i],basePigmentos[j]], props:[mejorProp,1-mejorProp], error:mejorErr });
+            }
+        }
+    }
+
+    // Si no hay pares, búsqueda de tríos
+    if (mejores.length === 0) {
+        for (let i = 0; i < basePigmentos.length; i++) {
+            for (let j = i+1; j < basePigmentos.length; j++) {
+                for (let k = j+1; k < basePigmentos.length; k++) {
+                    let mejorErr = Infinity;
+                    let mejoresP = [0.33, 0.33, 0.34];
+                    for (let p1 = 0.1; p1 <= 0.8; p1 += 0.1) {
+                        for (let p2 = 0.1; p2 <= 0.8-p1; p2 += 0.1) {
+                            const p3 = 1 - p1 - p2;
+                            if (p3 > 0.05) {
+                                const m = simularMezclaFisicaTres(basePigmentos[i],basePigmentos[j],basePigmentos[k],p1,p2,p3);
+                                const e = calcularErrorDeltaE(m, obj);
+                                if (e < mejorErr) { mejorErr = e; mejoresP = [p1,p2,p3]; }
+                            }
+                        }
+                    }
+                    if (mejorErr < 18) {
+                        mejores.push({ colores:[basePigmentos[i],basePigmentos[j],basePigmentos[k]], props:mejoresP, error:mejorErr });
+                    }
+                }
+            }
+        }
+    }
+
+    if (mejores.length === 0) return null;
+    mejores.sort((a,b) => a.error - b.error);
+    return mejores[0];
+}
+
+function construirResultadoMezcla(comb) {
+    const { colores, props } = comb;
+    const nombresPartes = colores.map((c,i) => `${Math.round(props[i]*100)}% ${c.nombre}`);
+    const codigos = [...new Set(colores.flatMap(c => c.codigos))];
+    const transp = colores.map((c,i) => getTransparenciaNum(c.transparencia)*props[i]).reduce((a,b)=>a+b,0);
+    const transpLabel = transp < 0.3 ? 'opaco' : transp < 0.6 ? 'semi-opaco' : transp < 0.8 ? 'semi-transparente' : 'transparente';
+    return {
+        nombre: 'Mezcla · ' + colores.map(c => c.nombre).join(' + '),
+        codigos,
+        mezcla: nombresPartes.join(' + '),
+        wn_tube: colores.map(c => c.wn_tube).join(' + '),
+        oh_tube: colores.map(c => c.oh_tube).join(' + '),
+        wb_tube: colores.map(c => c.wb_tube).join(' + '),
+        transparencia: transpLabel,
+        componentes: colores.map((c,i) => ({
+            nombre: c.nombre,
+            porcentaje: Math.round(props[i]*100),
+            codigos: c.codigos,
+            rgb: c.rgb
+        }))
+    };
+}
+
+function analizarComponentesPrincipales(r, g, b) {
+    const total = r + g + b || 1;
+    const rP = Math.round((r/total)*100);
+    const gP = Math.round((g/total)*100);
+    const bP = Math.round((b/total)*100);
+    const partes = [];
+    if (rP > 30) partes.push(`Rojo ${rP}%`);
+    if (gP > 30) partes.push(`Amarillo/Verde ${gP}%`);
+    if (bP > 30) partes.push(`Azul ${bP}%`);
+    if (partes.length >= 2) {
+        return {
+            nombre: 'Combinación cromática compleja',
+            codigos: ['MEZCLA'],
+            mezcla: `Componentes RGB — R${rP}% · G${gP}% · B${bP}%`,
+            wn_tube: 'Mezcla de pigmentos base',
+            oh_tube: 'Mezcla de pigmentos base',
+            wb_tube: 'Mezcla de pigmentos base',
+            transparencia: 'variable',
+            componentes: []
+        };
+    }
+    if (r > 100 && g > 80 && b < 70) {
+        return {
+            nombre: 'Tierra / Ocre',
+            codigos: ['PY42', 'PBr7'],
+            mezcla: 'Ocre Amarillo + Siena Tostada',
+            wn_tube: 'Yellow Ochre + Raw Sienna',
+            oh_tube: 'Yellow Ochre + Raw Sienna',
+            wb_tube: 'Yellow Ochre + Raw Sienna',
+            transparencia: 'semi-transparente',
+            componentes: []
+        };
+    }
+    return {
+        nombre: 'Color complejo',
+        codigos: ['—'],
+        mezcla: `RGB(${r}, ${g}, ${b}) — Análisis visual recomendado`,
+        wn_tube: '—', oh_tube: '—', wb_tube: '—',
+        transparencia: 'variable',
+        componentes: []
+    };
+}
+
+// ── Render barras de receta ──
+function renderRecipeBars(componentes) {
+    const container = document.getElementById('recipe-bars');
+    if (!componentes || componentes.length === 0) { container.innerHTML = ''; return; }
+    container.innerHTML = componentes.map(comp => {
+        const rgb = comp.rgb || {r:128,g:128,b:128};
+        return `<div class="recipe-comp"><div class="recipe-comp-hdr"><span class="recipe-comp-name">${comp.nombre}</span><span class="recipe-comp-pct">${comp.porcentaje}%</span></div><div class="recipe-bar-track"><div class="recipe-bar-fill" style="width:${comp.porcentaje}%;background:rgb(${rgb.r},${rgb.g},${rgb.b})"></div></div></div>`;
+    }).join('');
+}
+
+// ── Actualizar display ──
+function updateColorDisplay(p) {
+    const r = p[0], g = p[1], b = p[2];
+    const hsl = rgbToHsl(r, g, b);
+    document.getElementById('color-preview').style.backgroundColor = `rgb(${r},${g},${b})`;
+    document.getElementById('rgb-label').textContent = `RGB(${r}, ${g}, ${b})`;
+    document.getElementById('hsl-label').textContent = `HSL(${hsl.h}°, ${hsl.s}%, ${hsl.l}%)`;
+    document.getElementById('bar-r').style.width = (r/255*100) + '%';
+    document.getElementById('bar-g').style.width = (g/255*100) + '%';
+    document.getElementById('bar-b').style.width = (b/255*100) + '%';
+    updateColorWheel(r, g, b);
+
+    let info = basePigmentos.find(l => l.check(r, g, b));
+    if (info) {
+        if (!info.componentes) {
+            info = Object.assign({}, info, {
+                componentes: [{ nombre: info.nombre, porcentaje: 100, codigos: info.codigos, rgb: info.rgb }]
+            });
+        }
+    } else {
+        const comb = buscarMezclaOptima(r, g, b);
+        info = comb ? construirResultadoMezcla(comb) : analizarComponentesPrincipales(r, g, b);
+    }
+
+    document.getElementById('pigment-name').textContent = info.nombre;
+    document.getElementById('mix-recipe').textContent = info.mezcla;
+    document.getElementById('wn-tube').textContent = info.wn_tube || '—';
+    document.getElementById('oh-tube').textContent = info.oh_tube || '—';
+    document.getElementById('wb-tube').textContent = info.wb_tube || '—';
+
+    const codesEl = document.getElementById('pigment-codes-container');
+    codesEl.innerHTML = '';
+    (info.codigos || []).forEach(code => {
+        const span = document.createElement('span');
+        span.className = 'pigment-code';
+        span.textContent = code;
+        codesEl.appendChild(span);
+    });
+    renderRecipeBars(info.componentes);
+}
+
+// ════════════════════════════════════════════════
+// CANVAS — CARGA Y ZOOM
+// ════════════════════════════════════════════════
+const canvas  = document.getElementById('main-canvas');
+const wrapper = document.getElementById('canvas-wrapper');
+const area    = document.getElementById('canvas-area');
+const ctx     = canvas.getContext('2d', { willReadFrequently: true });
+const img     = new Image();
+let scale = 1, cursorFixed = false, fixedColor = null, isDragging = false;
+let dragStartX = 0, dragStartY = 0, canvasOffX = 0, canvasOffY = 0, spacePressed = false;
+
+document.getElementById('file-input').onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!IS_PRO && uploadCount >= MAX_FREE_UPLOADS) {
+        e.target.value = '';
+        showUpgradeModal();
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        img.onload = () => {
+            document.getElementById('empty-state').style.display = 'none';
+            canvas.width  = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            canvasOffX = 0; canvasOffY = 0;
+            resetZoom();
+            // Contador solo se activa cuando el análisis está visible en pantalla
+            uploadCount++;
+            localStorage.setItem('alquimia_uploads', uploadCount);
+        };
+        img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+};
+
+function resetZoom() {
+    const cw = area.clientWidth - 60;
+    const ch = area.clientHeight - 60;
+    scale = Math.min(cw / img.width, ch / img.height, 1);
+    updateTransform();
+}
+
+function updateTransform() {
+    wrapper.style.transform = `translate(${canvasOffX}px, ${canvasOffY}px) scale(${scale})`;
+    document.getElementById('zoom-badge').textContent = 'ZOOM  ' + Math.round(scale * 100) + '%';
+}
+
+area.addEventListener('wheel', (e) => {
+    if (!img.src) return;
+    e.preventDefault();
+    scale *= e.deltaY > 0 ? 0.9 : 1.1;
+    scale = Math.min(Math.max(0.04, scale), 20);
+    updateTransform();
+}, { passive: false });
+
+document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && !spacePressed) {
+        e.preventDefault(); spacePressed = true;
+        area.style.cursor = 'grab';
+    }
+});
+document.addEventListener('keyup', (e) => {
+    if (e.code === 'Space') {
+        e.preventDefault(); spacePressed = false;
+        area.style.cursor = 'crosshair';
+        isDragging = false;
+    }
+});
+
+area.addEventListener('mousedown', (e) => {
+    if (spacePressed && img.src) {
+        isDragging = true;
+        dragStartX = e.clientX - canvasOffX;
+        dragStartY = e.clientY - canvasOffY;
+        area.style.cursor = 'grabbing';
+        e.preventDefault();
+    }
+});
+
+area.addEventListener('mousemove', (e) => {
+    if (!img.src) return;
+    if (isDragging && spacePressed) {
+        canvasOffX = e.clientX - dragStartX;
+        canvasOffY = e.clientY - dragStartY;
+        updateTransform();
+        return;
+    }
+    if (cursorFixed && fixedColor) { updateColorDisplay(fixedColor); return; }
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const y = (e.clientY - rect.top)  * (canvas.height / rect.height);
+    if (x >= 0 && x < canvas.width && y >= 0 && y < canvas.height) {
+        updateColorDisplay(ctx.getImageData(Math.floor(x), Math.floor(y), 1, 1).data);
+    }
+});
+
+area.addEventListener('mouseup',    () => { isDragging = false; if (spacePressed) area.style.cursor = 'grab'; });
+area.addEventListener('mouseleave', () => { isDragging = false; });
+
+area.addEventListener('dblclick', (e) => {
+    if (!img.src) return;
+    cursorFixed = !cursorFixed;
+    const pin = document.getElementById('pin-indicator');
+    if (cursorFixed) {
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (e.clientY - rect.top)  * (canvas.height / rect.height);
+        if (x >= 0 && x < canvas.width && y >= 0 && y < canvas.height) {
+            fixedColor = ctx.getImageData(Math.floor(x), Math.floor(y), 1, 1).data;
+            pin.style.display = 'block';
+            document.getElementById('zoom-badge').style.borderColor = 'var(--gold)';
+        }
+    } else {
+        fixedColor = null;
+        pin.style.display = 'none';
+        document.getElementById('zoom-badge').style.borderColor = 'var(--app-border)';
+    }
+});
+
+// ── Modal códigos ──
+document.getElementById('codes-btn').addEventListener('click', () => document.getElementById('codes-guide').classList.toggle('open'));
+document.getElementById('codes-close-btn').addEventListener('click', () => document.getElementById('codes-guide').classList.remove('open'));
+document.getElementById('codes-guide').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); });
+</script>
+</body>
+</html>
