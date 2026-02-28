@@ -1598,7 +1598,37 @@ const img     = new Image();
 let scale = 1, cursorFixed = false, fixedColor = null, isDragging = false;
 let dragStartX = 0, dragStartY = 0, canvasOffX = 0, canvasOffY = 0, spacePressed = false;
 
-document.getElementById('file-input').onchange = (e) => {
+// ═══════════════════════════════════════════════════════
+// ESCUDO PROTECTOR — compresión invisible antes del análisis
+// Máx 1200 px en cualquier dimensión · JPEG calidad 0.82
+// Sin librerías externas — Canvas API nativo del navegador
+// ═══════════════════════════════════════════════════════
+function compressImage(file, maxPx = 1200, quality = 0.82) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            const original = new Image();
+            original.onload = () => {
+                let w = original.width;
+                let h = original.height;
+                // Escalar proporcionalmente si supera maxPx
+                if (w > maxPx || h > maxPx) {
+                    if (w >= h) { h = Math.round(h * maxPx / w); w = maxPx; }
+                    else        { w = Math.round(w * maxPx / h); h = maxPx; }
+                }
+                const offscreen = document.createElement('canvas');
+                offscreen.width  = w;
+                offscreen.height = h;
+                offscreen.getContext('2d').drawImage(original, 0, 0, w, h);
+                resolve(offscreen.toDataURL('image/jpeg', quality));
+            };
+            original.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+document.getElementById('file-input').onchange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     if (!IS_PRO && uploadCount >= MAX_FREE_UPLOADS) {
@@ -1610,20 +1640,27 @@ document.getElementById('file-input').onchange = (e) => {
     uploadCount++;
     localStorage.setItem('alquimia_uploads', uploadCount);
     blockUploadButton();   // bloquear ya para el resto de la sesión
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-        img.onload = () => {
-            document.getElementById('upload-prompt').style.display = 'none';
-            wrapper.style.display = 'block';
-            canvas.width  = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-            canvasOffX = 0; canvasOffY = 0;
-            resetZoom();
-        };
-        img.src = ev.target.result;
+
+    // Indicador visual durante la compresión
+    const btn = document.getElementById('upload-btn');
+    const originalText = btn ? btn.textContent : '';
+    if (btn) { btn.style.opacity = '0.5'; btn.textContent = 'PREPARANDO…'; }
+
+    // Comprimir antes de dibujar en canvas
+    const dataURL = await compressImage(file);
+
+    if (btn) { btn.style.opacity = ''; btn.textContent = originalText; }
+
+    img.onload = () => {
+        document.getElementById('upload-prompt').style.display = 'none';
+        wrapper.style.display = 'block';
+        canvas.width  = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        canvasOffX = 0; canvasOffY = 0;
+        resetZoom();
     };
-    reader.readAsDataURL(file);
+    img.src = dataURL;
 };
 
 function resetZoom() {
