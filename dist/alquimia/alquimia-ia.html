@@ -53,10 +53,6 @@
     }
     </script>
 
-    <!-- ═══ GOOGLE ADSENSE ═══ -->
-    <!-- Google AdSense — Publisher: ca-pub-4029145333045792 -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4029145333045792" crossorigin="anonymous"></script>
-
     <!-- ═══ FUENTES ═══ -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -732,36 +728,6 @@
     .code-desc { font-family: 'Montserrat', sans-serif; font-size: 0.55rem; color: #5a5060; }
 
     /* ═══════════════════════════════════════════════════════════
-       ADSENSE STRIP — Solo versión web
-       ═══════════════════════════════════════════════════════════ */
-    #adsense-panel {
-        display: none;   /* JS activa esto en modo web */
-        border-top: 1px solid rgba(35,31,40,0.9);
-        padding: 1.4rem 1.25rem 1rem;
-    }
-
-    #adsense-panel-label {
-        font-family: 'Playfair Display', serif;
-        font-style: italic;
-        font-size: 0.58rem;
-        letter-spacing: 0.18em;
-        color: var(--cream-muted);
-        text-align: center;
-        opacity: 0.5;
-        margin-bottom: 0.75rem;
-        display: block;
-    }
-
-    #adsense-slot {
-        min-height: 90px;
-        background: rgba(20,19,24,0.5);
-        border: 1px solid rgba(35,31,40,0.9);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* ═══════════════════════════════════════════════════════════
        BANNERS DE PATROCINADOR
        ═══════════════════════════════════════════════════════════ */
     .sponsor-strip {
@@ -989,17 +955,6 @@
         </div>
     </div>
 
-    <!-- Banner patrocinador — Herramienta -->
-    <div class="sponsor-strip">
-        <span class="sponsor-label">Patrocinadores Artísticos</span>
-        <div class="sponsor-slot">
-            <ins class="adsbygoogle"
-                 style="display:block;width:728px;height:90px;"
-                 data-ad-client="ca-pub-4029145333045792"
-                 data-ad-slot="XXXXXXXXXX"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div>
-    </div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -1100,20 +1055,6 @@
                     <button class="catalog-btn" onclick="openPDF('winsor_newton.pdf')">W&amp;N PDF</button>
                     <button class="catalog-btn" onclick="openPDF('old_holland.pdf')">Old Holland</button>
                     <button class="catalog-btn" onclick="openPDF('williamsburg.pdf')">Williamsburg</button>
-                </div>
-            </div>
-
-            <!-- ADSENSE — Solo visible en modo web (activado por JS) -->
-            <div id="adsense-panel">
-                <span id="adsense-panel-label">Patrocinadores Artísticos</span>
-                <div id="adsense-slot">
-                    <ins class="adsbygoogle"
-                         style="display:block;"
-                         data-ad-client="ca-pub-4029145333045792"
-                         data-ad-slot="XXXXXXXXXX"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
                 </div>
             </div>
 
@@ -1232,12 +1173,6 @@
 const IS_PRO           = false;
 const MAX_FREE_UPLOADS = 1;   // Máximo 1 foto gratis por sesión
 let uploadCount        = parseInt(localStorage.getItem('alquimia_uploads') || '0', 10);
-
-// Inicializar UI — mostrar panel AdSense en versión web
-(function initVersionUI() {
-    const adsPanel = document.getElementById('adsense-panel');
-    if (adsPanel) adsPanel.style.display = 'block';
-})();
 
 // ── Modal Pro ──
 function showUpgradeModal()  { document.getElementById('upgrade-modal').classList.add('open'); }
