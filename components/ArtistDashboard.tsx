@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, AlertTriangle, Hash, Save, Eye } from 'lucide-react';
-import { CertificatePreview } from './CertificatePreview';
+import { LogOut, Printer, Code, Layout, Plus, Trash2, CheckCircle, FileText, Settings, Edit, Briefcase, MinusCircle, Check, X, Copy, Image as ImageIcon, Mail, Instagram, Globe, AlertTriangle, Hash, Save } from 'lucide-react';
 
 
 // ---------------------------------------------------------
@@ -2089,9 +2088,6 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
     // 🎨 Estado para el Panel Giclée
     const [showGicleePanel, setShowGicleePanel] = useState(false);
 
-    // 👁️ Estado para la vista previa del certificado
-    const [previewArtwork, setPreviewArtwork] = useState<Artwork | null>(null);
-
     // 🛑 Handler para añadir o editar obra (Acepta ahora code y status)
     const handleSaveArtwork = (artworkData: Omit<Artwork, 'id' | 'originalIndex'>, idToUpdate: number | null) => {
 
@@ -2341,14 +2337,16 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                                             </td>
                                             <td className="py-3 px-4 text-right">
                                                 <div className="flex gap-1 justify-end">
-                                                    {/* Botón Ver Certificado */}
-                                                    <button
-                                                        onClick={() => setPreviewArtwork(artwork)}
-                                                        className="p-1.5 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded transition-colors"
-                                                        title="Ver certificado"
-                                                    >
-                                                        <Eye size={16} />
-                                                    </button>
+                                                    {/* Botón Imprimir Certificado Real */}
+                                                    {artwork.code && (
+                                                        <button
+                                                            onClick={() => handlePrintDocument(getCertificateHtml(artwork, documentSettings), `Certificado ${artwork.title}`)}
+                                                            className="p-1.5 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded transition-colors"
+                                                            title="Imprimir certificado"
+                                                        >
+                                                            <Printer size={16} />
+                                                        </button>
+                                                    )}
                                                     <button
                                                         onClick={() => setArtworkToManage(artwork)}
                                                         className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors"
@@ -2400,47 +2398,6 @@ export const ArtistDashboard: React.FC<ArtistDashboardProps> = ({ onLogout }) =>
                     settings={documentSettings}
                     onClose={() => setShowGicleePanel(false)}
                 />
-            )}
-
-            {/* ============================================
-                MODAL VISTA PREVIA - TALLER/ESTUDIO
-                SOLO EL CERTIFICADO NÍTIDO A TAMAÑO REAL
-                ============================================ */}
-            {previewArtwork && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
-                    onClick={() => setPreviewArtwork(null)}
-                >
-                    {/* Botón cerrar */}
-                    <button
-                        onClick={() => setPreviewArtwork(null)}
-                        className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-50"
-                    >
-                        <X size={24} className="text-white" />
-                    </button>
-
-                    {/* CERTIFICADO NÍTIDO - TAMAÑO REAL 85vh CENTRADO */}
-                    <div
-                        className="h-[85vh] shadow-2xl mx-auto"
-                        style={{ aspectRatio: '210 / 297' }}
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <CertificatePreview
-                            titulo={previewArtwork.title}
-                            imagen={previewArtwork.image}
-                            año={parseInt(previewArtwork.certificationDate.split('-')[0]) || 2026}
-                            dimensiones={previewArtwork.dimensions}
-                            tecnica={previewArtwork.technique}
-                            isGiclee={!!previewArtwork.hologramNumber || !!previewArtwork.gicleeDimensions}
-                            tecnicaOriginal={previewArtwork.technique}
-                            medidasOriginal={previewArtwork.originalDimensions || previewArtwork.dimensions}
-                            medidasImpresion={previewArtwork.gicleeDimensions}
-                            idReferencia={previewArtwork.code}
-                            edicion={previewArtwork.seriesIndex && previewArtwork.seriesTotal ? `${previewArtwork.seriesIndex}/${previewArtwork.seriesTotal}` : undefined}
-                            hologramNumber={previewArtwork.hologramNumber}
-                        />
-                    </div>
-                </div>
             )}
 
         </div>
