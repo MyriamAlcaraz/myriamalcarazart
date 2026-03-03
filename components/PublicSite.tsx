@@ -824,9 +824,10 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
         {/* 🔒 ACCESO SECRETO AL ESTUDIO - Candadito invisible en esquina inferior derecha */}
         <button
           onClick={onOpenStudioLogin}
-          className="absolute bottom-3 right-3 opacity-0 hover:opacity-20 transition-opacity duration-300 bg-transparent border-none outline-none"
+          className="absolute bottom-0 right-0 p-5 opacity-0 hover:opacity-20 active:opacity-30 transition-opacity duration-300 bg-transparent border-none outline-none"
           style={{ background: 'none', boxShadow: 'none' }}
           title=""
+          aria-hidden="true"
         >
           <Lock size={14} className="text-slate-300" />
         </button>
