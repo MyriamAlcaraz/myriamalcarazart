@@ -89,7 +89,17 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
       <nav className="sticky top-0 z-50 bg-stone-50/95 backdrop-blur-sm border-b border-stone-200">
         <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-4">
-            <img src="/logo-myriam.png" alt="Myriam Alcaraz Logo" className="h-12 w-auto md:h-16 object-contain" />
+            <div className="relative">
+              <img src="/logo-myriam.png" alt="Myriam Alcaraz Logo" className="h-12 w-auto md:h-16 object-contain" />
+              {/* 🔒 ACCESO SECRETO — invisible sobre el logo */}
+              <button
+                onClick={onOpenStudioLogin}
+                className="absolute inset-0 z-[100000] opacity-0 cursor-default bg-transparent border-none outline-none"
+                style={{ boxShadow: 'none' }}
+                title=""
+                aria-hidden="true"
+              />
+            </div>
             <div className="hidden md:block border-l border-slate-300 pl-4">
               <h1 className="font-serif text-lg tracking-[0.2em] text-slate-900 uppercase">Myriam Alcaraz</h1>
               <p className="text-[10px] text-gold-600 tracking-[0.3em] uppercase">Artista Figurativa</p>
@@ -818,19 +828,11 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
         <div className="max-w-4xl mx-auto px-6">
           <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
 
-          <p className="text-[10px] opacity-40 uppercase tracking-wide">© 2025 Myriam Alcaraz. Todos los derechos reservados..</p>
+          <p className="text-[10px] opacity-40 uppercase tracking-wide">© 2025 Myriam Alcaraz · Todos los derechos reservados.</p>
         </div>
 
       </footer>
 
-      {/* 🔒 ACCESO SECRETO AL ESTUDIO - Fixed bottom-left, por encima de todo */}
-      <button
-        onClick={onOpenStudioLogin}
-        className="fixed bottom-10 left-10 z-[999999] w-12 h-12 opacity-0 hover:opacity-10 transition-opacity duration-300 bg-white border-none outline-none cursor-default"
-        style={{ boxShadow: 'none' }}
-        title=""
-        aria-hidden="true"
-      />
     </div>
   );
 };
