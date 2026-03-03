@@ -97,7 +97,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
 
           {/* PANEL IZQUIERDO: IMAGEN Y LUPA */}
           <div className="flex-1 flex flex-col gap-4">
-            <div className="bg-white rounded-2xl shadow-2xl p-4 md:p-6">
+            <div className="bg-white rounded-2xl shadow-2xl p-4 md:p-6 flex-1 flex flex-col">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-gold-500 rounded-full flex items-center justify-center">
                   <ZoomIn size={20} className="text-white" />
@@ -146,14 +146,14 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
           </div>
 
           {/* PANEL DERECHO: FICHA TECNICA */}
-          <div className="lg:w-96 bg-white rounded-2xl shadow-2xl p-6">
+          <div className="lg:w-96 bg-white rounded-2xl shadow-2xl p-6 flex flex-col">
             <h3 className="font-serif text-xl text-slate-900 mb-4 pb-2 border-b border-slate-200">
               Datos Técnicos del Giclée
             </h3>
             <div className="space-y-3">
               <div className="flex justify-between py-2 border-b border-slate-100">
                 <span className="font-medium text-slate-700">Título:</span>
-                <span className="text-slate-900">{artwork?.title || 'Sin titulo'}</span>
+                <span className="text-slate-900 text-right ml-2">{artwork?.title || 'Sin titulo'}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-slate-100">
                 <span className="font-medium text-slate-700">Artista:</span>
@@ -165,7 +165,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
               </div>
               <div className="flex justify-between py-2 border-b border-slate-100">
                 <span className="font-medium text-slate-700">Técnica:</span>
-                <span className="text-slate-900">{artwork?.technique || 'Oleo sobre lienzo'}</span>
+                <span className="text-slate-900">{artwork?.technique || 'Óleo sobre lienzo'}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-slate-100">
                 <span className="font-medium text-slate-700">Dimensiones:</span>
@@ -178,18 +178,22 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                 </div>
               )}
             </div>
-            <div className="mt-5 pt-5 border-t border-slate-100">
-              <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2">Calidad Museo</h4>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Impresión sobre papel Hahnemühle William Turner Textured, 100% algodón, libre de ácido y lignina. Producido bajo estándares de calidad Fine Art con tintas pigmentadas en impresora Canon imagePROGRAF PRO-4000.
+
+            {/* CALIDAD MUSEO — siempre visible */}
+            <div className="mt-5 pt-5 border-t-2 border-amber-100 bg-amber-50/60 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#c5a059' }} />
+                <h4 className="text-xs font-bold text-amber-800 uppercase tracking-widest">Calidad Museo · Hahnemühle</h4>
+              </div>
+              <p className="text-xs text-slate-700 leading-relaxed">
+                Impresión íntegra sobre papel <strong>Hahnemühle William Turner Textured</strong>, 100% algodón, libre de ácido y lignina, sin blanqueadores ópticos. Recubrimiento inkjet premium mate para impresiones Fine Art, con alta estabilidad y durabilidad. Tintas pigmentadas en impresora <strong>Canon imagePROGRAF PRO-4000</strong>. Papel adquirido a través de distribuidor autorizado Hahnemühle; producto original garantizado.
               </p>
             </div>
 
-            <div className="mt-6 pt-6 border-t border-slate-100">
+            <div className="mt-auto pt-5 border-t border-slate-100">
               <p className="text-xs text-slate-500 text-center mb-3">
                 ¿Te gustaría saber más sobre esta obra?
               </p>
-              
               <a
                 href={`mailto:${ARTIST_INFO.email}?subject=Consulta sobre "${artwork?.title}"&body=Estimada Myriam,%0A%0AHe descubierto tu obra "${artwork?.title}" y me ha cautivado profundamente.%0A%0AMe gustar%C3%ADa conocer m%C3%A1s detalles sobre esta pieza: disponibilidad, opciones de env%C3%ADo y cualquier informaci%C3%B3n adicional que puedas compartirme.%0A%0AQuedo a la espera de tu respuesta.%0A%0AUn cordial saludo.`}
                 className="block w-full bg-gradient-to-r from-slate-800 to-slate-700 text-white py-3 px-4 rounded-xl font-medium hover:from-gold-600 hover:to-gold-500 transition-all text-center text-sm shadow-lg hover:shadow-xl"
@@ -208,7 +212,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
           <div
             className="relative rounded-2xl overflow-hidden shadow-2xl"
             style={{
-              background: 'linear-gradient(135deg, #2d1e10 0%, #3e2c17 45%, #2d1e10 100%)'
+              background: 'linear-gradient(135deg, #f5f0e8 0%, #ede6d9 45%, #f5f0e8 100%)'
             }}
           >
             <div
@@ -229,7 +233,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                     >
                       Certificado de Autenticidad
                     </p>
-                    <p className="text-amber-200/60 text-xs">
+                    <p className="text-slate-500 text-xs">
                       Cada obra incluye certificación oficial con holograma único
                     </p>
                   </div>
@@ -356,10 +360,10 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                                 src={artwork.image}
                                 alt={artwork.title}
                                 style={{
-                                  height: '100px',
+                                  height: '120px',
                                   width: 'auto',
                                   display: 'block',
-                                  imageRendering: 'auto'
+                                  imageRendering: 'crisp-edges'
                                 }}
                               />
                             </div>
@@ -459,110 +463,94 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                     style={{
                       opacity: certificateRevealed ? 0 : 1,
                       pointerEvents: certificateRevealed ? 'none' : 'auto',
+                      background: 'rgba(245,240,232,0.82)',
+                      backdropFilter: 'blur(3px)',
                     }}
                   >
                     <div className="text-center">
                       <div
                         className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
                         style={{
-                          background: 'linear-gradient(135deg, rgba(197,160,89,0.3), rgba(197,160,89,0.1))',
-                          border: '1px solid rgba(197,160,89,0.4)'
+                          background: 'linear-gradient(135deg, rgba(197,160,89,0.55), rgba(197,160,89,0.25))',
+                          border: '2px solid rgba(197,160,89,0.7)',
+                          boxShadow: '0 4px 20px rgba(197,160,89,0.3)'
                         }}
                       >
-                        <Sparkles size={28} style={{ color: '#c5a059' }} className="animate-pulse" />
+                        <Sparkles size={28} style={{ color: '#8a6520' }} className="animate-pulse" />
                       </div>
-                      <p className="text-white font-medium text-sm">Toca para revelar</p>
-                      <p className="text-xs" style={{ color: '#c5a059' }}>Certificado Oficial</p>
+                      <p className="text-slate-800 font-semibold text-sm">Toca para revelar</p>
+                      <p className="text-xs font-medium mt-1" style={{ color: '#b8860b' }}>Certificado Oficial</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* COLUMNA DERECHA (40%) - Garantias */}
+              {/* COLUMNA DERECHA (40%) - Garantias Hahnemühle */}
               <div
-                className="lg:w-[42%] p-8 md:p-12 flex flex-col justify-center"
+                className="lg:w-[42%] p-8 md:p-10 flex flex-col justify-center"
                 style={{
-                  borderLeft: '1px solid rgba(197,160,89,0.15)',
-                  background: 'linear-gradient(180deg, rgba(197,160,89,0.03) 0%, transparent 100%)'
+                  borderLeft: '1px solid rgba(197,160,89,0.3)',
+                  background: 'linear-gradient(180deg, rgba(197,160,89,0.06) 0%, rgba(197,160,89,0.01) 100%)'
                 }}
               >
-                <div className="mb-8">
+                {/* Header */}
+                <div className="mb-7">
                   <div
-                    className="w-14 h-14 rounded-full flex items-center justify-center mb-5"
+                    className="w-12 h-12 rounded-full flex items-center justify-center mb-4"
                     style={{
                       background: 'linear-gradient(135deg, #c5a059, #a8863d)',
-                      boxShadow: '0 4px 20px rgba(197,160,89,0.3)'
+                      boxShadow: '0 4px 16px rgba(197,160,89,0.35)'
                     }}
                   >
-                    <Shield size={24} className="text-white" />
+                    <Shield size={22} className="text-white" />
                   </div>
-                  <h3 className="font-serif text-2xl text-white mb-2">
-                    Garantía de<br/>Autenticidad
+                  <h3 className="font-serif text-xl text-slate-800 mb-1 leading-tight">
+                    Certificado de Autenticidad<br/>
+                    <span style={{ color: '#c5a059' }}>Hahnemühle</span>
                   </h3>
-                  <div className="w-12 h-px mt-3" style={{ backgroundColor: '#c5a059' }} />
+                  <p className="text-xs text-slate-500 mt-1">Amplifoto Digital · Fine Art Printing · Madrid, 2026</p>
+                  <div className="w-10 h-px mt-3" style={{ backgroundColor: '#c5a059' }} />
                 </div>
 
-                <div className="space-y-5">
-                  <div className="flex items-start gap-3">
-                    <div
-                      className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                      style={{ backgroundColor: 'rgba(197,160,89,0.15)', border: '1px solid rgba(197,160,89,0.3)' }}
-                    >
-                      <Award size={10} style={{ color: '#c5a059' }} />
+                {/* Texto certificado lab */}
+                <p className="text-sm text-slate-700 leading-relaxed mb-6 italic border-l-2 pl-4" style={{ borderColor: '#c5a059' }}>
+                  "Amplifoto Digital certifica que esta obra ha sido producida conforme a los estándares de calidad Fine Art utilizando papel Hahnemühle original."
+                </p>
+
+                {/* Especificaciones técnicas */}
+                <div className="space-y-4">
+                  {[
+                    { title: 'Papel 100% Algodón · Sin Ácidos', sub: 'Hahnemühle William Turner Textured 310g · sin blanqueadores ópticos' },
+                    { title: 'Impresora Canon imagePROGRAF PRO-4000', sub: 'Inyección de tinta pigmentada Fine Art' },
+                    { title: 'Alta Durabilidad y Estabilidad', sub: 'Recubrimiento inkjet premium mate · condiciones museísticas' },
+                    { title: 'Edición Limitada · Holograma Único', sub: 'Nº de serie irrepetible · firmado por la artista' },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <div
+                        className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+                        style={{ backgroundColor: 'rgba(197,160,89,0.18)', border: '1px solid rgba(197,160,89,0.45)' }}
+                      >
+                        <Award size={10} style={{ color: '#c5a059' }} />
+                      </div>
+                      <div>
+                        <p className="text-slate-800 text-sm font-semibold">{item.title}</p>
+                        <p className="text-slate-500 text-xs mt-0.5">{item.sub}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-white text-sm font-medium">Holograma Hahnemühle</p>
-                      <p className="text-white/40 text-xs mt-0.5">Número de serie único e irrepetible</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div
-                      className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                      style={{ backgroundColor: 'rgba(197,160,89,0.15)', border: '1px solid rgba(197,160,89,0.3)' }}
-                    >
-                      <Award size={10} style={{ color: '#c5a059' }} />
-                    </div>
-                    <div>
-                      <p className="text-white text-sm font-medium">Firmado por la Artista</p>
-                      <p className="text-white/40 text-xs mt-0.5">Firma manuscrita y sello en seco</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div
-                      className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                      style={{ backgroundColor: 'rgba(197,160,89,0.15)', border: '1px solid rgba(197,160,89,0.3)' }}
-                    >
-                      <Award size={10} style={{ color: '#c5a059' }} />
-                    </div>
-                    <div>
-                      <p className="text-white text-sm font-medium">Edición Limitada Numerada</p>
-                      <p className="text-white/40 text-xs mt-0.5">Máximo 10 reproducciones por obra</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div
-                      className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                      style={{ backgroundColor: 'rgba(197,160,89,0.15)', border: '1px solid rgba(197,160,89,0.3)' }}
-                    >
-                      <Award size={10} style={{ color: '#c5a059' }} />
-                    </div>
-                    <div>
-                      <p className="text-white text-sm font-medium">Papel 100% Algodón</p>
-                      <p className="text-white/40 text-xs mt-0.5">Hahnemühle William Turner 310g</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
-                <div className="mt-10 pt-6" style={{ borderTop: '1px solid rgba(197,160,89,0.12)' }}>
+                {/* Footer logo */}
+                <div className="mt-8 pt-5" style={{ borderTop: '1px solid rgba(197,160,89,0.2)' }}>
                   <div className="flex items-center gap-3">
                     <img
                       src="/logo-myriam.png"
                       alt="Myriam Alcaraz"
-                      className="h-8 w-auto opacity-60"
+                      className="h-7 w-auto opacity-70"
                     />
                     <div>
-                      <p className="text-white/70 text-xs font-medium tracking-wider uppercase">Myriam Alcaraz</p>
-                      <p className="text-white/30 text-[10px]">Pintura Figurativa Contemporánea</p>
+                      <p className="text-slate-700 text-xs font-medium tracking-wider uppercase">Myriam Alcaraz</p>
+                      <p className="text-slate-400 text-[10px]">Pintura Figurativa Contemporánea</p>
                     </div>
                   </div>
                 </div>
