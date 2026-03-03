@@ -818,15 +818,15 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
         <div className="max-w-4xl mx-auto px-6">
           <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
 
-          <p className="text-[10px] opacity-40 uppercase tracking-wide">© 2025 Myriam Alcaraz. Todos los derechos reservados.</p>
+          <p className="text-[10px] opacity-40 uppercase tracking-wide">© 2025 Myriam Alcaraz. Todos los derechos reservados..</p>
         </div>
 
       </footer>
 
-      {/* 🔒 ACCESO SECRETO AL ESTUDIO - Fixed top-left, totalmente invisible */}
+      {/* 🔒 ACCESO SECRETO AL ESTUDIO - Fixed bottom-left, por encima de todo */}
       <button
         onClick={onOpenStudioLogin}
-        className="fixed top-4 left-4 z-[99999] w-12 h-12 opacity-0 bg-transparent border-none outline-none cursor-default"
+        className="fixed bottom-10 left-10 z-[999999] w-12 h-12 opacity-0 hover:opacity-10 transition-opacity duration-300 bg-white border-none outline-none cursor-default"
         style={{ boxShadow: 'none' }}
         title=""
         aria-hidden="true"
