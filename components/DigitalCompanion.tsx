@@ -201,7 +201,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
           <div
             className="relative rounded-2xl overflow-hidden shadow-2xl"
             style={{
-              background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2520 40%, #1a1715 100%)'
+              background: 'linear-gradient(135deg, #2d1e10 0%, #3e2c17 45%, #2d1e10 100%)'
             }}
           >
             <div
@@ -211,10 +211,10 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
 
             <div className="flex flex-col lg:flex-row">
 
-              {/* COLUMNA IZQUIERDA (60%) - Certificado Real */}
-              <div className="lg:w-[58%] p-8 md:p-12 flex flex-col justify-center">
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="w-px h-12" style={{ backgroundColor: '#c5a059' }} />
+              {/* COLUMNA IZQUIERDA — Certificado protagonista */}
+              <div className="lg:w-[60%] p-8 md:p-10 flex flex-col justify-center items-center">
+                <div className="flex items-center gap-4 mb-6 self-start">
+                  <div className="w-px h-10" style={{ backgroundColor: '#c5a059' }} />
                   <div>
                     <p
                       className="text-xs uppercase tracking-widest mb-1"
@@ -222,35 +222,35 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                     >
                       Certificado de Autenticidad
                     </p>
-                    <p className="text-white/50 text-xs">
+                    <p className="text-amber-200/60 text-xs">
                       Cada obra incluye certificación oficial con holograma único
                     </p>
                   </div>
                 </div>
 
                 <div
-                  className="relative cursor-pointer group"
+                  className="relative cursor-pointer group w-full"
                   onClick={() => setCertificateRevealed(!certificateRevealed)}
                 >
                   {/* Marco dorado completo */}
                   <div
                     className="rounded-lg overflow-hidden transition-all duration-700 mx-auto"
                     style={{
-                      maxWidth: '340px',
-                      padding: '4px',
+                      maxWidth: '460px',
+                      padding: '5px',
                       background: 'linear-gradient(135deg, #c5a059 0%, #e8d5a3 25%, #c5a059 50%, #a8863d 75%, #c5a059 100%)',
                       boxShadow: certificateRevealed
-                        ? '0 25px 60px rgba(0,0,0,0.5), 0 0 50px rgba(197,160,89,0.25)'
-                        : '0 15px 40px rgba(0,0,0,0.4), 0 0 20px rgba(197,160,89,0.1)',
+                        ? '0 30px 70px rgba(0,0,0,0.55), 0 0 60px rgba(197,160,89,0.3)'
+                        : '0 20px 50px rgba(0,0,0,0.45), 0 0 30px rgba(197,160,89,0.15)',
                       transform: certificateRevealed ? 'scale(1)' : 'scale(0.97)',
                     }}
                   >
-                    {/* CERTIFICADO — Réplica exacta del PDF oficial */}
+                    {/* CERTIFICADO — Réplica PDF oficial, escala plena */}
                     <div className="relative overflow-hidden" style={{ backgroundColor: '#fffdf8' }}>
                       <div style={{
                         fontFamily: "'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif",
                         backgroundColor: '#fffdf8',
-                        padding: '14px 18px 12px',
+                        padding: '20px 26px 18px',
                         color: '#111',
                         lineHeight: 1.5,
                         position: 'relative',
@@ -259,18 +259,18 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
 
                         {/* Línea interior dorada fina */}
                         <div style={{
-                          position: 'absolute', top: 5, left: 5, right: 5, bottom: 5,
-                          border: '0.5px solid #c5a059', opacity: 0.5, pointerEvents: 'none'
+                          position: 'absolute', top: 6, left: 6, right: 6, bottom: 6,
+                          border: '0.75px solid #c5a059', opacity: 0.55, pointerEvents: 'none'
                         }} />
 
-                        {/* Marca de agua diagonal "CERTIFICADO OFICIAL" */}
+                        {/* Marca de agua diagonal */}
                         <div style={{
                           position: 'absolute', top: '48%', left: '50%',
                           transform: 'translate(-50%, -50%) rotate(-28deg)',
-                          fontSize: '18px', fontWeight: 700,
+                          fontSize: '26px', fontWeight: 700,
                           color: '#c5a059',
-                          opacity: certificateRevealed ? 0.06 : 0.11,
-                          letterSpacing: '4px', whiteSpace: 'nowrap',
+                          opacity: certificateRevealed ? 0.055 : 0.10,
+                          letterSpacing: '5px', whiteSpace: 'nowrap',
                           pointerEvents: 'none', zIndex: 3,
                           textTransform: 'uppercase',
                           transition: 'opacity 0.7s'
@@ -279,46 +279,46 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                         </div>
 
                         {/* ── LOGO ── */}
-                        <div style={{ textAlign: 'center', marginBottom: '3px' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '4px' }}>
                           <img src="/logo-myriam.png" alt="Myriam Alcaraz"
-                            style={{ height: '26px', width: 'auto', opacity: 0.92 }} />
+                            style={{ height: '34px', width: 'auto', opacity: 0.92 }} />
                         </div>
 
                         {/* ── LEMA ── */}
                         <p style={{
-                          textAlign: 'center', fontSize: '4pt',
+                          textAlign: 'center', fontSize: '5pt',
                           letterSpacing: '2.5px', color: '#888',
-                          textTransform: 'uppercase', margin: '0 0 7px',
+                          textTransform: 'uppercase', margin: '0 0 9px',
                           fontFamily: 'inherit'
                         }}>Arte con Alma y Sofisticación</p>
 
-                        {/* ── TÍTULO PRINCIPAL GRANDE ── */}
+                        {/* ── TÍTULO PRINCIPAL ── */}
                         <h1 style={{
                           textAlign: 'center',
                           fontFamily: "'Cinzel', 'Palatino Linotype', Palatino, Georgia, serif",
-                          fontSize: '13pt',
+                          fontSize: '16pt',
                           fontWeight: 400,
-                          letterSpacing: '4px',
+                          letterSpacing: '5px',
                           color: '#1a1a1a',
-                          lineHeight: 1.25,
-                          margin: '0 0 6px',
+                          lineHeight: 1.2,
+                          margin: '0 0 8px',
                           textTransform: 'uppercase'
                         }}>
                           Certificado de<br />Autenticidad
                         </h1>
 
-                        {/* ── LÍNEA DORADA SEPARADORA ── */}
+                        {/* ── LÍNEA DORADA ── */}
                         <div style={{
                           width: '75%', height: '1px',
                           backgroundColor: '#c5a059',
-                          margin: '0 auto 8px'
+                          margin: '0 auto 10px'
                         }} />
 
                         {/* ── TEXTO INTRODUCTORIO ── */}
                         <p style={{
-                          textAlign: 'center', fontSize: '5.5pt',
+                          textAlign: 'center', fontSize: '7pt',
                           lineHeight: 1.7, color: '#444',
-                          marginBottom: '4px', padding: '0 4%'
+                          marginBottom: '5px', padding: '0 3%'
                         }}>
                           {gicleeData
                             ? 'Por la presente se certifica que la reproducción Giclée descrita a continuación es una impresión autorizada y numerada. Todos los derechos de autor están reservados por la artista:'
@@ -329,29 +329,37 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                         <p style={{
                           textAlign: 'center',
                           fontFamily: "'Playfair Display', 'Palatino Linotype', Georgia, serif",
-                          fontSize: '10pt', fontWeight: 600,
-                          color: '#1a1a1a', marginBottom: '1px'
+                          fontSize: '13pt', fontWeight: 600,
+                          color: '#1a1a1a', marginBottom: '2px'
                         }}>Myriam Alcaraz</p>
                         <p style={{
-                          textAlign: 'center', fontSize: '4.5pt',
-                          color: '#777', fontStyle: 'italic', marginBottom: '8px'
+                          textAlign: 'center', fontSize: '5.5pt',
+                          color: '#777', fontStyle: 'italic', marginBottom: '12px'
                         }}>Pintura Figurativa Contemporánea</p>
 
-                        {/* ── IMAGEN DE LA OBRA ── */}
+                        {/* ── IMAGEN DE LA OBRA — nítida y grande ── */}
                         {artwork?.image && (
-                          <div style={{ textAlign: 'center', marginBottom: '8px' }}>
+                          <div style={{ textAlign: 'center', marginBottom: '12px' }}>
                             <div style={{
-                              display: 'inline-block', padding: '3px',
+                              display: 'inline-block', padding: '4px',
                               backgroundColor: '#f0ede8',
-                              boxShadow: '0 1px 5px rgba(0,0,0,0.18)'
+                              boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
                             }}>
-                              <img src={artwork.image} alt={artwork.title}
-                                style={{ height: '56px', width: 'auto', display: 'block' }} />
+                              <img
+                                src={artwork.image}
+                                alt={artwork.title}
+                                style={{
+                                  height: '100px',
+                                  width: 'auto',
+                                  display: 'block',
+                                  imageRendering: 'auto'
+                                }}
+                              />
                             </div>
                           </div>
                         )}
 
-                        {/* ── CAMPOS PÚBLICOS (label izq / valor der) ── */}
+                        {/* ── CAMPOS PÚBLICOS — totalmente legibles ── */}
                         {([
                           { label: 'Título de la Obra:', value: artwork?.title || 'Sin título' },
                           { label: 'Año de Creación:', value: `marzo de ${displayYear}` },
@@ -368,67 +376,70 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                             display: 'flex', justifyContent: 'space-between',
                             alignItems: 'baseline',
                             borderBottom: '1px dotted #ccc',
-                            padding: '2.5px 0', fontSize: '6pt'
+                            padding: '3.5px 0', fontSize: '7.5pt'
                           }}>
-                            <span style={{ fontWeight: 700, color: '#333', flexShrink: 0, paddingRight: '6px' }}>{item.label}</span>
+                            <span style={{ fontWeight: 700, color: '#333', flexShrink: 0, paddingRight: '8px' }}>{item.label}</span>
                             <span style={{ color: '#111', textAlign: 'right' }}>{item.value}</span>
                           </div>
                         ))}
 
-                        {/* ── CAMPOS SENSIBLES (opacidad según interacción) ── */}
-                        <div style={{ opacity: certificateRevealed ? 0.38 : 0.14, transition: 'opacity 0.7s' }}>
-                          {([
-                            { label: 'ID de Referencia:', value: gicleeData?.id || `MA-${displayYear}-XX·1/1` },
-                            { label: 'Edición:', value: gicleeData?.edicion || 'Obra Única Original' },
-                            { label: 'Nº Holograma:', value: gicleeData?.hologram || '●●●●●●' },
-                          ] as { label: string; value: string }[]).map((item, i) => (
-                            <div key={i} style={{
-                              display: 'flex', justifyContent: 'space-between',
-                              alignItems: 'baseline',
-                              borderBottom: '1px dotted #ccc',
-                              padding: '2.5px 0', fontSize: '6pt'
-                            }}>
-                              <span style={{ fontWeight: 700, color: '#c5a059', flexShrink: 0, paddingRight: '6px' }}>{item.label}</span>
-                              <span style={{ color: '#111', textAlign: 'right', letterSpacing: '0.5px' }}>{item.value}</span>
-                            </div>
-                          ))}
-                        </div>
+                        {/* ── CAMPOS SENSIBLES — blur real sobre valores ── */}
+                        {([
+                          { label: 'ID de Referencia:', value: gicleeData?.id || `MA-${displayYear}-XX·1/1` },
+                          { label: 'Edición:', value: gicleeData?.edicion || 'Obra Única Original' },
+                          { label: 'Nº Holograma:', value: gicleeData?.hologram || '●●●●●●' },
+                        ] as { label: string; value: string }[]).map((item, i) => (
+                          <div key={i} style={{
+                            display: 'flex', justifyContent: 'space-between',
+                            alignItems: 'baseline',
+                            borderBottom: '1px dotted #ccc',
+                            padding: '3.5px 0', fontSize: '7.5pt'
+                          }}>
+                            <span style={{ fontWeight: 700, color: '#c5a059', flexShrink: 0, paddingRight: '8px' }}>{item.label}</span>
+                            <span style={{
+                              color: '#111', textAlign: 'right',
+                              filter: certificateRevealed ? 'blur(2.5px)' : 'blur(5px)',
+                              transition: 'filter 0.7s',
+                              userSelect: 'none'
+                            }}>{item.value}</span>
+                          </div>
+                        ))}
 
                         {/* ── INDICADOR DATOS PROTEGIDOS ── */}
                         <div style={{
-                          display: 'flex', alignItems: 'center', gap: '3px',
-                          justifyContent: 'flex-end', margin: '4px 0',
-                          opacity: certificateRevealed ? 0.2 : 0.75,
+                          display: 'flex', alignItems: 'center', gap: '4px',
+                          justifyContent: 'flex-end', margin: '6px 0',
+                          opacity: certificateRevealed ? 0.3 : 0.85,
                           transition: 'opacity 0.7s'
                         }}>
-                          <Shield size={6} style={{ color: '#c5a059' }} />
-                          <span style={{ fontSize: '4px', color: '#c5a059', letterSpacing: '1.5px', fontWeight: 600, textTransform: 'uppercase' }}>Datos Protegidos</span>
+                          <Shield size={8} style={{ color: '#c5a059' }} />
+                          <span style={{ fontSize: '5px', color: '#c5a059', letterSpacing: '1.5px', fontWeight: 600, textTransform: 'uppercase' }}>Datos Protegidos</span>
                         </div>
 
-                        {/* ── FECHA Y FIRMA (sensibles) ── */}
+                        {/* ── FECHA Y FIRMA ── */}
                         <div style={{
                           display: 'flex', justifyContent: 'space-between',
-                          alignItems: 'flex-end', marginTop: '6px',
-                          opacity: certificateRevealed ? 0.38 : 0.14,
-                          transition: 'opacity 0.7s'
+                          alignItems: 'flex-end', marginTop: '8px',
+                          filter: certificateRevealed ? 'blur(2.5px)' : 'blur(5px)',
+                          transition: 'filter 0.7s'
                         }}>
-                          <div style={{ fontSize: '5pt', color: '#333' }}>
+                          <div style={{ fontSize: '6.5pt', color: '#333' }}>
                             <span style={{ fontWeight: 700 }}>FECHA: </span>
                             <span>2 de marzo de 2026</span>
                           </div>
                           <div style={{ textAlign: 'right' }}>
-                            <div style={{ height: '24px' }} />
-                            <div style={{ borderTop: '1px solid #555', width: '70px', marginBottom: '2px' }} />
-                            <p style={{ fontSize: '6pt', fontWeight: 700, color: '#1a1a1a', margin: 0 }}>Myriam Alcaraz</p>
-                            <p style={{ fontSize: '4.5pt', color: '#666', fontStyle: 'italic', margin: 0 }}>Pintura Figurativa Contemporánea</p>
+                            <div style={{ height: '28px' }} />
+                            <div style={{ borderTop: '1px solid #555', width: '80px', marginBottom: '3px' }} />
+                            <p style={{ fontSize: '7pt', fontWeight: 700, color: '#1a1a1a', margin: 0 }}>Myriam Alcaraz</p>
+                            <p style={{ fontSize: '5.5pt', color: '#666', fontStyle: 'italic', margin: 0 }}>Pintura Figurativa Contemporánea</p>
                           </div>
                         </div>
 
                         {/* ── PIE DE CONTACTO ── */}
                         <div style={{
-                          textAlign: 'center', fontSize: '3.5pt',
-                          color: '#aaa', marginTop: '7px',
-                          paddingTop: '5px', borderTop: '1px solid #e8e4dc',
+                          textAlign: 'center', fontSize: '4.5pt',
+                          color: '#aaa', marginTop: '9px',
+                          paddingTop: '6px', borderTop: '1px solid #e8e4dc',
                           letterSpacing: '0.5px'
                         }}>
                           myriamalcaraz.com&nbsp;•&nbsp;myriamhotmail@hotmail.com&nbsp;•&nbsp;@myriamalcaraz.artist
