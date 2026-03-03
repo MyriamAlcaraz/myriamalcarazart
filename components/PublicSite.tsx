@@ -824,8 +824,8 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
         {/* 🔒 ACCESO SECRETO AL ESTUDIO - Candadito invisible en esquina inferior derecha */}
         <button
           onClick={onOpenStudioLogin}
-          className="absolute bottom-0 left-0 p-5 opacity-0 hover:opacity-20 active:opacity-30 transition-opacity duration-300 bg-transparent border-none outline-none"
-          style={{ background: 'none', boxShadow: 'none' }}
+          className="absolute bottom-4 left-4 z-[9999] p-5 opacity-0 hover:opacity-20 active:opacity-30 transition-opacity duration-300 bg-red-500/10 border-none outline-none rounded"
+          style={{ boxShadow: 'none' }}
           title=""
           aria-hidden="true"
         >
