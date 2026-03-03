@@ -93,7 +93,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
       <div className="max-w-7xl mx-auto">
 
         {/* FILA SUPERIOR: Imagen + Ficha Tecnica */}
-        <div className="flex flex-col lg:flex-row gap-6 mb-8">
+        <div className="flex flex-col lg:flex-row gap-6 mb-8 lg:items-stretch">
 
           {/* PANEL IZQUIERDO: IMAGEN Y LUPA */}
           <div className="flex-1 flex flex-col gap-4">
@@ -148,7 +148,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
           {/* PANEL DERECHO: FICHA TECNICA */}
           <div className="lg:w-96 bg-white rounded-2xl shadow-2xl p-6">
             <h3 className="font-serif text-xl text-slate-900 mb-4 pb-2 border-b border-slate-200">
-              Ficha Técnica
+              Datos Técnicos del Giclée
             </h3>
             <div className="space-y-3">
               <div className="flex justify-between py-2 border-b border-slate-100">
@@ -178,6 +178,13 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                 </div>
               )}
             </div>
+            <div className="mt-5 pt-5 border-t border-slate-100">
+              <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2">Calidad Museo</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Impresión sobre papel Hahnemühle William Turner Textured, 100% algodón, libre de ácido y lignina. Producido bajo estándares de calidad Fine Art con tintas pigmentadas en impresora Canon imagePROGRAF PRO-4000.
+              </p>
+            </div>
+
             <div className="mt-6 pt-6 border-t border-slate-100">
               <p className="text-xs text-slate-500 text-center mb-3">
                 ¿Te gustaría saber más sobre esta obra?
@@ -236,7 +243,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                   <div
                     className="rounded-lg overflow-hidden transition-all duration-700 mx-auto"
                     style={{
-                      maxWidth: '460px',
+                      maxWidth: '500px',
                       padding: '5px',
                       background: 'linear-gradient(135deg, #c5a059 0%, #e8d5a3 25%, #c5a059 50%, #a8863d 75%, #c5a059 100%)',
                       boxShadow: certificateRevealed
@@ -342,8 +349,8 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                           <div style={{ textAlign: 'center', marginBottom: '12px' }}>
                             <div style={{
                               display: 'inline-block', padding: '4px',
-                              backgroundColor: '#f0ede8',
-                              boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
+                              backgroundColor: '#ffffff',
+                              boxShadow: '0 2px 8px rgba(0,0,0,0.12)'
                             }}>
                               <img
                                 src={artwork.image}
@@ -370,7 +377,8 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                                 { label: 'Soporte:', value: 'Papel Hahnemühle Textured · William Turner' }
                               ]
                             : [{ label: 'Técnica/Medio:', value: artwork?.technique || 'Óleo sobre lienzo' }]
-                          )
+                          ),
+                          { label: 'Edición:', value: gicleeData?.edicion || 'Obra Única Original' },
                         ] as { label: string; value: string }[]).map((item, i) => (
                           <div key={i} style={{
                             display: 'flex', justifyContent: 'space-between',
@@ -383,10 +391,9 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                           </div>
                         ))}
 
-                        {/* ── CAMPOS SENSIBLES — blur real sobre valores ── */}
+                        {/* ── CAMPOS SENSIBLES — blur solo en ID y Holograma ── */}
                         {([
                           { label: 'ID de Referencia:', value: gicleeData?.id || `MA-${displayYear}-XX·1/1` },
-                          { label: 'Edición:', value: gicleeData?.edicion || 'Obra Única Original' },
                           { label: 'Nº Holograma:', value: gicleeData?.hologram || '●●●●●●' },
                         ] as { label: string; value: string }[]).map((item, i) => (
                           <div key={i} style={{
@@ -419,9 +426,7 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                         {/* ── FECHA Y FIRMA ── */}
                         <div style={{
                           display: 'flex', justifyContent: 'space-between',
-                          alignItems: 'flex-end', marginTop: '8px',
-                          filter: certificateRevealed ? 'blur(2.5px)' : 'blur(5px)',
-                          transition: 'filter 0.7s'
+                          alignItems: 'flex-end', marginTop: '8px'
                         }}>
                           <div style={{ fontSize: '6.5pt', color: '#333' }}>
                             <span style={{ fontWeight: 700 }}>FECHA: </span>
