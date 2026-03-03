@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ZoomIn, X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { CertificatePreview } from './CertificatePreview';
 
 // ============================================
 // GALERÍA PÚBLICA - PORTFOLIO DE MYRIAM ALCARAZ
@@ -468,9 +467,8 @@ const Portfolio: React.FC = () => {
                   <div className="h-px flex-1 bg-gradient-to-l from-transparent to-amber-500/50"></div>
                 </div>
 
-                {/* CERTIFICADO REAL - Datos PDF 287213 */}
+                {/* CERTIFICADO — Diseño V15 Serif Clásico */}
                 <div className="relative transform hover:scale-[1.02] transition-transform duration-300">
-                  {/* Borde dorado #c5a059 NÍTIDO */}
                   <div
                     className="rounded-xl overflow-hidden"
                     style={{
@@ -478,22 +476,146 @@ const Portfolio: React.FC = () => {
                       boxShadow: '0 25px 60px rgba(197, 160, 89, 0.35), 0 15px 40px rgba(0,0,0,0.5)'
                     }}
                   >
-                    {/* CertificatePreview REAL con datos del PDF 287213 */}
-                    <div style={{ filter: 'blur(2.5px)' }}>
-                      <CertificatePreview
-                        titulo="Joven con vela en la bruma"
-                        imagen="/obras/OBRA_01.jpg"
-                        año={2026}
-                        dimensiones="100x73 cm"
-                        tecnica="Óleo sobre tela"
-                        isGiclee={true}
-                        tecnicaOriginal="Óleo sobre tela"
-                        medidasOriginal="100x73 cm"
-                        medidasImpresion="30 x 40 cm"
-                        idReferencia="MA-2026-GC-JC-01/10-S"
-                        edicion="1/10"
-                        hologramNumber="287213"
-                      />
+                    <div style={{
+                      fontFamily: "'Palatino Linotype', Palatino, Georgia, serif",
+                      backgroundColor: '#fffdf8',
+                      padding: '18px 22px',
+                      color: '#111',
+                      lineHeight: 1.5,
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}>
+                      {/* Marco interior dorado */}
+                      <div style={{
+                        position: 'absolute', top: 6, left: 6, right: 6, bottom: 6,
+                        border: '1px solid #b8860b', opacity: 0.35, pointerEvents: 'none'
+                      }} />
+
+                      {/* Marca de agua diagonal */}
+                      <div style={{
+                        position: 'absolute', top: '50%', left: '50%',
+                        transform: 'translate(-50%, -50%) rotate(-28deg)',
+                        fontSize: '22px', fontWeight: 700,
+                        color: '#b8860b', opacity: 0.1,
+                        letterSpacing: '3px', whiteSpace: 'nowrap',
+                        pointerEvents: 'none', zIndex: 2,
+                        textTransform: 'uppercase'
+                      }}>
+                        CERTIFICADO OFICIAL
+                      </div>
+
+                      {/* Logo */}
+                      <div style={{ textAlign: 'center', marginBottom: '6px' }}>
+                        <img src="/logo-myriam.png" alt="Myriam Alcaraz"
+                          style={{ height: '28px', width: 'auto', opacity: 0.9 }} />
+                      </div>
+
+                      {/* Lema */}
+                      <p style={{
+                        textAlign: 'center', fontSize: '5pt',
+                        letterSpacing: '2px', color: '#777',
+                        textTransform: 'uppercase', margin: '0 0 6px'
+                      }}>Pintura Figurativa Contemporánea</p>
+
+                      {/* Título del certificado */}
+                      <h1 style={{
+                        textAlign: 'center', fontFamily: 'inherit',
+                        fontSize: '10.5pt', fontWeight: 300,
+                        letterSpacing: '4px', color: '#b8860b',
+                        textTransform: 'uppercase',
+                        borderBottom: '2px solid #b8860b',
+                        paddingBottom: '5px', marginBottom: '8px'
+                      }}>Certificado de Autenticidad</h1>
+
+                      {/* Texto introductorio */}
+                      <p style={{
+                        textAlign: 'center', fontSize: '6pt',
+                        color: '#333', lineHeight: 1.6, marginBottom: '3px'
+                      }}>
+                        Por la presente se certifica que la obra de arte descrita a continuación
+                        es una creación original y auténtica de la artista:
+                      </p>
+                      <p style={{
+                        textAlign: 'center', fontWeight: 700,
+                        fontSize: '9pt', letterSpacing: '2px',
+                        color: '#000', marginBottom: '1px'
+                      }}>MYRIAM ALCARAZ</p>
+                      <p style={{
+                        textAlign: 'center', fontSize: '5pt',
+                        letterSpacing: '2px', color: '#555',
+                        textTransform: 'uppercase', marginBottom: '10px'
+                      }}>Pintura Figurativa Contemporánea</p>
+
+                      {/* Campos públicos — totalmente visibles */}
+                      {[
+                        { label: 'Título:', value: selectedObra.titulo },
+                        { label: 'Año:', value: String(selectedObra.año) },
+                        { label: 'Dimensiones:', value: selectedObra.dimensiones },
+                        { label: 'Técnica:', value: selectedObra.tecnica },
+                      ].map((item, i) => (
+                        <div key={i} style={{
+                          display: 'flex', alignItems: 'baseline',
+                          borderBottom: '1px dotted #bbb',
+                          marginBottom: '4px', paddingBottom: '3px', fontSize: '6pt'
+                        }}>
+                          <span style={{ fontWeight: 600, minWidth: '80px', color: '#444' }}>{item.label}</span>
+                          <span style={{ flex: 1, fontStyle: 'italic', color: '#111' }}>{item.value}</span>
+                        </div>
+                      ))}
+
+                      {/* Campos sensibles — marca de agua parcial */}
+                      <div style={{ opacity: 0.28, position: 'relative' }}>
+                        {[
+                          { label: 'ID Referencia:', value: 'MA-XXXX·GC·XX·01/10' },
+                          { label: 'Nº Holograma:', value: '●●●●●●' },
+                        ].map((item, i) => (
+                          <div key={i} style={{
+                            display: 'flex', alignItems: 'baseline',
+                            borderBottom: '1px dotted #bbb',
+                            marginBottom: '4px', paddingBottom: '3px', fontSize: '6pt'
+                          }}>
+                            <span style={{ fontWeight: 600, minWidth: '80px', color: '#b8860b' }}>{item.label}</span>
+                            <span style={{ flex: 1, fontStyle: 'italic', color: '#111', letterSpacing: '1px' }}>{item.value}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Nota de certificación */}
+                      <p style={{
+                        textAlign: 'center', fontStyle: 'italic',
+                        fontSize: '5.5pt', color: '#555',
+                        lineHeight: 1.4, margin: '8px 0 10px'
+                      }}>
+                        Este documento certifica que la obra ha sido inspeccionada y aprobada<br />
+                        personalmente por la artista. Todos los derechos reservados.
+                      </p>
+
+                      {/* Fecha y firma — opacidad reducida */}
+                      <div style={{
+                        display: 'flex', justifyContent: 'space-between',
+                        alignItems: 'flex-end', opacity: 0.3
+                      }}>
+                        <div style={{ fontSize: '5.5pt', color: '#333' }}>
+                          <span style={{ fontWeight: 600 }}>FECHA: </span>
+                          <span>2 de marzo de 2026</span>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ height: '28px' }} />
+                          <div style={{ borderTop: '1px solid #333', width: '75px', marginBottom: '2px' }} />
+                          <p style={{ fontSize: '6pt', fontWeight: 600, color: '#000', margin: 0 }}>Myriam Alcaraz</p>
+                          <p style={{ fontSize: '4.5pt', color: '#555', fontStyle: 'italic', margin: 0 }}>Pintura Figurativa Contemporánea</p>
+                        </div>
+                      </div>
+
+                      {/* Pie de contacto */}
+                      <div style={{
+                        textAlign: 'center', fontSize: '4pt',
+                        color: '#999', marginTop: '8px',
+                        paddingTop: '5px', borderTop: '1px solid #eee',
+                        letterSpacing: '0.5px', textTransform: 'uppercase'
+                      }}>
+                        myriamalcaraz.com&nbsp;•&nbsp;myriamhotmail@hotmail.com&nbsp;•&nbsp;@myriamalcaraz.artist
+                      </div>
                     </div>
                   </div>
 

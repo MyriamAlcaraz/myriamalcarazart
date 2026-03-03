@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import { Shield, ZoomIn, Award, X, Sparkles } from 'lucide-react';
 import { ARTWORKS, ARTIST_INFO } from '../constants';
 import { Certificate } from './Certificate';
-import { CertificatePreview } from './CertificatePreview';
 
 // Mapa de IDs Giclée reales por artwork ID
 const GICLEE_IDS: Record<string, { id: string; hologram: string; edicion: string; medidasImpresion?: string }> = {
@@ -246,46 +245,183 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                       transform: certificateRevealed ? 'scale(1)' : 'scale(0.97)',
                     }}
                   >
-                    <div className="relative rounded overflow-hidden bg-white">
-                      <CertificatePreview
-                        titulo={artwork?.title || 'Sin t\u00edtulo'}
-                        imagen={artwork?.image}
-                        año={parseInt(displayYear)}
-                        dimensiones={artwork?.dimensions}
-                        tecnica={artwork?.technique}
-                        isGiclee={!!gicleeData}
-                        tecnicaOriginal={artwork?.technique}
-                        medidasOriginal={artwork?.dimensions}
-                        medidasImpresion={gicleeData?.medidasImpresion || 'Tama\u00f1o original'}
-                        idReferencia={gicleeData?.id || `MA-${displayYear}-${(artwork?.title || 'XX').substring(0,2).toUpperCase()}1/1`}
-                        edicion={gicleeData?.edicion || 'Obra \u00danica Original'}
-                        hologramNumber={gicleeData?.hologram || null}
-                      />
-                      {/* Blur selectivo: solo datos sensibles */}
-                      <div
-                        className="absolute left-0 right-0 transition-all duration-700"
-                        style={{
-                          top: '62%',
-                          bottom: '12%',
-                          backdropFilter: certificateRevealed ? 'blur(3px)' : 'blur(8px)',
-                          WebkitBackdropFilter: certificateRevealed ? 'blur(3px)' : 'blur(8px)',
-                          background: certificateRevealed
-                            ? 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 30%, rgba(255,255,255,0.15) 70%, rgba(255,255,255,0) 100%)'
-                            : 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 30%, rgba(255,255,255,0.3) 70%, rgba(255,255,255,0) 100%)',
-                        }}
-                      />
-                      <div
-                        className="absolute flex items-center gap-1 transition-all duration-500"
-                        style={{
-                          right: '8%',
-                          top: '70%',
-                          opacity: certificateRevealed ? 0.6 : 0.9,
-                        }}
-                      >
-                        <Shield size={8} style={{ color: '#c5a059' }} />
-                        <span style={{ fontSize: '4px', color: '#c5a059', letterSpacing: '1px', fontWeight: 600 }}>
-                          DATOS PROTEGIDOS
-                        </span>
+                    {/* CERTIFICADO V15 — Diseño Serif Clásico con marca de agua */}
+                    <div className="relative rounded overflow-hidden" style={{ backgroundColor: '#fffdf8' }}>
+                      <div style={{
+                        fontFamily: "'Palatino Linotype', Palatino, Georgia, serif",
+                        backgroundColor: '#fffdf8',
+                        padding: '14px 16px',
+                        color: '#111',
+                        lineHeight: 1.5,
+                        position: 'relative',
+                        overflow: 'hidden'
+                      }}>
+                        {/* Marco interior dorado */}
+                        <div style={{
+                          position: 'absolute', top: 4, left: 4, right: 4, bottom: 4,
+                          border: '1px solid #b8860b', opacity: 0.3, pointerEvents: 'none'
+                        }} />
+
+                        {/* Marca de agua diagonal */}
+                        <div style={{
+                          position: 'absolute', top: '50%', left: '50%',
+                          transform: 'translate(-50%, -50%) rotate(-28deg)',
+                          fontSize: '17px', fontWeight: 700,
+                          color: '#b8860b',
+                          opacity: certificateRevealed ? 0.07 : 0.12,
+                          letterSpacing: '3px', whiteSpace: 'nowrap',
+                          pointerEvents: 'none', zIndex: 2,
+                          textTransform: 'uppercase',
+                          transition: 'opacity 0.7s'
+                        }}>
+                          CERTIFICADO OFICIAL
+                        </div>
+
+                        {/* Logo */}
+                        <div style={{ textAlign: 'center', marginBottom: '5px' }}>
+                          <img src="/logo-myriam.png" alt="Myriam Alcaraz"
+                            style={{ height: '22px', width: 'auto', opacity: 0.9 }} />
+                        </div>
+
+                        {/* Lema */}
+                        <p style={{
+                          textAlign: 'center', fontSize: '4.5pt',
+                          letterSpacing: '2px', color: '#777',
+                          textTransform: 'uppercase', margin: '0 0 5px'
+                        }}>Pintura Figurativa Contemporánea</p>
+
+                        {/* Título del certificado */}
+                        <h1 style={{
+                          textAlign: 'center', fontFamily: 'inherit',
+                          fontSize: '9.5pt', fontWeight: 300,
+                          letterSpacing: '3.5px', color: '#b8860b',
+                          textTransform: 'uppercase',
+                          borderBottom: '1.5px solid #b8860b',
+                          paddingBottom: '4px', marginBottom: '7px'
+                        }}>Certificado de Autenticidad</h1>
+
+                        {/* Texto introductorio */}
+                        <p style={{
+                          textAlign: 'center', fontSize: '5.5pt',
+                          color: '#333', lineHeight: 1.6, marginBottom: '2px'
+                        }}>
+                          {gicleeData
+                            ? 'Por la presente se certifica que la reproducción Giclée descrita a continuación es una impresión autorizada y numerada de la artista:'
+                            : 'Por la presente se certifica que la obra de arte descrita a continuación es una creación original y auténtica de la artista:'}
+                        </p>
+                        <p style={{
+                          textAlign: 'center', fontWeight: 700,
+                          fontSize: '8.5pt', letterSpacing: '2px',
+                          color: '#000', marginBottom: '1px'
+                        }}>MYRIAM ALCARAZ</p>
+                        <p style={{
+                          textAlign: 'center', fontSize: '4.5pt',
+                          letterSpacing: '2px', color: '#555',
+                          textTransform: 'uppercase', marginBottom: '8px'
+                        }}>Pintura Figurativa Contemporánea</p>
+
+                        {/* Imagen de la obra */}
+                        {artwork?.image && (
+                          <div style={{ textAlign: 'center', marginBottom: '7px' }}>
+                            <div style={{
+                              display: 'inline-block', padding: '2px',
+                              backgroundColor: '#f5f5f0',
+                              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'
+                            }}>
+                              <img src={artwork.image} alt={artwork.title}
+                                style={{ height: '44px', width: 'auto', display: 'block' }} />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Campos públicos — totalmente visibles */}
+                        {([
+                          { label: 'Título:', value: artwork?.title || 'Sin título' },
+                          { label: 'Año:', value: displayYear },
+                          { label: 'Técnica:', value: artwork?.technique || 'Óleo sobre lienzo' },
+                          { label: 'Medidas Original:', value: artwork?.dimensions || '—' },
+                          ...(gicleeData ? [{ label: 'Medidas Impresión:', value: gicleeData.medidasImpresion || 'Tamaño original' }] : [])
+                        ] as { label: string; value: string }[]).map((item, i) => (
+                          <div key={i} style={{
+                            display: 'flex', alignItems: 'baseline',
+                            borderBottom: '1px dotted #bbb',
+                            marginBottom: '3px', paddingBottom: '2px', fontSize: '5.5pt'
+                          }}>
+                            <span style={{ fontWeight: 600, minWidth: '80px', color: '#444' }}>{item.label}</span>
+                            <span style={{ flex: 1, fontStyle: 'italic', color: '#111' }}>{item.value}</span>
+                          </div>
+                        ))}
+
+                        {/* Campos sensibles — opacidad variable según interacción */}
+                        <div style={{
+                          opacity: certificateRevealed ? 0.35 : 0.16,
+                          transition: 'opacity 0.7s'
+                        }}>
+                          {([
+                            { label: 'ID Referencia:', value: gicleeData?.id || `MA-${displayYear}-XX·1/1`, gold: true },
+                            { label: 'Edición:', value: gicleeData?.edicion || 'Obra Única Original' },
+                            { label: 'Nº Holograma:', value: gicleeData?.hologram || '●●●●●●', gold: true },
+                          ] as { label: string; value: string; gold: boolean }[]).map((item, i) => (
+                            <div key={i} style={{
+                              display: 'flex', alignItems: 'baseline',
+                              borderBottom: '1px dotted #bbb',
+                              marginBottom: '3px', paddingBottom: '2px', fontSize: '5.5pt'
+                            }}>
+                              <span style={{ fontWeight: 600, minWidth: '80px', color: item.gold ? '#b8860b' : '#444' }}>{item.label}</span>
+                              <span style={{ flex: 1, fontStyle: 'italic', color: '#111', letterSpacing: item.gold ? '1px' : '0' }}>{item.value}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Indicador DATOS PROTEGIDOS */}
+                        <div style={{
+                          display: 'flex', alignItems: 'center', gap: '3px',
+                          justifyContent: 'flex-end', marginBottom: '6px',
+                          opacity: certificateRevealed ? 0.25 : 0.8,
+                          transition: 'opacity 0.7s'
+                        }}>
+                          <Shield size={6} style={{ color: '#c5a059' }} />
+                          <span style={{ fontSize: '4px', color: '#c5a059', letterSpacing: '1px', fontWeight: 600 }}>DATOS PROTEGIDOS</span>
+                        </div>
+
+                        {/* Nota de certificación */}
+                        <p style={{
+                          textAlign: 'center', fontStyle: 'italic',
+                          fontSize: '5pt', color: '#555',
+                          lineHeight: 1.4, margin: '0 0 8px'
+                        }}>
+                          Este documento certifica que la obra ha sido inspeccionada y aprobada<br />
+                          personalmente por la artista. Todos los derechos reservados.
+                        </p>
+
+                        {/* Fecha y firma — sensibles */}
+                        <div style={{
+                          display: 'flex', justifyContent: 'space-between',
+                          alignItems: 'flex-end',
+                          opacity: certificateRevealed ? 0.35 : 0.16,
+                          transition: 'opacity 0.7s'
+                        }}>
+                          <div style={{ fontSize: '5pt', color: '#333' }}>
+                            <span style={{ fontWeight: 600 }}>FECHA: </span>
+                            <span>2 de marzo de 2026</span>
+                          </div>
+                          <div style={{ textAlign: 'right' }}>
+                            <div style={{ height: '22px' }} />
+                            <div style={{ borderTop: '1px solid #333', width: '65px', marginBottom: '2px' }} />
+                            <p style={{ fontSize: '5.5pt', fontWeight: 600, color: '#000', margin: 0 }}>Myriam Alcaraz</p>
+                            <p style={{ fontSize: '4pt', color: '#555', fontStyle: 'italic', margin: 0 }}>Pintura Figurativa Contemporánea</p>
+                          </div>
+                        </div>
+
+                        {/* Pie de contacto */}
+                        <div style={{
+                          textAlign: 'center', fontSize: '3.5pt',
+                          color: '#999', marginTop: '6px',
+                          paddingTop: '4px', borderTop: '1px solid #eee',
+                          letterSpacing: '0.5px', textTransform: 'uppercase'
+                        }}>
+                          myriamalcaraz.com&nbsp;•&nbsp;myriamhotmail@hotmail.com&nbsp;•&nbsp;@myriamalcaraz.artist
+                        </div>
                       </div>
                     </div>
                   </div>
