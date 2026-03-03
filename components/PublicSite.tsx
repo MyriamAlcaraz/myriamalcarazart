@@ -14,14 +14,28 @@ interface PublicSiteProps {
 
 // Obras disponibles para Giclée con sus dimensiones originales
 const GICLEE_OBRAS = [
+  { id: 'abruma-belleza', titulo: 'Abruma y belleza', imagen: '/obras/OBRA_21.jpg', dimensionesOriginal: '100x73' },
   { id: 'joven-vela', titulo: 'Joven con vela en la bruma', imagen: '/obras/OBRA_22.jpg', dimensionesOriginal: '100x73' },
+  { id: 'sara-retiro', titulo: 'Sara en Retiro', imagen: '/obras/OBRA_23.jpg', dimensionesOriginal: '100x80' },
   { id: 'sara-marquesina', titulo: 'Sara en Marquesina', imagen: '/obras/OBRA_04.jpg', dimensionesOriginal: '100x81' },
   { id: 'laura-crepusculo', titulo: 'Laura en el Crepúsculo', imagen: '/obras/OBRA_02.jpg', dimensionesOriginal: '100x81' },
   { id: 'sara-farola', titulo: 'Sara bajo la farola', imagen: '/obras/OBRA_03.jpg', dimensionesOriginal: '92x60' },
+  { id: 'autorretrato', titulo: 'Autorretrato en siglo XIX', imagen: '/obras/OBRA_01.jpg', dimensionesOriginal: '100x81' },
   { id: 'ana-habana', titulo: 'Ana y la Habana', imagen: '/obras/OBRA_05.jpg', dimensionesOriginal: '100x81' },
-  { id: 'abruma-belleza', titulo: 'Abruma y belleza', imagen: '/obras/OBRA_21.jpg', dimensionesOriginal: '100x73' },
-  { id: 'memorias-mekong', titulo: 'Memorias de Mekong I', imagen: '/obras/OBRA_07.jpg', dimensionesOriginal: '100x65' },
+  { id: 'viajera', titulo: 'Viajera', imagen: '/obras/OBRA_06.jpg', dimensionesOriginal: '81x100' },
+  { id: 'memorias-mekong-i', titulo: 'Memorias de Mekong I', imagen: '/obras/OBRA_07.jpg', dimensionesOriginal: '100x65' },
+  { id: 'memorias-mekong-ii', titulo: 'Memorias de Mekong II', imagen: '/obras/OBRA_08.jpg', dimensionesOriginal: '100x65' },
+  { id: 'nino-capucha', titulo: 'El niño de la capucha', imagen: '/obras/OBRA_09.jpg', dimensionesOriginal: '92x65' },
+  { id: 'joven-piscina', titulo: 'Joven en piscina', imagen: '/obras/OBRA_10.jpg', dimensionesOriginal: '73x100' },
   { id: 'pablo-cascada', titulo: 'Pablo en Cascada', imagen: '/obras/OBRA_11.jpg', dimensionesOriginal: '55x46' },
+  { id: 'pablo-cascada-ii', titulo: 'Pablo en Cascada II', imagen: '/obras/OBRA_12.jpg', dimensionesOriginal: '80x65' },
+  { id: 'ninos-playa-valenciana', titulo: 'Niños en playa valenciana', imagen: '/obras/OBRA_13.jpg', dimensionesOriginal: '80x60' },
+  { id: 'buceando', titulo: 'Buceando', imagen: '/obras/OBRA_14.jpg', dimensionesOriginal: '100x65' },
+  { id: 'ninos-capucha', titulo: 'Niños con capucha', imagen: '/obras/OBRA_15.jpg', dimensionesOriginal: '100x81' },
+  { id: 'ninos-playa-rocosa', titulo: 'Niños en playa rocosa', imagen: '/obras/OBRA_16.jpg', dimensionesOriginal: '55x46' },
+  { id: 'porteadores', titulo: 'Porteadores', imagen: '/obras/OBRA_18.jpg', dimensionesOriginal: '55x46' },
+  { id: 'carpe-diem', titulo: 'Carpe Diem', imagen: '/obras/OBRA_19.jpg', dimensionesOriginal: '140x50' },
+  { id: 'mas-que-amigos', titulo: 'Más que amigos', imagen: '/obras/OBRA_20.jpg', dimensionesOriginal: '100x60' },
 ];
 
 // Configuración de tamaños Giclée - Precios fijos profesionales
@@ -526,37 +540,36 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               </div>
             )}
 
-            {/* Info adicional sobre el proceso */}
+            {/* Certificados de Autenticidad */}
             <div className="mt-16 border-t border-stone-200 pt-12">
-              <div className="grid md:grid-cols-3 gap-8 text-center">
-                <div>
-                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gold-50 flex items-center justify-center">
-                    <span className="text-2xl">1</span>
+              <h3 className="text-center font-serif text-2xl text-slate-800 mb-10">Certificación de Autenticidad</h3>
+              <div className="grid md:grid-cols-2 gap-6 mb-8">
+                <div className="bg-white border border-stone-100 rounded-lg p-6 flex items-start gap-4">
+                  <Shield size={22} className="text-gold-600 flex-shrink-0 mt-1" />
+                  <div>
+                    <h4 className="font-serif text-lg text-slate-800 mb-3">Certificado Hahnemühle</h4>
+                    <ul className="space-y-1.5 text-sm text-stone-500">
+                      <li>Papel William Turner 310g · 100% algodón</li>
+                      <li>Holograma de seguridad con número de serie inviolable</li>
+                      <li>Registro permanente en MyArtRegistry</li>
+                    </ul>
                   </div>
-                  <h4 className="font-serif text-lg text-slate-800 mb-2">Impresión Profesional</h4>
-                  <p className="text-sm text-stone-500">
-                    Cada Giclée se imprime bajo supervisión artística en papel Hahnemühle William Turner certificado.
-                  </p>
                 </div>
-                <div>
-                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gold-50 flex items-center justify-center">
-                    <span className="text-2xl">2</span>
+                <div className="bg-white border border-stone-100 rounded-lg p-6 flex items-start gap-4">
+                  <Award size={22} className="text-gold-600 flex-shrink-0 mt-1" />
+                  <div>
+                    <h4 className="font-serif text-lg text-slate-800 mb-3">Certificado de Artista</h4>
+                    <ul className="space-y-1.5 text-sm text-stone-500">
+                      <li>Sello Seco en relieve sobre el reverso</li>
+                      <li>Firma autógrafa de Myriam Alcaraz</li>
+                      <li>Numeración individual de la serie</li>
+                    </ul>
                   </div>
-                  <h4 className="font-serif text-lg text-slate-800 mb-2">Certificado Oficial</h4>
-                  <p className="text-sm text-stone-500">
-                    Certificado Hahnemühle con holograma único, número de serie y autenticación de la artista integrados.
-                  </p>
-                </div>
-                <div>
-                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gold-50 flex items-center justify-center">
-                    <span className="text-2xl">3</span>
-                  </div>
-                  <h4 className="font-serif text-lg text-slate-800 mb-2">Envío Protegido</h4>
-                  <p className="text-sm text-stone-500">
-                    La obra se entrega en tubo rígido de alta protección, garantizando su llegada en perfectas condiciones.
-                  </p>
                 </div>
               </div>
+              <p className="text-center text-xs text-stone-400">
+                La obra se entrega en tubo rígido de alta protección, garantizando su llegada en perfectas condiciones.
+              </p>
             </div>
 
             {/* Nota sobre Hahnemühle */}

@@ -125,16 +125,20 @@ const GicleeTab: React.FC = () => {
           </div>
         </section>
 
-        {/* Garantía Section */}
+        {/* Certificados de Autenticidad */}
         <section>
-          <h2 className="text-3xl font-serif text-slate-800 mb-8 text-center">Garantía de Autenticidad</h2>
+          <h2 className="text-3xl font-serif text-slate-800 mb-8 text-center">Certificación de Autenticidad</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-white p-6 rounded-lg shadow-sm border border-stone-100">
               <div className="flex items-start gap-4">
                 <Shield className="text-gold-500 mt-1" size={28} />
                 <div>
-                  <h3 className="font-semibold text-slate-800 mb-2 text-lg">Certificado Hahnemühle</h3>
-                  <p className="text-stone-600">Con holograma de autenticidad y número de serie único</p>
+                  <h3 className="font-semibold text-slate-800 mb-3 text-lg">Certificado Hahnemühle</h3>
+                  <ul className="space-y-1.5 text-stone-600 text-sm">
+                    <li>Papel William Turner 310g · 100% algodón</li>
+                    <li>Holograma de seguridad con número de serie inviolable</li>
+                    <li>Registro permanente en MyArtRegistry</li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -142,8 +146,12 @@ const GicleeTab: React.FC = () => {
               <div className="flex items-start gap-4">
                 <Award className="text-gold-500 mt-1" size={28} />
                 <div>
-                  <h3 className="font-semibold text-slate-800 mb-2 text-lg">Certificado Myriam Alcaraz</h3>
-                  <p className="text-stone-600">Con Sello Seco y firma autógrafa de la artista</p>
+                  <h3 className="font-semibold text-slate-800 mb-3 text-lg">Certificado de Artista</h3>
+                  <ul className="space-y-1.5 text-stone-600 text-sm">
+                    <li>Sello Seco en relieve sobre el reverso</li>
+                    <li>Firma autógrafa de Myriam Alcaraz</li>
+                    <li>Numeración individual de la serie</li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -202,11 +210,10 @@ const GicleeTab: React.FC = () => {
           </p>
         </section>
 
-        {/* Doble Garantía de Autenticidad */}
+        {/* Nota de certificación */}
         <section className="bg-stone-50 p-6 rounded-lg border border-stone-200">
-          <h3 className="text-lg font-semibold text-slate-800 mb-3 text-center">Doble Garantía de Autenticidad</h3>
-          <p className="text-stone-700 text-center leading-relaxed">
-            Cada ejemplar se entrega con el certificado oficial Hahnemühle (registrado en MyArtRegistry) y el Certificado de Autoría firmado por la artista con sello seco en relieve.
+          <p className="text-stone-700 text-center leading-relaxed text-sm font-serif italic">
+            Cada ejemplar incluye el Certificado oficial Hahnemühle —registrado en MyArtRegistry— y el Certificado de Artista con sello seco en relieve, firma autógrafa y número de serie individual.
           </p>
         </section>
 
