@@ -245,183 +245,195 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                       transform: certificateRevealed ? 'scale(1)' : 'scale(0.97)',
                     }}
                   >
-                    {/* CERTIFICADO V15 — Diseño Serif Clásico con marca de agua */}
-                    <div className="relative rounded overflow-hidden" style={{ backgroundColor: '#fffdf8' }}>
+                    {/* CERTIFICADO — Réplica exacta del PDF oficial */}
+                    <div className="relative overflow-hidden" style={{ backgroundColor: '#fffdf8' }}>
                       <div style={{
-                        fontFamily: "'Palatino Linotype', Palatino, Georgia, serif",
+                        fontFamily: "'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif",
                         backgroundColor: '#fffdf8',
-                        padding: '14px 16px',
+                        padding: '14px 18px 12px',
                         color: '#111',
                         lineHeight: 1.5,
                         position: 'relative',
                         overflow: 'hidden'
                       }}>
-                        {/* Marco interior dorado */}
+
+                        {/* Línea interior dorada fina */}
                         <div style={{
-                          position: 'absolute', top: 4, left: 4, right: 4, bottom: 4,
-                          border: '1px solid #b8860b', opacity: 0.3, pointerEvents: 'none'
+                          position: 'absolute', top: 5, left: 5, right: 5, bottom: 5,
+                          border: '0.5px solid #c5a059', opacity: 0.5, pointerEvents: 'none'
                         }} />
 
-                        {/* Marca de agua diagonal */}
+                        {/* Marca de agua diagonal "CERTIFICADO OFICIAL" */}
                         <div style={{
-                          position: 'absolute', top: '50%', left: '50%',
+                          position: 'absolute', top: '48%', left: '50%',
                           transform: 'translate(-50%, -50%) rotate(-28deg)',
-                          fontSize: '17px', fontWeight: 700,
-                          color: '#b8860b',
-                          opacity: certificateRevealed ? 0.07 : 0.12,
-                          letterSpacing: '3px', whiteSpace: 'nowrap',
-                          pointerEvents: 'none', zIndex: 2,
+                          fontSize: '18px', fontWeight: 700,
+                          color: '#c5a059',
+                          opacity: certificateRevealed ? 0.06 : 0.11,
+                          letterSpacing: '4px', whiteSpace: 'nowrap',
+                          pointerEvents: 'none', zIndex: 3,
                           textTransform: 'uppercase',
                           transition: 'opacity 0.7s'
                         }}>
                           CERTIFICADO OFICIAL
                         </div>
 
-                        {/* Logo */}
-                        <div style={{ textAlign: 'center', marginBottom: '5px' }}>
+                        {/* ── LOGO ── */}
+                        <div style={{ textAlign: 'center', marginBottom: '3px' }}>
                           <img src="/logo-myriam.png" alt="Myriam Alcaraz"
-                            style={{ height: '22px', width: 'auto', opacity: 0.9 }} />
+                            style={{ height: '26px', width: 'auto', opacity: 0.92 }} />
                         </div>
 
-                        {/* Lema */}
+                        {/* ── LEMA ── */}
                         <p style={{
-                          textAlign: 'center', fontSize: '4.5pt',
-                          letterSpacing: '2px', color: '#777',
-                          textTransform: 'uppercase', margin: '0 0 5px'
-                        }}>Pintura Figurativa Contemporánea</p>
+                          textAlign: 'center', fontSize: '4pt',
+                          letterSpacing: '2.5px', color: '#888',
+                          textTransform: 'uppercase', margin: '0 0 7px',
+                          fontFamily: 'inherit'
+                        }}>Arte con Alma y Sofisticación</p>
 
-                        {/* Título del certificado */}
+                        {/* ── TÍTULO PRINCIPAL GRANDE ── */}
                         <h1 style={{
-                          textAlign: 'center', fontFamily: 'inherit',
-                          fontSize: '9.5pt', fontWeight: 300,
-                          letterSpacing: '3.5px', color: '#b8860b',
-                          textTransform: 'uppercase',
-                          borderBottom: '1.5px solid #b8860b',
-                          paddingBottom: '4px', marginBottom: '7px'
-                        }}>Certificado de Autenticidad</h1>
+                          textAlign: 'center',
+                          fontFamily: "'Cinzel', 'Palatino Linotype', Palatino, Georgia, serif",
+                          fontSize: '13pt',
+                          fontWeight: 400,
+                          letterSpacing: '4px',
+                          color: '#1a1a1a',
+                          lineHeight: 1.25,
+                          margin: '0 0 6px',
+                          textTransform: 'uppercase'
+                        }}>
+                          Certificado de<br />Autenticidad
+                        </h1>
 
-                        {/* Texto introductorio */}
+                        {/* ── LÍNEA DORADA SEPARADORA ── */}
+                        <div style={{
+                          width: '75%', height: '1px',
+                          backgroundColor: '#c5a059',
+                          margin: '0 auto 8px'
+                        }} />
+
+                        {/* ── TEXTO INTRODUCTORIO ── */}
                         <p style={{
                           textAlign: 'center', fontSize: '5.5pt',
-                          color: '#333', lineHeight: 1.6, marginBottom: '2px'
+                          lineHeight: 1.7, color: '#444',
+                          marginBottom: '4px', padding: '0 4%'
                         }}>
                           {gicleeData
-                            ? 'Por la presente se certifica que la reproducción Giclée descrita a continuación es una impresión autorizada y numerada de la artista:'
-                            : 'Por la presente se certifica que la obra de arte descrita a continuación es una creación original y auténtica de la artista:'}
+                            ? 'Por la presente se certifica que la reproducción Giclée descrita a continuación es una impresión autorizada y numerada. Todos los derechos de autor están reservados por la artista:'
+                            : 'Por la presente se certifica que la obra de arte descrita a continuación es una creación original y auténtica. Todos los derechos de autor están reservados por la artista:'}
                         </p>
+
+                        {/* ── NOMBRE ARTISTA ── */}
                         <p style={{
-                          textAlign: 'center', fontWeight: 700,
-                          fontSize: '8.5pt', letterSpacing: '2px',
-                          color: '#000', marginBottom: '1px'
-                        }}>MYRIAM ALCARAZ</p>
+                          textAlign: 'center',
+                          fontFamily: "'Playfair Display', 'Palatino Linotype', Georgia, serif",
+                          fontSize: '10pt', fontWeight: 600,
+                          color: '#1a1a1a', marginBottom: '1px'
+                        }}>Myriam Alcaraz</p>
                         <p style={{
                           textAlign: 'center', fontSize: '4.5pt',
-                          letterSpacing: '2px', color: '#555',
-                          textTransform: 'uppercase', marginBottom: '8px'
+                          color: '#777', fontStyle: 'italic', marginBottom: '8px'
                         }}>Pintura Figurativa Contemporánea</p>
 
-                        {/* Imagen de la obra */}
+                        {/* ── IMAGEN DE LA OBRA ── */}
                         {artwork?.image && (
-                          <div style={{ textAlign: 'center', marginBottom: '7px' }}>
+                          <div style={{ textAlign: 'center', marginBottom: '8px' }}>
                             <div style={{
-                              display: 'inline-block', padding: '2px',
-                              backgroundColor: '#f5f5f0',
-                              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'
+                              display: 'inline-block', padding: '3px',
+                              backgroundColor: '#f0ede8',
+                              boxShadow: '0 1px 5px rgba(0,0,0,0.18)'
                             }}>
                               <img src={artwork.image} alt={artwork.title}
-                                style={{ height: '44px', width: 'auto', display: 'block' }} />
+                                style={{ height: '56px', width: 'auto', display: 'block' }} />
                             </div>
                           </div>
                         )}
 
-                        {/* Campos públicos — totalmente visibles */}
+                        {/* ── CAMPOS PÚBLICOS (label izq / valor der) ── */}
                         {([
-                          { label: 'Título:', value: artwork?.title || 'Sin título' },
-                          { label: 'Año:', value: displayYear },
-                          { label: 'Técnica:', value: artwork?.technique || 'Óleo sobre lienzo' },
+                          { label: 'Título de la Obra:', value: artwork?.title || 'Sin título' },
+                          { label: 'Año de Creación:', value: `marzo de ${displayYear}` },
                           { label: 'Medidas Original:', value: artwork?.dimensions || '—' },
-                          ...(gicleeData ? [{ label: 'Medidas Impresión:', value: gicleeData.medidasImpresion || 'Tamaño original' }] : [])
+                          ...(gicleeData
+                            ? [
+                                { label: 'Medidas Impresión:', value: gicleeData.medidasImpresion || '—' },
+                                { label: 'Soporte:', value: 'Papel Hahnemühle Textured · William Turner' }
+                              ]
+                            : [{ label: 'Técnica/Medio:', value: artwork?.technique || 'Óleo sobre lienzo' }]
+                          )
                         ] as { label: string; value: string }[]).map((item, i) => (
                           <div key={i} style={{
-                            display: 'flex', alignItems: 'baseline',
-                            borderBottom: '1px dotted #bbb',
-                            marginBottom: '3px', paddingBottom: '2px', fontSize: '5.5pt'
+                            display: 'flex', justifyContent: 'space-between',
+                            alignItems: 'baseline',
+                            borderBottom: '1px dotted #ccc',
+                            padding: '2.5px 0', fontSize: '6pt'
                           }}>
-                            <span style={{ fontWeight: 600, minWidth: '80px', color: '#444' }}>{item.label}</span>
-                            <span style={{ flex: 1, fontStyle: 'italic', color: '#111' }}>{item.value}</span>
+                            <span style={{ fontWeight: 700, color: '#333', flexShrink: 0, paddingRight: '6px' }}>{item.label}</span>
+                            <span style={{ color: '#111', textAlign: 'right' }}>{item.value}</span>
                           </div>
                         ))}
 
-                        {/* Campos sensibles — opacidad variable según interacción */}
-                        <div style={{
-                          opacity: certificateRevealed ? 0.35 : 0.16,
-                          transition: 'opacity 0.7s'
-                        }}>
+                        {/* ── CAMPOS SENSIBLES (opacidad según interacción) ── */}
+                        <div style={{ opacity: certificateRevealed ? 0.38 : 0.14, transition: 'opacity 0.7s' }}>
                           {([
-                            { label: 'ID Referencia:', value: gicleeData?.id || `MA-${displayYear}-XX·1/1`, gold: true },
+                            { label: 'ID de Referencia:', value: gicleeData?.id || `MA-${displayYear}-XX·1/1` },
                             { label: 'Edición:', value: gicleeData?.edicion || 'Obra Única Original' },
-                            { label: 'Nº Holograma:', value: gicleeData?.hologram || '●●●●●●', gold: true },
-                          ] as { label: string; value: string; gold: boolean }[]).map((item, i) => (
+                            { label: 'Nº Holograma:', value: gicleeData?.hologram || '●●●●●●' },
+                          ] as { label: string; value: string }[]).map((item, i) => (
                             <div key={i} style={{
-                              display: 'flex', alignItems: 'baseline',
-                              borderBottom: '1px dotted #bbb',
-                              marginBottom: '3px', paddingBottom: '2px', fontSize: '5.5pt'
+                              display: 'flex', justifyContent: 'space-between',
+                              alignItems: 'baseline',
+                              borderBottom: '1px dotted #ccc',
+                              padding: '2.5px 0', fontSize: '6pt'
                             }}>
-                              <span style={{ fontWeight: 600, minWidth: '80px', color: item.gold ? '#b8860b' : '#444' }}>{item.label}</span>
-                              <span style={{ flex: 1, fontStyle: 'italic', color: '#111', letterSpacing: item.gold ? '1px' : '0' }}>{item.value}</span>
+                              <span style={{ fontWeight: 700, color: '#c5a059', flexShrink: 0, paddingRight: '6px' }}>{item.label}</span>
+                              <span style={{ color: '#111', textAlign: 'right', letterSpacing: '0.5px' }}>{item.value}</span>
                             </div>
                           ))}
                         </div>
 
-                        {/* Indicador DATOS PROTEGIDOS */}
+                        {/* ── INDICADOR DATOS PROTEGIDOS ── */}
                         <div style={{
                           display: 'flex', alignItems: 'center', gap: '3px',
-                          justifyContent: 'flex-end', marginBottom: '6px',
-                          opacity: certificateRevealed ? 0.25 : 0.8,
+                          justifyContent: 'flex-end', margin: '4px 0',
+                          opacity: certificateRevealed ? 0.2 : 0.75,
                           transition: 'opacity 0.7s'
                         }}>
                           <Shield size={6} style={{ color: '#c5a059' }} />
-                          <span style={{ fontSize: '4px', color: '#c5a059', letterSpacing: '1px', fontWeight: 600 }}>DATOS PROTEGIDOS</span>
+                          <span style={{ fontSize: '4px', color: '#c5a059', letterSpacing: '1.5px', fontWeight: 600, textTransform: 'uppercase' }}>Datos Protegidos</span>
                         </div>
 
-                        {/* Nota de certificación */}
-                        <p style={{
-                          textAlign: 'center', fontStyle: 'italic',
-                          fontSize: '5pt', color: '#555',
-                          lineHeight: 1.4, margin: '0 0 8px'
-                        }}>
-                          Este documento certifica que la obra ha sido inspeccionada y aprobada<br />
-                          personalmente por la artista. Todos los derechos reservados.
-                        </p>
-
-                        {/* Fecha y firma — sensibles */}
+                        {/* ── FECHA Y FIRMA (sensibles) ── */}
                         <div style={{
                           display: 'flex', justifyContent: 'space-between',
-                          alignItems: 'flex-end',
-                          opacity: certificateRevealed ? 0.35 : 0.16,
+                          alignItems: 'flex-end', marginTop: '6px',
+                          opacity: certificateRevealed ? 0.38 : 0.14,
                           transition: 'opacity 0.7s'
                         }}>
                           <div style={{ fontSize: '5pt', color: '#333' }}>
-                            <span style={{ fontWeight: 600 }}>FECHA: </span>
+                            <span style={{ fontWeight: 700 }}>FECHA: </span>
                             <span>2 de marzo de 2026</span>
                           </div>
                           <div style={{ textAlign: 'right' }}>
-                            <div style={{ height: '22px' }} />
-                            <div style={{ borderTop: '1px solid #333', width: '65px', marginBottom: '2px' }} />
-                            <p style={{ fontSize: '5.5pt', fontWeight: 600, color: '#000', margin: 0 }}>Myriam Alcaraz</p>
-                            <p style={{ fontSize: '4pt', color: '#555', fontStyle: 'italic', margin: 0 }}>Pintura Figurativa Contemporánea</p>
+                            <div style={{ height: '24px' }} />
+                            <div style={{ borderTop: '1px solid #555', width: '70px', marginBottom: '2px' }} />
+                            <p style={{ fontSize: '6pt', fontWeight: 700, color: '#1a1a1a', margin: 0 }}>Myriam Alcaraz</p>
+                            <p style={{ fontSize: '4.5pt', color: '#666', fontStyle: 'italic', margin: 0 }}>Pintura Figurativa Contemporánea</p>
                           </div>
                         </div>
 
-                        {/* Pie de contacto */}
+                        {/* ── PIE DE CONTACTO ── */}
                         <div style={{
                           textAlign: 'center', fontSize: '3.5pt',
-                          color: '#999', marginTop: '6px',
-                          paddingTop: '4px', borderTop: '1px solid #eee',
-                          letterSpacing: '0.5px', textTransform: 'uppercase'
+                          color: '#aaa', marginTop: '7px',
+                          paddingTop: '5px', borderTop: '1px solid #e8e4dc',
+                          letterSpacing: '0.5px'
                         }}>
                           myriamalcaraz.com&nbsp;•&nbsp;myriamhotmail@hotmail.com&nbsp;•&nbsp;@myriamalcaraz.artist
                         </div>
+
                       </div>
                     </div>
                   </div>
