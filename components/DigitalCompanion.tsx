@@ -184,20 +184,23 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
               <div className="mt-5 pt-5 border-t-2 border-amber-100 bg-amber-50/60 rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#c5a059' }} />
-                  <h4 className="text-xs font-bold text-amber-800 uppercase tracking-widest">Calidad Museo · Doble Certificación</h4>
+                  <h4 className="text-xs font-bold text-amber-800 uppercase tracking-widest">Calidad Museística · Doble Certificación</h4>
                 </div>
+                <p className="text-xs text-slate-700 leading-relaxed mb-2">
+                  <strong>Soporte de Calidad Museística:</strong> Papel Hahnemühle William Turner, 100% algodón, moldeado artesanalmente y libre de ácido. Impresión Giclée con tintas pigmentadas en tecnología Canon imagePROGRAF PRO-4000 para una longevidad centenaria y fidelidad cromática absoluta.
+                </p>
                 <p className="text-xs text-slate-700 leading-relaxed">
-                  Impresión íntegra sobre papel <strong>Hahnemühle William Turner Textured</strong>, 100% algodón, libre de ácido y lignina, sin blanqueadores ópticos. Recubrimiento inkjet premium mate para impresiones Fine Art, con alta estabilidad y durabilidad. Tintas pigmentadas en impresora <strong>Canon imagePROGRAF PRO-4000</strong>. Incluye <strong>Doble Certificación</strong>: de la Artista y del Soporte, emitida por el Laboratorio Fine Art de Autor.
+                  <strong>Doble Certificación:</strong> Incluye Certificado de Autenticidad de la Artista y Certificado de Calidad del Soporte del Laboratorio.
                 </p>
               </div>
             ) : (
               <div className="mt-5 pt-5 border-t-2 border-slate-100 bg-slate-50/60 rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#c5a059' }} />
-                  <h4 className="text-xs font-bold text-slate-600 uppercase tracking-widest">Obra Original Única</h4>
+                  <h4 className="text-xs font-bold text-slate-600 uppercase tracking-widest">Pieza Única de Autor</h4>
                 </div>
                 <p className="text-xs text-slate-700 leading-relaxed">
-                  Obra Original única sobre lienzo de algodón de alta densidad. Incluye Certificado de Autenticidad original firmado por la artista.
+                  Pieza única de autor. Realizada sobre tela de alta densidad con acabado para realismo. Incluye Certificado de Autenticidad original firmado por la artista.
                 </p>
               </div>
             )}
