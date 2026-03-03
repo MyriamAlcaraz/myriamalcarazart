@@ -196,31 +196,19 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
               )}
             </div>
 
-            {/* CALIDAD / CERTIFICACIÓN — condicional Giclée vs Original */}
-            {gicleeData ? (
-              <div className="mt-5 pt-5 border-t-2 border-amber-100 bg-amber-50/60 rounded-xl p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#c5a059' }} />
-                  <h4 className="text-xs font-bold text-amber-800 uppercase tracking-widest">Calidad Museística · Doble Certificación</h4>
-                </div>
-                <p className="text-xs text-slate-700 leading-relaxed mb-2">
-                  <strong>Soporte de Calidad Museística:</strong> Papel Hahnemühle William Turner, 100% algodón, moldeado artesanalmente y libre de ácido. Impresión Giclée con tintas pigmentadas en tecnología Canon imagePROGRAF PRO-4000 para una longevidad centenaria y fidelidad cromática absoluta.
-                </p>
-                <p className="text-xs text-slate-700 leading-relaxed">
-                  <strong>Doble Certificación:</strong> Incluye Certificado de Autenticidad de la Artista y Certificado de Calidad del Soporte del Laboratorio.
-                </p>
+            {/* CALIDAD MUSEÍSTICA GICLÉE — siempre presente */}
+            <div className="mt-5 pt-5 border-t-2 border-amber-100 bg-amber-50/60 rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#c5a059' }} />
+                <h4 className="text-xs font-bold text-amber-800 uppercase tracking-widest">Calidad Museística · Doble Certificación</h4>
               </div>
-            ) : (
-              <div className="mt-5 pt-5 border-t-2 border-slate-100 bg-slate-50/60 rounded-xl p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#c5a059' }} />
-                  <h4 className="text-xs font-bold text-slate-600 uppercase tracking-widest">Pieza Única de Autor</h4>
-                </div>
-                <p className="text-xs text-slate-700 leading-relaxed">
-                  Pieza única de autor. Realizada sobre tela de alta densidad con acabado para realismo. Incluye Certificado de Autenticidad original firmado por la artista.
-                </p>
-              </div>
-            )}
+              <p className="text-xs text-slate-700 leading-relaxed mb-2">
+                <strong>Soporte de Calidad Museística:</strong> Papel Hahnemühle William Turner, 100% algodón, moldeado artesanalmente y libre de ácido. Impresión Giclée con tintas pigmentadas en tecnología Canon imagePROGRAF PRO-4000 para una longevidad centenaria y fidelidad cromática absoluta.
+              </p>
+              <p className="text-xs text-slate-700 leading-relaxed">
+                <strong>Doble Certificación:</strong> Incluye Certificado de Autenticidad de la Artista y Certificado de Calidad del Soporte del Laboratorio.
+              </p>
+            </div>
 
             <div className="mt-auto pt-5 border-t border-slate-100">
               <p className="text-xs text-slate-500 text-center mb-3">
@@ -537,42 +525,25 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                     <Shield size={22} className="text-white" />
                   </div>
                   <h3 className="font-serif text-xl text-slate-800 mb-1 leading-tight">
-                    {gicleeData ? (
-                      <>Doble Certificación<br/><span style={{ color: '#c5a059' }}>Artista · Soporte Fine Art</span></>
-                    ) : (
-                      <>Certificado de Autenticidad<br/><span style={{ color: '#c5a059' }}>Obra Original</span></>
-                    )}
+                    Doble Certificación<br/><span style={{ color: '#c5a059' }}>Artista · Soporte Fine Art</span>
                   </h3>
-                  {gicleeData && (
-                    <p className="text-xs text-slate-500 mt-1">Laboratorio Fine Art de Autor · Madrid, 2026</p>
-                  )}
+                  <p className="text-xs text-slate-500 mt-1">Laboratorio Fine Art de Autor · Madrid, 2026</p>
                   <div className="w-10 h-px mt-3" style={{ backgroundColor: '#c5a059' }} />
                 </div>
 
-                {/* Texto certificado — condicional Giclée vs Original */}
-                {gicleeData ? (
-                  <p className="text-sm text-slate-700 leading-relaxed mb-6 italic border-l-2 pl-4" style={{ borderColor: '#c5a059' }}>
-                    "El Laboratorio Fine Art de Autor certifica que esta obra ha sido producida conforme a los estándares de calidad Fine Art utilizando papel Hahnemühle original."
-                  </p>
-                ) : (
-                  <p className="text-sm text-slate-700 leading-relaxed mb-6 italic border-l-2 pl-4" style={{ borderColor: '#c5a059' }}>
-                    "Obra Original única sobre lienzo de algodón de alta densidad. Incluye Certificado de Autenticidad original firmado por la artista."
-                  </p>
-                )}
+                {/* Texto certificado Giclée */}
+                <p className="text-sm text-slate-700 leading-relaxed mb-6 italic border-l-2 pl-4" style={{ borderColor: '#c5a059' }}>
+                  "El Laboratorio Fine Art de Autor certifica que esta obra ha sido producida conforme a los estándares de calidad Fine Art utilizando papel Hahnemühle original."
+                </p>
 
-                {/* Especificaciones técnicas — condicional Giclée vs Original */}
+                {/* Especificaciones técnicas Giclée */}
                 <div className="space-y-4">
-                  {(gicleeData ? [
+                  {[
+                    { title: 'Holograma Hahnemühle', sub: 'Número de serie único e irrepetible' },
                     { title: 'Papel 100% Algodón · Sin Ácidos', sub: 'Hahnemühle William Turner Textured 310g · sin blanqueadores ópticos' },
-                    { title: 'Impresora Canon imagePROGRAF PRO-4000', sub: 'Inyección de tinta pigmentada Fine Art' },
-                    { title: 'Alta Durabilidad y Estabilidad', sub: 'Recubrimiento inkjet premium mate · condiciones museísticas' },
-                    { title: 'Doble Certificación · Holograma Único', sub: 'Artista + Laboratorio Fine Art de Autor · Nº de serie irrepetible' },
-                  ] : [
-                    { title: 'Obra Única e Irrepetible', sub: 'Creación original · no existe ninguna copia' },
-                    { title: 'Lienzo de Algodón Alta Densidad', sub: 'Soporte de calidad museística para pintura original' },
-                    { title: 'Firmado por la Artista', sub: 'Firma manuscrita y sello en seco' },
-                    { title: 'Certificado de Autenticidad', sub: 'Emitido y firmado por Myriam Alcaraz' },
-                  ]).map((item, i) => (
+                    { title: 'Edición Limitada Numerada', sub: 'Máximo 10 reproducciones por obra' },
+                    { title: 'Doble Certificación · Canon PRO-4000', sub: 'Artista + Laboratorio Fine Art de Autor' },
+                  ].map((item, i) => (
                     <div key={i} className="flex items-start gap-3">
                       <div
                         className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
