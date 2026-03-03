@@ -130,6 +130,23 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
                   />
                 )}
               </div>
+
+              {/* GARANTÍA DE DISTINCIÓN — siempre visible */}
+              <p
+                className="mt-4 text-center"
+                style={{
+                  fontFamily: "'Playfair Display', 'Palatino Linotype', Palatino, Georgia, serif",
+                  fontSize: '12.5px',
+                  lineHeight: 1.65,
+                  color: '#4a3f33',
+                  letterSpacing: '0.02em',
+                  borderTop: '1px solid #e8e0d4',
+                  paddingTop: '14px'
+                }}
+              >
+                Obra Original enmarcada con marco fabricado artesanalmente por la artista.<br />
+                Incluye Certificado de Autenticidad con sello seco y firma original.
+              </p>
             </div>
 
             {showCertificateAccess && (
