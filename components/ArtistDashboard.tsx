@@ -143,7 +143,7 @@ const REAL_ARTWORKS: Artwork[] = ARTWORKS_FOR_INITIALIZATION.map((art, index) =>
     return {
         id: art.id,
         title: art.title,
-        certificationDate: gicleeInfo ? '2026-02-10' : '2025-12-10',
+        certificationDate: gicleeInfo ? '2026-03-02' : '2025-12-10',
         type: 'PT' as const,
         seriesIndex: gicleeInfo?.seriesIndex || null,
         seriesTotal: gicleeInfo?.seriesTotal || null,
@@ -227,8 +227,10 @@ const getSeriesText = (artwork: Artwork) => {
  * (Permanece igual a la V15, que fue declarada perfecta)
  */
 const getCertificateHtml = (artwork: Artwork, settings: DocumentSettings): string => {
-    const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-    const creationMonthAndYear = new Date(artwork.certificationDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
+    const today = artwork.hologramNumber
+        ? new Date(artwork.certificationDate + 'T12:00:00').toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })
+        : new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+    const creationMonthAndYear = new Date(artwork.certificationDate + 'T12:00:00').toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
 
     // 🛑 Parámetros de Estilo del Marco V11
     const GOLD_COLOR = "#b8860b";
@@ -1274,7 +1276,7 @@ const GicleePanel: React.FC<GicleePanelProps> = ({ artworks, settings, onClose }
         if (!selectedArtwork || !selectedSizeData) return;
 
         const code = generateGicleeCode();
-        const today = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+        const today = '2 de marzo de 2026';
 
         const GOLD_COLOR = "#b8860b";
         const OUTLINE_WIDTH = "12px";
