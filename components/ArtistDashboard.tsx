@@ -107,12 +107,12 @@ const GICLEE_DATA: Record<number, {
         seriesIndex: 1,
         seriesTotal: 10
     },
-    // Mediano (50x63): Sara en Marquesina - ID 4
+    // Mediano (50x61.5): Sara en Marquesina - ID 4
     4: {
         code: 'MA-2026-GC-SE-01/10-M',
         hologramNumber: '287214',
         originalDimensions: '100x81 cm',
-        gicleeDimensions: '50x63 cm',
+        gicleeDimensions: '50x61,5 cm',
         seriesIndex: 1,
         seriesTotal: 10
     },

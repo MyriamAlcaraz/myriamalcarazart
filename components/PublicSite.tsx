@@ -41,7 +41,7 @@ const GICLEE_OBRAS = [
 // Configuración de tamaños Giclée - Precios fijos profesionales
 const GICLEE_SIZES = {
   pequeno: { label: 'Pequeño', dimensions: '30x40', precio: 245, edicion: 10 },
-  mediano: { label: 'Mediano', dimensions: '50x63', precio: 425, edicion: 10 },
+  mediano: { label: 'Mediano', dimensions: '50x61,5', precio: 425, edicion: 10 },
   original: { label: 'Original', precio: 780, edicion: 10 }
 };
 
