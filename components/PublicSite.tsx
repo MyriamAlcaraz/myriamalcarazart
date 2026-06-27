@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ARTIST_INFO, ARTWORKS } from '../constants';
-import { Eye, Lock, Layout, ArrowLeft, Award, Shield, Sparkles, ChevronDown, Check } from 'lucide-react';
+import { Eye, Lock, Layout, ArrowLeft, Award, Shield, Sparkles, ChevronDown, Check, Mail, Instagram, Globe } from 'lucide-react';
 import AtlasTransparencias from './AtlasTransparencias';
 import PaletasMaestros from './PaletasMaestros';
 import SolSorolla from './SolSorolla';
@@ -54,7 +54,7 @@ const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
 );
 
 const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin, onOpenGiclee, onTabChange }) => {
-  const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices' | 'giclee' | 'app'>('portfolio');
+  const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices' | 'contact' | 'giclee' | 'app'>('portfolio');
   const [activeDigitalTool, setActiveDigitalTool] = useState<'none' | 'atlas' | 'maestros' | 'sorolla'>('none');
 
   // Estado para Giclée
@@ -62,12 +62,34 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
-  const handleTabChange = (tab: 'portfolio' | 'bio' | 'prices' | 'giclee' | 'app') => {
+  const handleTabChange = (tab: 'portfolio' | 'bio' | 'prices' | 'contact' | 'giclee' | 'app') => {
     setActiveTab(tab);
     if (tab !== 'giclee') {
-      onTabChange?.(tab);
+      onTabChange?.(tab as any);
+    }
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+
+  // Observer que añade .is-visible a los .reveal cuando entran en pantalla
+  useEffect(() => {
+    const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(el => el.classList.add('is-visible'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+    els.forEach(el => io.observe(el));
+    return () => io.disconnect();
+  }, [activeTab]);
 
   // Obtener obra seleccionada
   const obraActual = GICLEE_OBRAS.find(o => o.id === selectedObra);
@@ -105,76 +127,120 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               <p className="text-[10px] text-gold-600 tracking-[0.3em] uppercase">Artista Figurativa</p>
             </div>
           </div>
-          {/* Main Tabs */}
-          <div className="flex gap-1 md:gap-4 text-sm font-semibold">
+          {/* Main Tabs — jerarquía limpia: solo obra original al frente */}
+          <div className="flex gap-2 md:gap-6 text-xs md:text-sm tracking-[0.18em]">
             <button
               onClick={() => handleTabChange('portfolio')}
-              className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'portfolio' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
+              className={`px-2 py-1 md:px-3 md:py-2 transition-colors ${activeTab === 'portfolio' ? 'text-gold-600 border-b border-gold-600' : 'text-slate-500 hover:text-slate-900'}`}
             >
-              PORTFOLIO
+              OBRA
             </button>
             <button
               onClick={() => handleTabChange('bio')}
-              className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'bio' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
+              className={`px-2 py-1 md:px-3 md:py-2 transition-colors ${activeTab === 'bio' ? 'text-gold-600 border-b border-gold-600' : 'text-slate-500 hover:text-slate-900'}`}
             >
-              TRAYECTORIA & BIO
+              TRAYECTORIA
             </button>
             <button
               onClick={() => handleTabChange('prices')}
-              className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'prices' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
+              className={`px-2 py-1 md:px-3 md:py-2 transition-colors ${activeTab === 'prices' ? 'text-gold-600 border-b border-gold-600' : 'text-slate-500 hover:text-slate-900'}`}
             >
-              ENCARGOS & PRECIOS
+              ENCARGOS
             </button>
             <button
-              onClick={() => handleTabChange('giclee')}
-              className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'giclee' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
+              onClick={() => handleTabChange('contact')}
+              className={`px-2 py-1 md:px-3 md:py-2 transition-colors ${activeTab === 'contact' ? 'text-gold-600 border-b border-gold-600' : 'text-slate-500 hover:text-slate-900'}`}
             >
-              GICLÉE
+              CONTACTO
             </button>
-            <button
-              onClick={() => handleTabChange('app')}
-              className={`px-3 py-1 md:px-4 md:py-2 transition-colors ${activeTab === 'app' ? 'text-gold-600 border-b-2 border-gold-600' : 'text-slate-500 hover:text-slate-800'}`}
-            >
-              ESTUDIO DIGITAL
-            </button>
-            <a
-              href="/alquimia/alquimia-ia.html"
-              className="px-3 py-1 md:px-4 md:py-2 transition-colors text-slate-500 hover:text-slate-800"
-            >
-              ALQUIMIA IA
-            </a>
           </div>
         </div>
       </nav>
 
       <main className="max-w-6xl mx-auto px-6 py-12">
         {/* ========================================= */}
-        {/* PORTFOLIO TAB */}
+        {/* PORTFOLIO TAB — Hero editorial + grid de obras */}
         {/* ========================================= */}
         {activeTab === 'portfolio' && (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {ARTWORKS.map(artwork => (
-              <div key={artwork.id} className="group relative overflow-hidden bg-white shadow-lg border border-stone-100">
-                <img
-                  src={artwork.image}
-                  alt={artwork.title}
-                  className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="p-4">
-                  <h3 className="font-serif text-lg font-semibold text-slate-800 truncate">{artwork.title}</h3>
-                  <p className="text-xs text-slate-500 mt-1">{artwork.dimensions} | {artwork.technique}</p>
+          <>
+            {/* HERO editorial */}
+            <section className="reveal grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center mb-20 md:mb-28">
+              <div className="md:col-span-7 order-2 md:order-1">
+                <p className="text-[10px] tracking-[0.35em] text-gold-600 mb-6">ARTISTA FIGURATIVA</p>
+                <h2 className="font-serif text-4xl md:text-6xl leading-[1.05] text-slate-900 mb-8">
+                  La figura humana<br/>
+                  desde una mirada<br/>
+                  <em className="text-gold-600 not-italic font-serif italic">íntima</em> y contemporánea.
+                </h2>
+                <p className="text-base md:text-lg text-slate-600 leading-relaxed max-w-xl mb-10 font-serif italic">
+                  "{ARTIST_INFO.statement}"
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={() => {
+                      document.getElementById('obra-disponible')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center gap-3 px-6 py-3 border border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-stone-50 transition-all text-xs tracking-[0.25em]"
+                  >
+                    VER OBRA DISPONIBLE
+                  </button>
+                  <button
+                    onClick={() => handleTabChange('prices')}
+                    className="inline-flex items-center gap-3 px-6 py-3 text-slate-600 hover:text-gold-600 transition-colors text-xs tracking-[0.25em]"
+                  >
+                    ENCARGO A MEDIDA →
+                  </button>
                 </div>
-                {/* Overlay for Detail View */}
-                <button
-                  onClick={() => onOpenCompanion(artwork.id)}
-                  className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                >
-                  <Eye size={36} className="text-white" />
-                  <span className="sr-only">Ver detalles de {artwork.title}</span>
-                </button>
               </div>
-            ))}
-          </div>
+              <div className="md:col-span-5 order-1 md:order-2">
+                <div className="relative overflow-hidden shadow-2xl">
+                  <img
+                    src={ARTWORKS.find(a => a.title === 'Sara en Marquesina')?.image || ARTWORKS[0].image}
+                    alt="Obra destacada — Sara en Marquesina"
+                    className="w-full h-[60vh] md:h-[70vh] object-cover"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-5 text-stone-50">
+                    <p className="font-serif italic text-sm md:text-base">Sara en marquesina</p>
+                    <p className="text-[10px] tracking-[0.2em] opacity-80 mt-1">100 × 81 cm · ÓLEO SOBRE TELA · 92 SALÓN DE OTOÑO</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* OBRA DISPONIBLE — grid */}
+            <section id="obra-disponible" className="mb-24">
+              <div className="flex items-end justify-between mb-10 border-b border-stone-200 pb-4">
+                <h2 className="font-serif text-2xl md:text-3xl text-slate-900">Obra disponible</h2>
+                <p className="text-[10px] tracking-[0.3em] text-gold-600">2025 — 2026</p>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-10">
+                {ARTWORKS.map((artwork, idx) => (
+                  <div
+                    key={artwork.id}
+                    className="reveal group cursor-pointer"
+                    style={{ transitionDelay: `${(idx % 4) * 80}ms` }}
+                    onClick={() => onOpenCompanion(artwork.id)}
+                  >
+                    <div className="relative overflow-hidden bg-stone-100 aspect-[4/5] mb-3">
+                      <img
+                        src={artwork.image}
+                        alt={artwork.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/30 transition-all duration-500 flex items-center justify-center">
+                        <Eye size={28} className="text-stone-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      </div>
+                      {artwork.status === 'sold' && (
+                        <div className="absolute top-3 left-3 bg-slate-900/80 text-stone-50 text-[9px] tracking-[0.2em] px-2 py-1">VENDIDA</div>
+                      )}
+                    </div>
+                    <h3 className="font-serif text-base text-slate-900 leading-snug">{artwork.title}</h3>
+                    <p className="text-[11px] text-slate-500 mt-1 tracking-wide">{artwork.dimensions} · {artwork.technique}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </>
         )}
 
         {/* ========================================= */}
@@ -821,16 +887,120 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
             </div>
           </div>
         )}
+        {/* ========================================= */}
+        {/* CONTACTO TAB */}
+        {/* ========================================= */}
+        {activeTab === 'contact' && (
+          <div className="reveal max-w-3xl mx-auto py-12">
+            <p className="text-[10px] tracking-[0.35em] text-gold-600 mb-6">CONTACTO</p>
+            <h2 className="font-serif text-4xl md:text-5xl text-slate-900 mb-8 leading-tight">
+              Escribir antes que <em className="text-gold-600 not-italic font-serif italic">elegir</em>.
+            </h2>
+            <p className="text-base md:text-lg text-slate-600 leading-relaxed font-serif italic mb-12">
+              "Cada encargo empieza con una conversación. Cuéntame qué imaginas — la persona, el lugar, el momento —
+              y te respondo personalmente con una propuesta a medida."
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+              <a
+                href={`mailto:${ARTIST_INFO.email}?subject=Consulta%20desde%20la%20web`}
+                className="group flex items-start gap-4 p-6 border border-stone-200 hover:border-gold-500 transition-colors"
+              >
+                <Mail size={20} className="text-gold-600 mt-1 flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-[10px] tracking-[0.3em] text-slate-500 mb-2">CORREO DIRECTO</p>
+                  <p className="font-serif text-base text-slate-900 break-all group-hover:text-gold-600 transition-colors">{ARTIST_INFO.email}</p>
+                </div>
+              </a>
+              <a
+                href={`https://www.instagram.com/${ARTIST_INFO.instagram.replace('@', '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-start gap-4 p-6 border border-stone-200 hover:border-gold-500 transition-colors"
+              >
+                <Instagram size={20} className="text-gold-600 mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-[10px] tracking-[0.3em] text-slate-500 mb-2">INSTAGRAM</p>
+                  <p className="font-serif text-base text-slate-900 group-hover:text-gold-600 transition-colors">{ARTIST_INFO.instagram}</p>
+                </div>
+              </a>
+            </div>
+
+            <div className="border-t border-stone-200 pt-8 text-xs text-slate-500 tracking-wide leading-relaxed">
+              <p>Respuesta personal en 24-48 h. Atelier en Madrid, encargos enviados con embalaje profesional a toda España y Europa. Posibilidad de visita previa al estudio con cita.</p>
+            </div>
+          </div>
+        )}
+
       </main>
 
+      {/* ============================================== */}
+      {/* OTRAS VÍAS DE COLECCIONAR — solo en pestaña OBRA */}
+      {/* ============================================== */}
+      {activeTab === 'portfolio' && (
+        <section className="bg-[#F0EBE0] border-t border-stone-200 mt-12 py-20">
+          <div className="reveal max-w-6xl mx-auto px-6">
+            <p className="text-[10px] tracking-[0.35em] text-gold-600 mb-4">OTRAS VÍAS DE COLECCIONAR</p>
+            <h3 className="font-serif text-2xl md:text-3xl text-slate-900 mb-12 max-w-2xl">
+              Más allá del óleo único, otras formas de tener la obra cerca.
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <button
+                onClick={() => handleTabChange('giclee')}
+                className="group text-left p-8 bg-white hover:bg-stone-50 border border-stone-200 hover:border-gold-500 transition-all"
+              >
+                <p className="text-[10px] tracking-[0.3em] text-gold-600 mb-3">EDICIONES LIMITADAS</p>
+                <h4 className="font-serif text-xl text-slate-900 mb-3 group-hover:text-gold-700 transition-colors">Giclée firmadas</h4>
+                <p className="text-sm text-slate-600 leading-relaxed mb-6">
+                  Tiradas limitadas de diez piezas con certificado original numerado, firmado y sello seco.
+                  Tres formatos disponibles, papel de algodón de archivo.
+                </p>
+                <span className="text-[11px] tracking-[0.25em] text-slate-900 group-hover:text-gold-600 transition-colors">EXPLORAR →</span>
+              </button>
+              <button
+                onClick={() => handleTabChange('app')}
+                className="group text-left p-8 bg-white hover:bg-stone-50 border border-stone-200 hover:border-gold-500 transition-all"
+              >
+                <p className="text-[10px] tracking-[0.3em] text-gold-600 mb-3">LABORATORIO</p>
+                <h4 className="font-serif text-xl text-slate-900 mb-3 group-hover:text-gold-700 transition-colors">Estudio digital</h4>
+                <p className="text-sm text-slate-600 leading-relaxed mb-6">
+                  Atlas de transparencias, paletas de los maestros y Sol de Sorolla.
+                  Herramientas pensadas para artistas y curiosos del oficio.
+                </p>
+                <span className="text-[11px] tracking-[0.25em] text-slate-900 group-hover:text-gold-600 transition-colors">DESCUBRIR →</span>
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Footer */}
-      <footer className="bg-white text-slate-500 py-16 text-center border-t border-slate-100 relative">
-        <div className="max-w-4xl mx-auto px-6">
-          <img src="/logo-myriam.png" alt="Logo Footer" className="h-12 w-auto mx-auto mb-6 opacity-50 grayscale" />
-
-          <p className="text-[10px] opacity-40 uppercase tracking-wide">© 2025 Myriam Alcaraz · Todos los derechos reservados.</p>
+      <footer className="bg-slate-900 text-stone-300 py-16 relative">
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
+          <div>
+            <p className="font-serif text-lg tracking-[0.18em] text-stone-50 mb-2">MYRIAM ALCARAZ</p>
+            <p className="text-[10px] tracking-[0.3em] text-gold-500 mb-4">ARTISTA FIGURATIVA</p>
+            <p className="text-xs text-stone-400 leading-relaxed max-w-xs">{ARTIST_INFO.tagline}</p>
+          </div>
+          <div className="text-sm space-y-2">
+            <p className="text-[10px] tracking-[0.3em] text-gold-500 mb-3">CONTACTO</p>
+            <a href={`mailto:${ARTIST_INFO.email}`} className="block text-stone-300 hover:text-gold-500 transition-colors break-all">{ARTIST_INFO.email}</a>
+            <a href={`https://www.instagram.com/${ARTIST_INFO.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="block text-stone-300 hover:text-gold-500 transition-colors">{ARTIST_INFO.instagram}</a>
+          </div>
+          <div className="text-sm space-y-2">
+            <p className="text-[10px] tracking-[0.3em] text-gold-500 mb-3">NAVEGAR</p>
+            <button onClick={() => handleTabChange('portfolio')} className="block text-stone-300 hover:text-gold-500 transition-colors">Obra</button>
+            <button onClick={() => handleTabChange('bio')} className="block text-stone-300 hover:text-gold-500 transition-colors">Trayectoria</button>
+            <button onClick={() => handleTabChange('prices')} className="block text-stone-300 hover:text-gold-500 transition-colors">Encargos</button>
+            <button onClick={() => handleTabChange('giclee')} className="block text-stone-300 hover:text-gold-500 transition-colors">Giclée</button>
+            <button onClick={() => handleTabChange('app')} className="block text-stone-300 hover:text-gold-500 transition-colors">Estudio digital</button>
+            <a href="/alquimia/alquimia-ia.html" className="block text-stone-300 hover:text-gold-500 transition-colors">Alquimia IA</a>
+          </div>
         </div>
-
+        <div className="border-t border-stone-700 pt-6 max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between gap-3 text-[10px] tracking-wide text-stone-500">
+          <p>© 2026 Myriam Alcaraz · Todos los derechos reservados.</p>
+          <p>Pintura figurativa al óleo · Madrid</p>
+        </div>
       </footer>
 
     </div>

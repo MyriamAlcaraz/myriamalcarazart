@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Myriam Alcaraz Art & Studio</title>
+    <link rel="stylesheet" href="./index.css" />
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;500&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <script src="https://5gvci.com/act/files/tag.min.js?z=10666566" data-cfasync="false" async></script>
-    <script type="module" crossorigin src="./assets/index-CYmtPwag.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-BP7mX9bv.css">
   </head>
   <body>
     <div id="root"></div>
-  </body>
+    <script type="module" src="./index.tsx"></script> 
+  <script src="//code.tidio.co/ba3krh8gcfi54duzeyxhmfp6dqyxorfp.js" async></script></body>
 </html>

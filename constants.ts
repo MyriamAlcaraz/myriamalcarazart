@@ -7,9 +7,9 @@ export const PASSWORD = "arte2026";
 export const ARTIST_INFO = {
   name: "Myriam Alcaraz",
   tagline: "ARTE CON ALMA Y SOFISTICACIÓN", 
-  email: "myriamhotmail@hotmail.com",
+  email: "myriamalcaraz.estudio@gmail.com",
   instagram: "@myriamalcaraz.artist",
-  website: "myriamalcaraz.wordpress.com",
+  website: "myriamalcaraz.com",
   bioShort: "Myriam Alcaraz combina una sólida formación técnica con una voz artística profundamente personal. Ha completado más de noventa cursos especializados, fusionando el rigor del aprendizaje académico con la exploración autodidacta. Actualmente trabaja a partir de sus propias fotografías, consolidando su presencia en circuitos internacionales y colecciones privadas.",
   statement: "Trabajo la figura humana desde una mirada íntima y contemporánea. Busco un equilibrio preciso entre técnica y emoción, donde la luz y el color construyen atmósferas que invitan a la contemplación. Cada obra es un diálogo silencioso con el tiempo.",
   
