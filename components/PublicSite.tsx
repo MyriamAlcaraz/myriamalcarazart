@@ -72,9 +72,41 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
     }
   };
 
-  // Observer que añade .is-visible a los .reveal cuando entran en pantalla
+  // Parallax sutil del banner cinematográfico al hacer scroll
   useEffect(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const banner = document.getElementById('cinematic-banner');
+        if (banner) {
+          const rect = banner.getBoundingClientRect();
+          const visible = rect.top < window.innerHeight && rect.bottom > 0;
+          if (visible) {
+            const img = banner.querySelector<HTMLElement>('[data-parallax-img]');
+            const text = banner.querySelector<HTMLElement>('[data-parallax-text]');
+            const offset = (window.innerHeight - rect.top) * 0.18;
+            if (img) img.style.transform = `translate3d(0, ${offset * 0.6}px, 0)`;
+            if (text) text.style.transform = `translate3d(0, ${-offset * 0.25}px, 0)`;
+          }
+        }
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [activeTab]);
+
+  // Observer que añade .is-visible a los .reveal cuando entran en pantalla.
+  // Se re-ejecuta cuando cambia la pestaña O cuando aparece contenido nuevo
+  // dentro de la misma pestaña (ej. seleccionar una obra en Giclée).
+  useEffect(() => {
+    const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal:not(.is-visible)'));
+    if (els.length === 0) return;
     if (!('IntersectionObserver' in window)) {
       els.forEach(el => el.classList.add('is-visible'));
       return;
@@ -89,7 +121,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
     els.forEach(el => io.observe(el));
     return () => io.disconnect();
-  }, [activeTab]);
+  }, [activeTab, selectedObra, selectedSize]);
 
   // Obtener obra seleccionada
   const obraActual = GICLEE_OBRAS.find(o => o.id === selectedObra);
@@ -199,6 +231,46 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                     <p className="text-[10px] tracking-[0.2em] opacity-80 mt-1">100 × 81 cm · ÓLEO SOBRE TELA · 92 SALÓN DE OTOÑO</p>
                   </div>
                 </div>
+              </div>
+            </section>
+
+            {/* BANNER CINEMATOGRÁFICO — Sara bajo la farola con parallax y Ken Burns */}
+            <section
+              id="cinematic-banner"
+              className="relative w-screen left-1/2 right-1/2 -mx-[50vw] my-24 md:my-32 overflow-hidden bg-slate-950"
+              style={{ height: 'min(85vh, 720px)' }}
+            >
+              {/* Capa de imagen — Ken Burns + parallax */}
+              <div
+                data-parallax-img
+                className="absolute inset-0 will-change-transform"
+                style={{ transform: 'translate3d(0,0,0)' }}
+              >
+                <img
+                  src="/obras/OBRA_03.jpg"
+                  alt="Sara bajo la farola"
+                  className="ken-burns w-full h-[120%] object-cover object-center"
+                />
+                {/* Velo oscuro para dar contraste al texto */}
+                <div className="absolute inset-0" style={{
+                  background: 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 35%, rgba(0,0,0,0.55) 100%)'
+                }} />
+              </div>
+
+              {/* Capa de texto — fade-in al entrar + leve parallax inverso */}
+              <div
+                data-parallax-text
+                className="reveal absolute inset-0 flex flex-col items-center justify-center text-center px-6 will-change-transform"
+                style={{ transitionDuration: '1400ms' }}
+              >
+                <p className="text-[10px] md:text-xs tracking-[0.45em] text-gold-500 mb-7">MYRIAM ALCARAZ · ARTISTA FIGURATIVA</p>
+                <h2 className="font-serif text-3xl md:text-6xl lg:text-7xl text-stone-50 leading-[1.05] max-w-4xl">
+                  Cada obra es un<br/>
+                  <em className="not-italic font-serif italic text-gold-500">diálogo silencioso</em><br/>
+                  con el tiempo.
+                </h2>
+                <div className="mt-10 h-px w-16" style={{ background: 'linear-gradient(90deg, transparent, #c5a059, transparent)' }} />
+                <p className="font-serif italic text-[11px] md:text-sm text-white/60 mt-6 tracking-wide">Sara bajo la farola · óleo sobre tela · 92 × 60 cm</p>
               </div>
             </section>
 
@@ -407,11 +479,11 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                 <p className="text-[10px] tracking-[0.35em] text-gold-600 mb-4">EL PROCESO</p>
                 <h3 className="font-serif text-3xl md:text-4xl text-slate-900 mb-4">De la idea al óleo</h3>
                 <p className="text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
-                  Cuatro pasos. Sin prisa. Cada obra encuentra su tiempo.
+                  Tres pasos. Sin prisa. Cada obra encuentra su tiempo.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 max-w-4xl mx-auto">
                 {[
                   {
                     n: '01',
@@ -425,16 +497,11 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                   },
                   {
                     n: '03',
-                    t: 'Estudio',
-                    d: 'Trabajo desde mi estudio en Madrid. Te comparto fotos del proceso si lo prefieres, o respeto la sorpresa final.',
-                  },
-                  {
-                    n: '04',
                     t: 'Entrega',
                     d: 'Embalaje profesional y envío asegurado a tu domicilio. Firma en el reverso y certificado de autoría.',
                   },
                 ].map((step, idx) => (
-                  <div key={step.n} className="reveal" style={{ transitionDelay: `${idx * 90}ms` }}>
+                  <div key={step.n} className="reveal text-center md:text-left" style={{ transitionDelay: `${idx * 90}ms` }}>
                     <p className="font-serif text-4xl md:text-5xl text-gold-500 mb-4 leading-none">{step.n}</p>
                     <h4 className="font-serif text-lg text-slate-900 mb-2">{step.t}</h4>
                     <p className="text-sm text-slate-600 leading-relaxed">{step.d}</p>
@@ -513,9 +580,9 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               </div>
             </section>
 
-            {/* SELECTOR DE OBRA */}
-            <section className="reveal mb-12">
-              <div className="text-center mb-8">
+            {/* SELECTOR DE OBRA — sin .reveal en el contenedor para que el dropdown pueda salir del stacking context */}
+            <section className={`mb-12 relative ${isDropdownOpen ? 'z-[60]' : ''}`}>
+              <div className="reveal text-center mb-8">
                 <p className="text-[10px] tracking-[0.35em] text-gold-600 mb-4">PASO 1</p>
                 <h3 className="font-serif text-2xl md:text-3xl text-slate-900">Elige una obra</h3>
               </div>
@@ -546,7 +613,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                 </button>
 
                 {isDropdownOpen && (
-                  <div className="absolute z-50 w-full mt-2 bg-white border border-stone-200 shadow-2xl max-h-96 overflow-y-auto">
+                  <div className="absolute z-[70] w-full mt-2 bg-white border border-stone-200 shadow-2xl max-h-96 overflow-y-auto">
                     {GICLEE_OBRAS.map((obra) => (
                       <button
                         key={obra.id}
