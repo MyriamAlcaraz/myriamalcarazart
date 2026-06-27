@@ -54,3 +54,22 @@ h1, h2, h3, h4, h5, h6 {
   }
   html { scroll-behavior: auto; }
 }
+
+/* Entrada suave del modal de obra individual */
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes artwork-rise {
+  from { opacity: 0; transform: translateY(18px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-backdrop {
+  animation: modal-fade-in 500ms ease-out both;
+}
+
+.modal-stage {
+  animation: artwork-rise 700ms cubic-bezier(.2,.7,.2,1) both;
+}
