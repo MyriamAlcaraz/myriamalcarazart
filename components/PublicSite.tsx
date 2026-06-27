@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ARTIST_INFO, ARTWORKS } from '../constants';
-import { Eye, Lock, Layout, ArrowLeft, Award, Shield, Sparkles, ChevronDown, Check, Mail, Instagram, Globe } from 'lucide-react';
+import { Eye, Lock, Layout, ArrowLeft, Award, Shield, Sparkles, ChevronDown, Check, Mail, Instagram, Globe, Menu, X } from 'lucide-react';
 import AtlasTransparencias from './AtlasTransparencias';
 import PaletasMaestros from './PaletasMaestros';
 import SolSorolla from './SolSorolla';
@@ -56,6 +56,7 @@ const AccoladeList: React.FC<{ items: string[] }> = ({ items }) => (
 const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLogin, onOpenGiclee, onTabChange }) => {
   const [activeTab, setActiveTab] = useState<'portfolio' | 'bio' | 'prices' | 'contact' | 'giclee' | 'app'>('portfolio');
   const [activeDigitalTool, setActiveDigitalTool] = useState<'none' | 'atlas' | 'maestros' | 'sorolla'>('none');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Estado para Giclée
   const [selectedObra, setSelectedObra] = useState<string | null>(null);
@@ -154,8 +155,8 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               <p className="text-[10px] text-gold-600 tracking-[0.3em] uppercase">Artista Figurativa</p>
             </div>
           </div>
-          {/* Main Tabs — jerarquía limpia: solo obra original al frente */}
-          <div className="flex gap-2 md:gap-6 text-xs md:text-sm tracking-[0.18em]">
+          {/* Tabs en escritorio — sigue exactamente igual */}
+          <div className="hidden md:flex gap-2 md:gap-6 text-xs md:text-sm tracking-[0.18em]">
             <button
               onClick={() => handleTabChange('portfolio')}
               className={`px-2 py-1 md:px-3 md:py-2 transition-colors ${activeTab === 'portfolio' ? 'text-gold-600 border-b border-gold-600' : 'text-slate-500 hover:text-slate-900'}`}
@@ -181,6 +182,15 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               CONTACTO
             </button>
           </div>
+
+          {/* Hamburguesa — solo móvil */}
+          <button
+            className="md:hidden text-slate-900 p-1"
+            onClick={() => setIsMobileMenuOpen(true)}
+            aria-label="Abrir menú"
+          >
+            <Menu size={24} strokeWidth={1.5} />
+          </button>
         </div>
       </nav>
 
@@ -224,7 +234,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                   <img
                     src={ARTWORKS.find(a => a.title === 'Sara en Marquesina')?.image || ARTWORKS[0].image}
                     alt="Obra destacada — Sara en Marquesina"
-                    className="w-full h-[60vh] md:h-[70vh] object-cover"
+                    className="w-full h-[42vh] md:h-[70vh] object-cover object-top"
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-5 text-stone-50">
                     <p className="font-serif italic text-sm md:text-base">Sara en marquesina</p>
@@ -1074,6 +1084,58 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
           <p>Pintura figurativa al óleo · Madrid</p>
         </div>
       </footer>
+
+      {/* Panel móvil — overlay a pantalla completa con las cuatro pestañas grandes */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-[90] bg-stone-50 flex flex-col modal-backdrop">
+          <div className="flex justify-between items-center p-6 border-b border-stone-200">
+            <div>
+              <p className="font-serif text-sm tracking-[0.18em] text-slate-900">MYRIAM ALCARAZ</p>
+              <p className="text-[9px] tracking-[0.3em] text-gold-600 mt-1">ARTISTA FIGURATIVA</p>
+            </div>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-slate-900 p-1"
+              aria-label="Cerrar menú"
+            >
+              <X size={24} strokeWidth={1.5} />
+            </button>
+          </div>
+          <nav className="flex-1 flex flex-col items-center justify-center gap-10 px-6">
+            {[
+              { id: 'portfolio' as const, label: 'Obra' },
+              { id: 'bio' as const, label: 'Trayectoria' },
+              { id: 'prices' as const, label: 'Encargos' },
+              { id: 'contact' as const, label: 'Contacto' },
+            ].map(({ id, label }) => (
+              <button
+                key={id}
+                onClick={() => {
+                  handleTabChange(id);
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`font-serif text-3xl tracking-wide transition-colors ${
+                  activeTab === id ? 'text-gold-600' : 'text-slate-900'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </nav>
+          <div className="text-center pb-10 px-6">
+            <div className="h-px w-12 mx-auto mb-5" style={{ background: 'linear-gradient(90deg, transparent, #c5a059, transparent)' }} />
+            <a
+              href={`mailto:${ARTIST_INFO.email}`}
+              className="text-[11px] tracking-[0.2em] text-slate-500 break-all"
+            >
+              {ARTIST_INFO.email}
+            </a>
+            <p className="text-[10px] tracking-[0.2em] text-slate-400 mt-3">
+              {ARTIST_INFO.instagram}
+            </p>
+          </div>
+        </div>
+      )}
 
     </div>
   );
