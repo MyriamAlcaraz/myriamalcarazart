@@ -6,9 +6,15 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   // ** IMPORTANTE: Esta es la línea que soluciona el problema de Vercel **
-  base: './', 
-  
+  base: './',
+
   plugins: [react()],
+
+  // Permite acceso desde túneles temporales (cloudflared, ngrok) en dev.
+  // No afecta a producción.
+  server: {
+    allowedHosts: true,
+  },
   
   // Si tienes errores de mayúsculas/minúsculas en los archivos
   // En este punto, no es necesario, pero lo dejo por si acaso:
