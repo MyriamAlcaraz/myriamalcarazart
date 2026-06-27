@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import PublicSite from './components/PublicSite';
 import { ArtistDashboard } from './components/ArtistDashboard';
 import { DigitalCompanion } from './components/DigitalCompanion';
@@ -136,6 +137,9 @@ const App: React.FC = () => {
           showCertificateAccess={view === 'artist'}
         />
       )}
+
+      {/* Vercel Analytics — métricas de tráfico anónimas */}
+      <Analytics />
     </div>
   );
 };
