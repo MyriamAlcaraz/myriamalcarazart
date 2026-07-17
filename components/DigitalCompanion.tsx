@@ -16,7 +16,11 @@ function extraerReconocimientos(descripcion?: string): string[] {
   const d = descripcion.toLowerCase();
   const hits: string[] = [];
   if (d.includes('salón de otoño')) hits.push('92 Salón de Otoño');
-  if (d.includes('target prize')) hits.push('Target Prize 2025');
+  if (d.includes('target prize 2026')) {
+    hits.push(d.includes('semifinalista') ? 'Semifinalista · Target Prize 2026' : 'Finalista · Target Prize 2026');
+  } else if (d.includes('target prize')) {
+    hits.push('Target Prize 2025');
+  }
   if (d.includes('modportrait')) hits.push('ModPortrait');
   if (d.includes('guía leonardo') || d.includes('guia leonardo')) hits.push('Guía Leonardo 2025');
   if (d.includes('salón de realismo')) hits.push('X Salón de Realismo');

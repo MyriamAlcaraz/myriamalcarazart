@@ -27,6 +27,8 @@ export const ARTIST_INFO = {
           '"Alba y Crepúsculo", exposición colectiva de la Asociación Española de Pintores y Escultores. Salas Juana Francés y Pablo Serrano, Junta Municipal de Tetuán, Madrid. Del 2 al 28 de abril de 2025.',
       ],
       concursos: [
+          'Finalista en el concurso internacional Target Prize 2026, categoría Figura y Retrato, con "Sara en Retiro".',
+          'Semifinalista en el concurso internacional Target Prize 2026 con tres obras: "A Contraluz", "Joven con vela en la bruma" y "Sara en Retiro".',
           'Finalista en el concurso internacional ModPortrait 2022 con "Pablo en Cascada".',
           'Semifinalista en el concurso internacional Target Prize 2025 con tres obras: "Laura en el Crepúsculo", "Sara bajo la farola" y "Viajera".',
       ]
@@ -41,13 +43,13 @@ export const ARTIST_INFO = {
 
 export const ARTWORKS: Artwork[] = [
   { 
-    id: '21', 
-    title: 'Abruma y belleza', 
-    dimensions: '100x73 cm', 
-    technique: 'Óleo sobre tela', 
-    price: 3000, 
-    image: '/obras/OBRA_21.jpg', 
-    description: 'Retrato atmosférico donde la figura emerge entre brumas oscuras y doradas.', 
+    id: '21',
+    title: 'A Contraluz',
+    dimensions: '100x73 cm',
+    technique: 'Óleo sobre tela',
+    price: 3000,
+    image: '/obras/OBRA_21.jpg',
+    description: 'Obra semifinalista en el concurso internacional Target Prize 2026. Retrato atmosférico donde la figura emerge entre brumas oscuras y doradas.',
     status: 'available', 
     year: '2026' 
   },
@@ -58,7 +60,7 @@ export const ARTWORKS: Artwork[] = [
     technique: 'Óleo sobre tela', 
     price: 3000, 
     image: '/obras/OBRA_22.jpg', 
-    description: 'Estudio de luz cálida y fría en atmósfera envolvente.', 
+    description: 'Obra semifinalista en el concurso internacional Target Prize 2026. Estudio de luz cálida y fría en atmósfera envolvente.',
     status: 'available', 
     year: '2026' 
   },
@@ -69,7 +71,7 @@ export const ARTWORKS: Artwork[] = [
     technique: 'Óleo sobre papel encolado en tabla', 
     price: 3000, 
     image: '/obras/OBRA_23.jpg', 
-    description: 'Retrato en el Parque del Retiro de Madrid.', 
+    description: 'Obra FINALISTA en el concurso internacional Target Prize 2026, categoría Figura y Retrato. Retrato en el Parque del Retiro de Madrid.',
     status: 'available', 
     year: '2026' 
   },
@@ -296,7 +298,7 @@ export const PRICING_TABLE: PriceRow[] = [
 export const ANALYSIS_POINTS = { 
   strengths: [
     "Reconocimiento Institucional Completo: Selección en 92 Salón de Otoño (Casa de Vacas), X Salón de Realismo (La Vaguada) y Certamen Pequeño Formato (C.C. Príncipe de Asturias).",
-    "Premios Internacionales: Finalista ModPortrait 2022 y Semifinalista Target Prize 2025.",
+    "Premios Internacionales: Finalista Target Prize 2026 (Figura y Retrato), Finalista ModPortrait 2022 y Semifinalista Target Prize 2025 y 2026.",
     "Publicaciones de Prestigio: Obra incluida en la Guía de Arte y Artistas Leonardo 2025 y Catálogos ModPortrait.",
     "Identidad & Gestión: Marca personal premium ('Alma y Sofisticación') con control total del inventario y venta directa."
   ], 
