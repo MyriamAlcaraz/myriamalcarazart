@@ -1072,8 +1072,6 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
             <button onClick={() => handleTabChange('bio')} className="block text-stone-300 hover:text-gold-500 transition-colors">Trayectoria</button>
             <button onClick={() => handleTabChange('prices')} className="block text-stone-300 hover:text-gold-500 transition-colors">Encargos</button>
             <button onClick={() => handleTabChange('giclee')} className="block text-stone-300 hover:text-gold-500 transition-colors">Giclée</button>
-            <button onClick={() => handleTabChange('app')} className="block text-stone-300 hover:text-gold-500 transition-colors">Estudio digital</button>
-            <a href="/alquimia/alquimia-ia.html" className="block text-stone-300 hover:text-gold-500 transition-colors">Alquimia IA</a>
           </div>
         </div>
         <div className="border-t border-stone-700 pt-6 max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between gap-3 text-[10px] tracking-wide text-stone-500">
