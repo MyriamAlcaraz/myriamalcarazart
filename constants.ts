@@ -247,7 +247,7 @@ export const ARTWORKS: Artwork[] = [
     price: 0,
     image: '/obras/OBRA_17.jpg',
     description: 'Obra seleccionada por la Asociación Española de Pintores y Escultores para integrar la exposición del 44 Certamen de Pequeño Formato. Centro Cultural Príncipe de Asturias, Madrid, octubre de 2025.',
-    status: 'sold' 
+    status: 'available'
   },
   { 
     id: '18', 
