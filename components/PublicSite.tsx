@@ -219,7 +219,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                     }}
                     className="inline-flex items-center gap-3 px-6 py-3 border border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-stone-50 transition-all text-xs tracking-[0.25em]"
                   >
-                    VER OBRA DISPONIBLE
+                    VER LA OBRA
                   </button>
                   <button
                     onClick={() => handleTabChange('prices')}
@@ -287,7 +287,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
             {/* OBRA DISPONIBLE — grid */}
             <section id="obra-disponible" className="mb-24">
               <div className="flex items-end justify-between mb-10 border-b border-stone-200 pb-4">
-                <h2 className="font-serif text-2xl md:text-3xl text-slate-900">Obra disponible</h2>
+                <h2 className="font-serif text-2xl md:text-3xl text-slate-900">Obra</h2>
                 <p className="text-[10px] tracking-[0.3em] text-gold-600">2025 — 2026</p>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-10">
@@ -433,7 +433,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
               {/* I — Obra original */}
               <div className="reveal group flex flex-col bg-white border border-stone-200 hover:border-gold-500 transition-colors p-8" style={{ transitionDelay: '0ms' }}>
                 <p className="font-serif text-5xl text-gold-500 mb-6 leading-none">I</p>
-                <h3 className="font-serif text-xl text-slate-900 mb-3">Obra original disponible</h3>
+                <h3 className="font-serif text-xl text-slate-900 mb-3">Obra original</h3>
                 <p className="text-sm text-slate-600 leading-relaxed mb-8 flex-grow">
                   Una pieza única ya pintada, esperando colección. Óleo sobre tela o tabla,
                   firmado en el reverso. Disponibilidad limitada al inventario actual.
@@ -442,7 +442,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                   onClick={() => handleTabChange('portfolio')}
                   className="text-[11px] tracking-[0.25em] text-slate-900 group-hover:text-gold-600 transition-colors text-left"
                 >
-                  VER OBRA DISPONIBLE →
+                  VER LA OBRA →
                 </button>
               </div>
 
