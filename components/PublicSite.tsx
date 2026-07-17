@@ -219,7 +219,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                     }}
                     className="inline-flex items-center gap-3 px-6 py-3 border border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-stone-50 transition-all text-xs tracking-[0.25em]"
                   >
-                    VER LA OBRA
+                    VER OBRA
                   </button>
                   <button
                     onClick={() => handleTabChange('prices')}
@@ -442,7 +442,7 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                   onClick={() => handleTabChange('portfolio')}
                   className="text-[11px] tracking-[0.25em] text-slate-900 group-hover:text-gold-600 transition-colors text-left"
                 >
-                  VER LA OBRA →
+                  VER OBRA →
                 </button>
               </div>
 
