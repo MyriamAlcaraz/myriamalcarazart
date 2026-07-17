@@ -44,8 +44,6 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
 
   const displayYear = artwork?.year && artwork.year.toString().trim() !== '' ? artwork.year : '2025';
   const reconocimientos = extraerReconocimientos(artwork?.description);
-  const disponibilidad = artwork?.status === 'sold' ? 'Vendida' : 'Disponible';
-  const disponibilidadColor = artwork?.status === 'sold' ? '#9CA3AF' : '#c5a059';
 
   // Cerrar con tecla Escape — atención al detalle
   useEffect(() => {
@@ -178,10 +176,6 @@ export const DigitalCompanion: React.FC<DigitalCompanionProps> = ({
               <div>
                 <p className="text-[10px] tracking-[0.25em] text-white/45 mb-1.5">AÑO</p>
                 <p className="font-serif text-base text-stone-50">{displayYear}</p>
-              </div>
-              <div>
-                <p className="text-[10px] tracking-[0.25em] text-white/45 mb-1.5">DISPONIBILIDAD</p>
-                <p className="font-serif text-base" style={{ color: disponibilidadColor }}>{disponibilidad}</p>
               </div>
             </div>
 
