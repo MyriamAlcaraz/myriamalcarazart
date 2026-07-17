@@ -307,9 +307,6 @@ const PublicSite: React.FC<PublicSiteProps> = ({ onOpenCompanion, onOpenStudioLo
                       <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/30 transition-all duration-500 flex items-center justify-center">
                         <Eye size={28} className="text-stone-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                       </div>
-                      {artwork.status === 'sold' && (
-                        <div className="absolute top-3 left-3 bg-slate-900/80 text-stone-50 text-[9px] tracking-[0.2em] px-2 py-1">VENDIDA</div>
-                      )}
                     </div>
                     <h3 className="font-serif text-base text-slate-900 leading-snug">{artwork.title}</h3>
                     <p className="text-[11px] text-slate-500 mt-1 tracking-wide">{artwork.dimensions} · {artwork.technique}</p>
