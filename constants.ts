@@ -42,7 +42,18 @@ export const ARTIST_INFO = {
 };
 
 export const ARTWORKS: Artwork[] = [
-  { 
+  {
+    id: '24',
+    title: 'Retrato en la penumbra',
+    dimensions: '50x50 cm',
+    technique: 'Óleo sobre tela',
+    price: 0,
+    image: '/obras/OBRA_24.jpg',
+    description: 'Retrato íntimo en la penumbra, donde el rostro emerge de la sombra con una luz contenida y cálida.',
+    status: 'available',
+    year: '2026'
+  },
+  {
     id: '21',
     title: 'A Contraluz',
     dimensions: '100x73 cm',
